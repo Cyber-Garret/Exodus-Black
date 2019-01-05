@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<exotics>
+  <exotic>
+    <id>0</id>
+    <name>Милое Дело</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Sweet_Business.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Sweet_Business.jpg</image>
+    <type>Кинетический автомат</type>
+    <description>"...Я люблю свою работу"</description>
+    <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
+    <catalyst>1</catalyst>
+    <catalystlocation>Достигнуть 50 ранга у Новой монархии</catalystlocation>
+    <catalystquest>250 мульти-убийств (Быстро убить 4 врагов)</catalystquest>
+    <catalystperk>Перк "Серьезное дело" - Отдача при получении урона значительно снижается при максимальной скорости вращения этого оружия</catalystperk>
+  </exotic>
+  <exotic>
+    <id>1</id>
+    <name>Буря</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Sturm.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Sturm.jpg</image>
+    <type>Кинетический револьвер</type>
+    <description>Эти древние церемониальные пистолеты датируются началом Золотого века. Потускневшая надпись гласит: "Сигруну от Виктора".</description>
+    <droplocation>Экзотическое поручение на Нессе или испытание.</droplocation>
+    <catalyst>1</catalyst>
+    <catalystlocation>Случайное выпадение с убитого монстра на Нессе</catalystlocation>
+    <catalystquest>500 убийств с Бури	и 500 убийств с Натиска</catalystquest>
+    <catalystperk>Дальность бури +20 и стабильность бури +40</catalystperk>
+  </exotic>
+  <exotic>
+    <id>2</id>
+    <name>Крыло бдительности</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Vigilance_Wing.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Vigilance_Wing.jpg</image>
+    <type>Кинетическая импульсная винтовка</type>
+    <description>"Глаз по-прежнему открыт. В Маяке по-прежнему горит свет". — брат Вэнс </description>
+    <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
+    <catalyst>1</catalyst>
+    <catalystlocation>Одержать победу в Горниле</catalystlocation>
+    <catalystquest>250 убийств в PvP и 5 медалей "Око за око"</catalystquest>
+    <catalystperk>Перк "Система автоспуска"	- Удерживайте спуск, чтобы вести автоматический огонь.</catalystperk>
+  </exotic>
+  <exotic>
+    <id>3</id>
+    <name>Крысиный Король</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Rat_King.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Rat_King.jpg</image>
+    <type>Кинетический пистолет</type>
+    <description>"Мы малы, но нас легион."</description>
+    <droplocation>Экзотическое поручение на титане или испытание.</droplocation>
+    <catalyst>0</catalyst>
+    <catalystlocation></catalystlocation>
+    <catalystquest></catalystquest>
+    <catalystperk></catalystperk>
+  </exotic>
+  <exotic>
+    <id>4</id>
+    <name>Универсальный инструмент MIDA</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/MIDA_Multi_Tool.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/MIDA_Multi_Tool.jpg</image>
+    <type>Кинетическая винтовка разведчика</type>
+    <description>Баллистическое взаимодействие. Шанцевый инструмент. Авиационный трал. Разрушитель троллей. Секстант. Другое.</description>
+    <droplocation>Экзотическое поручение в ЕМЗ или испытание.</droplocation>
+    <catalyst>1</catalyst>
+    <catalystlocation>Одержать победу в состязательном матче Горнила.</catalystlocation>
+    <catalystquest>250 убийств в голову в PvP.</catalystquest>
+    <catalystperk>Перк "Изгой" - Прицельные убийства заметно ускоряют перезарядку.</catalystperk>
+  </exotic>
+  <exotic>
+    <id>5</id>
+    <name>Багрец</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Crimson.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Crimson.jpg</image>
+    <type>Кинетический револьвер</type>
+    <description>Согласно официальным данным "Авангарда", этого оружия не существует.</description>
+    <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
+    <catalyst>1</catalyst>
+    <catalystlocation>Случайное выпадение с монстра в любой точке солнечной системы.</catalystlocation>
+    <catalystquest>300 прицельных убийств.</catalystquest>
+    <catalystperk>Дальность багреца +20.</catalystperk>
+  </exotic>
+  <exotic>
+    <id>6</id>
+    <name>Нефритовый кролик</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/The_Jade_Rabbit.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/The_Jade_Rabbit.jpg</image>
+    <type>Кинетическая винтовка разведчика</type>
+    <description>"Ну и какая глупость зародилась в твоей голове на этот раз?"</description>
+    <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
+    <catalyst>1</catalyst>
+    <catalystlocation>Одержать победу в Горниле.</catalystlocation>
+    <catalystquest>250 убийств в PvP.</catalystquest>
+    <catalystperk>Стабильность нефритового кролика +30.</catalystperk>
+  </exotic>
+  <exotic>
+    <id>7</id>
+    <name>Гекльберри</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/The_Huckleberry.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/The_Huckleberry.jpg</image>
+    <type>Кинетический пистолет-пулемет</type>
+    <description>Нет ничего, что не решила бы очередь из 30 пуль.</description>
+    <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
+    <catalyst>1</catalyst>
+    <catalystlocation>Пройти любое героическое приключение.</catalystlocation>
+    <catalystquest>500 убийств из гекльберри.</catalystquest>
+    <catalystperk>Перк "Честолюбивый ассасин" - Переполнение магазина в зависимости от количества быстрых убийств перед перезарядкой.</catalystperk>
+  </exotic>
+  <exotic>
+    <id>8</id>
+    <name>Режим SUROS</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/SUROS_Regime.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/SUROS_Regime.jpg</image>
+    <type>Кинетический автомат</type>
+    <description>Ностальгия — орудие войны. Стиль — важная составляющая победы.</description>
+    <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
+    <catalyst>0</catalyst>
+    <catalystlocation></catalystlocation>
+    <catalystquest></catalystquest>
+    <catalystperk></catalystperk>
+  </exotic>
+  <exotic>
+    <id>9</id>
+    <name>Цербер+1</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Cerberus+1.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Cerberus+1.jpg</image>
+    <type>Кинетический автомат</type>
+    <description>"Три головы хорошо, а четыре лучше!" — Джеза Верлейн по прозвищу "Сорвиголова"</description>
+    <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
+    <catalyst>0</catalyst>
+    <catalystlocation></catalystlocation>
+    <catalystquest></catalystquest>
+    <catalystperk></catalystperk>
+  </exotic>
+  <exotic>
+    <id>10</id>
+    <name>Губитель Желаний</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Wish_Ender.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Wish_Ender.jpg</image>
+    <type>Кинетический боевой лук</type>
+    <description>"Не волнуйся. Это простая экспедиция. Мы вернемся к обеду". — Сйор Эйдо, первая Ярость королевы</description>
+    <droplocation>Экзотическое поручение в Городе Грез или испытание.</droplocation>
+    <catalyst>0</catalyst>
+    <catalystlocation></catalystlocation>
+    <catalystquest></catalystquest>
+    <catalystperk></catalystperk>
+  </exotic>
+  <exotic>
+    <id>11</id>
+    <name>Злоумышленник</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Malfeasance.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Malfeasance.jpg</image>
+    <type>Кинетический револьвер</type>
+    <description>"Ничто не убивает Стража быстрее, чем другой Страж". – Скиталец</description>
+    <droplocation>Экзотическое поручение в Гамбите или испытание.</droplocation>
+    <catalyst>0</catalyst>
+    <catalystlocation></catalystlocation>
+    <catalystquest></catalystquest>
+    <catalystperk></catalystperk>
+  </exotic>
+  <exotic>
+    <id>12</id>
+    <name>Пиковый туз</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/Ace_of_Spades.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/Ace_of_Spades.jpg</image>
+    <type>Кинетический револьвер</type>
+    <description>"У меня всегда есть козырь в рукаве". — Кейд-6</description>
+    <droplocation>Экзотическое поручение в Башне или испытание.</droplocation>
+    <catalyst>0</catalyst>
+    <catalystlocation></catalystlocation>
+    <catalystquest></catalystquest>
+    <catalystperk></catalystperk>
+  </exotic>
+  <exotic>
+    <id>13</id>
+    <name>Компаньон</name>
+    <icon>http://159.69.21.188/Icon/Kinetic/The_Chaperone.jpg</icon>
+    <image>http://159.69.21.188/Image/Kinetic/The_Chaperone.jpg</image>
+    <type>Кинетический дробовик</type>
+    <description>"У моей мамы был дробовик по прозвищу "Компаньон". Он защищал нас, пока мы не попали в Город". — Аманда Холлидей</description>
+    <droplocation>Экзотическое поручение или испытание.</droplocation>
+    <catalyst>0</catalyst>
+    <catalystlocation></catalystlocation>
+    <catalystquest></catalystquest>
+    <catalystperk></catalystperk>
+  </exotic>
+</exotics>
