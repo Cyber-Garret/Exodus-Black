@@ -7,6 +7,7 @@
     <image>http://159.69.21.188/Image/Power/The_Prospector.jpg</image>
     <type>Силовой гранатомет</type>
     <description>"Некоторые вещи лучше пусть остаются под землей".</description>
+    <perk>Удерживайте , чтобы выстрелить гранатой. Отпустите кнопку, чтобы подорвать все гранаты одновременно. Гранаты прилипают к поверхностям и поджигают врагов.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>1</catalyst>
     <catalystlocation>Неизвестно</catalystlocation>
@@ -20,6 +21,7 @@
     <image>http://159.69.21.188/Image/Power/Tractor_Cannon.jpg</image>
     <type>Силовой дробовик</type>
     <description>Собственность "Коллектива Иштар". ПРЕДУПРЕЖДЕНИЕ: попадание в луч гравитационного двигателя может повлечь за собой серьезную травму или даже смерть.</description>
+    <perk>Это оружие выпускает мощный силовой импульс, который отталкивает врагов назад, подавляет их способности и делает их более уязвимыми к любому урону, особенно к пустотному.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>1</catalyst>
     <catalystlocation>Рандомный дроп с убитого моба в PvE</catalystlocation>
@@ -33,9 +35,10 @@
     <image>http://159.69.21.188/Image/Power/Legend_of_Acrius.jpg</image>
     <type>Силовой дробовик</type>
     <description>"В легенде Кабал говорится о герое, стремящемся завладеть Cолнцем. Он добивается своей цели. А затем становится императором. Кабал... не ведают тонкостей". — Тира Карн</description>
+    <perk>Это оружие стреляет мощными электрическими разрядами, пробивающими цели насквозь.</perk>
     <droplocation>Экзотическое поручение на Нессе или испытание.</droplocation>
     <catalyst>1</catalyst>
-    <catalystlocation>Пройти этап "Левиафана" на престиже</catalystlocation>
+    <catalystlocation>Пройти этап рейда "Левиафан" на престижном уровне сложности.</catalystlocation>
     <catalystquest>500 убийств</catalystquest>
     <catalystperk>Уменьшение скорости перезарядки, 4 дополнительных патрона в магазин и 1 дополнительный патрон в резерв</catalystperk>
   </power>
@@ -46,6 +49,7 @@
     <image>http://159.69.21.188/Image/Power/D.A.R.C.I..jpg</image>
     <type>Силовая снайперская винтовка</type>
     <description>Спасибо, что воспользовались Диалоговым Аналитически-Разведывательным Специализированным Интеллектом. Можете звать меня Дарси.</description>
+    <perk>При наведении оружия на врага в прицеле отображается его здоровье и другая важная информация.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>1</catalyst>
     <catalystlocation>Рандомный дроп с убитого моба в PvE.</catalystlocation>
@@ -59,6 +63,7 @@
     <image>http://159.69.21.188/Image/Power/The_Wardcliff_Coil.jpg</image>
     <type>Силовая ракетная установка</type>
     <description>Изобретательность. Отчаяние. Непродуманный прототип, обладающий чудовищной мощью. Таковы обстоятельства Уордклиффского инцидента.</description>
+    <perk>Это оружие производит ракетные залпы.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>1</catalyst>
     <catalystlocation>Убить босса в героическом или Сумрачном налете</catalystlocation>
@@ -72,6 +77,7 @@
     <image>http://159.69.21.188/Image/Power/The_Colony.jpg</image>
     <type>Силовой гранатомет</type>
     <description>Нас намного больше. Мы тебя найдем. Ты всего один, а нас целая колония.</description>
+    <perk>Гранаты, выпускаемые из этого оружия, — насекомоподобные роботы, которые преследуют цель и взрываются вблизи от нее.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>1</catalyst>
     <catalystlocation>Одержать победу в Горниле.</catalystlocation>
@@ -85,6 +91,7 @@
     <image>http://159.69.21.188/Image/Power/Worldline_Zero.jpg</image>
     <type>Силовой меч</type>
     <description>Один-единственный удар может изменить ход истории.</description>
+    <perk>Нажмите во время бега, чтобы нанести удар по площади. Разбежавшись и сделав прыжок, нажмите , находясь в воздухе, чтобы телепортироваться вперед.</perk>
     <droplocation>Экзотическое поручение или испытание на Марсе.</droplocation>
     <catalyst>1</catalyst>
     <catalystlocation>Случайное выпадение с убитого монстра любым мечом в любой точке солнечной системы.</catalystlocation>
@@ -98,9 +105,10 @@
     <image>http://159.69.21.188/Image/Power/Sleeper_Simulant.jpg</image>
     <type>Силовая линейно-плазменная винтовка</type>
     <description>Подпрограмма ИКЕЛ: Статус=выполнена. ПОЛНОЧНАЯ ДИРЕКТИВА: Статус=выполняется.</description>
+    <perk>Лазерный луч этого оружия проходит сквозь врагов и отражается от твердых поверхностей.</perk>
     <droplocation>Экзотическое поручение на Марсе или испытание.</droplocation>
     <catalyst>1</catalyst>
-    <catalystlocation>Пройти этап "Звездного шпиля" на престиже</catalystlocation>
+    <catalystlocation>Пройти этап рейда "Звездного шпиля" на престижном уровне сложности.</catalystlocation>
     <catalystquest>Неизвестно</catalystquest>
     <catalystperk>20% уменьшение скорости заряда и 2 дополнительных патрона в резерве</catalystperk>
   </power>
@@ -111,6 +119,7 @@
     <image>http://159.69.21.188/Image/Power/Whisper_of_the_Worm.jpg</image>
     <type>Силовая снайперская винтовка</type>
     <description>Сила Стража манит паразитов. Но не спеши их прогонять. Они могут быть тебе полезны... ведь их клыки в разы острее твоих зубов.</description>
+    <perk>Увеличенный базовый урон от прицельных попаданий. Три быстрых прицельных попадания добавляют патроны в магазин.</perk>
     <droplocation>Экзотическое поручение на ИО или испытание.</droplocation>
     <catalyst>1</catalyst>
     <catalystlocation>Выполнить героическую версию миссии "Шёпот"</catalystlocation>
@@ -124,6 +133,7 @@
     <image>http://159.69.21.188/Image/Power/One_Thousand_Voices.jpg</image>
     <type>Силовая плазменная винтовка</type>
     <description>Я могу быть тем, кем ты пожелаешь, о мой убийца.</description>
+    <perk>В заряженном состоянии это оружие испускает мощный непрерывный луч смерти.</perk>
     <droplocation>рейд "Последнее желание".</droplocation>
     <catalyst>0</catalyst>
     <catalystlocation></catalystlocation>
@@ -137,6 +147,7 @@
     <image>http://159.69.21.188/Image/Power/Two_Tailed_Fox.jpg</image>
     <type>Силовая ракетная установка</type>
     <description>Восхитительно смертоносный.</description>
+    <perk>Выпускает две ракеты, пустотную и солнечную, которые могут навестись на одну и ту же цель.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>0</catalyst>
     <catalystlocation></catalystlocation>
@@ -150,6 +161,7 @@
     <image>http://159.69.21.188/Image/Power/Black_Talon.jpg</image>
     <type>Силовой меч</type>
     <description>"Его жизнь принесла мир на Риф. Его смерть принесет меч". — Вороны Черного корпуса</description>
+    <perk>Нажмите , , чтобы выстрелить кросс-комбинацией снарядов.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>0</catalyst>
     <catalystlocation></catalystlocation>
@@ -163,6 +175,7 @@
     <image>http://159.69.21.188/Image/Power/The_Queenbreaker.jpg</image>
     <type>Силовая линейно-плазменная винтовка</type>
     <description>Несмотря на коварство изменников, Ее величество все еще держится.</description>
+    <perk>Испускает точный дальнобойный электроразряд, ослепляющий врагов при попадании.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>0</catalyst>
     <catalystlocation></catalystlocation>
@@ -176,6 +189,7 @@
     <image>http://159.69.21.188/Image/Power/Thunderlord.jpg</image>
     <type>Силовой пулемет</type>
     <description>Они возвращаются из далеких полей. Око миновало, конец уже близок. Не исчезай тихо. Пусть снова гремит гром.</description>
+    <perk>Убийства из этого оружия создают молнии, бьющие сверху.</perk>
     <droplocation>Экзотические энграммы, редкие выпадения в открытом мире.</droplocation>
     <catalyst>0</catalyst>
     <catalystlocation></catalystlocation>
@@ -189,6 +203,7 @@
     <image>http://159.69.21.188/Image/Power/Anarchy.jpg</image>
     <type>Силовой гранатомет</type>
     <description>"Жмись к стене, к земле, человек... а потом ГОРИ-И-И! Хе-хе-хе-хе". – Сивикс Безродный</description>
+    <perk>Гранаты прилипают к поверхностям и создает цепочку из электрических взрывов.</perk>
     <droplocation>Завершите рейд "Истребители прошлого".</droplocation>
     <catalyst>0</catalyst>
     <catalystlocation></catalystlocation>

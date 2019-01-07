@@ -19,6 +19,7 @@ namespace Neuromatrix.Resources.Datatypes
         public string image { get; set; }
         public string type { get; set; }
         public string description { get; set; }
+        public string perk { get; set; }
         public string droplocation { get; set; }
         public int catalyst { get; set; }
         public string catalystlocation { get; set; }

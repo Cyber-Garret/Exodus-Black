@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\Database.db" />
     <None Remove="Data\Exotics\Energy.xml" />
     <None Remove="Data\Exotics\Kinetic.xml" />
     <None Remove="Data\Exotics\Power.xml" />
@@ -29,10 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="1.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Core\" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
