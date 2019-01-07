@@ -26,10 +26,10 @@ namespace Neuromatrix
         private async Task MainAsync()
         {
             string JSON = "";
-            string SettingsLocation = @"Data\Settings.json";
+            string SettingsLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"/Data/Settings.json";
             if (!File.Exists(SettingsLocation))
             {
-                Console.WriteLine($"Не найден файл настроек по пути ..{SettingsLocation}");
+                Console.WriteLine($"Not found file {SettingsLocation}");
                 Console.ReadLine();
                 return;
             }
@@ -102,7 +102,7 @@ namespace Neuromatrix
 
             var Result = await Command.ExecuteAsync(Context, ArgPos);
             if (!Result.IsSuccess)
-                Console.WriteLine($"[{DateTime.Now} в коммандах] Что-то пошло не так во время выполнении комманды. Текст: {Context.Message.Content} | Ошибка: {Result.ErrorReason}");
+                Console.WriteLine($"[{DateTime.Now} in command ] Sometimes went wrong with commands. Text: {Context.Message.Content} | Error: {Result.ErrorReason}");
         }
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Text;
 using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
 
 using Discord;
@@ -17,14 +18,14 @@ namespace Neuromatrix.Core.Data
         {
             string ExotType()
             {
-                string ExoticLocation = null;
+                string ExoticLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
                 if (Type == "Kinetic")
-                    ExoticLocation = @"Data\Exotics\Kinetic.xml";
+                    ExoticLocation += @"/Data/Exotics/Kinetic.xml";
                 if (Type == "Energy")
-                    ExoticLocation = @"Data\Exotics\Energy.xml";
+                    ExoticLocation += @"/Data/Exotics/Energy.xml";
                 if (Type == "Power")
-                    ExoticLocation = @"Data\Exotics\Power.xml";
+                    ExoticLocation += @"/Data/Exotics/Power.xml";
                 return ExoticLocation;
             }
 
