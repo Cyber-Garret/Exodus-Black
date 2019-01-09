@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 
-namespace Neuromatrix.Resources.Settings
+namespace Neuromatrix.Resources
 {
     public static class StaticSettings
     {
         public static string Token;
         public static ulong Owner;
-        public static List<ulong> Log;
+        public static ulong Guild;
+        public static ulong LogChannel;
+        public static ulong XurChannel;
         public static string Version;
-        public static List<ulong> Banned;
     }
 }

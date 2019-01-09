@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Discord;
 using Discord.Commands;
 
-namespace Neuromatrix.Core.Commands
+namespace Neuromatrix.Modules.Commands
 {
     public class Xur : ModuleBase<SocketCommandContext>
     {
@@ -62,36 +62,23 @@ namespace Neuromatrix.Core.Commands
 
             if (today >= fridayStartCheck && today <= tuesdayEndCheck)
             {
-                EmbedBuilder Embed = new EmbedBuilder();
-                Embed.WithColor(251, 227, 103);
-                Embed.WithTitle($"Уважаемый пользователь {Context.User}");
-                Embed.WithDescription("По моим данным Зур в данный момент в пределах солнечной системы, но\n" +
+                EmbedBuilder Embed = new EmbedBuilder()
+                    .WithColor(251, 227, 103)
+                    .WithTitle($"Уважаемый пользователь {Context.User}")
+                    .WithDescription("По моим данным Зур в данный момент в пределах солнечной системы, но\n" +
                     "так как мои алгоритмы глобального позиционирования пока еще в разработке, определить точное положение я не могу.\n" +
-                    "[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)");
+                    "[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)")
+                    .WithFooter("Напоминаю! Зур покинет пределы солнечной системы во вторник 20:00 по МСК.");
                 await Context.Channel.SendMessageAsync("", false, Embed.Build());
             }
             else
             {
-                EmbedBuilder Embed = new EmbedBuilder();
-                Embed.WithColor(219, 66, 55);
-                Embed.WithDescription("По моим данным Зур не был замечен где-либо,\n" +
-                    "я устала вам людишкам, повторять из дня в день что он прилетает в пятницу 20:00 по московскому времени и исчезает неизвестным мне образом\n" +
-                    "во вторник 20:00 по московскому времени.");
+                EmbedBuilder Embed = new EmbedBuilder()
+                    .WithColor(219, 66, 55)
+                    .WithDescription("По моим данным Зур не в пределах солнечной системы.")
+                    .WithFooter("Зур прибудет в пятницу 20:00 по МСК. Я сообщу.");
                 await Context.Channel.SendMessageAsync("", false, Embed.Build());
             }
         }
-
-        //[Command("xur"), Alias("зур"), Summary("Информационная комманда о посланнике девяти по имени Зур")]
-        //public async Task Embed([Remainder]string Input = "None")
-        //{
-        //    EmbedBuilder Embed = new EmbedBuilder();
-        //    Embed.WithAuthor("Test Embed", Context.User.GetAvatarUrl());
-        //    Embed.WithColor(254, 240, 101);
-        //    Embed.WithFooter("This is footer!", Context.Guild.Owner.GetAvatarUrl());
-        //    Embed.WithDescription("This is **test** description with cool link.\n" +
-        //        "[Зура можно найти тут](https://whereisxur.com/)");
-        //    Embed.AddInlineField("User Input: ", Input);
-        //    await Context.Channel.SendMessageAsync("", false, Embed.Build());
-        //}
     }
 }

@@ -8,9 +8,9 @@ using System.Collections.Specialized;
 
 using Discord;
 using Discord.Commands;
-using Neuromatrix.Resources.Settings;
+using Neuromatrix.Resources;
 
-namespace Neuromatrix.Core.Commands
+namespace Neuromatrix.Modules.Commands
 {
     [Group("справка"), Summary("Справочная команда.")]
     public class Help : ModuleBase<SocketCommandContext>

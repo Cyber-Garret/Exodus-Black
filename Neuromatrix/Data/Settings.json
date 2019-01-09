@@ -1,7 +1,9 @@
 {
-  "token": "NTIxNjkzNzA3MjM4NTA2NDk4.DvARhQ.pGbf6laa85kkyNNwUem2-NiRwYk",
+  "token": "NTMyMjI1MTg5ODgzMjgxNDA4.Dxd-9A.gHoUvWg8TZNNYJJmKKxoNlu8Hgw",
   "owner": 316272461291192322,
-  "log": [ 521689023962415104, 523174608971759626 ],
+  "guild": 521689023962415104,
+  "logchannel": 523174608971759626,
+  "xurchannel": 532227269658279954,
   "version": "1.0.0.0",
   "Banned": []
 }

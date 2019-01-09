@@ -10,12 +10,11 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neuromatrix.Resources.Datatypes;
-using Neuromatrix.Resources.Settings;
+using Neuromatrix.Resources;
 
 namespace Neuromatrix
 {
-    class Program
+    partial class Program
     {
         private DiscordSocketClient Client;
         private CommandService Command;
@@ -42,9 +41,10 @@ namespace Neuromatrix
             Settings Settings = JsonConvert.DeserializeObject<Settings>(JSON);
             StaticSettings.Token = Settings.token;
             StaticSettings.Owner = Settings.owner;
-            StaticSettings.Log = Settings.log;
+            StaticSettings.Guild = Settings.guild;
+            StaticSettings.LogChannel = Settings.logchannel;
+            StaticSettings.XurChannel = Settings.xurchannel;
             StaticSettings.Version = Settings.version;
-            StaticSettings.Banned = Settings.banned;
 
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
@@ -66,6 +66,8 @@ namespace Neuromatrix
             await Client.LoginAsync(TokenType.Bot, StaticSettings.Token);
             await Client.StartAsync();
 
+            await XurReminder();
+
             await Task.Delay(-1);
         }
 
@@ -74,8 +76,8 @@ namespace Neuromatrix
             Console.WriteLine($"[{DateTime.Now} в {logMessage.Source}] {logMessage.Message}");
             try
             {
-                SocketGuild Guild = Client.Guilds.Where(x => x.Id == StaticSettings.Log[0]).FirstOrDefault();
-                SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == StaticSettings.Log[1]).FirstOrDefault() as SocketTextChannel;
+                SocketGuild Guild = Client.Guilds.Where(x => x.Id == StaticSettings.Guild).First();
+                SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == StaticSettings.LogChannel).First() as SocketTextChannel;
                 await TextChannel.SendMessageAsync($"[{DateTime.Now} в {logMessage.Source}] {logMessage.Message}");
             }
             catch

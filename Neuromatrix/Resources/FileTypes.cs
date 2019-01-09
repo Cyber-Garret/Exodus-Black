@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 
-namespace Neuromatrix.Resources.Datatypes
+namespace Neuromatrix.Resources
 {
     public class Settings
     {
         public string token { get; set; }
         public ulong owner { get; set; }
-        public List<ulong> log { get; set; }
+        public ulong guild { get; set; }
+        public ulong logchannel { get; set; }
+        public ulong xurchannel { get; set; }
         public string version { get; set; }
         public List<ulong> banned { get; set; }
     }

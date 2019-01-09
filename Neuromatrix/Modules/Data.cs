@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 using Discord;
 
-using Neuromatrix.Resources.Datatypes;
+using Neuromatrix.Resources;
 
-namespace Neuromatrix.Core.Data
+namespace Neuromatrix.Modules
 {
     public static class Data
     {
