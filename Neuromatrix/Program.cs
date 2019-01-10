@@ -96,7 +96,11 @@ namespace Neuromatrix
             var Message = MessageParams as SocketUserMessage;
             var Context = new SocketCommandContext(Client, Message);
 
+            //Ignore private message.
+            if (Message.Channel is SocketDMChannel) return;
+            //Ignore if message null or empty content.
             if (Context.Message == null || Context.Message.Content == "") return;
+            //Ignore message from bot.
             if (Context.User.IsBot) return;
 
             int ArgPos = 0;
