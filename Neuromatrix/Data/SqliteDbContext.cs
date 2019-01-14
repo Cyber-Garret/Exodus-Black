@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
-namespace Neuromatrix.Resources.Database
+using Neuromatrix.Models.Db;
+
+namespace Neuromatrix.Data
 {
     public class SqliteDbContext : DbContext
     {
@@ -10,7 +12,7 @@ namespace Neuromatrix.Resources.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder Options)
         {
-            string DbLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"/Data/Neuromatrix.db";
+            string DbLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"/UserData/Neuromatrix.db";
             Options.UseSqlite($"DataSource={DbLocation}");
         }
     }

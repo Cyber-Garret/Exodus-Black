@@ -43,7 +43,8 @@ namespace Neuromatrix.Services
         public async Task OnMessageReceivedAsync(SocketMessage arg)
         {
             if (!(arg is SocketUserMessage msg)) return;
-            if (msg.Author.IsBot) return;
+            if (msg.Author.IsBot) return; // Игнорируем вызов команд от других ботов.
+            if (msg.Channel is SocketDMChannel) return; // Игнорируем вызов команд в личных сообщениях боту.
 
             int argPos = 0;
             if (!(msg.HasMentionPrefix(_discord.CurrentUser, ref argPos)
@@ -52,26 +53,6 @@ namespace Neuromatrix.Services
             var context = new SocketCommandContext(_discord, msg);
             await _commands.ExecuteAsync(context, argPos, _services);
         }
-
-        //private async Task Client_MessageReceived(SocketMessage MessageParams)
-        //{
-        //    var Message = MessageParams as SocketUserMessage;
-        //    var Context = new SocketCommandContext(Client, Message);
-
-        //    //Ignore private message.
-        //    if (Message.Channel is SocketDMChannel) return;
-        //    //Ignore if message null or empty content.
-        //    if (Context.Message == null || Context.Message.Content == "") return;
-        //    //Ignore message from bot.
-        //    if (Context.User.IsBot) return;
-
-        //    int ArgPos = 0;
-        //    if (!(Message.HasStringPrefix("!", ref ArgPos) || Message.HasMentionPrefix(Client.CurrentUser, ref ArgPos))) return;
-
-        //    var Result = await Command.ExecuteAsync(Context, ArgPos);
-        //    if (!Result.IsSuccess)
-        //        Console.WriteLine($"[{DateTime.Now} in command ] Sometimes went wrong with commands. Text: {Context.Message.Content} | Error: {Result.ErrorReason}");
-        //}
 
         public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
@@ -88,7 +69,7 @@ namespace Neuromatrix.Services
                     _rateLimitService.GetOrAdd(rule, BogusFactory).Increment();
                 }
             }
-            var log = new LogMessage(LogSeverity.Info, "chs", $"{context.User} invoked {command.Value.Name} in {context.Channel} with {result}");
+            var log = new LogMessage(LogSeverity.Info, "chs", $"{context.User} invoked command {command.Value.Name} in channel {context.Channel} with result {result}");
             await _log.LogAsync(log);
         }
         private RateLimitInfo BogusFactory(string _)

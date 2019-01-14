@@ -1,19 +1,11 @@
 ﻿using System;
-using System.IO;
-using System.Xml;
-using System.Text;
 using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
 
-using Discord;
+using Neuromatrix.Models.Db;
 
-using Neuromatrix.Resources;
-using Neuromatrix.Resources.Database;
-
-namespace Neuromatrix.Modules
+namespace Neuromatrix.Data
 {
-    public static class Data
+    public static class Database
     {
         public static Gear GetGears(string ItemName)
         {
@@ -24,15 +16,17 @@ namespace Neuromatrix.Modules
                     Gear gear = DbContext.Gears.Where(g => g.Name.IndexOf(ItemName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
                     if (gear == null)
                         return null;
-                    return gear;
+                    else
+                        return gear;
                 }
                 catch (Exception ex)
                 {
 
-                    Console.WriteLine($"[{DateTime.Now} в {ex.Source}] {ex.Message}");
+                    Console.WriteLine($"[{DateTime.Now} Source: {ex.Source}] Message: {ex.Message}");
                     return null;
                 }
             }
         }
+
     }
 }

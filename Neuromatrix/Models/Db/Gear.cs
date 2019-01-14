@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Neuromatrix.Resources.Database
+namespace Neuromatrix.Models.Db
 {
     public class Gear
     {

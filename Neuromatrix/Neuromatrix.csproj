@@ -10,17 +10,13 @@
     <None Remove="Data\config.tml" />
     <None Remove="Data\Database.db" />
     <None Remove="Data\Neuromatrix.db" />
-    <None Remove="Data\Settings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\config.tml">
+    <Content Include="UserData\config.tml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Neuromatrix.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Settings.json">
+    <Content Include="UserData\Neuromatrix.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

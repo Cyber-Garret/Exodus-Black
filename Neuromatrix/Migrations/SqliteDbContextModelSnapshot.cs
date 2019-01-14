@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Neuromatrix.Resources.Database;
+using Neuromatrix.Data;
 
 namespace Neuromatrix.Migrations
 {

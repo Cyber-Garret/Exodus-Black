@@ -1,21 +1,16 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 
-using Neuromatrix.Resources.Database;
-using Neuromatrix.Modules;
-using Neuromatrix.Resources;
-using Microsoft.Extensions.DependencyInjection;
+using Neuromatrix.Data;
+using Neuromatrix.Models;
+using Neuromatrix.Models.Db;
 
 namespace Neuromatrix.Modules.Commands
 {
-    public class ExoticGear : ModuleBase<SocketCommandContext>
+    public class ExoticModule : NeiraModuleBase
     {
-        ServiceProvider service { get; set; }
 
         [Command("инфо")]
         public async Task GearInfo([Remainder]string Input = null)
@@ -40,7 +35,7 @@ namespace Neuromatrix.Modules.Commands
                 return Input;
             }
             //Запрашиваем информацию из локальной бд.
-            Gear gear = Data.GetGears(Alias());
+            Gear gear = Database.GetGears(Alias());
             //Если бд вернула null сообщаем пользователю что ничего не нашли.
             if (gear == null)
             {
@@ -78,7 +73,8 @@ namespace Neuromatrix.Modules.Commands
             embed.AddField("Как получить:", gear.DropLocation,true);
             //Скриншот снаряжения.
             embed.WithImageUrl(gear.ImageUrl);
-            var owner = Context.Guild.GetUser(service.GetRequiredService<Settings>().Owner);
+
+            var owner = Context.Guild.GetUser(Configuration.Owner);
             embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {owner.Username}", owner.GetAvatarUrl());
 
 

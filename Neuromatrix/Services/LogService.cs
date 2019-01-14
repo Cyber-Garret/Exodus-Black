@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
-using Neuromatrix.Resources;
+
+using Neuromatrix.Models;
 
 namespace Neuromatrix.Services
 {
@@ -29,7 +29,6 @@ namespace Neuromatrix.Services
 
     public class LogService
     {
-        ServiceProvider service { get; set; }
 
         private readonly CommandService _commands;
         private readonly DiscordSocketClient _discord;
@@ -49,13 +48,6 @@ namespace Neuromatrix.Services
         public Task LogAsync(LogMessage message)
         {
             Console.WriteLine($"[{DateTime.Now} Source: {message.Source}] Message: {message.Message}");
-            try
-            {
-                SocketGuild Guild = _discord.Guilds.Where(x => x.Id == service.GetRequiredService<Settings>().Guild).First();
-                SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == service.GetRequiredService<Settings>().LogChannel).First() as SocketTextChannel;
-                TextChannel.SendMessageAsync($"[{DateTime.Now} Источник: {message.Source}] Сообщение: {message.Message}");
-            }
-            catch { }
             return Task.CompletedTask;
         }
     }

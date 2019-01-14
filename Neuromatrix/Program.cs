@@ -10,7 +10,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neuromatrix.Resources;
+using Neuromatrix.Models;
 using Neuromatrix.Services;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +43,11 @@ namespace Neuromatrix
 
         private async Task MainAsync()
         {
+            Console.Title = $"Neuromatrix (Discord.Net v{DiscordConfig.Version})";
+
+            _services.GetRequiredService<ConfigurationService>().Configure();
             _services.GetRequiredService<LogService>().Configure();
+            _services.GetRequiredService<ReminderService>().Configure();
             await _services.GetRequiredService<CommandHandlingService>().ConfigureAsync();
 
             var token = _services.GetRequiredService<Settings>().Token;
@@ -52,12 +56,10 @@ namespace Neuromatrix
             await discord.LoginAsync(TokenType.Bot, token);
             await discord.StartAsync();
 
-            Console.Title = $"Neuromatrix (Discord.Net v{DiscordConfig.Version})";
-
             try
             {
-                await Task.Delay(-1, _exitTokenSource.Token);
                 await discord.SetGameAsync("Destiny 2", null, ActivityType.Watching);
+                await Task.Delay(-1, _exitTokenSource.Token);
             }
             // we expect this to throw when exiting.
             catch (TaskCanceledException) { }
@@ -69,13 +71,15 @@ namespace Neuromatrix
         public ServiceProvider BuildServices()
         {
             return new ServiceCollection()
-                .AddSingleton(_ => Toml.ReadFile<Settings>("./Data/config.tml"))
+                .AddSingleton(_ => Toml.ReadFile<Settings>("./UserData/config.tml"))
                 .AddSingleton(_exitTokenSource)
+                .AddSingleton<ConfigurationService>()
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<LogService>()
                 .AddSingleton<RateLimitService>()
+                .AddSingleton<ReminderService>()
                 .BuildServiceProvider();
         }
 

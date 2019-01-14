@@ -8,7 +8,7 @@ using Discord.Commands;
 
 namespace Neuromatrix.Modules.Commands
 {
-    public class Xur : ModuleBase<SocketCommandContext>
+    public class XurModule : NeiraModuleBase
     {
         #region Global fields
         DateTime today = DateTime.Now;
