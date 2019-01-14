@@ -9,17 +9,19 @@ using System.Collections.Specialized;
 using Discord;
 using Discord.Commands;
 using Neuromatrix.Resources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Neuromatrix.Modules.Commands
 {
     [Group("справка"), Summary("Справочная команда.")]
     public class Help : ModuleBase<SocketCommandContext>
     {
+        ServiceProvider services { get; set; }
 
         [Command("")]
         public async Task MainHelp()
         {
-            string description = $"Доброго времени суток.\n Я Нейроматрица версии {StaticSettings.Version}.\n" +
+            string description = $"Доброго времени суток.\n Я Нейроматрица версии {services.GetRequiredService<Settings>().Version}.\n" +
                 "Моя основная цель быстро помочь вам и дать информацию о том что есть в моей базе данных.\n" +
                 "Чтобы я знала чем именно вам помочь вы можете более конкретно задать мне команду.\n" +
                 "В данный момент в моей базе данных зарегистрированны такие команды:\n**!справка кинетическое**\n**!справка энергетическое**\n**!справка силовое**\n**!зур**\n";

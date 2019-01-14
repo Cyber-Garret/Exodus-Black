@@ -9,11 +9,14 @@ using Discord.Commands;
 using Neuromatrix.Resources.Database;
 using Neuromatrix.Modules;
 using Neuromatrix.Resources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Neuromatrix.Modules.Commands
 {
     public class ExoticGear : ModuleBase<SocketCommandContext>
     {
+        ServiceProvider service { get; set; }
+
         [Command("инфо")]
         public async Task GearInfo([Remainder]string Input = null)
         {
@@ -68,14 +71,14 @@ namespace Neuromatrix.Modules.Commands
                 embed.AddField("Катализатор:", "Отсутствует");
             }
             //Экзотическое свойство.
-            embed.AddInlineField(gear.PerkName, gear.PerkDescription);
+            embed.AddField(gear.PerkName, gear.PerkDescription,true);
             //Второе уникальное или не очень свойство.
-            embed.AddInlineField(gear.SecondPerkName, gear.SecondPerkDescription);
+            embed.AddField(gear.SecondPerkName, gear.SecondPerkDescription,true);
             //Информация о том как получить снаряжение.
-            embed.AddInlineField("Как получить:", gear.DropLocation);
+            embed.AddField("Как получить:", gear.DropLocation,true);
             //Скриншот снаряжения.
             embed.WithImageUrl(gear.ImageUrl);
-            var owner = Context.Guild.GetUser(StaticSettings.Owner);
+            var owner = Context.Guild.GetUser(service.GetRequiredService<Settings>().Owner);
             embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {owner.Username}", owner.GetAvatarUrl());
 
 

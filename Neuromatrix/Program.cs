@@ -11,104 +11,79 @@ using Discord.Commands;
 using Discord.WebSocket;
 
 using Neuromatrix.Resources;
+using Neuromatrix.Services;
+using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using Nett;
 
 namespace Neuromatrix
 {
-    partial class Program
+    public class Program : IDisposable
     {
-        private DiscordSocketClient Client;
-        private CommandService Command;
+        public static void Main(string[] args)
+        {
+            using (var program = new Program())
+                program.MainAsync().GetAwaiter().GetResult();
+        }
 
-        static void Main(string[] args)
-        => new Program().MainAsync().GetAwaiter().GetResult();
+        private readonly CancellationTokenSource _exitTokenSource;
+        private readonly ServiceProvider _services;
+
+        public Program()
+        {
+            _exitTokenSource = new CancellationTokenSource();
+            _services = BuildServices();
+
+            Console.CancelKeyPress += (_s, e) =>
+            {
+                e.Cancel = true;
+                _exitTokenSource.Cancel();
+            };
+        }
 
         private async Task MainAsync()
         {
-            string JSON = "";
-            string SettingsLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"/Data/Settings.json";
-            if (!File.Exists(SettingsLocation))
-            {
-                Console.WriteLine($"Not found file {SettingsLocation}");
-                Console.ReadLine();
-                return;
-            }
-            using (var Stream = new FileStream(SettingsLocation, FileMode.Open, FileAccess.Read))
-            using (var ReadSettings = new StreamReader(Stream))
-            {
-                JSON = ReadSettings.ReadToEnd();
-            }
+            _services.GetRequiredService<LogService>().Configure();
+            await _services.GetRequiredService<CommandHandlingService>().ConfigureAsync();
 
-            Settings Settings = JsonConvert.DeserializeObject<Settings>(JSON);
-            StaticSettings.Token = Settings.token;
-            StaticSettings.Owner = Settings.owner;
-            StaticSettings.Guild = Settings.guild;
-            StaticSettings.LogChannel = Settings.logchannel;
-            StaticSettings.XurChannel = Settings.xurchannel;
-            StaticSettings.Version = Settings.version;
+            var token = _services.GetRequiredService<Settings>().Token;
+            var discord = _services.GetRequiredService<DiscordSocketClient>();
 
-            Client = new DiscordSocketClient(new DiscordSocketConfig
-            {
-                LogLevel = LogSeverity.Info
-            });
-            Command = new CommandService(new CommandServiceConfig
-            {
-                CaseSensitiveCommands = false,
-                DefaultRunMode = RunMode.Async,
-                LogLevel = LogSeverity.Debug
-            });
+            await discord.LoginAsync(TokenType.Bot, token);
+            await discord.StartAsync();
 
-            Client.MessageReceived += Client_MessageReceived;
-            await Command.AddModulesAsync(Assembly.GetEntryAssembly());
+            Console.Title = $"Neuromatrix (Discord.Net v{DiscordConfig.Version})";
 
-            Client.Ready += Client_Ready;
-            Client.Log += Client_Log;
-
-            await Client.LoginAsync(TokenType.Bot, StaticSettings.Token);
-            await Client.StartAsync();
-
-            await XurReminder();
-
-            await Task.Delay(-1);
-        }
-
-        private async Task Client_Log(LogMessage logMessage)
-        {
-            Console.WriteLine($"[{DateTime.Now} в {logMessage.Source}] {logMessage.Message}");
             try
             {
-                SocketGuild Guild = Client.Guilds.Where(x => x.Id == StaticSettings.Guild).First();
-                SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == StaticSettings.LogChannel).First() as SocketTextChannel;
-                await TextChannel.SendMessageAsync($"[{DateTime.Now} в {logMessage.Source}] {logMessage.Message}");
+                await Task.Delay(-1, _exitTokenSource.Token);
+                await discord.SetGameAsync("Destiny 2", null, ActivityType.Watching);
             }
-            catch
-            {
-                //Console.WriteLine($"[{DateTime.Now} at Logs] Something went wrong with SocketGuild or SocketTextChannel. Message: {ex.Message}");
-            }
+            // we expect this to throw when exiting.
+            catch (TaskCanceledException) { }
+
+            await discord.StopAsync();
+            Environment.Exit(0);
         }
 
-        private async Task Client_Ready()
+        public ServiceProvider BuildServices()
         {
-            await Client.SetGameAsync("Destiny 2", null, StreamType.NotStreaming);
+            return new ServiceCollection()
+                .AddSingleton(_ => Toml.ReadFile<Settings>("./Data/config.tml"))
+                .AddSingleton(_exitTokenSource)
+                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton<CommandService>()
+                .AddSingleton<CommandHandlingService>()
+                .AddSingleton<LogService>()
+                .AddSingleton<RateLimitService>()
+                .BuildServiceProvider();
         }
 
-        private async Task Client_MessageReceived(SocketMessage MessageParams)
+        public void Dispose()
         {
-            var Message = MessageParams as SocketUserMessage;
-            var Context = new SocketCommandContext(Client, Message);
-
-            //Ignore private message.
-            if (Message.Channel is SocketDMChannel) return;
-            //Ignore if message null or empty content.
-            if (Context.Message == null || Context.Message.Content == "") return;
-            //Ignore message from bot.
-            if (Context.User.IsBot) return;
-
-            int ArgPos = 0;
-            if (!(Message.HasStringPrefix("!", ref ArgPos) || Message.HasMentionPrefix(Client.CurrentUser, ref ArgPos))) return;
-
-            var Result = await Command.ExecuteAsync(Context, ArgPos);
-            if (!Result.IsSuccess)
-                Console.WriteLine($"[{DateTime.Now} in command ] Sometimes went wrong with commands. Text: {Context.Message.Content} | Error: {Result.ErrorReason}");
+            _exitTokenSource.Dispose();
+            _services.Dispose();
         }
+
     }
 }

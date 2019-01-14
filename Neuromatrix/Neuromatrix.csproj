@@ -3,15 +3,20 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <StartupObject>Neuromatrix.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\config.tml" />
     <None Remove="Data\Database.db" />
     <None Remove="Data\Neuromatrix.db" />
     <None Remove="Data\Settings.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Data\config.tml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\Neuromatrix.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -21,7 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="1.0.2" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.0.1" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
@@ -29,6 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Nett" Version="0.10.1" />
   </ItemGroup>
 
 </Project>
