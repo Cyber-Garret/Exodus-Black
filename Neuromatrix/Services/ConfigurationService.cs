@@ -7,7 +7,9 @@ namespace Neuromatrix.Services
 {
     public class ConfigurationService
     {
+        #region Private fields
         private readonly IServiceProvider _services;
+        #endregion
 
         public ConfigurationService(IServiceProvider services)
         {
@@ -16,11 +18,11 @@ namespace Neuromatrix.Services
 
         public void Configure()
         {
-            Configuration.Token = _services.GetRequiredService<Settings>().Token;
-            Configuration.Owner = _services.GetRequiredService<Settings>().Owner;
-            Configuration.Guild = _services.GetRequiredService<Settings>().Guild;
-            Configuration.XurChannel = _services.GetRequiredService<Settings>().XurChannel;
-            Configuration.Version = _services.GetRequiredService<Settings>().Version;
+            Settings.Token = _services.GetRequiredService<Configuration>().Token;
+            Settings.Owner = _services.GetRequiredService<Configuration>().Owner;
+            Settings.Guild = _services.GetRequiredService<Configuration>().Guild;
+            Settings.XurChannel = _services.GetRequiredService<Configuration>().XurChannel;
+            Settings.Version = _services.GetRequiredService<Configuration>().Version;
         }
     }
 }

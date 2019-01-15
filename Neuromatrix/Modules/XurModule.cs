@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using Discord;
 using Discord.Commands;
 
 namespace Neuromatrix.Modules.Commands
 {
-    public class XurModule : NeiraModuleBase
+    public class XurModule : BotModuleBase
     {
         #region Global fields
         DateTime today = DateTime.Now;
@@ -18,7 +16,7 @@ namespace Neuromatrix.Modules.Commands
         DateTime tuesdayEndCheck = new DateTime();
         #endregion
 
-        [Command("xur"), Alias("зур"), Summary("Информационная комманда о посланнике девяти по имени Зур")]
+        [Command("зур"), Summary("Информационная комманда о посланнике девяти по имени Зур")]
         public async Task XurCommand()
         {
 
@@ -63,18 +61,19 @@ namespace Neuromatrix.Modules.Commands
             if (today >= fridayStartCheck && today <= tuesdayEndCheck)
             {
                 EmbedBuilder Embed = new EmbedBuilder()
-                    .WithColor(251, 227, 103)
+                    .WithColor(Color.Gold)
                     .WithTitle($"Уважаемый пользователь {Context.User}")
                     .WithDescription("По моим данным Зур в данный момент в пределах солнечной системы, но\n" +
                     "так как мои алгоритмы глобального позиционирования пока еще в разработке, определить точное положение я не могу.\n" +
-                    "[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)")
+                    "[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)\n" +
+                    "[Или тут](https://ftw.in/game/destiny-2/find-xur)")
                     .WithFooter("Напоминаю! Зур покинет пределы солнечной системы во вторник 20:00 по МСК.");
                 await Context.Channel.SendMessageAsync("", false, Embed.Build());
             }
             else
             {
                 EmbedBuilder Embed = new EmbedBuilder()
-                    .WithColor(219, 66, 55)
+                    .WithColor(Color.Red)
                     .WithDescription("По моим данным Зур не в пределах солнечной системы.")
                     .WithFooter("Зур прибудет в пятницу 20:00 по МСК. Я сообщу.");
                 await Context.Channel.SendMessageAsync("", false, Embed.Build());

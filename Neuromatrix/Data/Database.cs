@@ -21,7 +21,6 @@ namespace Neuromatrix.Data
                 }
                 catch (Exception ex)
                 {
-
                     Console.WriteLine($"[{DateTime.Now} Source: {ex.Source}] Message: {ex.Message}");
                     return null;
                 }

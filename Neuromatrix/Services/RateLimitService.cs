@@ -1,15 +1,17 @@
-﻿using Discord;
-using Discord.Commands;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Collections.Concurrent;
+
+using Discord;
+using Discord.Commands;
 
 namespace Neuromatrix.Services
 {
     public class RateLimitService
     {
+        #region Private fields
         private ConcurrentDictionary<string, RateLimitInfo> _ratelimits;
+        #endregion
 
         public RateLimitService()
         {
@@ -38,9 +40,11 @@ namespace Neuromatrix.Services
 
     public class RateLimitInfo
     {
+        #region Public fields
         public uint Capacity { get; private set; }
         public TimeSpan DrainRate { get; private set; }
         public HashSet<DateTimeOffset> Entries { get; private set; }
+        #endregion
 
         public RateLimitInfo(uint capacity, TimeSpan drainRate)
         {

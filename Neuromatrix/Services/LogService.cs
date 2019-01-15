@@ -1,37 +1,38 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neuromatrix.Models;
-
 namespace Neuromatrix.Services
 {
     public struct Logger
     {
-        private readonly string source;
-        private readonly LogService log;
+        #region Private fields
+        private readonly string _source;
+        private readonly LogService _log;
+        #endregion
 
         public Logger(string source, LogService log)
         {
-            this.source = source;
-            this.log = log;
+            _source = source;
+            _log = log;
         }
 
         public Task InfoAsync(string message)
-            => log.LogAsync(new LogMessage(LogSeverity.Info, source, message));
+            => _log.LogAsync(new LogMessage(LogSeverity.Info, _source, message));
+
         public Task WarnAsync(string message, Exception ex = null)
-            => log.LogAsync(new LogMessage(LogSeverity.Warning, source, message, ex));
+            => _log.LogAsync(new LogMessage(LogSeverity.Warning, _source, message, ex));
     }
 
     public class LogService
     {
-
+        #region Private fields
         private readonly CommandService _commands;
         private readonly DiscordSocketClient _discord;
+        #endregion
 
         public LogService(CommandService commands, DiscordSocketClient discord)
         {

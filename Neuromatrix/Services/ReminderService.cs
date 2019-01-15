@@ -1,11 +1,10 @@
-﻿using Discord;
-using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
+using System.Threading.Tasks;
+
+using Discord;
+using Discord.WebSocket;
 
 using Neuromatrix.Models;
 
@@ -13,21 +12,20 @@ namespace Neuromatrix.Services
 {
     public class ReminderService
     {
-        private readonly IServiceProvider _services;
+        #region Private fields
         private readonly DiscordSocketClient _discord;
         private Timer _timer;
+        #endregion
 
-        public ReminderService(DiscordSocketClient discord, IServiceProvider services)
+        public ReminderService(DiscordSocketClient discord)
         {
             _discord = discord;
-            _services = services;
         }
 
         public void Configure()
         {
-            // Создаем таймер с интервалом в 10 секунд.
+            // Initialize timer for 10 sec.
             _timer = new Timer(10000);
-            // Привязываем Elapsed event к таймеру. 
             _timer.Elapsed += OnTimedEventAsync;
             _timer.AutoReset = true;
             _timer.Enabled = true;
@@ -35,21 +33,21 @@ namespace Neuromatrix.Services
 
         private async void OnTimedEventAsync(object sender, ElapsedEventArgs e)
         {
-            // Если пятница 20:00 отправляем сообщение что Зур пришёл. DateTime.Now.Second < 10 помогает вызвать 1 раз, а не каждые 10 секунд в течении минуты.
+            // If signal time equal Friday 20:00 we will send message Xur is arrived in game.
             if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
                 await XurArrived();
-            // Если вторник 20:00 отправляем сообщение что Зур ушёл. DateTime.Now.Second < 10 помогает вызвать 1 раз, а не каждые 10 секунд в течении минуты.
+            // If signal time equal Tuesday 20:00 we will send message Xur is leave game.
             if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
                 await XurLeave();
         }
 
         private async Task XurArrived()
         {
-            SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Configuration.Guild).First();
-            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Configuration.XurChannel).First() as SocketTextChannel;
+            SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Settings.Guild).First();
+            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Settings.XurChannel).First() as SocketTextChannel;
 
             EmbedBuilder embed = new EmbedBuilder()
-                .WithColor(251, 227, 103)
+                .WithColor(Color.Gold)
                 .WithTitle("Стражи! Зур прибыл в солнечную систему!")
                 .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
                 .WithDescription("Нажмите на заголовок сообщения чтобы узнать точное местоположение посланника Зура.")
@@ -61,11 +59,11 @@ namespace Neuromatrix.Services
         }
         private async Task XurLeave()
         {
-            SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Configuration.Guild).First();
-            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Configuration.XurChannel).First() as SocketTextChannel;
+            SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Settings.Guild).First();
+            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Settings.XurChannel).First() as SocketTextChannel;
 
             EmbedBuilder embed = new EmbedBuilder()
-               .WithColor(219, 66, 55)
+               .WithColor(Color.Red)
                .WithTitle("Внимание! Зур покинул солнечную систему!")
                .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
                .WithDescription("Он просто испарился! Как только он прийдет я сообщу.")

@@ -1,12 +1,12 @@
 ﻿namespace Neuromatrix.Models
 {
-    public static class Configuration
+    public class Configuration
     {
-        public static string Token;
-        public static ulong Owner;
-        public static ulong Guild;
-        public static ulong XurChannel;
-        public static string Version;
-        public static string DbLocation;
+        public string Token { get; set; }
+        public ulong Owner { get; set; }
+        public ulong Guild { get; set; }
+        public ulong XurChannel { get; set; }
+        public string Version { get; set; }
+        public string DbLocation { get; set; }
     }
 }

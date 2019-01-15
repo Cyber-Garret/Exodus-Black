@@ -1,11 +1,10 @@
-﻿using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+
+using Discord.Commands;
 
 using Neuromatrix.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Neuromatrix.Preconditions
 {

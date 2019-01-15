@@ -6,23 +6,30 @@ using Neuromatrix.Models;
 
 namespace Neuromatrix.Modules.Commands
 {
-    [Group("справка"), Summary("Справочная группа команд.")]
-    public class HelpModule : NeiraModuleBase
+    public class HelpModule : BotModuleBase
     {
-
-        [Command("")]
-        public async Task MainHelp(Optional<CommandInfo> command)
+        [Command("справка")]
+        [Summary("Основная справочная команда.")]
+        public async Task MainHelp()
         {
-            string description = $"Доброго времени суток.\n Я Нейроматрица версии {Configuration.Version}.\n" +
-                "Моя основная цель быстро помочь вам и дать информацию о том что есть в моей базе данных.\n" +
-                "Чтобы я знала чем именно вам помочь вы можете более конкретно задать мне команду.\n" +
-                "В данный момент в моей базе данных зарегистрированны такие команды:\n**!справка кинетическое**\n**!справка энергетическое**\n**!справка силовое**\n**!зур**\n";
-            EmbedBuilder embed = new EmbedBuilder()
-                .WithColor(251, 227, 103)
-                .WithDescription(description)
-                .WithFooter("Для продолжения диалога введите одну из команд представленых выше.");
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.WithColor(Color.Gold);
+            embedBuilder.WithDescription(
+                $"Доброго времени суток. Я Нейроматрица версии {Settings.Version}.\n" +
+                "Моя основная цель своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
+                "Так же я могу предоставить информацию о экзотическом вооружении.\n" +
+                "В текущий момент в моей базе данных зарегистрированны такие команды:");
+            embedBuilder.AddField(
+                "Команда: **!инфо [название снаряжения]**",
+                "Эта команда несет полную информацию о экзотическом вооружении представленном в игре.\n" +
+                "Синтаксис довольно простой, можно искать как по полному названию так и частичному.\n" +
+                "Например: **!инфо дело** предоставит информацию об автомате Милое Дело.");
+            embedBuilder.AddField(
+                "Команда: **!зур**",
+                "Команда отображает находится ли в данный момент Зур в игре или нет.");
+            embedBuilder.WithFooter("Для дальнейшей работы введите одну из команд представленых выше.");
 
-            await Context.Channel.SendMessageAsync("", false, embed.Build());
+            await Context.Channel.SendMessageAsync("", false, embedBuilder.Build());
         }
     }
 }

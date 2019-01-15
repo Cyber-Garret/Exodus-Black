@@ -9,7 +9,7 @@ using Neuromatrix.Models.Db;
 
 namespace Neuromatrix.Modules.Commands
 {
-    public class ExoticModule : NeiraModuleBase
+    public class ExoticModule : BotModuleBase
     {
 
         [Command("инфо")]
@@ -46,7 +46,7 @@ namespace Neuromatrix.Modules.Commands
 
             EmbedBuilder embed = new EmbedBuilder();
 
-            embed.WithColor(206, 174, 51);
+            embed.WithColor(Color.Gold);
             //Тип снаряжение и его имя.
             embed.WithTitle(gear.Type + " - " + gear.Name);
             //Иконка снаряжения.
@@ -74,7 +74,7 @@ namespace Neuromatrix.Modules.Commands
             //Скриншот снаряжения.
             embed.WithImageUrl(gear.ImageUrl);
 
-            var owner = Context.Guild.GetUser(Configuration.Owner);
+            var owner = Context.Guild.GetUser(Settings.Owner);
             embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {owner.Username}", owner.GetAvatarUrl());
 
 

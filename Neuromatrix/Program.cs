@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
-using Newtonsoft.Json;
+using Nett;
 
 using Discord;
 using Discord.Commands;
@@ -12,22 +11,22 @@ using Discord.WebSocket;
 
 using Neuromatrix.Models;
 using Neuromatrix.Services;
-using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
-using Nett;
 
 namespace Neuromatrix
 {
     public class Program : IDisposable
     {
+
         public static void Main(string[] args)
         {
             using (var program = new Program())
                 program.MainAsync().GetAwaiter().GetResult();
         }
 
+        #region Private fields
         private readonly CancellationTokenSource _exitTokenSource;
         private readonly ServiceProvider _services;
+        #endregion
 
         public Program()
         {
@@ -45,12 +44,14 @@ namespace Neuromatrix
         {
             Console.Title = $"Neuromatrix (Discord.Net v{DiscordConfig.Version})";
 
+            #region Configure services
             _services.GetRequiredService<ConfigurationService>().Configure();
             _services.GetRequiredService<LogService>().Configure();
             _services.GetRequiredService<ReminderService>().Configure();
             await _services.GetRequiredService<CommandHandlingService>().ConfigureAsync();
+            #endregion
 
-            var token = _services.GetRequiredService<Settings>().Token;
+            var token = _services.GetRequiredService<Configuration>().Token;
             var discord = _services.GetRequiredService<DiscordSocketClient>();
 
             await discord.LoginAsync(TokenType.Bot, token);
@@ -71,7 +72,7 @@ namespace Neuromatrix
         public ServiceProvider BuildServices()
         {
             return new ServiceCollection()
-                .AddSingleton(_ => Toml.ReadFile<Settings>("./UserData/config.tml"))
+                .AddSingleton(_ => Toml.ReadFile<Configuration>("./UserData/config.tml"))
                 .AddSingleton(_exitTokenSource)
                 .AddSingleton<ConfigurationService>()
                 .AddSingleton<DiscordSocketClient>()
