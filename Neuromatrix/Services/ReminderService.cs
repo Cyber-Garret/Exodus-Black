@@ -64,9 +64,9 @@ namespace Neuromatrix.Services
 
             EmbedBuilder embed = new EmbedBuilder()
                .WithColor(Color.Red)
-               .WithTitle("Внимание! Зур покинул солнечную систему!")
+               .WithTitle("Внимание! Зур покинул солнечную систему.")
                .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
-               .WithDescription("Он просто испарился! Как только он прийдет я сообщу.")
+               .WithDescription("Он просто испарился! Как только он придёт я сообщу.")
                .WithFooter("Напоминаю! В следующий раз Зур прибудет в пятницу в 20:00 по МСК.");
 
             await TextChannel.SendMessageAsync("@everyone", false, embed.Build());
