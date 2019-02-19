@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ namespace Neuromatrix
 {
     public class Program : IDisposable
     {
+        private static string config_path;
 
         public static void Main(string[] args)
         {
@@ -30,6 +32,7 @@ namespace Neuromatrix
 
         public Program()
         {
+            config_path = Directory.GetCurrentDirectory() + "/UserData/config.tml";
             _exitTokenSource = new CancellationTokenSource();
             _services = BuildServices();
 
@@ -72,7 +75,7 @@ namespace Neuromatrix
         public ServiceProvider BuildServices()
         {
             return new ServiceCollection()
-                .AddSingleton(_ => Toml.ReadFile<Configuration>("./UserData/config.tml"))
+                .AddSingleton(_ => Toml.ReadFile<Configuration>(config_path))
                 .AddSingleton(_exitTokenSource)
                 .AddSingleton<ConfigurationService>()
                 .AddSingleton<DiscordSocketClient>()
