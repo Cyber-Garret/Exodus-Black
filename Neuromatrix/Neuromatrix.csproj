@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190311214009_Neuromatrix.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Data\config.tml" />
     <None Remove="Data\Database.db" />
     <None Remove="Data\Neuromatrix.db" />
@@ -16,7 +20,7 @@
     <Content Include="UserData\config.tml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="UserData\Neuromatrix.db">
+    <Content Include="Neuromatrix.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -32,7 +36,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Nett" Version="0.10.1" />
+    <PackageReference Include="Nett" Version="0.11.0" />
   </ItemGroup>
 
 </Project>

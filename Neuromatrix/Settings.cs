@@ -1,4 +1,4 @@
-﻿namespace Neuromatrix.Models
+﻿namespace Neuromatrix
 {
     public static class Settings
     {
