@@ -2,7 +2,7 @@
 
 using Discord;
 using Discord.Commands;
-using Neuromatrix.Models;
+using Neuromatrix.Preconditions;
 
 namespace Neuromatrix.Modules.Commands
 {
@@ -10,6 +10,7 @@ namespace Neuromatrix.Modules.Commands
     {
         [Command("справка")]
         [Summary("Основная справочная команда.")]
+        [Cooldown(10)]
         public async Task MainHelp()
         {
             EmbedBuilder embedBuilder = new EmbedBuilder();

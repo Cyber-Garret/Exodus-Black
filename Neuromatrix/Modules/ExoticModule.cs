@@ -4,8 +4,8 @@ using Discord;
 using Discord.Commands;
 
 using Neuromatrix.Data;
-using Neuromatrix.Models;
 using Neuromatrix.Models.Db;
+using Neuromatrix.Preconditions;
 
 namespace Neuromatrix.Modules.Commands
 {
@@ -13,6 +13,7 @@ namespace Neuromatrix.Modules.Commands
     {
 
         [Command("инфо")]
+        [Cooldown(10)]
         public async Task GearInfo([Remainder]string Input = null)
         {
             #region Checks

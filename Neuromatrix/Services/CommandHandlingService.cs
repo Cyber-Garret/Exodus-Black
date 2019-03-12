@@ -21,11 +21,7 @@ namespace Neuromatrix.Services
         private readonly IServiceProvider _services;
         #endregion
 
-        public CommandHandlingService(CommandService commands,
-            DiscordSocketClient discord,
-            LogService log,
-            RateLimitService rateLimit,
-            IServiceProvider services)
+        public CommandHandlingService(CommandService commands, DiscordSocketClient discord, LogService log, RateLimitService rateLimit, IServiceProvider services)
         {
             _commands = commands;
             _discord = discord;
@@ -44,13 +40,14 @@ namespace Neuromatrix.Services
 
         public async Task OnMessageReceivedAsync(SocketMessage arg)
         {
-            if (!(arg is SocketUserMessage msg)) return;
-            if (msg.Author.IsBot) return; // Ignore message from other bot
-            //if (msg.Channel is SocketDMChannel) return; // Ignore PM messages.
+            #region Checks
+            if (!(arg is SocketUserMessage msg)) return; // Only SocketUserMessage allow
+
+            if (arg.Author.Id == _discord.CurrentUser.Id) return; // Ignore self message
 
             int argPos = 0;
-            if (!(msg.HasMentionPrefix(_discord.CurrentUser, ref argPos)
-                || msg.HasCharPrefix('!', ref argPos))) return;
+            if (!(msg.HasMentionPrefix(_discord.CurrentUser, ref argPos) || msg.HasCharPrefix('!', ref argPos))) return;
+            #endregion
 
             var context = new SocketCommandContext(_discord, msg);
             await _commands.ExecuteAsync(context, argPos, _services);

@@ -55,16 +55,22 @@ namespace Neuromatrix.Migrations
 
             modelBuilder.Entity("Neuromatrix.Models.Db.Guild", b =>
                 {
-                    b.Property<ulong>("GuildID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<ulong>("AdministratorChannel");
+                    b.Property<bool>("EnableLogging");
+
+                    b.Property<ulong>("GuildID");
+
+                    b.Property<string>("GuildName");
 
                     b.Property<ulong>("GuildOwnerId");
 
+                    b.Property<ulong>("LoggingChannel");
+
                     b.Property<ulong>("NotificationChannel");
 
-                    b.HasKey("GuildID");
+                    b.HasKey("ID");
 
                     b.ToTable("Guilds");
                 });

@@ -12,6 +12,7 @@ using Discord.WebSocket;
 
 using Neuromatrix.Models;
 using Neuromatrix.Services;
+using Neuromatrix.Modules.Administration;
 
 namespace Neuromatrix
 {
@@ -51,6 +52,7 @@ namespace Neuromatrix
             _services.GetRequiredService<ConfigurationService>().Configure();
             _services.GetRequiredService<LogService>().Configure();
             _services.GetRequiredService<ReminderService>().Configure();
+            _services.GetRequiredService<DiscordEventHandlerService>().Configure();
             await _services.GetRequiredService<CommandHandlingService>().ConfigureAsync();
             #endregion
 
@@ -83,7 +85,9 @@ namespace Neuromatrix
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<LogService>()
                 .AddSingleton<RateLimitService>()
+                .AddSingleton<DiscordEventHandlerService>()
                 .AddSingleton<ReminderService>()
+                .AddScoped<ServerActivityLogger>()
                 .BuildServiceProvider();
         }
 

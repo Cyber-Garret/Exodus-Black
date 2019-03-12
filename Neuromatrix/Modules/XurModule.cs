@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 
+using Neuromatrix.Preconditions;
+
 namespace Neuromatrix.Modules.Commands
 {
     public class XurModule : BotModuleBase
@@ -17,6 +19,7 @@ namespace Neuromatrix.Modules.Commands
         #endregion
 
         [Command("зур"), Summary("Информационная комманда о посланнике девяти по имени Зур")]
+        [Cooldown(10)]
         public async Task XurCommand()
         {
 

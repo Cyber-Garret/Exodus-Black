@@ -8,7 +8,9 @@ namespace Neuromatrix.Models.Db
     public class Guild
     {
         [Key]
-        public ulong ID { get; set; }
+        public int ID { get; set; }
+        public ulong GuildID { get; set; }
+        public string GuildName { get; set; }
         public ulong GuildOwnerId { get; set; }
         public ulong NotificationChannel { get; set; }
         public bool EnableLogging { get; set; }

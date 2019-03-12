@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <Compile Remove="Migrations\20190311214009_Neuromatrix.cs" />
+    <Compile Remove="Migrations\20190311214127_Administration.cs" />
+    <Compile Remove="Migrations\20190312110319_Administration.cs" />
+    <Compile Remove="Migrations\20190312111441_Admin.cs" />
   </ItemGroup>
 
   <ItemGroup>

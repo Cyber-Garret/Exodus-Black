@@ -1,22 +1,22 @@
-﻿using Discord;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
+
 using Neuromatrix.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Neuromatrix.Modules.Administration
 {
     public class ServerActivityLogger
     {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
-
+        #region Private Fields
         public readonly DiscordSocketClient _client;
         public readonly IServiceProvider _services;
+        #endregion
+
 
         public ServerActivityLogger(DiscordSocketClient client, IServiceProvider services)
         {
@@ -24,62 +24,7 @@ namespace Neuromatrix.Modules.Administration
             _services = services;
         }
 
-        public async Task Client_Connected()
-        {
-        }
-
-        public async Task Client_Disconnected(Exception arg)
-        {
-
-        }
-        public async Task ChannelDestroyed(IChannel arg)
-        {
-            try
-            {
-                var embed = new EmbedBuilder();
-                embed.WithColor(14, 243, 247);
-
-                if (arg is ITextChannel channel)
-                {
-                    var log = await channel.Guild.GetAuditLogsAsync(1);
-                    var audit = log.ToList();
-
-                    var name = audit[0].Action == ActionType.ChannelDeleted ? audit[0].User.Mention : "error";
-                    var auditLogData = audit[0].Data as ChannelDeleteAuditLogData;
-                    embed.AddField("🚫 Канал удален", $"Название канала: {arg.Name}\n" +
-                                                           $"Кто удалял: {name}\n" +
-                                                           $"Тип: {auditLogData?.ChannelType}\n" +
-                                                           $"NSFW: {channel.IsNsfw}\n" +
-                                                           $"Категория: {channel.GetCategoryAsync().Result.Name}\n" +
-                                                           $"ID: {arg.Id}\n");
-
-                    embed.WithTimestamp(DateTimeOffset.UtcNow);
-                    embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
-                }
-
-
-                if (arg is IGuildChannel currentIguildChannel)
-                {
-                    var guild = Database.GetGuildAccount(currentIguildChannel.Guild.Id);
-                    if (guild.EnableLogging == true)
-                    {
-                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
-                            .SendMessageAsync("", false, embed.Build());
-                    }
-                }
-            }
-            catch
-            {
-                //
-            }
-        }
-
-        public async Task Client_ChannelDestroyed(IChannel arg)
-        {
-            ChannelDestroyed(arg);
-            await Task.CompletedTask;
-        }
-
+        #region Methods
         public async Task ChannelCreated(IChannel arg)
         {
             try
@@ -93,13 +38,14 @@ namespace Neuromatrix.Modules.Administration
                 var auditLogData = audit[0].Data as ChannelCreateAuditLogData;
 
                 var embed = new EmbedBuilder();
-                embed.WithColor(14, 243, 247);
-                embed.AddField("📖 Канал создан", $"Название: {arg.Name}\n" +
-                                                     $"Кто создал: {name}\n" +
-                                                     $"Тип: {auditLogData?.ChannelType.ToString()}\n" +
-                                                     $"NSFW {channel.IsNsfw}\n" +
-                                                     $"Категория: {channel.GetCategoryAsync().Result.Name}\n" +
-                                                     $"ID: {arg.Id}\n");
+                embed.WithColor(Color.Orange);
+                embed.AddField("📖 Создан канал",
+                    $"Название: {arg.Name}\n" +
+                    $"Кто создал: {name}\n" +
+                    $"Тип канала: {auditLogData?.ChannelType.ToString()}\n" +
+                    $"NSFW {channel.IsNsfw}\n" +
+                    $"Категория: {channel.GetCategoryAsync().Result.Name}\n" +
+                    $"ID: {arg.Id}\n");
                 embed.WithTimestamp(DateTimeOffset.UtcNow);
                 embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
 
@@ -108,22 +54,58 @@ namespace Neuromatrix.Modules.Administration
                 var guild = Database.GetGuildAccount(currentIGuildChannel.Guild.Id);
                 if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
             catch
             {
-                //
+
             }
 
         }
 
-        public async Task Client_ChannelCreated(IChannel arg)
+        public async Task ChannelDestroyed(IChannel arg)
         {
-            ChannelCreated(arg);
-            await Task.CompletedTask;
+            try
+            {
+                var embed = new EmbedBuilder();
+                embed.WithColor(Color.Red);
 
+                if (arg is ITextChannel channel)
+                {
+                    var log = await channel.Guild.GetAuditLogsAsync(1);
+                    var audit = log.ToList();
+
+                    var name = audit[0].Action == ActionType.ChannelDeleted ? audit[0].User.Mention : "error";
+                    var auditLogData = audit[0].Data as ChannelDeleteAuditLogData;
+                    embed.AddField("❌ Удален канал",
+                        $"Название канала: {arg.Name}\n" +
+                        $"Кто удалял: {name}\n" +
+                        $"Тип: {auditLogData?.ChannelType}\n" +
+                        $"NSFW: {channel.IsNsfw}\n" +
+                        $"Категория: {channel.GetCategoryAsync().Result.Name}\n" +
+                        $"ID: {arg.Id}\n");
+
+                    embed.WithTimestamp(DateTimeOffset.UtcNow);
+                    embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
+                }
+
+
+                if (arg is IGuildChannel currentIguildChannel)
+                {
+                    var guild = Database.GetGuildAccount(currentIguildChannel.Guild.Id);
+                    if (guild.EnableLogging == true)
+                    {
+                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                            .SendMessageAsync("", false, embed.Build());
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         public async Task GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
@@ -136,6 +118,10 @@ namespace Neuromatrix.Modules.Administration
                 var guild = Database.GetGuildAccount(before.Guild.Id);
 
                 var embed = new EmbedBuilder();
+
+                embed.WithColor(Color.Orange);
+                embed.WithTimestamp(DateTimeOffset.UtcNow);
+
                 if (before.Nickname != after.Nickname)
                 {
                     var log = await before.Guild.GetAuditLogsAsync(1).FlattenAsync();
@@ -144,8 +130,6 @@ namespace Neuromatrix.Modules.Administration
 
                     var afterName = after.Nickname ?? after.Username;
 
-                    embed.WithColor(255, 255, 0);
-                    embed.WithTimestamp(DateTimeOffset.UtcNow);
                     embed.AddField("💢 Имя стража изменено:",
                         $"Страж: **{before.Username} {before.Id}**\n" +
                         $"Гильдия: **{before.Guild.Name}**\n" +
@@ -154,23 +138,21 @@ namespace Neuromatrix.Modules.Administration
                         $"Новое имя:\n" +
                         $"**{afterName}**");
                     if (audit[0].Action == ActionType.MemberUpdated)
-                        embed.AddField("Who:", $"{audit[0].User.Mention}\n");
+                        embed.AddField("Кем изменено:", $"{audit[0].User.Mention}\n");
                     embed.WithThumbnailUrl($"{after.GetAvatarUrl()}");
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
 
                 if (before.GetAvatarUrl() != after.GetAvatarUrl())
                 {
-                    embed.WithColor(255, 255, 0);
-                    embed.WithTimestamp(DateTimeOffset.UtcNow);
+
                     embed.AddField("💢 Портрет стража изменен:",
                         $"Страж: **{before.Username} {before.Id}**\n" +
-                        $"Гильдия: **{before.Guild.Name}**\n" +
                         $"Предыдущий портер:\n" +
                         $"**{before.GetAvatarUrl()}**\n" +
                         $"Новый портрет:\n" +
@@ -181,20 +163,17 @@ namespace Neuromatrix.Modules.Administration
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
 
                 if (before.Username != after.Username || before.Id != after.Id)
                 {
-                    embed.WithColor(255, 255, 0);
-                    embed.WithTimestamp(DateTimeOffset.UtcNow);
-                    embed.AddField("💢 Позывной стража изменен:",
-                        $"Гильдия: **{before.Guild.Name}**\n" +
-                        $"Предыдущий позывной:\n" +
+                    embed.AddField("💢 Discord ID стража изменен:",
+                        $"Предыдущий Discord ID:\n" +
                         $"**{before.Username} {before.Id}**\n" +
-                        $"Новый позывной:\n" +
+                        $"Новый Discord ID:\n" +
                         $"**{after.Username} {after.Id}**\n");
                     embed.WithThumbnailUrl($"{after.GetAvatarUrl()}");
 
@@ -203,7 +182,7 @@ namespace Neuromatrix.Modules.Administration
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -217,6 +196,7 @@ namespace Neuromatrix.Modules.Administration
                     var role = "";
                     if (before.Roles.Count > after.Roles.Count)
                     {
+                        embed.WithColor(Color.Red);
                         roleString = "Убрана";
                         var differenceQuery = list1.Except(list2);
                         var socketRoles = differenceQuery as SocketRole[] ?? differenceQuery.ToArray();
@@ -235,9 +215,7 @@ namespace Neuromatrix.Modules.Administration
                     var log = await before.Guild.GetAuditLogsAsync(1).FlattenAsync();
                     var audit = log.ToList();
 
-                    embed.WithColor(255, 255, 0);
-                    embed.WithTimestamp(DateTimeOffset.UtcNow);
-                    embed.AddField($"👑 Обновлена роль ({roleString} роль):",
+                    embed.AddField($"🔑 Обновлена роль стража ({roleString} роль):",
 
                         $"Страж: **{before.Username} {before.Id}**\n" +
                         $"Гильдия: **{before.Guild.Name}**\n" +
@@ -249,7 +227,7 @@ namespace Neuromatrix.Modules.Administration
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -262,14 +240,7 @@ namespace Neuromatrix.Modules.Administration
 
         }
 
-        public async Task Client_GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
-        {
-            GuildMemberUpdated(before, after);
-            await Task.CompletedTask;
-        }
-
-        public async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore,
-            SocketMessage messageAfter, ISocketMessageChannel arg3)
+        public async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore, SocketMessage messageAfter, ISocketMessageChannel arg3)
         {
             try
             {
@@ -311,20 +282,20 @@ namespace Neuromatrix.Modules.Administration
                     {
                         var string1 = messageBefore.Value.Content.Substring(0, 1000);
 
-                        embed.AddField("Before:", $"{string1}");
+                        embed.AddField("Предыдущий текст:", $"{string1}");
 
                         if (messageBefore.Value.Content.Length <= 2000)
                         {
 
                             var string2 =
                                 messageBefore.Value.Content.Substring(1000, messageBefore.Value.Content.Length - 1000);
-                            embed.AddField("Before: Continued", $"...{string2}");
+                            embed.AddField("Предыдущий текст: Далее", $"...{string2}");
 
                         }
                     }
                     else if (messageBefore.Value.Content.Length != 0)
                     {
-                        embed.AddField("Before:", $"{messageBefore.Value.Content}");
+                        embed.AddField("Предыдущий текст:", $"{messageBefore.Value.Content}");
                     }
 
 
@@ -332,56 +303,39 @@ namespace Neuromatrix.Modules.Administration
                     {
                         var string1 = messageAfter.Content.Substring(0, 1000);
 
-                        embed.AddField("After:", $"{string1}");
+                        embed.AddField("Новый текст:", $"{string1}");
 
                         if (messageAfter.Content.Length <= 2000)
                         {
 
                             var string2 =
                                 messageAfter.Content.Substring(1000, messageAfter.Content.Length - 1000);
-                            embed.AddField("After: Continued", $"...{string2}");
+                            embed.AddField("Новый текст: Далее", $"...{string2}");
 
                         }
                     }
                     else if (messageAfter.Content.Length != 0)
                     {
-                        embed.AddField("After:", $"{messageAfter.Content}");
+                        embed.AddField("Новый текст:", $"{messageAfter.Content}");
                     }
 
 
-                    if (guild.IsServerLoggingEnabled == true)
+                    if (guild.EnableLogging == true)
                     {
 
-                        await _client.GetGuild(guild.Id).GetTextChannel(guild.ServerLoggingChannel)
+                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
             }
             catch
             {
-                //  Console.WriteLine("Cath messupd");
+
             }
 
         }
 
-        public async Task Client_MessageReceived(SocketMessage arg)
-        {
-            if (arg.Author.Id == _client.CurrentUser.Id)
-                return;
-
-            await Task.CompletedTask;
-        }
-
-        public async Task Client_MessageUpdated(Cacheable<IMessage, ulong> messageBefore,
-            SocketMessage messageAfter, ISocketMessageChannel arg3)
-        {
-            MessageUpdated(messageBefore, messageAfter, arg3);
-            await Task.CompletedTask;
-
-        }
-
-        public async Task DeleteLogg(Cacheable<IMessage, ulong> messageBefore,
-            ISocketMessageChannel arg3)
+        public async Task MessageDeleted(Cacheable<IMessage, ulong> messageBefore, ISocketMessageChannel arg3)
         {
             try
             {
@@ -389,7 +343,7 @@ namespace Neuromatrix.Modules.Administration
                     return;
                 if (messageBefore.Value.Channel is ITextChannel kek)
                 {
-                    var guild = GlobalGuildAccounts.GetGuildAccount(kek.Guild.Id);
+                    var guild = Database.GetGuildAccount(kek.Guild.Id);
 
                     var log = await kek.Guild.GetAuditLogsAsync(1);
                     var audit = log.ToList();
@@ -403,41 +357,41 @@ namespace Neuromatrix.Modules.Administration
 
                     var embedDel = new EmbedBuilder();
 
-                    embedDel.WithFooter($"MessageId: {messageBefore.Id}");
+                    embedDel.WithFooter($"ID сообщения: {messageBefore.Id}");
                     embedDel.WithTimestamp(DateTimeOffset.UtcNow);
                     embedDel.WithThumbnailUrl($"{messageBefore.Value.Author.GetAvatarUrl()}");
 
                     embedDel.WithColor(Color.Red);
-                    embedDel.WithTitle($"🗑 Deleted Message");
-                    embedDel.WithDescription($"Where: <#{messageBefore.Value.Channel.Id}>\n" +
-                                             $"Who: **{name}** (not always correct)\n" +
-                                             $"Message Author: **{messageBefore.Value.Author}**\n");
+                    embedDel.WithTitle($"🗑 Удалено сообщение");
+                    embedDel.WithDescription($"Где: <#{messageBefore.Value.Channel.Id}>\n" +
+                                             $"Кем: **{name}** (Не всегда корректно показывает)\n" +
+                                             $"Автор сообщения: **{messageBefore.Value.Author}**\n");
 
 
                     if (messageBefore.Value.Content.Length > 1000)
                     {
                         var string1 = messageBefore.Value.Content.Substring(0, 1000);
 
-                        embedDel.AddField("Content1", $"{string1}");
+                        embedDel.AddField("Текст сообщения", $"{string1}");
 
                         if (messageBefore.Value.Content.Length <= 2000)
                         {
 
                             var string2 =
                                 messageBefore.Value.Content.Substring(1000, messageBefore.Value.Content.Length - 1000);
-                            embedDel.AddField("Continued", $"...{string2}");
+                            embedDel.AddField("Далее", $"...{string2}");
 
                         }
                     }
                     else if (messageBefore.Value.Content.Length != 0)
                     {
-                        embedDel.AddField("Content", $"{messageBefore.Value.Content}");
+                        embedDel.AddField("Текст сообщения", $"{messageBefore.Value.Content}");
                     }
 
-                    if (guild.IsServerLoggingEnabled == true)
+                    if (guild.EnableLogging == true)
                     {
 
-                        await _client.GetGuild(guild.Id).GetTextChannel(guild.ServerLoggingChannel)
+                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embedDel.Build());
                     }
 
@@ -451,13 +405,6 @@ namespace Neuromatrix.Modules.Administration
 
         }
 
-        public async Task Client_MessageDeleted(Cacheable<IMessage, ulong> messageBefore,
-            ISocketMessageChannel arg3)
-        {
-            DeleteLogg(messageBefore, arg3);
-            await Task.CompletedTask;
-        }
-
         public async Task RoleCreated(SocketRole arg)
         {
             try
@@ -465,7 +412,7 @@ namespace Neuromatrix.Modules.Administration
                 var log = await arg.Guild.GetAuditLogsAsync(1).FlattenAsync();
                 var audit = log.ToList();
                 var check = audit[0].Data as RoleCreateAuditLogData;
-                var name = "Unknown";
+                var name = "Неизвестно";
 
                 if (check?.RoleId == arg.Id)
                 {
@@ -473,22 +420,22 @@ namespace Neuromatrix.Modules.Administration
                 }
 
                 var embed = new EmbedBuilder();
-                embed.WithColor(240, 51, 255);
-                embed.AddField("⚰️ Role Created", $"Who: {name}\n" +
-
-                                                  $"Name: {arg.Name} ({arg.Guild})\n" +
-                                                  $"Color: {arg.Color}\n" +
-                                                  $"ID: {arg.Id}\n");
+                embed.WithColor(Color.Orange);
+                embed.AddField("🗝️ Создана роль",
+                    $"Кем: {name}\n" +
+                    $"Название: **{arg.Name}**\n" +
+                    $"Цвет: {arg.Color}\n" +
+                    $"ID: {arg.Id}\n");
                 embed.WithTimestamp(DateTimeOffset.UtcNow);
 
                 embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
 
 
-                var guild = GlobalGuildAccounts.GetGuildAccount(arg.Guild.Id);
+                var guild = Database.GetGuildAccount(arg.Guild.Id);
 
-                if (guild.IsServerLoggingEnabled == true)
+                if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.Id).GetTextChannel(guild.ServerLoggingChannel)
+                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
@@ -497,12 +444,6 @@ namespace Neuromatrix.Modules.Administration
                 //
             }
 
-        }
-
-        public async Task Client_RoleCreated(SocketRole arg)
-        {
-            RoleCreated(arg);
-            await Task.CompletedTask;
         }
 
         public async Task RoleDeleted(SocketRole arg)
@@ -513,7 +454,7 @@ namespace Neuromatrix.Modules.Administration
                 var log = await arg.Guild.GetAuditLogsAsync(1).FlattenAsync();
                 var audit = log.ToList();
                 var check = audit[0].Data as RoleDeleteAuditLogData;
-                var name = "Unknown";
+                var name = "Неизвестно";
 
                 if (check?.RoleId == arg.Id)
                 {
@@ -521,142 +462,69 @@ namespace Neuromatrix.Modules.Administration
                 }
 
                 var embed = new EmbedBuilder();
-                embed.WithColor(240, 51, 255);
-                embed.AddField("⚰️ Role Deleted", $"Who: {name}\n" +
-
-                                                  $"Name: {arg.Name} ({arg.Guild})\n" +
-                                                  $"Color: {arg.Color}\n" +
-                                                  $"ID: {arg.Id}\n");
+                embed.WithColor(Color.Red);
+                embed.AddField("🗝️ Удалена роль",
+                    $"Кем: {name}\n" +
+                    $"Название: **{arg.Name}**\n" +
+                    $"Цвет: {arg.Color}\n" +
+                    $"ID: {arg.Id}\n");
                 embed.WithTimestamp(DateTimeOffset.UtcNow);
 
                 embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
 
 
-                var guild = GlobalGuildAccounts.GetGuildAccount(arg.Guild.Id);
+                var guild = Database.GetGuildAccount(arg.Guild.Id);
 
-                if (guild.IsServerLoggingEnabled == true)
+                if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.Id).GetTextChannel(guild.ServerLoggingChannel)
+                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
             catch
             {
-                //
+
             }
 
         }
 
-        public async Task Client_RoleDeleted(SocketRole arg)
-        {
-            RoleDeleted(arg);
-            await Task.CompletedTask;
-        }
-        /*
-        public async Task RoleUpdated(SocketRole arg1, SocketRole arg2)
+        public async Task UserLeft(SocketGuildUser arg)
         {
             try
             {
-                var before = arg1;
-                var after = arg2;
-                if (after == null)
-                    return;
-                if (before == after)
+                if (arg == null || arg.IsBot)
                     return;
 
-
-                var roleString = "nothing";
-                var list1 = before.Permissions.ToList();
-                var list2 = after.Permissions.ToList();
-                var role = "\n";
-
-                if (list1.Count > list2.Count)
-                {
-                    roleString = "Removed";
-                    var differenceQuery = list1.Except(list2);
-                    var socketRoles = differenceQuery as GuildPermission[] ?? differenceQuery.ToArray();
-                    for (var i = 0; i < socketRoles.Count(); i++)
-                        role += $"{socketRoles[i]}\n";
-                }
-                else if (list1.Count < list2.Count)
-                {
-                    roleString = "Added";
-                    var differenceQuery = list2.Except(list1);
-                    var socketRoles = differenceQuery as GuildPermission[] ?? differenceQuery.ToArray();
-                    for (var i = 0; i < socketRoles.Count(); i++)
-                        role += $"{socketRoles[i]}\n";
-                }
-
-                var extra = "";
-                if (before.Name != after.Name)
-                {
-                    extra += $"__**Before:**__\n" +
-                             $"Name: **{before}**\n";
-                    if (before.Color.ToString() != after.Color.ToString())
-                    {
-                        extra += $"Color: {before.Color}\n";
-                    }
-
-                    extra += $"__**After:**__\n" +
-                             $"Name: **{after}**\n";
-                    if (before.Color.ToString() != after.Color.ToString())
-                    {
-                        extra += $"Color: {after.Color}\n";
-                    }
-
-                }
-                else if (before.Color.ToString() != after.Color.ToString())
-                {
-                    extra += $"__**Before:**__\n";
-                    extra += $"Color: {before.Color}\n";
-                    extra += $"__**After:**__\n";
-                    extra += $"Color: {after.Color}\n";
-
-                }
-
-                var log = await before.Guild.GetAuditLogsAsync(1).FlattenAsync();
+                var log = await arg.Guild.GetAuditLogsAsync(1).FlattenAsync();
                 var audit = log.ToList();
-                var check = audit[0].Data as RoleUpdateAuditLogData;
-                var name = "error";
-                if (check?.After.Name == arg2.Name)
+
+                EmbedBuilder embed = new EmbedBuilder();
+
+                embed.AddField("Страж покинул гильдию",
+                    $"Имя стража: {arg.Username}\n" +
+                    $"Среди других стражей был известен как: {arg.Nickname}");
+                if (audit[0].Action == ActionType.Kick)
                 {
-                    name = audit[0].User.Mention;
+                    embed.AddField("Причина изгнания:", audit[0].Reason);
+                    embed.WithFooter($"Кто выгнал: {audit[0].User.Username}",audit[0].User.GetAvatarUrl());
                 }
-
-                var guild = GlobalGuildAccounts.GetGuildAccount(before.Guild.Id);
-                var embed = new EmbedBuilder();
-                embed.WithColor(57, 51, 255);
-                embed.AddField($"🛠️ Role Updated({roleString})", $"Role: {after.Mention}\n" +
-                                                                  $"Who: {name}\n" +
-                                                                  $"ID: {before.Id}\n" +
-                                                                  $"Guild: {before.Guild.Name}\n" +
-                                                                  $"{extra}" +
-                                                                  $"Permission ({roleString}): **{role}**");
+                embed.WithColor(Color.Red);
+                embed.WithThumbnailUrl($"{arg.GetAvatarUrl()}");
                 embed.WithTimestamp(DateTimeOffset.UtcNow);
-                embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
 
+                var guild = Database.GetGuildAccount(arg.Guild.Id);
 
-                var s = role.Replace("\n", "");
-                if (s.Length < 1 && extra.Length < 1)
-                    return;
-
-                if (guild.IsServerLoggingEnabled == true)
+                if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.Id).GetTextChannel(guild.ServerLoggingChannel)
+                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                //
+                Console.WriteLine($"[{DateTime.Now} Source: {ex.Source}] Message: {ex.Message}");
             }
         }
-
-        public async Task Client_RoleUpdated(SocketRole arg1, SocketRole arg2)
-        {
-            RoleUpdated(arg1, arg2);
-            await Task.CompletedTask;
-
-        }*/
+        #endregion
     }
 }

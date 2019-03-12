@@ -10,15 +10,18 @@ namespace Neuromatrix.Migrations
                 name: "Guilds",
                 columns: table => new
                 {
-                    GuildID = table.Column<ulong>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    GuildID = table.Column<ulong>(nullable: false),
+                    GuildName = table.Column<string>(nullable: true),
                     GuildOwnerId = table.Column<ulong>(nullable: false),
                     NotificationChannel = table.Column<ulong>(nullable: false),
-                    AdministratorChannel = table.Column<ulong>(nullable: false)
+                    EnableLogging = table.Column<bool>(nullable: false),
+                    LoggingChannel = table.Column<ulong>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Guilds", x => x.GuildID);
+                    table.PrimaryKey("PK_Guilds", x => x.ID);
                 });
         }
 

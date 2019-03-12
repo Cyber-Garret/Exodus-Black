@@ -11,9 +11,9 @@ namespace Neuromatrix.Preconditions
         readonly ConcurrentDictionary<CooldownInfo, DateTime> _cooldowns = new ConcurrentDictionary<CooldownInfo, DateTime>();
 
         /// <summary>
-        /// Sets the cooldown for a user to use this command
+        /// Устанавливает время отката этой команды для пользователя.
         /// </summary>
-        /// <param name="seconds">Sets the cooldown in seconds.</param>
+        /// <param name="seconds">Время отката в секундах.</param>
         public Cooldown(int seconds)
         {
             CooldownLength = TimeSpan.FromSeconds(seconds);
@@ -22,18 +22,18 @@ namespace Neuromatrix.Preconditions
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
             var key = new CooldownInfo(context.User.Id, command.GetHashCode());
-            // Check if message with the same hash code is already in dictionary 
+            // Проверяет есть ли сообщение с таких хэш кодом в словаре.
             if (_cooldowns.TryGetValue(key, out DateTime endsAt))
             {
-                // Calculate the difference between current time and the time cooldown should end
+                // Высчитывает разницу между текущим временме и временем когда откат закончится.
                 var difference = endsAt.Subtract(DateTime.UtcNow);
                 var timeSpanString = string.Format("{0:%s} сек.", difference);
-                // Display message if command is on cooldown
+                // Сообщение если команда все еще в откате.
                 if (difference.Ticks > 0)
                 {
-                    return Task.FromResult(PreconditionResult.FromError($"Ты сможешь использовать эту команду через {timeSpanString}"));
+                    return Task.FromResult(PreconditionResult.FromError($"Ты сможешь использовать эту комманду через {timeSpanString}"));
                 }
-                // Update cooldown time
+                // Обновляет время отката.
                 var time = DateTime.UtcNow.Add(CooldownLength);
                 _cooldowns.TryUpdate(key, time, endsAt);
             }
