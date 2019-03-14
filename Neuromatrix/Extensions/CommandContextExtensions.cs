@@ -13,7 +13,7 @@ namespace Neuromatrix.Extensions
         public static readonly Emoji _X = new Emoji("\u274C");
         private const int _confirmationTimeoutSeconds = 10;
 
-        public static async Task<bool> GetUserConfirmationAsync(this ICommandContext context, string mainMessage)
+        public static async Task<bool?> GetUserConfirmationAsync(this ICommandContext context, string mainMessage)
         {
             if (!mainMessage.EndsWith(Environment.NewLine))
                 mainMessage += Environment.NewLine;
@@ -44,7 +44,7 @@ namespace Neuromatrix.Extensions
             }
 
             await RemoveReactionsAndUpdateMessage("Не было получено подтверждение операции.");
-            return false;
+            return null;
 
             async Task RemoveReactionsAndUpdateMessage(string bottomMessage)
             {

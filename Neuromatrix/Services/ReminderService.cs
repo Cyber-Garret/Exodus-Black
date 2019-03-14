@@ -46,7 +46,7 @@ namespace Neuromatrix.Services
             SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Settings.Guild).First();
             SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Settings.XurChannel).First() as SocketTextChannel;
 
-            EmbedBuilder embed = new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Gold)
                 .WithTitle("Стражи! Зур прибыл в солнечную систему!")
                 .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
@@ -62,7 +62,7 @@ namespace Neuromatrix.Services
             SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Settings.Guild).First();
             SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Settings.XurChannel).First() as SocketTextChannel;
 
-            EmbedBuilder embed = new EmbedBuilder()
+            var embed = new EmbedBuilder()
                .WithColor(Color.Red)
                .WithTitle("Внимание! Зур покинул солнечную систему.")
                .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
