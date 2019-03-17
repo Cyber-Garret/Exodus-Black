@@ -92,12 +92,38 @@ namespace Neuromatrix.Modules.Administration
             }
             #endregion
 
-            var guild = Database.GetGuildAccount(Context.Guild.Id);
+            var guild = Database.GetGuildAccount(Context.Guild);
             var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
-            var NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name ?? "Не указан.";
-            var LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name ?? "Не указан.";
+            string NotificationChannel;
+            if (guild == null || guild.NotificationChannel == 0)
+            {
+                NotificationChannel = "Не указан";
+            }
+            else
+            {
+                NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
+            }
+            string LogChannel;
+            if (guild == null || guild.LoggingChannel == 0)
+            {
+                LogChannel = "Не указан";
+            }
+            else
+            {
+                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
+            }
 
             var FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
+
+            string logs;
+            if (guild == null)
+            {
+                logs = "**Нет**";
+            }
+            else
+            {
+                logs = ConvertBoolean(guild.EnableLogging);
+            }
 
             embed.WithColor(Color.Orange);
 
@@ -109,7 +135,7 @@ namespace Neuromatrix.Modules.Administration
                 $"Стражей на корабле: **{Context.Guild.Users.Count}**");
             embed.AddField("Новостной канал", $"В данный момент используется **{NotificationChannel}** для сообщений о Зур-е.");
             embed.AddField("Технический канал", $"В данный момент используется **{LogChannel}** для сервисных сообщений корабля");
-            embed.AddField("Тех. сообщения включены?", ConvertBoolean(guild.EnableLogging));
+            embed.AddField("Тех. сообщения включены?", logs);
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
 
@@ -140,17 +166,25 @@ namespace Neuromatrix.Modules.Administration
             #endregion
 
             var guild = Database.GetGuildAccount(Context.Guild);
-            var NotificationChannelName = Context.Guild.GetChannel(guild.NotificationChannel).Name ?? "Не указан.";
+            string NotificationChannel;
+            if (guild.NotificationChannel == 0 || guild == null)
+            {
+                NotificationChannel = "Не указан";
+            }
+            else
+            {
+                NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
+            }
 
             embed.WithColor(Color.Orange);
             embed.WithTitle("Новостной канал");
-            if (guild.NotificationChannel == 0)
+            if (guild.NotificationChannel == 0 || guild == null)
             {
                 embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять новости о Зур-е. :frowning: ";
             }
             else
             {
-                embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **#{NotificationChannelName}**.";
+                embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **#{NotificationChannel}**.";
             }
 
             embed.WithFooter($"Хотите я запишу этот канал как новостной? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
@@ -188,17 +222,25 @@ namespace Neuromatrix.Modules.Administration
             #endregion
 
             var guild = Database.GetGuildAccount(Context.Guild);
-            var LoggingChannelName = Context.Guild.GetChannel(guild.LoggingChannel).Name ?? "Не указан.";
+            string LogChannel;
+            if (guild.LoggingChannel == 0 || guild == null)
+            {
+                LogChannel = "Не указан";
+            }
+            else
+            {
+                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
+            }
 
             embed.WithColor(Color.Orange);
             embed.WithTitle("Технический канал");
-            if (guild.LoggingChannel == 0)
+            if (guild.LoggingChannel == 0 || guild == null)
             {
                 embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять сообщения о том когда-то вышел или кого либо выгнали. :frowning: ";
             }
             else
             {
-                embed.Description = $"В данный момент у меня записанно что все технические сообщения я должна отправлять в **#{LoggingChannelName}**.";
+                embed.Description = $"В данный момент у меня записанно что все технические сообщения я должна отправлять в **#{LogChannel}**.";
             }
 
             embed.WithFooter($"Хотите я запишу этот канал как технический? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
@@ -236,13 +278,31 @@ namespace Neuromatrix.Modules.Administration
             #endregion
 
             var guild = Database.GetGuildAccount(Context.Guild);
-            var LoggingChannelName = Context.Guild.GetChannel(guild.LoggingChannel).Name ?? "Не указан.";
+            string LogChannel;
+            if (guild.LoggingChannel == 0 || guild == null)
+            {
+                LogChannel = "Не указан";
+            }
+            else
+            {
+                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
+            }
+
+            string logs;
+            if (guild == null)
+            {
+                logs = "**Нет**";
+            }
+            else
+            {
+                logs = ConvertBoolean(guild.EnableLogging);
+            }
 
             embed.Color = Color.Orange;
             embed.Title = "Технические сообщения";
-            embed.Description = $"В данный момент все технические сообщения я отправляю в канал **#{LoggingChannelName}** ";
+            embed.Description = $"В данный момент все технические сообщения я отправляю в канал **#{LogChannel}** ";
 
-            embed.AddField("Оповещения включены?", ConvertBoolean(guild.EnableLogging), true);
+            embed.AddField("Оповещения включены?", logs, true);
             embed.WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
 
             var message = await Context.Channel.SendMessageAsync("", embed: embed.Build());
