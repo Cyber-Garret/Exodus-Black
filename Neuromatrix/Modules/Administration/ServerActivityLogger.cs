@@ -51,10 +51,10 @@ namespace Neuromatrix.Modules.Administration
 
 
                 var currentIGuildChannel = (IGuildChannel)arg;
-                var guild = Database.GetGuildAccount(currentIGuildChannel.Guild.Id);
+                var guild = Database.GetGuildAccount(currentIGuildChannel.Guild);
                 if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                    await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
@@ -94,10 +94,10 @@ namespace Neuromatrix.Modules.Administration
 
                 if (arg is IGuildChannel currentIguildChannel)
                 {
-                    var guild = Database.GetGuildAccount(currentIguildChannel.Guild.Id);
+                    var guild = Database.GetGuildAccount(currentIguildChannel.Guild);
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -115,7 +115,7 @@ namespace Neuromatrix.Modules.Administration
                 if (after == null || before == after || before.IsBot)
                     return;
 
-                var guild = Database.GetGuildAccount(before.Guild.Id);
+                var guild = Database.GetGuildAccount(before.Guild);
 
                 var embed = new EmbedBuilder();
 
@@ -143,7 +143,7 @@ namespace Neuromatrix.Modules.Administration
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -163,7 +163,7 @@ namespace Neuromatrix.Modules.Administration
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -182,7 +182,7 @@ namespace Neuromatrix.Modules.Administration
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -227,7 +227,7 @@ namespace Neuromatrix.Modules.Administration
 
                     if (guild.EnableLogging == true)
                     {
-                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -247,7 +247,7 @@ namespace Neuromatrix.Modules.Administration
                 var before = (messageBefore.HasValue ? messageBefore.Value : null) as IUserMessage;
                 if (arg3 is IGuildChannel currentIGuildChannel)
                 {
-                    var guild = Database.GetGuildAccount(currentIGuildChannel.Guild.Id);
+                    var guild = Database.GetGuildAccount(currentIGuildChannel.Guild);
                     if (messageAfter.Author.IsBot)
                         return;
 
@@ -323,7 +323,7 @@ namespace Neuromatrix.Modules.Administration
                     if (guild.EnableLogging == true)
                     {
 
-                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embed.Build());
                     }
                 }
@@ -343,7 +343,7 @@ namespace Neuromatrix.Modules.Administration
                     return;
                 if (messageBefore.Value.Channel is ITextChannel kek)
                 {
-                    var guild = Database.GetGuildAccount(kek.Guild.Id);
+                    var guild = Database.GetGuildAccount(kek.Guild);
 
                     var log = await kek.Guild.GetAuditLogsAsync(1);
                     var audit = log.ToList();
@@ -391,7 +391,7 @@ namespace Neuromatrix.Modules.Administration
                     if (guild.EnableLogging == true)
                     {
 
-                        await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                             .SendMessageAsync("", false, embedDel.Build());
                     }
 
@@ -431,11 +431,11 @@ namespace Neuromatrix.Modules.Administration
                 embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
 
 
-                var guild = Database.GetGuildAccount(arg.Guild.Id);
+                var guild = Database.GetGuildAccount(arg.Guild);
 
                 if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                    await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
@@ -473,11 +473,11 @@ namespace Neuromatrix.Modules.Administration
                 embed.WithThumbnailUrl($"{audit[0].User.GetAvatarUrl()}");
 
 
-                var guild = Database.GetGuildAccount(arg.Guild.Id);
+                var guild = Database.GetGuildAccount(arg.Guild);
 
                 if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                    await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
@@ -506,21 +506,21 @@ namespace Neuromatrix.Modules.Administration
                 if (audit[0].Action == ActionType.Kick)
                 {
                     embed.AddField("Причина изгнания:", audit[0].Reason);
-                    embed.WithFooter($"Кто выгнал: {audit[0].User.Username}",audit[0].User.GetAvatarUrl());
+                    embed.WithFooter($"Кто выгнал: {audit[0].User.Username}", audit[0].User.GetAvatarUrl());
                 }
                 embed.WithColor(Color.Red);
                 embed.WithThumbnailUrl($"{arg.GetAvatarUrl()}");
                 embed.WithTimestamp(DateTimeOffset.UtcNow);
 
-                var guild = Database.GetGuildAccount(arg.Guild.Id);
+                var guild = Database.GetGuildAccount(arg.Guild);
 
                 if (guild.EnableLogging == true)
                 {
-                    await _client.GetGuild(guild.GuildID).GetTextChannel(guild.LoggingChannel)
+                    await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
                         .SendMessageAsync("", false, embed.Build());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"[{DateTime.Now} Source: {ex.Source}] Message: {ex.Message}");
             }

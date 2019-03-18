@@ -2,7 +2,7 @@
 
 namespace Neuromatrix.Migrations
 {
-    public partial class Administration : Migration
+    public partial class V1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,14 +10,12 @@ namespace Neuromatrix.Migrations
                 name: "Guilds",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    GuildID = table.Column<ulong>(nullable: false),
-                    GuildName = table.Column<string>(nullable: true),
-                    GuildOwnerId = table.Column<ulong>(nullable: false),
-                    NotificationChannel = table.Column<ulong>(nullable: false),
-                    EnableLogging = table.Column<bool>(nullable: false),
-                    LoggingChannel = table.Column<ulong>(nullable: false)
+                    ID = table.Column<ulong>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    OwnerId = table.Column<ulong>(nullable: false),
+                    NotificationChannel = table.Column<ulong>(nullable: false, defaultValue: 0ul),
+                    LoggingChannel = table.Column<ulong>(nullable: false, defaultValue: 0ul),
+                    EnableLogging = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {

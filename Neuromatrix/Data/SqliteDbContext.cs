@@ -17,5 +17,13 @@ namespace Neuromatrix.Data
             string DbLocation = @"Neuromatrix.db";
             Options.UseSqlite($"DataSource={DbLocation}");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Guild>().Property(g => g.ID).ValueGeneratedNever();
+            modelBuilder.Entity<Guild>().Property(g => g.NotificationChannel).HasDefaultValue(0).ValueGeneratedNever();
+            modelBuilder.Entity<Guild>().Property(g => g.LoggingChannel).HasDefaultValue(0).ValueGeneratedNever();
+            modelBuilder.Entity<Guild>().Property(g => g.EnableLogging).HasDefaultValue(false).ValueGeneratedNever();
+        }
     }
 }
