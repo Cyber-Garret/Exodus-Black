@@ -11,6 +11,12 @@
     <Compile Remove="Migrations\20190311214127_Administration.cs" />
     <Compile Remove="Migrations\20190312110319_Administration.cs" />
     <Compile Remove="Migrations\20190312111441_Admin.cs" />
+    <Compile Remove="Migrations\20190312112210_Administration.cs" />
+    <Compile Remove="Migrations\20190318120810_V1.cs" />
+    <Compile Remove="Migrations\20190318121129_V1.cs" />
+    <Compile Remove="Migrations\20190318122240_V1.cs" />
+    <Compile Remove="Migrations\20190318122850_V1.cs" />
+    <Compile Remove="Migrations\20190318123207_V1.cs" />
   </ItemGroup>
 
   <ItemGroup>

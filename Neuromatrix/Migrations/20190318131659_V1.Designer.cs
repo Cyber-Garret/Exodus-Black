@@ -8,8 +8,8 @@ using Neuromatrix.Data;
 namespace Neuromatrix.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20190312112210_Administration")]
-    partial class Administration
+    [Migration("20190318131659_V1")]
+    partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,20 +57,20 @@ namespace Neuromatrix.Migrations
 
             modelBuilder.Entity("Neuromatrix.Models.Db.Guild", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
+                    b.Property<ulong>("ID");
 
-                    b.Property<bool>("EnableLogging");
+                    b.Property<bool>("EnableLogging")
+                        .HasDefaultValue(false);
 
-                    b.Property<ulong>("GuildID");
+                    b.Property<ulong>("LoggingChannel")
+                        .HasDefaultValue(0ul);
 
-                    b.Property<string>("GuildName");
+                    b.Property<string>("Name");
 
-                    b.Property<ulong>("GuildOwnerId");
+                    b.Property<ulong>("NotificationChannel")
+                        .HasDefaultValue(0ul);
 
-                    b.Property<ulong>("LoggingChannel");
-
-                    b.Property<ulong>("NotificationChannel");
+                    b.Property<ulong>("OwnerId");
 
                     b.HasKey("ID");
 

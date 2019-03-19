@@ -19,7 +19,7 @@ namespace Neuromatrix.Modules.Administration
     public class ModerationModule : BotModuleBase
     {
         #region Functions
-        public static string ConvertBoolean(bool boolean)
+        public static string ConvertBoolean(bool? boolean)
         {
             return boolean == true ? "**Да**" : "**Нет**";
         }
@@ -49,12 +49,17 @@ namespace Neuromatrix.Modules.Administration
             }
             #endregion
 
+            #region Add guild in local storage if null
             var guild = Database.GetGuildAccount(Context.Guild);
             if (guild == null)
                 await Database.CreateGuildAccount(Context.Guild);
+            #endregion
 
+            #region Data
             var app = await Context.Client.GetApplicationInfoAsync();
+            #endregion
 
+            #region Message
             embed.WithColor(Color.Orange);
             embed.WithTitle($"Приветствую капитан {Context.User.Username}");
             embed.WithDescription("Краткий ликбез о том какие команды доступны избранным стражам и капитану.");
@@ -65,6 +70,8 @@ namespace Neuromatrix.Modules.Administration
             embed.WithFooter($"Любые предложения по улучшению или исправлении ошибок пожалуйста сообщи моему создателю {app.Owner.Username}", app.Owner.GetAvatarUrl());
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
+            #endregion
+
 
         }
 
@@ -72,7 +79,7 @@ namespace Neuromatrix.Modules.Administration
         [Summary("Отображает все настройки бота в гильдии где была вызвана комманда.")]
         public async Task GetGuildConfig()
         {
-            #region Checks
+            #region Base Checks
             if (Context.User.IsBot) return; //Ignore bots
             if (Context.IsPrivate)
             {
@@ -90,46 +97,41 @@ namespace Neuromatrix.Modules.Administration
                 await Context.Channel.SendMessageAsync(null, false, embed.Build());
                 return;
             }
-            #endregion
 
             var guild = Database.GetGuildAccount(Context.Guild);
-            var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
-            string NotificationChannel;
-            if (guild == null || guild.NotificationChannel == 0)
-            {
-                NotificationChannel = "Не указан";
-            }
-            else
-            {
-                NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
-            }
-            string LogChannel;
-            if (guild == null || guild.LoggingChannel == 0)
-            {
-                LogChannel = "Не указан";
-            }
-            else
-            {
-                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
-            }
 
-            var FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
-
-            string logs;
             if (guild == null)
             {
-                logs = "**Нет**";
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
             }
-            else
-            {
-                logs = ConvertBoolean(guild.EnableLogging);
-            }
+            #endregion
 
-            embed.WithColor(Color.Orange);
+            #region Data
+            var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
+            string NotificationChannel = "Не указан";
+            string LogChannel = "Не указан";
+            string FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
+            string logs;
+            #endregion
 
+            #region Checks for Data
+            if (guild.NotificationChannel != 0)
+                NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
+
+            if (guild.LoggingChannel != 0)
+                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
+
+            logs = ConvertBoolean(guild.EnableLogging);
+            #endregion
+
+            #region Message
+            embed.WithColor(Color.LightOrange);
             embed.WithTitle($"Мои настройки на этом корабле.");
             embed.WithThumbnailUrl(Context.Guild.IconUrl);
-            embed.WithDescription($"Гильдия **{Context.Guild.Name}** имеет свой корабль с **{FormattedCreatedAt}**, капитан корабля в данный момент являеться **{OwnerName}**");
+            embed.WithDescription($"Клан **{Context.Guild.Name}** имеет свой корабль с **{FormattedCreatedAt}**, капитан корабля в данный момент является **{OwnerName}**");
             embed.AddField("Сейчас на корабле:",
                 $"Всего каналов: **{Context.Guild.Channels.Count}**\n" +
                 $"Стражей на корабле: **{Context.Guild.Users.Count}**");
@@ -138,7 +140,7 @@ namespace Neuromatrix.Modules.Administration
             embed.AddField("Тех. сообщения включены?", logs);
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
-
+            #endregion
         }
 
         [Command("новости")]
@@ -163,38 +165,49 @@ namespace Neuromatrix.Modules.Administration
                 await Context.Channel.SendMessageAsync(null, false, embed.Build());
                 return;
             }
-            #endregion
 
             var guild = Database.GetGuildAccount(Context.Guild);
-            string NotificationChannel;
-            if (guild.NotificationChannel == 0 || guild == null)
-            {
-                NotificationChannel = "Не указан";
-            }
-            else
-            {
-                NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
-            }
 
+            if (guild == null)
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+            #endregion
+
+            #region Data
+            string NotificationChannel = "Не указан";
+            #endregion
+
+            #region Checks for Data
+            if (guild.NotificationChannel != 0)
+                NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
+            #endregion
+
+            #region Message
             embed.WithColor(Color.Orange);
             embed.WithTitle("Новостной канал");
-            if (guild.NotificationChannel == 0 || guild == null)
+            if (guild.NotificationChannel == 0)
             {
                 embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять новости о Зур-е. :frowning: ";
             }
             else
             {
-                embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **#{NotificationChannel}**.";
+                embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **{NotificationChannel}**.";
             }
 
             embed.WithFooter($"Хотите я запишу этот канал как новостной? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
 
             var message = await Context.Channel.SendMessageAsync("", embed: embed.Build());
+            #endregion
 
+            //Если true обновляем id новостного канала.
             bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
             if (choice == true)
-                await Database.UpdateGuildInfo(Context.Guild, Database.DbData.NotificationChannel, Context.Channel.Id);
+                await Database.UpdateGuildNotificationChannel(Context.Guild, Context.Channel);
         }
 
         [Command("логи")]
@@ -219,42 +232,52 @@ namespace Neuromatrix.Modules.Administration
                 await Context.Channel.SendMessageAsync(null, false, embed.Build());
                 return;
             }
-            #endregion
 
             var guild = Database.GetGuildAccount(Context.Guild);
-            string LogChannel;
-            if (guild.LoggingChannel == 0 || guild == null)
+            if (guild == null)
             {
-                LogChannel = "Не указан";
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
             }
-            else
-            {
-                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
-            }
+            #endregion
 
+            #region Data
+            string LogChannel = "Не указан";
+            #endregion
+
+            #region Checks for Data
+            if (guild.LoggingChannel != 0)
+                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
+            #endregion
+
+            #region Message
             embed.WithColor(Color.Orange);
             embed.WithTitle("Технический канал");
-            if (guild.LoggingChannel == 0 || guild == null)
+            if (guild.LoggingChannel == 0)
             {
-                embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять сообщения о том когда-то вышел или кого либо выгнали. :frowning: ";
+                embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять сообщения о том когда-то вышел или кого либо обновили. :frowning: ";
             }
             else
             {
                 embed.Description = $"В данный момент у меня записанно что все технические сообщения я должна отправлять в **#{LogChannel}**.";
             }
-
             embed.WithFooter($"Хотите я запишу этот канал как технический? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
 
             var message = await Context.Channel.SendMessageAsync("", embed: embed.Build());
+            #endregion
 
+
+            //Если true обновляем id лог канала.
             bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
             if (choice == true)
-                await Database.UpdateGuildInfo(Context.Guild, Database.DbData.LoggingChannel, Context.Channel.Id);
+                await Database.UpdateGuildLoggingChannel(Context.Guild, Context.Channel);
         }
 
         [Command("логирование")]
-        [Summary("Сохраняет ID канала для использования в тех сообщениях.")]
+        [Summary("Сохраняет ID канала для использования в тех. сообщениях.")]
         public async Task ToggleLogging()
         {
             #region Checks
@@ -275,42 +298,51 @@ namespace Neuromatrix.Modules.Administration
                 await Context.Channel.SendMessageAsync(null, false, embed.Build());
                 return;
             }
-            #endregion
 
             var guild = Database.GetGuildAccount(Context.Guild);
-            string LogChannel;
-            if (guild.LoggingChannel == 0 || guild == null)
-            {
-                LogChannel = "Не указан";
-            }
-            else
-            {
-                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
-            }
-
-            string logs;
             if (guild == null)
             {
-                logs = "**Нет**";
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
             }
-            else
-            {
-                logs = ConvertBoolean(guild.EnableLogging);
-            }
+            #endregion
 
+            #region Data
+            string LogChannel = "Не указан";
+            string LogState;
+            #endregion
+
+            #region Checks for Data
+            if (guild.LoggingChannel != 0)
+                LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
+            LogState = ConvertBoolean(guild.EnableLogging);
+            #endregion
+
+            #region Message
             embed.Color = Color.Orange;
             embed.Title = "Технические сообщения";
-            embed.Description = $"В данный момент все технические сообщения я отправляю в канал **#{LogChannel}** ";
+            embed.Description = $"В данный момент все технические сообщения я отправляю в канал **{LogChannel}** ";
 
-            embed.AddField("Оповещения включены?", logs, true);
+            embed.AddField("Оповещения включены?", LogState, true);
             embed.WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
 
             var message = await Context.Channel.SendMessageAsync("", embed: embed.Build());
+            #endregion
 
+            //Если true или false обновляем включено или выключено логирование для гильдии, в противном случае ничего не делаем.
             bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
-            if (choice == true || choice == false)
-                await Database.UpdateGuildInfo(Context.Guild, Database.DbData.EnableLogging, choice);
+            if (choice == true)
+            {
+                await Database.ToggleGuildLogging(Context.Guild, true);
+            }
+            else if (choice == false)
+            {
+                await Database.ToggleGuildLogging(Context.Guild, false);
+            }
+
         }
     }
 }

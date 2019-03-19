@@ -3,6 +3,7 @@
 using Discord;
 using Discord.WebSocket;
 
+using Neuromatrix.Data;
 using Neuromatrix.Modules.Administration;
 
 namespace Neuromatrix.Services
@@ -23,6 +24,7 @@ namespace Neuromatrix.Services
 
         public void Configure()
         {
+            _client.JoinedGuild += _client_JoinedGuild;
             _client.ChannelCreated += _client_ChannelCreatedAsync;
             _client.ChannelDestroyed += _client_ChannelDestroyedAsync;
             _client.GuildMemberUpdated += _client_GuildMemberUpdatedAsync;
@@ -33,7 +35,11 @@ namespace Neuromatrix.Services
             _client.UserLeft += _client_UserLeftAsync;
         }
 
-        
+        private Task _client_JoinedGuild(SocketGuild guild)
+        {
+            Database.CreateGuildAccount(guild);
+            return Task.CompletedTask;
+        }
 
         private async Task _client_ChannelCreatedAsync(SocketChannel arg)
         {
