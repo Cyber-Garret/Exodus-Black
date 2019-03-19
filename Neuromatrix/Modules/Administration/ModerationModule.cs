@@ -131,7 +131,7 @@ namespace Neuromatrix.Modules.Administration
             embed.WithColor(Color.LightOrange);
             embed.WithTitle($"Мои настройки на этом корабле.");
             embed.WithThumbnailUrl(Context.Guild.IconUrl);
-            embed.WithDescription($"Гильдия **{Context.Guild.Name}** имеет свой корабль с **{FormattedCreatedAt}**, капитан корабля в данный момент являеться **{OwnerName}**");
+            embed.WithDescription($"Клан **{Context.Guild.Name}** имеет свой корабль с **{FormattedCreatedAt}**, капитан корабля в данный момент является **{OwnerName}**");
             embed.AddField("Сейчас на корабле:",
                 $"Всего каналов: **{Context.Guild.Channels.Count}**\n" +
                 $"Стражей на корабле: **{Context.Guild.Users.Count}**");
