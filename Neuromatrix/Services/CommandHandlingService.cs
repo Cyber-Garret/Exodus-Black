@@ -14,65 +14,59 @@ namespace Neuromatrix.Services
     public class CommandHandlingService
     {
         #region Private fields
-        private readonly CommandService _commands;
-        private readonly DiscordSocketClient _discord;
-        private readonly LogService _log;
-        private readonly RateLimitService _rateLimitService;
+        private DiscordShardedClient _client;
+        private CommandService _commands;
         private readonly IServiceProvider _services;
         #endregion
 
-        public CommandHandlingService(CommandService commands, DiscordSocketClient discord, LogService log, RateLimitService rateLimit, IServiceProvider services)
+        public CommandHandlingService(DiscordShardedClient client, CommandService commands, IServiceProvider services)
         {
+            _client = client;
             _commands = commands;
-            _discord = discord;
-            _log = log;
-            _rateLimitService = rateLimit;
             _services = services;
-
-            _commands.CommandExecuted += OnCommandExecutedAsync;
-            _discord.MessageReceived += OnMessageReceivedAsync;
         }
 
         public async Task ConfigureAsync()
         {
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
-        }
-
-        public async Task OnMessageReceivedAsync(SocketMessage arg)
-        {
-            #region Checks
-            if (!(arg is SocketUserMessage msg)) return; // Only SocketUserMessage allow
-
-            if (arg.Author.Id == _discord.CurrentUser.Id) return; // Ignore self message
-
-            int argPos = 0;
-            if (!(msg.HasMentionPrefix(_discord.CurrentUser, ref argPos) || msg.HasCharPrefix('!', ref argPos))) return;
-            #endregion
-
-            var context = new SocketCommandContext(_discord, msg);
-            await _commands.ExecuteAsync(context, argPos, _services);
-        }
-
-        public async Task OnCommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
-        {
-            if (!command.IsSpecified) return; // Ignore search failures
-            if (!result.IsSuccess)
-                await context.Channel.SendMessageAsync(result.ToString());
-            else
+            _commands = new CommandService();
+            var cmdConfig = new CommandServiceConfig
             {
-                var limits = command.Value.Preconditions.OfType<RateLimitAttribute>();
-                foreach (var limit in limits)
-                {
-                    var rule = limit.GetRule(_rateLimitService, context, command.Value);
-                    //Safe to pass null here, this factory would have been run in the precondition earlier
-                    _rateLimitService.GetOrAdd(rule, BogusFactory).Increment();
-                }
-            }
-            var log = new LogMessage(LogSeverity.Info, "chs", $"{context.User} invoked command {command.Value.Name} in channel {context.Channel} with result {result}");
-            await _log.LogAsync(log);
+                DefaultRunMode = RunMode.Async
+            };
+
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+
+            Global.Client = _client;
         }
 
-        private RateLimitInfo BogusFactory(string _)
-            => throw new InvalidOperationException("This shouldn't be happening in the first place!!");
+        public async Task HandleCommandAsync(SocketMessage arg)
+        {
+
+            if (!(arg is SocketUserMessage msg)) return;
+            if (msg.Channel is SocketDMChannel) return;
+
+            var context = new ShardedCommandContext(_client, msg);
+            if (context.User.IsBot) return;
+            
+
+            var argPos = 0;
+            if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos) || msg.HasCharPrefix('!', ref argPos))) return;
+            {
+
+                var cmdSearchResult = _commands.Search(context, argPos);
+                if (cmdSearchResult.Commands.Count == 0) await context.Channel.SendMessageAsync($"{context.User.Mention}, это неизвестная мне команда.");
+
+                var executionTask = _commands.ExecuteAsync(context, argPos, _services);
+
+                await executionTask.ContinueWith(task =>
+                 {
+                     if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
+                     const string errTemplate = "{0}, Ошибка: {1}.";
+                     var errMessage = string.Format(errTemplate, context.User.Mention, task.Result.ErrorReason);
+                     context.Channel.SendMessageAsync(errMessage);
+                 });
+            }
+        }
+
     }
 }

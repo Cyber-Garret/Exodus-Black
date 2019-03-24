@@ -11,14 +11,16 @@ namespace Neuromatrix.Services
     public class DiscordEventHandlerService
     {
         #region Private Fields
-        private readonly DiscordSocketClient _client;
+        private readonly DiscordShardedClient _client;
+        private readonly CommandHandlingService _commandHandlingService;
         private readonly ServerActivityLogger _serverActivityLogger;
         #endregion
 
 
-        public DiscordEventHandlerService(DiscordSocketClient client, ServerActivityLogger serverActivityLogger)
+        public DiscordEventHandlerService(DiscordShardedClient client, CommandHandlingService command, ServerActivityLogger serverActivityLogger)
         {
             _client = client;
+            _commandHandlingService = command;
             _serverActivityLogger = serverActivityLogger;
         }
 
@@ -29,6 +31,7 @@ namespace Neuromatrix.Services
             _client.ChannelDestroyed += _client_ChannelDestroyedAsync;
             _client.GuildMemberUpdated += _client_GuildMemberUpdatedAsync;
             _client.MessageDeleted += _client_MessageDeletedAsync;
+            _client.MessageReceived += _client_MessageReceived;
             _client.MessageUpdated += _client_MessageUpdatedAsync;
             _client.RoleCreated += _client_RoleCreatedAsync;
             _client.RoleDeleted += _client_RoleDeletedAsync;
@@ -63,6 +66,14 @@ namespace Neuromatrix.Services
             if (cacheMessage.Value.Author.IsBot)
                 return;
             await _serverActivityLogger.MessageDeleted(cacheMessage, channel);
+        }
+
+        private async Task _client_MessageReceived(SocketMessage message)
+        {
+            if (message.Author.IsBot)
+                return;
+            await _commandHandlingService.HandleCommandAsync(message);
+            await _serverActivityLogger.MessageReceived(message);
         }
 
         private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)

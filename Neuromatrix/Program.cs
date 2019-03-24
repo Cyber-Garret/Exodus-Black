@@ -16,85 +16,72 @@ using Neuromatrix.Modules.Administration;
 
 namespace Neuromatrix
 {
-    public class Program : IDisposable
+    class Program
     {
-        private static string config_path;
-
-        public static void Main(string[] args)
-        {
-            using (var program = new Program())
-                program.MainAsync().GetAwaiter().GetResult();
-        }
-
         #region Private fields
-        private readonly CancellationTokenSource _exitTokenSource;
-        private readonly ServiceProvider _services;
+        public static DiscordShardedClient _client;
+        private IServiceProvider _services;
+        private static string _config_path;
+        private readonly int[] _shardIds = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         #endregion
 
-        public Program()
-        {
-            config_path = Directory.GetCurrentDirectory() + "/UserData/config.tml";
-            _exitTokenSource = new CancellationTokenSource();
-            _services = BuildServices();
 
-            Console.CancelKeyPress += (_s, e) =>
-            {
-                e.Cancel = true;
-                _exitTokenSource.Cancel();
-            };
-        }
-
-        private async Task MainAsync()
+        private static void Main()
         {
             Console.Title = $"Neuromatrix (Discord.Net v{DiscordConfig.Version})";
+            Console.CursorVisible = false;
+            Console.ForegroundColor = ConsoleColor.Blue;
+            _config_path = Directory.GetCurrentDirectory() + "/UserData/config.tml";
+
+            new Program().StartAsync().GetAwaiter().GetResult();
+        }
+
+        private async Task StartAsync()
+        {
+            _client = new DiscordShardedClient(_shardIds, new DiscordSocketConfig
+            {
+                LogLevel = LogSeverity.Verbose,
+                DefaultRetryMode = RetryMode.AlwaysRetry,
+                MessageCacheSize = 100,
+                TotalShards = 10
+            });
+
+            _client.Log += Logger.Log;
 
             #region Configure services
+            _services = BuildServices();
+
             _services.GetRequiredService<ConfigurationService>().Configure();
-            _services.GetRequiredService<LogService>().Configure();
             _services.GetRequiredService<ReminderService>().Configure();
             _services.GetRequiredService<DiscordEventHandlerService>().Configure();
             await _services.GetRequiredService<CommandHandlingService>().ConfigureAsync();
             #endregion
 
             var token = _services.GetRequiredService<Configuration>().Token;
-            var discord = _services.GetRequiredService<DiscordSocketClient>();
+            
 
-            await discord.LoginAsync(TokenType.Bot, token);
-            await discord.StartAsync();
+            await _client.LoginAsync(TokenType.Bot, token);
+            await _client.StartAsync();
 
-            try
-            {
-                await discord.SetGameAsync("Destiny 2", null, ActivityType.Watching);
-                await Task.Delay(-1, _exitTokenSource.Token);
-            }
-            // we expect this to throw when exiting.
-            catch (TaskCanceledException) { }
 
-            await discord.StopAsync();
-            Environment.Exit(0);
+            await _client.SetGameAsync("Destiny 2", null, ActivityType.Watching);
+            await _client.SetStatusAsync(UserStatus.Online);
+
+            await Task.Delay(-1);
         }
 
         public ServiceProvider BuildServices()
         {
             return new ServiceCollection()
-                .AddSingleton(_ => Toml.ReadFile<Configuration>(config_path))
-                .AddSingleton(_exitTokenSource)
+                .AddSingleton(_ => Toml.ReadFile<Configuration>(_config_path))
                 .AddSingleton<ConfigurationService>()
-                .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlingService>()
-                .AddSingleton<LogService>()
                 .AddSingleton<RateLimitService>()
                 .AddSingleton<DiscordEventHandlerService>()
                 .AddSingleton<ReminderService>()
                 .AddScoped<ServerActivityLogger>()
                 .BuildServiceProvider();
-        }
-
-        public void Dispose()
-        {
-            _exitTokenSource.Dispose();
-            _services.Dispose();
         }
 
     }

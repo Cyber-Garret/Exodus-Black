@@ -315,6 +315,14 @@ namespace Neuromatrix.Modules.Administration
 
         }
 
+        public async Task MessageReceived(SocketMessage arg)
+        {
+            if (arg.Author.Id == _client.CurrentUser.Id)
+                return;
+
+            await Task.CompletedTask;
+        }
+
         public async Task MessageDeleted(Cacheable<IMessage, ulong> messageBefore, ISocketMessageChannel arg3)
         {
             try

@@ -75,8 +75,8 @@ namespace Neuromatrix.Modules.Commands
             //Скриншот снаряжения.
             embed.WithImageUrl(gear.ImageUrl);
 
-            var owner = Context.Guild.GetUser(Settings.Owner);
-            embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {owner.Username}", owner.GetAvatarUrl());
+            var app = await Context.Client.GetApplicationInfoAsync();
+            embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}", app.Owner.GetAvatarUrl());
 
 
             await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, embed.Build());
