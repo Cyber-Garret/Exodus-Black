@@ -13,7 +13,7 @@ namespace Neuromatrix.Services
     public class ReminderService
     {
         #region Private fields
-        private static readonly DiscordShardedClient _client = Program._client;
+        private readonly DiscordShardedClient _client = Program._client;
         private Timer _timer;
         #endregion
 

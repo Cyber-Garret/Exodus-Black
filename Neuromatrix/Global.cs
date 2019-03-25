@@ -4,7 +4,7 @@ namespace Neuromatrix
 {
     internal static class Global
     {
-        internal static DiscordShardedClient Client { get; set; }
+        //internal static DiscordShardedClient Client { get; set; }
         internal static string Token { get; set; }
         internal static ulong Guild { get; set; }
         internal static ulong XurChannel { get; set; }

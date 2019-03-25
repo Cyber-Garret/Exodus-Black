@@ -54,7 +54,7 @@ namespace Neuromatrix
             _services.GetRequiredService<ConfigurationService>().Configure();
             _services.GetRequiredService<ReminderService>().Configure();
             _services.GetRequiredService<DiscordEventHandlerService>().Configure();
-            await _services.GetRequiredService<CommandHandlingService>().ConfigureAsync();
+            await _services.GetRequiredService<CommandHandlerService>().ConfigureAsync();
             #endregion
 
             var token = _services.GetRequiredService<Configuration>().Token;
@@ -76,7 +76,7 @@ namespace Neuromatrix
                 .AddSingleton(_ => Toml.ReadFile<Configuration>(_config_path))
                 .AddSingleton<ConfigurationService>()
                 .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandlingService>()
+                .AddSingleton<CommandHandlerService>()
                 .AddSingleton<RateLimitService>()
                 .AddSingleton<DiscordEventHandlerService>()
                 .AddSingleton<ReminderService>()

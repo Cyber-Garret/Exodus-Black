@@ -11,17 +11,16 @@ using Neuromatrix.Preconditions;
 
 namespace Neuromatrix.Services
 {
-    public class CommandHandlingService
+    public class CommandHandlerService
     {
         #region Private fields
-        private DiscordShardedClient _client;
+        private DiscordShardedClient _client = Program._client;
         private CommandService _commands;
         private readonly IServiceProvider _services;
         #endregion
 
-        public CommandHandlingService(DiscordShardedClient client, CommandService commands, IServiceProvider services)
+        public CommandHandlerService(CommandService commands, IServiceProvider services)
         {
-            _client = client;
             _commands = commands;
             _services = services;
         }
@@ -35,8 +34,6 @@ namespace Neuromatrix.Services
             };
 
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
-
-            Global.Client = _client;
         }
 
         public async Task HandleCommandAsync(SocketMessage arg)

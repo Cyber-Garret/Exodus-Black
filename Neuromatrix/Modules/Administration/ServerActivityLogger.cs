@@ -13,14 +13,13 @@ namespace Neuromatrix.Modules.Administration
     public class ServerActivityLogger
     {
         #region Private Fields
-        public readonly DiscordSocketClient _client;
-        public readonly IServiceProvider _services;
+        private readonly DiscordShardedClient _client = Program._client;
+        private readonly IServiceProvider _services;
         #endregion
 
 
-        public ServerActivityLogger(DiscordSocketClient client, IServiceProvider services)
+        public ServerActivityLogger(IServiceProvider services)
         {
-            _client = client;
             _services = services;
         }
 

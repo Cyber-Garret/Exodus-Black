@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Discord;
 using Discord.WebSocket;
@@ -11,21 +12,22 @@ namespace Neuromatrix.Services
     public class DiscordEventHandlerService
     {
         #region Private Fields
-        private readonly DiscordShardedClient _client;
-        private readonly CommandHandlingService _commandHandlingService;
+        private readonly DiscordShardedClient _client = Program._client;
+        private readonly CommandHandlerService _commandHandlingService;
         private readonly ServerActivityLogger _serverActivityLogger;
         #endregion
 
 
-        public DiscordEventHandlerService(DiscordShardedClient client, CommandHandlingService command, ServerActivityLogger serverActivityLogger)
+        public DiscordEventHandlerService(CommandHandlerService command, ServerActivityLogger serverActivityLogger)
         {
-            _client = client;
             _commandHandlingService = command;
             _serverActivityLogger = serverActivityLogger;
         }
 
         public void Configure()
         {
+            //_client.ShardConnected += _client_ShardConnected;
+            _client.ShardDisconnected += _client_ShardDisconnected;
             _client.JoinedGuild += _client_JoinedGuild;
             _client.ChannelCreated += _client_ChannelCreatedAsync;
             _client.ChannelDestroyed += _client_ChannelDestroyedAsync;
@@ -36,6 +38,12 @@ namespace Neuromatrix.Services
             _client.RoleCreated += _client_RoleCreatedAsync;
             _client.RoleDeleted += _client_RoleDeletedAsync;
             _client.UserLeft += _client_UserLeftAsync;
+        }
+
+        private Task _client_ShardDisconnected(Exception arg1, DiscordSocketClient arg2)
+        {
+            Console.WriteLine($"Shard {arg2.ShardId} Disconnected");
+            return Task.CompletedTask;
         }
 
         private Task _client_JoinedGuild(SocketGuild guild)
