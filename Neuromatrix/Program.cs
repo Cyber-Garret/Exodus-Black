@@ -22,7 +22,7 @@ namespace Neuromatrix
         public static DiscordShardedClient _client;
         private IServiceProvider _services;
         private static string _config_path;
-        private readonly int[] _shardIds = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private readonly int[] _shardIds = { 0, 1 };
         #endregion
 
 
@@ -43,7 +43,7 @@ namespace Neuromatrix
                 LogLevel = LogSeverity.Verbose,
                 DefaultRetryMode = RetryMode.AlwaysRetry,
                 MessageCacheSize = 100,
-                TotalShards = 10
+                TotalShards = 2
             });
 
             _client.Log += Logger.Log;

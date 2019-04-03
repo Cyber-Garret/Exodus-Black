@@ -486,6 +486,8 @@ namespace Neuromatrix.Modules.Administration
                 embed.WithTimestamp(DateTimeOffset.UtcNow);
                 embed.WithThumbnailUrl($"{arg.GetAvatarUrl()}");
                 embed.AddField($"💢 Страж покинул клан", $"На корабле был известен как:\n **{arg.Nickname ?? arg.Username}**");
+                embed.AddField("Discord имя стража", $"**{arg.Username}#{arg.Discriminator}**");
+                embed.AddField("Ссылка на профиль(Не всегда корректно работает)", arg.Mention);
                 if (audit[0].Action == ActionType.Kick)
                 {
                     var name = audit[0].User.Username ?? "Неизвестно";
