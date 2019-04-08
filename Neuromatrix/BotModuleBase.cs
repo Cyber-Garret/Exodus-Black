@@ -5,7 +5,7 @@ using Discord.Commands;
 
 namespace Neuromatrix
 {
-    public class BotModuleBase : ModuleBase<SocketCommandContext>
+    public class BotModuleBase : ModuleBase<ShardedCommandContext>
     {
         public IEmote Ok => new Emoji("\u1F197");
         public IEmote HeavyCheckMark => new Emoji("\u2714");

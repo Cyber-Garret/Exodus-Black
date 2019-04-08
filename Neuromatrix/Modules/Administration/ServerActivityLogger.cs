@@ -223,7 +223,6 @@ namespace Neuromatrix.Modules.Administration
         {
             try
             {
-                var before = (messageBefore.HasValue ? messageBefore.Value : null) as IUserMessage;
                 if (arg3 is IGuildChannel currentIGuildChannel)
                 {
                     var guild = Database.GetGuildAccount(currentIGuildChannel.Guild);
@@ -237,7 +236,7 @@ namespace Neuromatrix.Modules.Administration
                         return;
                     }
 
-                    if (before == null)
+                    if (!((messageBefore.HasValue ? messageBefore.Value : null) is IUserMessage before))
                         return;
 
 
@@ -353,7 +352,6 @@ namespace Neuromatrix.Modules.Administration
                     embedDel.WithDescription($"Где: <#{messageBefore.Value.Channel.Id}>\n" +
                                              $"Кем: **{name}** (Не всегда корректно показывает)\n" +
                                              $"Автор сообщения: **{messageBefore.Value.Author}**\n");
-
 
                     if (messageBefore.Value.Content.Length > 1000)
                     {
@@ -485,15 +483,19 @@ namespace Neuromatrix.Modules.Administration
                 embed.WithColor(Color.Red);
                 embed.WithTimestamp(DateTimeOffset.UtcNow);
                 embed.WithThumbnailUrl($"{arg.GetAvatarUrl()}");
-                embed.AddField($"💢 Страж покинул клан", $"На корабле был известен как:\n **{arg.Nickname ?? arg.Username}**");
-                embed.AddField("Discord имя стража", $"**{arg.Username}#{arg.Discriminator}**");
-                embed.AddField("Ссылка на профиль(Не всегда корректно работает)", arg.Mention);
+                embed.AddField($"💢 Страж покинул клан",
+                    $"На корабле был известен как:\n**{arg.Nickname ?? arg.Username}**\n" +
+                    $"Discord имя стража\n**{arg.Username}#{arg.Discriminator}**\n" +
+                    $"Discord ID:\n**{arg.Id}**");
+                embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", arg.Mention);
                 if (audit[0].Action == ActionType.Kick)
                 {
                     var name = audit[0].User.Username ?? "Неизвестно";
-                    embed.AddField("Причина изгнания:", audit[0].Reason ?? "Не указана.");
-                    embed.WithFooter($"Кто выгнал: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
+                    embed.AddField("Причина изгнания:",
+                         $"{audit[0].Reason ?? "Не указана."}\n\n" +
+                         $"Кто выгнал: {name}");
                 }
+                embed.WithFooter($"Если ссылка на профиль некорректно отображается то просто скопируй <@{arg.Id}> вместе с <> и отправь в любой чат сообщением.");
                 #endregion
 
                 var guild = Database.GetGuildAccount(arg.Guild);
