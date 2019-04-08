@@ -25,7 +25,7 @@ namespace Neuromatrix.Modules.Commands
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.WithColor(Color.Gold);
             embedBuilder.WithDescription(
-                $"Доброго времени суток. Я Нейроматрица версии {Settings.Version}.\n" +
+                $"Доброго времени суток. Я Нейроматрица версии {Global.Version}.\n" +
                 "Моя основная цель своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
                 "Так же я могу предоставить информацию о экзотическом вооружении.\n" +
                 "В текущий момент в моей базе данных зарегистрированны такие команды:");

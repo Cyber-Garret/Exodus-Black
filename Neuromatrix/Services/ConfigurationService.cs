@@ -18,11 +18,10 @@ namespace Neuromatrix.Services
 
         public void Configure()
         {
-            Settings.Token = _services.GetRequiredService<Configuration>().Token;
-            Settings.Owner = _services.GetRequiredService<Configuration>().Owner;
-            Settings.Guild = _services.GetRequiredService<Configuration>().Guild;
-            Settings.XurChannel = _services.GetRequiredService<Configuration>().XurChannel;
-            Settings.Version = _services.GetRequiredService<Configuration>().Version;
+            Global.Token = _services.GetRequiredService<Configuration>().Token;
+            Global.Guild = _services.GetRequiredService<Configuration>().Guild;
+            Global.XurChannel = _services.GetRequiredService<Configuration>().XurChannel;
+            Global.Version = _services.GetRequiredService<Configuration>().Version;
         }
     }
 }

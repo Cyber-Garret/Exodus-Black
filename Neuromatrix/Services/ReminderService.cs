@@ -13,14 +13,9 @@ namespace Neuromatrix.Services
     public class ReminderService
     {
         #region Private fields
-        private readonly DiscordSocketClient _discord;
+        private readonly DiscordShardedClient _client = Program._client;
         private Timer _timer;
         #endregion
-
-        public ReminderService(DiscordSocketClient discord)
-        {
-            _discord = discord;
-        }
 
         public void Configure()
         {
@@ -43,11 +38,11 @@ namespace Neuromatrix.Services
 
         private async Task XurArrived()
         {
-            SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Settings.Guild).First();
-            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Settings.XurChannel).First() as SocketTextChannel;
+            SocketGuild Guild = _client.Guilds.Where(x => x.Id == Global.Guild).First();
+            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Global.XurChannel).First() as SocketTextChannel;
 
             var embed = new EmbedBuilder()
-                .WithColor(Color.Gold)
+                .WithColor(Color.Orange)
                 .WithTitle("Стражи! Зур прибыл в солнечную систему!")
                 .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
                 .WithDescription("Нажмите на заголовок сообщения чтобы узнать точное местоположение посланника Зура.")
@@ -59,8 +54,8 @@ namespace Neuromatrix.Services
         }
         private async Task XurLeave()
         {
-            SocketGuild Guild = _discord.Guilds.Where(x => x.Id == Settings.Guild).First();
-            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Settings.XurChannel).First() as SocketTextChannel;
+            SocketGuild Guild = _client.Guilds.Where(x => x.Id == Global.Guild).First();
+            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Global.XurChannel).First() as SocketTextChannel;
 
             var embed = new EmbedBuilder()
                .WithColor(Color.Red)

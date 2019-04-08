@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Discord;
 using Discord.WebSocket;
@@ -11,28 +12,38 @@ namespace Neuromatrix.Services
     public class DiscordEventHandlerService
     {
         #region Private Fields
-        private readonly DiscordSocketClient _client;
+        private readonly DiscordShardedClient _client = Program._client;
+        private readonly CommandHandlerService _commandHandlingService;
         private readonly ServerActivityLogger _serverActivityLogger;
         #endregion
 
 
-        public DiscordEventHandlerService(DiscordSocketClient client, ServerActivityLogger serverActivityLogger)
+        public DiscordEventHandlerService(CommandHandlerService command, ServerActivityLogger serverActivityLogger)
         {
-            _client = client;
+            _commandHandlingService = command;
             _serverActivityLogger = serverActivityLogger;
         }
 
         public void Configure()
         {
+            //_client.ShardConnected += _client_ShardConnected;
+            _client.ShardDisconnected += _client_ShardDisconnected;
             _client.JoinedGuild += _client_JoinedGuild;
             _client.ChannelCreated += _client_ChannelCreatedAsync;
             _client.ChannelDestroyed += _client_ChannelDestroyedAsync;
             _client.GuildMemberUpdated += _client_GuildMemberUpdatedAsync;
             _client.MessageDeleted += _client_MessageDeletedAsync;
+            _client.MessageReceived += _client_MessageReceived;
             _client.MessageUpdated += _client_MessageUpdatedAsync;
             _client.RoleCreated += _client_RoleCreatedAsync;
             _client.RoleDeleted += _client_RoleDeletedAsync;
             _client.UserLeft += _client_UserLeftAsync;
+        }
+
+        private Task _client_ShardDisconnected(Exception arg1, DiscordSocketClient arg2)
+        {
+            Console.WriteLine($"Shard {arg2.ShardId} Disconnected");
+            return Task.CompletedTask;
         }
 
         private Task _client_JoinedGuild(SocketGuild guild)
@@ -63,6 +74,14 @@ namespace Neuromatrix.Services
             if (cacheMessage.Value.Author.IsBot)
                 return;
             await _serverActivityLogger.MessageDeleted(cacheMessage, channel);
+        }
+
+        private async Task _client_MessageReceived(SocketMessage message)
+        {
+            if (message.Author.IsBot)
+                return;
+            await _commandHandlingService.HandleCommandAsync(message);
+            await _serverActivityLogger.MessageReceived(message);
         }
 
         private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
