@@ -397,7 +397,34 @@ namespace Neuromatrix.Modules.Administration
         [Cooldown(10)]
         public async Task SaveWelcomeMessage([Remainder]string message)
         {
-            
+            #region Checks
+            if (Context.IsPrivate)
+            {
+                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
+                return;
+            }
+
+            SocketGuildUser user = Context.User as SocketGuildUser;
+            var embed = new EmbedBuilder();
+
+            if (!user.GuildPermissions.Administrator)
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+
+            var guild = Database.GetGuildAccount(Context.Guild);
+            if (guild == null)
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+            #endregion
+
             await Database.SaveWelcomeMessage(Context.Guild, message);
 
             await Context.Channel.SendMessageAsync("сообщение сохранено");
