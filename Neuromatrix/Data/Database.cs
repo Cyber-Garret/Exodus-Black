@@ -135,6 +135,20 @@ namespace Neuromatrix.Data
                 return Task.CompletedTask;
             }
         }
+
+        internal static Task SaveWelcomeMessage(IGuild guild, string value)
+        {
+
+            using (var Db = new SqliteDbContext())
+            {
+                var GuildData = Db.Guilds.First(g => g.ID == guild.Id);
+                GuildData.WelcomeMessage = value;
+                Db.Guilds.Update(GuildData);
+                Db.SaveChanges();
+                Console.WriteLine($"Гильдия {guild.Name} сохранила сообщение.");
+                return Task.CompletedTask;
+            }
+        }
         #endregion
     }
 }
