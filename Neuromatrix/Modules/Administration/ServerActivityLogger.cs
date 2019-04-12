@@ -485,8 +485,7 @@ namespace Neuromatrix.Modules.Administration
                 embed.WithThumbnailUrl($"{arg.GetAvatarUrl()}");
                 embed.AddField($"💢 Страж покинул клан",
                     $"На корабле был известен как:\n**{arg.Nickname ?? arg.Username}**\n" +
-                    $"Discord имя стража\n**{arg.Username}#{arg.Discriminator}**\n" +
-                    $"Discord ID:\n**{arg.Id}**");
+                    $"Discord имя стража\n**{arg.Username}#{arg.Discriminator}**");
                 embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", arg.Mention);
                 if (audit[0].Action == ActionType.Kick)
                 {

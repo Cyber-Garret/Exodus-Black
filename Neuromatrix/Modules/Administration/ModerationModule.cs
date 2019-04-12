@@ -8,14 +8,12 @@ using Discord.Commands;
 using Discord.WebSocket;
 
 using Neuromatrix.Data;
+using Neuromatrix.Helpers;
 using Neuromatrix.Extensions;
 using Neuromatrix.Preconditions;
 
 namespace Neuromatrix.Modules.Administration
 {
-    [Group("клан")]
-    [Summary("Группа команд для управление дискорд гильдией администраторами.")]
-    [Cooldown(10)]
     public class ModerationModule : BotModuleBase
     {
         #region Functions
@@ -25,8 +23,9 @@ namespace Neuromatrix.Modules.Administration
         }
         #endregion
 
-        [Command("")]
-        [Summary("Главная команда группы клан")]
+        [Command("клан")]
+        [Summary("Информационная справка о доступных командах администраторам клана.")]
+        [Cooldown(5)]
         public async Task GuildInfo()
         {
             #region Checks
@@ -61,12 +60,14 @@ namespace Neuromatrix.Modules.Administration
 
             #region Message
             embed.WithColor(Color.Orange);
-            embed.WithTitle($"Приветствую капитан {Context.User.Username}");
+            embed.WithTitle($"Приветствую страж {Context.User.Username}");
             embed.WithDescription("Краткий ликбез о том какие команды доступны избранным стражам и капитану.");
-            embed.AddField("Команда: **!клан инфо**", "Эта команда выводит мои настройки для текущей гильдии, так же соержит некоторую полезную и не очень информацию.");
+            embed.AddField("Команда: **!клан инфо**", "Эта команда выводит мои настройки для текущей гильдии, так же содержит некоторую полезную и не очень информацию.");
             embed.AddField("Команда: **!клан новости**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда информационные сообщения например о Зуре.");
             embed.AddField("Команда: **!клан логи**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда тех. сообщения например о том что кто-то покинул сервер.");
             embed.AddField("Команда: **!клан логирование**", "Эта команда позволяет включить или выключить Тех. сообщения.");
+            embed.AddField("Команда: **!посмотреть приветствие**", "Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.");
+            embed.AddField("Команда: **!сохранить приветствие <сообщение>**", "Сохраняет сообщение-приветствие и включает механизм отправки сообщения.\nПоддерживает синтаксис MarkDown для красивого оформления.");
             embed.WithFooter($"Любые предложения по улучшению или исправлении ошибок пожалуйста сообщи моему создателю {app.Owner.Username}", app.Owner.GetAvatarUrl());
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
@@ -75,8 +76,9 @@ namespace Neuromatrix.Modules.Administration
 
         }
 
-        [Command("инфо")]
+        [Command("клан инфо")]
         [Summary("Отображает все настройки бота в гильдии где была вызвана комманда.")]
+        [Cooldown(5)]
         public async Task GetGuildConfig()
         {
             #region Base Checks
@@ -143,8 +145,9 @@ namespace Neuromatrix.Modules.Administration
             #endregion
         }
 
-        [Command("новости")]
+        [Command("клан новости")]
         [Summary("Сохраняет ID канала для использования в новостных сообщениях.")]
+        [Cooldown(5)]
         public async Task SetNotificationChannel()
         {
             #region Checks
@@ -210,8 +213,9 @@ namespace Neuromatrix.Modules.Administration
                 await Database.UpdateGuildNotificationChannel(Context.Guild, Context.Channel);
         }
 
-        [Command("логи")]
+        [Command("клан логи")]
         [Summary("Сохраняет ID канала для использования в тех сообщениях.")]
+        [Cooldown(5)]
         public async Task SetLogChannel()
         {
             #region Checks
@@ -276,8 +280,9 @@ namespace Neuromatrix.Modules.Administration
                 await Database.UpdateGuildLoggingChannel(Context.Guild, Context.Channel);
         }
 
-        [Command("логирование")]
+        [Command("клан логирование")]
         [Summary("Сохраняет ID канала для использования в тех. сообщениях.")]
+        [Cooldown(5)]
         public async Task ToggleLogging()
         {
             #region Checks
@@ -343,6 +348,88 @@ namespace Neuromatrix.Modules.Administration
                 await Database.ToggleGuildLogging(Context.Guild, false);
             }
 
+        }
+
+        [Command("посмотреть приветствие")]
+        [Summary("Команда предпросмотра приветственного сообщения")]
+        [Cooldown(5)]
+        public async Task WelcomeMessagePreview()
+        {
+            #region Checks
+            if (Context.User.IsBot) return; //Ignore bots
+            if (Context.IsPrivate)
+            {
+                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
+                return;
+            }
+
+            SocketGuildUser user = Context.User as SocketGuildUser;
+            var embed = new EmbedBuilder();
+
+            if (!user.GuildPermissions.Administrator)
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+
+            var guild = Database.GetGuildAccount(Context.Guild);
+            if (guild == null)
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!сохранить приветствие <текст сообщения>**";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+            #endregion
+
+            await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.", false, MiscHelpers.WelcomeEmbed(user).Build());
+        }
+
+        [Command("сохранить приветствие")]
+        [Summary("Сохраняет сообщение для отправки всем кто пришел в гильдию")]
+        [Cooldown(5)]
+        public async Task SaveWelcomeMessage([Remainder]string message)
+        {
+            #region Checks
+            if (Context.IsPrivate)
+            {
+                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
+                return;
+            }
+
+            SocketGuildUser user = Context.User as SocketGuildUser;
+            var embed = new EmbedBuilder();
+
+            if (!user.GuildPermissions.Administrator)
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+
+            var guild = Database.GetGuildAccount(Context.Guild);
+            if (guild == null)
+            {
+                embed.WithColor(Color.Red);
+                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
+                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                return;
+            }
+            #endregion
+
+            await Database.SaveWelcomeMessage(Context.Guild, message);
+
+            await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение успешно сохранено.");
         }
     }
 }

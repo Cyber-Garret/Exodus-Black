@@ -5,6 +5,7 @@ using Discord;
 using Discord.WebSocket;
 
 using Neuromatrix.Data;
+using Neuromatrix.Helpers;
 using Neuromatrix.Modules.Administration;
 
 namespace Neuromatrix.Services
@@ -37,9 +38,10 @@ namespace Neuromatrix.Services
             _client.MessageUpdated += _client_MessageUpdatedAsync;
             _client.RoleCreated += _client_RoleCreatedAsync;
             _client.RoleDeleted += _client_RoleDeletedAsync;
+            _client.UserJoined += _client_UserJoinedAsync;
             _client.UserLeft += _client_UserLeftAsync;
         }
-
+        #region Events
         private Task _client_ShardDisconnected(Exception arg1, DiscordSocketClient arg2)
         {
             Console.WriteLine($"Shard {arg2.ShardId} Disconnected");
@@ -103,9 +105,40 @@ namespace Neuromatrix.Services
             await _serverActivityLogger.RoleDeleted(arg);
         }
 
+        private async Task _client_UserJoinedAsync(SocketGuildUser arg)
+        {
+            await UserJoined(arg);
+        }
+
         private async Task _client_UserLeftAsync(SocketGuildUser arg)
         {
             await _serverActivityLogger.UserLeft(arg);
         }
+        #endregion
+
+        #region Methods
+        private async Task UserJoined(SocketGuildUser user)
+        {
+            try
+            {
+                #region Checks
+                if (user == null || user.IsBot) return;
+
+                var guild = Database.GetGuildAccount(user.Guild);
+                if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
+                #endregion
+
+                IDMChannel dM = await user.GetOrCreateDMChannelAsync();
+
+                await dM.SendMessageAsync(null, false, MiscHelpers.WelcomeEmbed(user).Build());
+            }
+            catch
+            {
+                //TODO text log
+            }
+            
+        }
+        #endregion
+
     }
 }
