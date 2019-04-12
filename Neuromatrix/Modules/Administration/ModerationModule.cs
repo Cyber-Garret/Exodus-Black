@@ -24,8 +24,8 @@ namespace Neuromatrix.Modules.Administration
         #endregion
 
         [Command("клан")]
-        [Summary("Информация о гильдии")]
-        [Cooldown(10)]
+        [Summary("Информационная справка о доступных командах администраторам клана.")]
+        [Cooldown(5)]
         public async Task GuildInfo()
         {
             #region Checks
@@ -60,12 +60,14 @@ namespace Neuromatrix.Modules.Administration
 
             #region Message
             embed.WithColor(Color.Orange);
-            embed.WithTitle($"Приветствую капитан {Context.User.Username}");
+            embed.WithTitle($"Приветствую страж {Context.User.Username}");
             embed.WithDescription("Краткий ликбез о том какие команды доступны избранным стражам и капитану.");
-            embed.AddField("Команда: **!клан инфо**", "Эта команда выводит мои настройки для текущей гильдии, так же соержит некоторую полезную и не очень информацию.");
+            embed.AddField("Команда: **!клан инфо**", "Эта команда выводит мои настройки для текущей гильдии, так же содержит некоторую полезную и не очень информацию.");
             embed.AddField("Команда: **!клан новости**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда информационные сообщения например о Зуре.");
             embed.AddField("Команда: **!клан логи**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда тех. сообщения например о том что кто-то покинул сервер.");
             embed.AddField("Команда: **!клан логирование**", "Эта команда позволяет включить или выключить Тех. сообщения.");
+            embed.AddField("Команда: **!посмотреть приветствие**", "Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.");
+            embed.AddField("Команда: **!сохранить приветствие <сообщение>**", "Сохраняет сообщение-приветствие и включает механизм отправки сообщения.\nПоддерживает синтаксис MarkDown для красивого оформления.");
             embed.WithFooter($"Любые предложения по улучшению или исправлении ошибок пожалуйста сообщи моему создателю {app.Owner.Username}", app.Owner.GetAvatarUrl());
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
@@ -76,7 +78,7 @@ namespace Neuromatrix.Modules.Administration
 
         [Command("клан инфо")]
         [Summary("Отображает все настройки бота в гильдии где была вызвана комманда.")]
-        [Cooldown(10)]
+        [Cooldown(5)]
         public async Task GetGuildConfig()
         {
             #region Base Checks
@@ -145,7 +147,7 @@ namespace Neuromatrix.Modules.Administration
 
         [Command("клан новости")]
         [Summary("Сохраняет ID канала для использования в новостных сообщениях.")]
-        [Cooldown(10)]
+        [Cooldown(5)]
         public async Task SetNotificationChannel()
         {
             #region Checks
@@ -213,7 +215,7 @@ namespace Neuromatrix.Modules.Administration
 
         [Command("клан логи")]
         [Summary("Сохраняет ID канала для использования в тех сообщениях.")]
-        [Cooldown(10)]
+        [Cooldown(5)]
         public async Task SetLogChannel()
         {
             #region Checks
@@ -280,7 +282,7 @@ namespace Neuromatrix.Modules.Administration
 
         [Command("клан логирование")]
         [Summary("Сохраняет ID канала для использования в тех. сообщениях.")]
-        [Cooldown(10)]
+        [Cooldown(5)]
         public async Task ToggleLogging()
         {
             #region Checks
@@ -348,9 +350,9 @@ namespace Neuromatrix.Modules.Administration
 
         }
 
-        [Command("клан сообщение")]
+        [Command("посмотреть приветствие")]
         [Summary("Команда предпросмотра приветственного сообщения")]
-        [Cooldown(10)]
+        [Cooldown(5)]
         public async Task WelcomeMessagePreview()
         {
             #region Checks
@@ -383,18 +385,18 @@ namespace Neuromatrix.Modules.Administration
             if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
             {
                 embed.WithColor(Color.Red);
-                embed.Title = $":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!привет <текст сообщения>**";
+                embed.Title = $":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!сохранить приветствие <текст сообщения>**";
                 await Context.Channel.SendMessageAsync(null, false, embed.Build());
                 return;
             }
             #endregion
 
-            await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новичков.", false, MiscHelpers.WelcomeEmbed(user).Build());
+            await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.", false, MiscHelpers.WelcomeEmbed(user).Build());
         }
 
-        [Command("привет")]
-        [Summary("")]
-        [Cooldown(10)]
+        [Command("сохранить приветствие")]
+        [Summary("Сохраняет сообщение для отправки всем кто пришел в гильдию")]
+        [Cooldown(5)]
         public async Task SaveWelcomeMessage([Remainder]string message)
         {
             #region Checks
@@ -427,7 +429,7 @@ namespace Neuromatrix.Modules.Administration
 
             await Database.SaveWelcomeMessage(Context.Guild, message);
 
-            await Context.Channel.SendMessageAsync("сообщение сохранено");
+            await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение успешно сохранено.");
         }
     }
 }

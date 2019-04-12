@@ -9,22 +9,18 @@ namespace Neuromatrix.Helpers
     {
         public static EmbedBuilder WelcomeEmbed(SocketGuildUser guildUser)
         {
-            var bot = Program._client.CurrentUser;
             var text = Database.GetGuildAccount(guildUser.Guild).WelcomeMessage;
-
-            var auth = new EmbedAuthorBuilder()
-            {
-                IconUrl = bot.GetAvatarUrl(),
-                Name = bot.Username
-            };
-
+            
             var embed = new EmbedBuilder()
             {
-                Author = auth,
                 Color = Color.Orange,
-                Title = $"Добро пожаловать в гильдию {guildUser.Guild.Name}",
+                Title = $"Добро пожаловать на сервер клана {guildUser.Guild.Name} в Destiny 2",
                 Description = text
             };
+            //if guild have picture add to message.
+            if (guildUser.Guild.IconUrl != string.Empty)
+                embed.ThumbnailUrl = guildUser.Guild.IconUrl;
+
             return embed;
         }
     }
