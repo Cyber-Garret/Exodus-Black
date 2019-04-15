@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -51,6 +52,19 @@ namespace Neuromatrix.Data
             {
 
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Возвращает список всех гильдий.
+        /// </summary>
+        /// <returns>IEnumerable<Guild></returns>
+        internal static IEnumerable<Guild> GetAllGuilds()
+        {
+            using (SqliteDbContext dbContext = new SqliteDbContext())
+            {
+                IEnumerable<Guild> guilds = dbContext.Guilds;
+                return guilds;
             }
         }
 

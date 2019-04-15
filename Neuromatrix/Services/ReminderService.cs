@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Timers;
 using System.Threading.Tasks;
 
 using Discord;
 using Discord.WebSocket;
 
-using Neuromatrix.Models;
+using Neuromatrix.Data;
 
 namespace Neuromatrix.Services
 {
@@ -38,9 +37,7 @@ namespace Neuromatrix.Services
 
         private async Task XurArrived()
         {
-            SocketGuild Guild = _client.Guilds.Where(x => x.Id == Global.Guild).First();
-            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Global.XurChannel).First() as SocketTextChannel;
-
+            #region Message
             var embed = new EmbedBuilder()
                 .WithColor(Color.Orange)
                 .WithTitle("Стражи! Зур прибыл в солнечную систему!")
@@ -48,23 +45,58 @@ namespace Neuromatrix.Services
                 .WithDescription("Нажмите на заголовок сообщения чтобы узнать точное местоположение посланника Зура.")
                 .WithUrl("https://whereisxur.com/")
                 .WithFooter("Напоминаю! Зур покинет солнечную систему во вторник в 20:00 по МСК.");
+            #endregion
 
+            var guilds = Database.GetAllGuilds();
 
-            await TextChannel.SendMessageAsync("@everyone", false, embed.Build());
+            foreach (var guild in guilds)
+            {
+                if (guild.EnableNotification == true)
+                {
+                    try
+                    {
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.NotificationChannel)
+                       .SendMessageAsync(null, false, embed.Build());
+                    }
+                    catch (Exception ex)
+                    {
+                        LogMessage message = new LogMessage(LogSeverity.Error, $"Xur Arrived Method - {ex.Source}", ex.Message, ex.InnerException);
+                        await Logger.Log(message);
+                    }
+
+                }
+            }
         }
         private async Task XurLeave()
         {
-            SocketGuild Guild = _client.Guilds.Where(x => x.Id == Global.Guild).First();
-            SocketTextChannel TextChannel = Guild.Channels.Where(x => x.Id == Global.XurChannel).First() as SocketTextChannel;
-
+            #region Message
             var embed = new EmbedBuilder()
                .WithColor(Color.Red)
                .WithTitle("Внимание! Зур покинул солнечную систему.")
                .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
                .WithDescription("Он просто испарился! Как только он придёт я сообщу.")
                .WithFooter("Напоминаю! В следующий раз Зур прибудет в пятницу в 20:00 по МСК.");
+            #endregion
 
-            await TextChannel.SendMessageAsync("@everyone", false, embed.Build());
+            var guilds = Database.GetAllGuilds();
+
+            foreach (var guild in guilds)
+            {
+                if (guild.EnableNotification == true)
+                {
+                    try
+                    {
+                        await _client.GetGuild(guild.ID).GetTextChannel(guild.NotificationChannel)
+                       .SendMessageAsync(null, false, embed.Build());
+                    }
+                    catch (Exception ex)
+                    {
+                        LogMessage message = new LogMessage(LogSeverity.Error, $"Xur Leave Method - {ex.Source}", ex.Message, ex.InnerException);
+                        await Logger.Log(message);
+                    }
+
+                }
+            }
         }
     }
 }
