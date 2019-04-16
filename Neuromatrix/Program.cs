@@ -29,8 +29,6 @@ namespace Neuromatrix
         private static void Main()
         {
             Console.Title = $"Neuromatrix (Discord.Net v{DiscordConfig.Version})";
-            Console.CursorVisible = false;
-            Console.ForegroundColor = ConsoleColor.Blue;
             _config_path = Directory.GetCurrentDirectory() + "/UserData/config.tml";
 
             new Program().StartAsync().GetAwaiter().GetResult();
@@ -64,7 +62,7 @@ namespace Neuromatrix
             await _client.StartAsync();
 
 
-            await _client.SetGameAsync("Destiny 2", null, ActivityType.Watching);
+            await _client.SetGameAsync("!справка");
             await _client.SetStatusAsync(UserStatus.Online);
 
             await Task.Delay(-1);
@@ -77,10 +75,8 @@ namespace Neuromatrix
                 .AddSingleton<ConfigurationService>()
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlerService>()
-                .AddSingleton<RateLimitService>()
                 .AddSingleton<DiscordEventHandlerService>()
                 .AddSingleton<ReminderService>()
-                .AddScoped<ServerActivityLogger>()
                 .BuildServiceProvider();
         }
 
