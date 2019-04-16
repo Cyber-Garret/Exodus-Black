@@ -9,7 +9,7 @@ namespace Neuromatrix.Helpers
     {
         public static EmbedBuilder WelcomeEmbed(SocketGuildUser guildUser)
         {
-            var text = Database.GetGuildAccount(guildUser.Guild).WelcomeMessage;
+            string text = Database.GetGuildAccountAsync(guildUser.Guild).Result.WelcomeMessage;
             
             var embed = new EmbedBuilder()
             {

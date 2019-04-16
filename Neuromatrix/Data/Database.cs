@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+
 using Discord;
 
 using Neuromatrix.Models.Db;
@@ -32,107 +35,70 @@ namespace Neuromatrix.Data
         #region Guilds
 
         /// <summary>
-        /// Возвращает данные о гильдии с локального хранилища.
+        /// Возвращает список всех гильдий.
+        /// </summary>
+        /// <returns>IEnumerable<Guild></returns>
+        internal static async Task<IEnumerable<Guild>> GetAllGuildsAsync()
+        {
+            using (SqliteDbContext dbContext = new SqliteDbContext())
+            {
+                IEnumerable<Guild> guilds = await dbContext.Guilds.ToListAsync();
+                return guilds;
+            }
+        }
+
+        /// <summary>
+        /// Возвращает данные о гильдии, если нет данных создает запись.
         /// </summary>
         /// <param name="guild">SocketGuild</param>
         /// <returns>Guild class</returns>
-        internal static Guild GetGuildAccount(IGuild guild)
+        internal static async Task<Guild> GetGuildAccountAsync(IGuild guild)
         {
-            try
+            using (var ctx = new SqliteDbContext())
             {
-                using (var DbContext = new SqliteDbContext())
+                if (ctx.Guilds.Where(G => G.ID == guild.Id).Count() < 1)
                 {
-                    if (DbContext.Guilds.Where(g => g.ID == guild.Id).Count() < 1)
-                        return null;
-                    return DbContext.Guilds.FirstOrDefault(g => g.ID == guild.Id);
+                    var newGuild = new Guild
+                    {
+                        ID = guild.Id
+                    };
+
+                    ctx.Guilds.Add(newGuild);
+                    await ctx.SaveChangesAsync();
+
+                    return newGuild;
+                }
+                else
+                {
+                    return ctx.Guilds.SingleOrDefault(G => G.ID == guild.Id);
                 }
             }
-            catch
-            {
-
-                return null;
-            }
         }
 
-        /// <summary>
-        /// Создает запись о гильдии с начальными данными ID гильдии, название гильдии и ID владельца гильдии.
-        /// </summary>
-        /// <param name="guild">SocketGuild</param>
-        /// <returns></returns>
-        internal static Task CreateGuildAccount(IGuild guild)
+
+        internal static Task SaveGuildAccountAsync(IGuild guild, Guild guildAccount)
         {
-            using (SqliteDbContext context = new SqliteDbContext())
+            using (var ctx = new SqliteDbContext())
             {
-                Guild new_Guild = new Guild
+                if (ctx.Guilds.Where(G => G.ID == guild.Id).Count() < 1)
                 {
-                    ID = guild.Id,
-                    Name = guild.Name,
-                    OwnerId = guild.OwnerId
-                };
+                    var newGuild = new Guild
+                    {
+                        ID = guild.Id
+                    };
 
-                context.Guilds.Add(new_Guild);
-                context.SaveChanges();
+                    ctx.Guilds.Add(newGuild);
+                    ctx.SaveChangesAsync();
 
-                Console.WriteLine($"Гильдия {guild.Name} успешно зарегистрирована.");
-                return Task.CompletedTask;
-            }
-        }
-
-        /// <summary>
-        /// Обновляет запись в локальном хранилище о информационом канале гильдии.
-        /// </summary>
-        /// <param name="guild">SocketGuild</param>
-        /// <param name="channel">ISocketMessageChannel</param>
-        /// <returns></returns>
-        internal static Task UpdateGuildNotificationChannel(IGuild guild, IChannel channel)
-        {
-            using (var Db = new SqliteDbContext())
-            {
-                var GuildData = Db.Guilds.First(g => g.ID == guild.Id);
-                GuildData.NotificationChannel = channel.Id;
-                Db.Guilds.Update(GuildData);
-                Db.SaveChanges();
-                Console.WriteLine($"Гильдия {guild.Name} успешно обновила канал для новостей.");
-                return Task.CompletedTask;
-            }
-        }
-
-        /// <summary>
-        /// Обновляет запись в локальном хранилище о лог канале гильдии.
-        /// </summary>
-        /// <param name="guild">SocketGuild</param>
-        /// <param name="channel">ISocketMessageChannel</param>
-        /// <returns></returns>
-        internal static Task UpdateGuildLoggingChannel(IGuild guild, IChannel channel)
-        {
-            using (var Db = new SqliteDbContext())
-            {
-                var GuildData = Db.Guilds.First(g => g.ID == guild.Id);
-                GuildData.LoggingChannel = channel.Id;
-                Db.Guilds.Update(GuildData);
-                Db.SaveChanges();
-                Console.WriteLine($"Гильдия {guild.Name} успешно обновила канал для логгирования.");
-                return Task.CompletedTask;
-            }
-        }
-
-        /// <summary>
-        /// Обновляет запись в локальном хранилище о включенном или выключенном логировании в гильдии.
-        /// </summary>
-        /// <param name="guild">SocketGuild</param>
-        /// <param name="channel">bool true\false</param>
-        /// <returns></returns>
-        internal static Task ToggleGuildLogging(IGuild guild, bool value)
-        {
-
-            using (var Db = new SqliteDbContext())
-            {
-                var GuildData = Db.Guilds.First(g => g.ID == guild.Id);
-                GuildData.EnableLogging = value;
-                Db.Guilds.Update(GuildData);
-                Db.SaveChanges();
-                Console.WriteLine($"Гильдия {guild.Name} включила или выключила логгирование.");
-                return Task.CompletedTask;
+                    return Task.CompletedTask;
+                }
+                else
+                {
+                    //ctx.Guilds.Add(guildAccount);
+                    ctx.Entry(guildAccount).State = EntityState.Modified;
+                    ctx.SaveChangesAsync();
+                    return Task.CompletedTask;
+                }
             }
         }
 

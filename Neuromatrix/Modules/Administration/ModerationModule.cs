@@ -9,6 +9,7 @@ using Discord.WebSocket;
 
 using Neuromatrix.Data;
 using Neuromatrix.Helpers;
+using Neuromatrix.Models.Db;
 using Neuromatrix.Extensions;
 using Neuromatrix.Preconditions;
 
@@ -23,100 +24,53 @@ namespace Neuromatrix.Modules.Administration
         }
         #endregion
 
-        [Command("клан")]
+        [Command("clan")]
         [Summary("Информационная справка о доступных командах администраторам клана.")]
         [Cooldown(5)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
         public async Task GuildInfo()
         {
-            #region Checks
-            if (Context.User.IsBot) return; //Ignore bots
-            if (Context.IsPrivate)
-            {
-                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
-                return;
-            }
-
-            SocketGuildUser user = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
-
-            if (!user.GuildPermissions.Administrator)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-            #endregion
-
-            #region Add guild in local storage if null
-            var guild = Database.GetGuildAccount(Context.Guild);
-            if (guild == null)
-                await Database.CreateGuildAccount(Context.Guild);
-            #endregion
-
-            #region Data
+            // Get some bot info
             var app = await Context.Client.GetApplicationInfoAsync();
-            #endregion
 
             #region Message
-            embed.WithColor(Color.Orange);
-            embed.WithTitle($"Приветствую страж {Context.User.Username}");
-            embed.WithDescription("Краткий ликбез о том какие команды доступны избранным стражам и капитану.");
-            embed.AddField("Команда: **!клан инфо**", "Эта команда выводит мои настройки для текущей гильдии, так же содержит некоторую полезную и не очень информацию.");
-            embed.AddField("Команда: **!клан новости**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда информационные сообщения например о Зуре.");
-            embed.AddField("Команда: **!клан логи**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда тех. сообщения например о том что кто-то покинул сервер.");
-            embed.AddField("Команда: **!клан логирование**", "Эта команда позволяет включить или выключить Тех. сообщения.");
-            embed.AddField("Команда: **!посмотреть приветствие**", "Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.");
-            embed.AddField("Команда: **!сохранить приветствие <сообщение>**", "Сохраняет сообщение-приветствие и включает механизм отправки сообщения.\nПоддерживает синтаксис MarkDown для красивого оформления.");
-            embed.WithFooter($"Любые предложения по улучшению или исправлении ошибок пожалуйста сообщи моему создателю {app.Owner.Username}", app.Owner.GetAvatarUrl());
+            EmbedBuilder embed = new EmbedBuilder()
+                .WithColor(Color.Orange)
+                .WithTitle($"Приветствую страж {Context.User.Username}")
+                .WithDescription("Краткий ликбез о том какие команды доступны избранным стражам и капитану.")
+                .AddField("Команда: **!clan info**", "Эта команда выводит мои настройки для текущей гильдии, так же содержит некоторую полезную и не очень информацию.")
+                .AddField("Команда: **!news**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда информационные сообщения например о Зуре.")
+                .AddField("Команда: **!switch news**", "Эта команда позволяет включить или выключить оповещения о Зур-е")
+                .AddField("Команда: **!logs**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда сервисные сообщения например о том что кто-то покинул сервер.")
+                .AddField("Команда: **!switch logs**", "Эта команда позволяет включить или выключить Тех. сообщения.")
+                .AddField("Команда: **!preview welcome**", "Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.")
+                .AddField("Команда: **!save welcome <Message>**", "Сохраняет сообщение-приветствие и включает механизм отправки сообщения.\nПоддерживает синтаксис MarkDown для красивого оформления.")
+                .WithFooter($"Любые предложения по улучшению или исправлении ошибок пожалуйста сообщи моему создателю {app.Owner.Username}#{app.Owner.Discriminator}", app.Owner.GetAvatarUrl());
+            #endregion
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
-            #endregion
-
-
         }
 
-        [Command("клан инфо")]
+        [Command("clan info")]
         [Summary("Отображает все настройки бота в гильдии где была вызвана комманда.")]
         [Cooldown(5)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
         public async Task GetGuildConfig()
         {
-            #region Base Checks
-            if (Context.User.IsBot) return; //Ignore bots
-            if (Context.IsPrivate)
-            {
-                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
-                return;
-            }
-
-            SocketGuildUser user = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
-
-            if (!user.GuildPermissions.Administrator)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-
-            var guild = Database.GetGuildAccount(Context.Guild);
-
-            if (guild == null)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-            #endregion
+            // Get or create personal guild settings
+            Guild guild = Database.GetGuildAccountAsync(Context.Guild).Result;
 
             #region Data
             var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
             string NotificationChannel = "Не указан";
             string LogChannel = "Не указан";
             string FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
-            string logs;
+            string logs = ConvertBoolean(guild.EnableLogging);
+            string news = ConvertBoolean(guild.EnableNotification);
             #endregion
 
             #region Checks for Data
@@ -125,73 +79,49 @@ namespace Neuromatrix.Modules.Administration
 
             if (guild.LoggingChannel != 0)
                 LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
-
-            logs = ConvertBoolean(guild.EnableLogging);
             #endregion
 
             #region Message
-            embed.WithColor(Color.LightOrange);
-            embed.WithTitle($"Мои настройки на этом корабле.");
-            embed.WithThumbnailUrl(Context.Guild.IconUrl);
-            embed.WithDescription($"Клан **{Context.Guild.Name}** имеет свой корабль с **{FormattedCreatedAt}**, капитан корабля в данный момент является **{OwnerName}**");
-            embed.AddField("Сейчас на корабле:",
+            EmbedBuilder embed = new EmbedBuilder()
+                .WithColor(Color.Orange)
+                .WithTitle($"Мои настройки на этом корабле.")
+                .WithThumbnailUrl(Context.Guild.IconUrl)
+                .WithDescription($"Клан **{Context.Guild.Name}** имеет свой корабль с **{FormattedCreatedAt}**, капитаном корабля в данный момент является **{OwnerName}**")
+                .AddField("Сейчас на корабле:",
                 $"Всего каналов: **{Context.Guild.Channels.Count}**\n" +
-                $"Стражей на корабле: **{Context.Guild.Users.Count}**");
-            embed.AddField("Новостной канал", $"В данный момент используется **{NotificationChannel}** для сообщений о Зур-е.");
-            embed.AddField("Технический канал", $"В данный момент используется **{LogChannel}** для сервисных сообщений корабля");
-            embed.AddField("Тех. сообщения включены?", logs);
+                $"Стражей на корабле: **{Context.Guild.Users.Count}**")
+                .AddField("Новостной канал", $"В данный момент используется **{NotificationChannel}** для сообщений о Зур-е.")
+                .AddField("Оповещения о Зур-е включены?", news)
+                .AddField("Технический канал", $"В данный момент используется **{LogChannel}** для сервисных сообщений клана")
+                .AddField("Тех. сообщения включены?", logs);
+            #endregion
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
-            #endregion
         }
 
-        [Command("клан новости")]
+        [Command("news")]
         [Summary("Сохраняет ID канала для использования в новостных сообщениях.")]
         [Cooldown(5)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
         public async Task SetNotificationChannel()
         {
-            #region Checks
-            if (Context.User.IsBot) return; //Ignore bots
-            if (Context.IsPrivate)
-            {
-                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
-                return;
-            }
+            // Get or create personal guild settings
+            Guild guild = Database.GetGuildAccountAsync(Context.Guild).Result;
 
-            SocketGuildUser user = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
-
-            if (!user.GuildPermissions.Administrator)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-
-            var guild = Database.GetGuildAccount(Context.Guild);
-
-            if (guild == null)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-            #endregion
-
-            #region Data
             string NotificationChannel = "Не указан";
-            #endregion
+            string news = ConvertBoolean(guild.EnableNotification);
 
-            #region Checks for Data
+            //Get notification channel name
             if (guild.NotificationChannel != 0)
                 NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
-            #endregion
 
             #region Message
-            embed.WithColor(Color.Orange);
-            embed.WithTitle("Новостной канал");
+            EmbedBuilder embed = new EmbedBuilder()
+                .WithColor(Color.Orange)
+                .WithTitle("Новостной канал");
             if (guild.NotificationChannel == 0)
             {
                 embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять новости о Зур-е. :frowning: ";
@@ -200,236 +130,197 @@ namespace Neuromatrix.Modules.Administration
             {
                 embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **{NotificationChannel}**.";
             }
-
+            embed.AddField("Оповещения о Зур-е включены?", news);
             embed.WithFooter($"Хотите я запишу этот канал как новостной? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
-
-            var message = await Context.Channel.SendMessageAsync("", embed: embed.Build());
             #endregion
+
+            var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
 
             //Если true обновляем id новостного канала.
             bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
             if (choice == true)
-                await Database.UpdateGuildNotificationChannel(Context.Guild, Context.Channel);
+            {
+                guild.NotificationChannel = Context.Channel.Id;
+                await Database.SaveGuildAccountAsync(Context.Guild, guild);
+            }
         }
 
-        [Command("клан логи")]
+        [Command("logs")]
         [Summary("Сохраняет ID канала для использования в тех сообщениях.")]
         [Cooldown(5)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
         public async Task SetLogChannel()
         {
-            #region Checks
-            if (Context.User.IsBot) return; //Ignore bots
-            if (Context.IsPrivate)
-            {
-                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
-                return;
-            }
+            // Get or create personal guild settings
+            Guild guild = Database.GetGuildAccountAsync(Context.Guild).Result;
 
-            SocketGuildUser user = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
-
-            if (!user.GuildPermissions.Administrator)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-
-            var guild = Database.GetGuildAccount(Context.Guild);
-            if (guild == null)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-            #endregion
-
-            #region Data
             string LogChannel = "Не указан";
-            #endregion
+            string logs = ConvertBoolean(guild.EnableLogging);
 
-            #region Checks for Data
+            //Get logging channel name
             if (guild.LoggingChannel != 0)
                 LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
-            #endregion
 
             #region Message
-            embed.WithColor(Color.Orange);
-            embed.WithTitle("Технический канал");
+            EmbedBuilder embed = new EmbedBuilder()
+                .WithColor(Color.Orange)
+                .WithTitle("Технический канал");
             if (guild.LoggingChannel == 0)
             {
-                embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять сообщения о том когда-то вышел или кого либо обновили. :frowning: ";
+                embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять сервисные сообщения. :frowning: ";
             }
             else
             {
-                embed.Description = $"В данный момент у меня записанно что все технические сообщения я должна отправлять в **#{LogChannel}**.";
+                embed.Description = $"В данный момент у меня записанно что все сервисные сообщения я должна отправлять в **#{LogChannel}**.";
             }
+            embed.AddField("Cервисные сообщения включены?", logs);
             embed.WithFooter($"Хотите я запишу этот канал как технический? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
-
-            var message = await Context.Channel.SendMessageAsync("", embed: embed.Build());
             #endregion
 
+            var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
 
             //Если true обновляем id лог канала.
             bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
             if (choice == true)
-                await Database.UpdateGuildLoggingChannel(Context.Guild, Context.Channel);
+            {
+                guild.LoggingChannel = Context.Channel.Id;
+                await Database.SaveGuildAccountAsync(Context.Guild, guild);
+            }
         }
 
-        [Command("клан логирование")]
-        [Summary("Сохраняет ID канала для использования в тех. сообщениях.")]
+        [Command("switch logs")]
+        [Summary("Вкл. или Выкл. тех. сообщения.")]
         [Cooldown(5)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
         public async Task ToggleLogging()
         {
-            #region Checks
-            if (Context.User.IsBot) return; //Ignore bots
-            if (Context.IsPrivate)
-            {
-                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
-                return;
-            }
+            // Get or create personal guild settings
+            Guild guild = Database.GetGuildAccountAsync(Context.Guild).Result;
 
-            SocketGuildUser user = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
-
-            if (!user.GuildPermissions.Administrator)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-
-            var guild = Database.GetGuildAccount(Context.Guild);
-            if (guild == null)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-            #endregion
-
-            #region Data
             string LogChannel = "Не указан";
-            string LogState;
-            #endregion
+            string logs = ConvertBoolean(guild.EnableLogging);
 
-            #region Checks for Data
+            //Get logging channel name
             if (guild.LoggingChannel != 0)
                 LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
-            LogState = ConvertBoolean(guild.EnableLogging);
-            #endregion
 
             #region Message
-            embed.Color = Color.Orange;
-            embed.Title = "Технические сообщения";
-            embed.Description = $"В данный момент все технические сообщения я отправляю в канал **{LogChannel}** ";
-
-            embed.AddField("Оповещения включены?", LogState, true);
-            embed.WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
-
-            var message = await Context.Channel.SendMessageAsync("", embed: embed.Build());
+            EmbedBuilder embed = new EmbedBuilder()
+            .WithColor(Color.Orange)
+            .WithTitle("Технические сообщения")
+            .WithDescription($"В данный момент все технические сообщения я отправляю в канал **{LogChannel}**")
+            .AddField("Оповещения включены?", logs, true)
+            .WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
             #endregion
+
+            var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
 
             //Если true или false обновляем включено или выключено логирование для гильдии, в противном случае ничего не делаем.
             bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
             if (choice == true)
             {
-                await Database.ToggleGuildLogging(Context.Guild, true);
+                guild.EnableLogging = true;
+                await Database.SaveGuildAccountAsync(Context.Guild, guild);
             }
             else if (choice == false)
             {
-                await Database.ToggleGuildLogging(Context.Guild, false);
+                guild.EnableLogging = false;
+                await Database.SaveGuildAccountAsync(Context.Guild, guild);
             }
 
         }
 
-        [Command("посмотреть приветствие")]
+        [Command("switch news")]
+        [Summary("Включает или выключает новости о зуре")]
+        [Cooldown(5)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
+        public async Task ToggleNews()
+        {
+            // Get or create personal guild settings
+            Guild guild = Database.GetGuildAccountAsync(Context.Guild).Result;
+
+            string NewsChannel = "Не указан";
+            string news = ConvertBoolean(guild.EnableNotification);
+
+            //Get notification channel name
+            if (guild.NotificationChannel != 0)
+                NewsChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
+
+            #region Message
+            EmbedBuilder embed = new EmbedBuilder()
+                .WithColor(Color.Orange)
+                .WithTitle("Новостные сообщения")
+                .WithDescription($"В данный момент все новостные сообщения о Зур-е я отправляю в канал **{NewsChannel}**")
+                .AddField("Оповещения включены?", news, true)
+                .WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
+            #endregion
+
+            var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
+
+            //Если true или false обновляем включено или выключено логирование для гильдии, в противном случае ничего не делаем.
+            bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
+
+            if (choice == true)
+            {
+                guild.EnableNotification = true;
+                await Database.SaveGuildAccountAsync(Context.Guild, guild);
+            }
+            else if (choice == false)
+            {
+                guild.EnableNotification = false;
+                await Database.SaveGuildAccountAsync(Context.Guild, guild);
+            }
+        }
+
+        [Command("preview welcome")]
         [Summary("Команда предпросмотра приветственного сообщения")]
         [Cooldown(5)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
         public async Task WelcomeMessagePreview()
         {
-            #region Checks
-            if (Context.User.IsBot) return; //Ignore bots
-            if (Context.IsPrivate)
-            {
-                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
-                return;
-            }
+            // Get or create personal guild settings
+            var guild = Database.GetGuildAccountAsync(Context.Guild).Result;
 
-            SocketGuildUser user = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
-
-            if (!user.GuildPermissions.Administrator)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-
-            var guild = Database.GetGuildAccount(Context.Guild);
-            if (guild == null)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
             if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
             {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!сохранить приветствие <текст сообщения>**";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
+                await Context.Channel.SendMessageAsync($":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!сохранить приветствие <текст сообщения>**");
                 return;
             }
-            #endregion
 
-            await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.", false, MiscHelpers.WelcomeEmbed(user).Build());
+            await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.", embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build());
         }
 
-        [Command("сохранить приветствие")]
+        [Command("save welcome")]
         [Summary("Сохраняет сообщение для отправки всем кто пришел в гильдию")]
         [Cooldown(5)]
+        [RequireUserPermission(GuildPermission.Administrator,
+            ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+            NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
         public async Task SaveWelcomeMessage([Remainder]string message)
         {
-            #region Checks
-            if (Context.IsPrivate)
-            {
-                await Context.Channel.SendMessageAsync(":x: | Эта команда не доступна в личных сообщениях.");
-                return;
-            }
+            // Get or create personal guild settings
+            var guild = Database.GetGuildAccountAsync(Context.Guild).Result;
 
-            SocketGuildUser user = Context.User as SocketGuildUser;
-            var embed = new EmbedBuilder();
+            //Dont save empty welcome message.
+            if (string.IsNullOrWhiteSpace(message)) return;
+            
+            guild.WelcomeMessage = message;
 
-            if (!user.GuildPermissions.Administrator)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Прошу прощения страж {Context.User.Username}, но эта команда доступна только капитану корабля и его избранным стражам.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
+            await Database.SaveGuildAccountAsync(Context.Guild, guild);
 
-            var guild = Database.GetGuildAccount(Context.Guild);
-            if (guild == null)
-            {
-                embed.WithColor(Color.Red);
-                embed.Title = $":x: | Гильдия не найдена в базе данных, для начал введите команду !клан, для авто регистрации.";
-                await Context.Channel.SendMessageAsync(null, false, embed.Build());
-                return;
-            }
-            #endregion
-
-            await Database.SaveWelcomeMessage(Context.Guild, message);
-
-            await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение успешно сохранено.");
+            await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение сохранено.");
         }
     }
 }

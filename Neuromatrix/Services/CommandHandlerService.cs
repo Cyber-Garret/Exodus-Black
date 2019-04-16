@@ -14,7 +14,7 @@ namespace Neuromatrix.Services
     public class CommandHandlerService
     {
         #region Private fields
-        private DiscordShardedClient _client = Program._client;
+        private readonly DiscordShardedClient _client = Program._client;
         private CommandService _commands;
         private readonly IServiceProvider _services;
         #endregion
@@ -27,26 +27,29 @@ namespace Neuromatrix.Services
 
         public async Task ConfigureAsync()
         {
-            _commands = new CommandService();
-            var cmdConfig = new CommandServiceConfig
+            _commands = new CommandService(new CommandServiceConfig
             {
-                DefaultRunMode = RunMode.Async
-            };
+                DefaultRunMode = RunMode.Async,
+                CaseSensitiveCommands = false
+            });
 
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
         public async Task HandleCommandAsync(SocketMessage arg)
         {
-
+            // Ignore if not SocketUserMessage 
             if (!(arg is SocketUserMessage msg)) return;
-            if (msg.Channel is SocketDMChannel) return;
+            // Ignore if command execute in Private message
+            //if (msg.Channel is SocketDMChannel) return;
 
             var context = new ShardedCommandContext(_client, msg);
+            // Ignore all bots
             if (context.User.IsBot) return;
-            
+
 
             var argPos = 0;
+            // Ignore if not mention this bot or command not start from char !
             if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos) || msg.HasCharPrefix('!', ref argPos))) return;
             {
 
@@ -58,7 +61,7 @@ namespace Neuromatrix.Services
                 await executionTask.ContinueWith(task =>
                  {
                      if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
-                     const string errTemplate = "{0}, Ошибка: {1}.";
+                     const string errTemplate = "{0}, {1}.";
                      var errMessage = string.Format(errTemplate, context.User.Mention, task.Result.ErrorReason);
                      context.Channel.SendMessageAsync(errMessage);
                  });
