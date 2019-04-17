@@ -52,4 +52,8 @@
     <PackageReference Include="Nett" Version="0.11.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\API\API.csproj" />
+  </ItemGroup>
+
 </Project>
