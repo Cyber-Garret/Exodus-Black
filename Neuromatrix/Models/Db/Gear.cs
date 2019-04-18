@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Neuromatrix.Models.Db
+namespace DiscordBot.Models.Db
 {
     public class Gear
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Neuromatrix.Migrations
+namespace DiscordBot.Migrations
 {
     public partial class Migration : Microsoft.EntityFrameworkCore.Migrations.Migration
     {

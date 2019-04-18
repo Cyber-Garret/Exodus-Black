@@ -7,9 +7,9 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neuromatrix.Preconditions;
+using DiscordBot.Preconditions;
 
-namespace Neuromatrix.Services
+namespace DiscordBot.Services
 {
     public class CommandHandlerService
     {

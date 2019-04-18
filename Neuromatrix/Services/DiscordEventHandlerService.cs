@@ -6,11 +6,11 @@ using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 
-using Neuromatrix.Data;
-using Neuromatrix.Helpers;
-using Neuromatrix.Modules.Administration;
+using DiscordBot.Data;
+using DiscordBot.Helpers;
+using DiscordBot.Modules.Administration;
 
-namespace Neuromatrix.Services
+namespace DiscordBot.Services
 {
     public class DiscordEventHandlerService
     {

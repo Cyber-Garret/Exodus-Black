@@ -3,7 +3,7 @@
 using Discord;
 using Discord.Commands;
 
-namespace Neuromatrix
+namespace DiscordBot
 {
     public class BotModuleBase : ModuleBase<ShardedCommandContext>
     {

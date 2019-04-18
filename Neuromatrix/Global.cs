@@ -1,6 +1,6 @@
 ﻿using Discord.WebSocket;
 
-namespace Neuromatrix
+namespace DiscordBot
 {
     internal static class Global
     {

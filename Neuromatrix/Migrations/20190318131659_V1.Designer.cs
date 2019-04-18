@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Neuromatrix.Data;
+using DiscordBot.Data;
 
-namespace Neuromatrix.Migrations
+namespace DiscordBot.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
     [Migration("20190318131659_V1")]

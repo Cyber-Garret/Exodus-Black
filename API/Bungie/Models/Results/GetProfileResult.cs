@@ -4,12 +4,12 @@ using System.Text;
 
 namespace API.Bungie.Models
 {
-    public class GetProfileResult : RootObject
+    public class GetProfileResult : RootResult
     {
-        public Response1 Response { get; set; }
+        public Response Response { get; set; }
     }
 
-    public class Response1
+    public class Response
     {
         public Profile profile { get; set; }
         public ProfileCurrencies profileCurrencies { get; set; }

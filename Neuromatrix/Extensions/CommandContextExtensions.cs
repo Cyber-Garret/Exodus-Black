@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 
-namespace Neuromatrix.Extensions
+namespace DiscordBot.Extensions
 {
     public static class CommandContextExtensions
     {

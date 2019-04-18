@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Neuromatrix.Preconditions
+namespace DiscordBot.Preconditions
 {
     public class Cooldown : PreconditionAttribute
     {

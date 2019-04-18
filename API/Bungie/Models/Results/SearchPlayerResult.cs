@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace API.Bungie.Models
 {
-    public class SearchPlayerResult: RootObject
+    public class SearchPlayerResult: RootResult
     {
         public bool HasPlayers
         {

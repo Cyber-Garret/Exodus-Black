@@ -1,4 +1,4 @@
-﻿namespace Neuromatrix.Models
+﻿namespace DiscordBot.Models
 {
     public class Configuration
     {

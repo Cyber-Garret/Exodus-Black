@@ -1,17 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace API.Bungie.Models
 {
-    public class RootObject
+    public partial class RootResult
     {
-        public int ErrorCode { get; set; }
-        public int ThrottleSeconds { get; set; }
+        [JsonProperty("ErrorCode")]
+        public long ErrorCode { get; set; }
+
+        [JsonProperty("ThrottleSeconds")]
+        public long ThrottleSeconds { get; set; }
+
+        [JsonProperty("ErrorStatus")]
         public string ErrorStatus { get; set; }
+
+        [JsonProperty("Message")]
         public string Message { get; set; }
+
+        [JsonProperty("MessageData")]
         public MessageData MessageData { get; set; }
     }
-    public class MessageData { }
+    public partial class MessageData { }
 
 }

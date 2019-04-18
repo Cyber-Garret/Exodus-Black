@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 using Discord;
 
-using Neuromatrix.Models.Db;
+using DiscordBot.Models.Db;
 
-namespace Neuromatrix.Data
+namespace DiscordBot.Data
 {
     public static class Database
     {

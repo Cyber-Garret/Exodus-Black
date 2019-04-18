@@ -2,9 +2,9 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-using Neuromatrix.Models.Db;
+using DiscordBot.Models.Db;
 
-namespace Neuromatrix.Data
+namespace DiscordBot.Data
 {
     public class SqliteDbContext : DbContext
     {

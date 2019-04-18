@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 
 using Discord;
 using Discord.Commands;
-using Neuromatrix.Preconditions;
+using DiscordBot.Preconditions;
 
-namespace Neuromatrix.Modules.Commands
+namespace DiscordBot.Modules.Commands
 {
     public class HelpModule : BotModuleBase
     {

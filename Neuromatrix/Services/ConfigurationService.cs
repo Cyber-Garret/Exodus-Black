@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-using Neuromatrix.Models;
+using DiscordBot.Models;
 
-namespace Neuromatrix.Services
+namespace DiscordBot.Services
 {
     public class ConfigurationService
     {

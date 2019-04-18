@@ -3,11 +3,11 @@
 using Discord;
 using Discord.Commands;
 
-using Neuromatrix.Data;
-using Neuromatrix.Models.Db;
-using Neuromatrix.Preconditions;
+using DiscordBot.Data;
+using DiscordBot.Models.Db;
+using DiscordBot.Preconditions;
 
-namespace Neuromatrix.Modules.Commands
+namespace DiscordBot.Modules.Commands
 {
     public class ExoticModule : BotModuleBase
     {

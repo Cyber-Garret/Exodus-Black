@@ -1,4 +1,4 @@
-﻿namespace Neuromatrix.Models.Db
+﻿namespace DiscordBot.Models.Db
 {
     public class Guild
     {

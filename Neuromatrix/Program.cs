@@ -10,11 +10,11 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neuromatrix.Models;
-using Neuromatrix.Services;
-using Neuromatrix.Modules.Administration;
+using DiscordBot.Models;
+using DiscordBot.Services;
+using DiscordBot.Modules.Administration;
 
-namespace Neuromatrix
+namespace DiscordBot
 {
     class Program
     {
@@ -28,7 +28,7 @@ namespace Neuromatrix
 
         private static void Main()
         {
-            Console.Title = $"Neuromatrix (Discord.Net v{DiscordConfig.Version})";
+            Console.Title = $"Neuromatrix Discord Bot (Discord.Net v{DiscordConfig.Version})";
             _config_path = Directory.GetCurrentDirectory() + "/UserData/config.tml";
 
             new Program().StartAsync().GetAwaiter().GetResult();

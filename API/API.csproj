@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Bungie\Models\Destiny2\" />
     <Folder Include="Fortnite\" />
     <Folder Include="Nekos.life\" />
     <Folder Include="Shibe.online\" />

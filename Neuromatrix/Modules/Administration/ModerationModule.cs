@@ -7,13 +7,13 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neuromatrix.Data;
-using Neuromatrix.Helpers;
-using Neuromatrix.Models.Db;
-using Neuromatrix.Extensions;
-using Neuromatrix.Preconditions;
+using DiscordBot.Data;
+using DiscordBot.Helpers;
+using DiscordBot.Models.Db;
+using DiscordBot.Extensions;
+using DiscordBot.Preconditions;
 
-namespace Neuromatrix.Modules.Administration
+namespace DiscordBot.Modules.Administration
 {
     public class ModerationModule : BotModuleBase
     {

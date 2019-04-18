@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
-using Neuromatrix.Data;
+using DiscordBot.Data;
 
-namespace Neuromatrix.Services
+namespace DiscordBot.Services
 {
     public class ReminderService
     {

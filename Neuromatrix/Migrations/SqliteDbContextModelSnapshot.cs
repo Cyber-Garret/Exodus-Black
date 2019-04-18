@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Neuromatrix.Data;
+using DiscordBot.Data;
 
-namespace Neuromatrix.Migrations
+namespace DiscordBot.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
     partial class SqliteDbContextModelSnapshot : ModelSnapshot
