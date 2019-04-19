@@ -15,12 +15,12 @@ namespace API.Bungie
     {
         private int _clanId { get; set; }
         private List<string> UserId { get; set; }
-        private List<string> CharacterIds { get; set; }
+        private Dictionary<string, DateTime> GuildMemberDict { get; set; }
         public DestinyClanMemberWeekStat(int ClanId)
         {
             _clanId = ClanId;
             UserId = new List<string>();
-            CharacterIds = new List<string>();
+            GuildMemberDict = new Dictionary<string, DateTime>();
         }
 
         public async Task GetGuildMemberId()
@@ -40,17 +40,8 @@ namespace API.Bungie
 
             foreach (var item in UserId)
             {
-                GetProfileResult User = profile.GetProfileWithComponentsAsync(BungieMembershipType.TigerBlizzard, item, DestinyComponentType.Profiles).Result;
-                string[] characters = User.Response.profile.data.characterIds;
-                foreach (string character in characters)
-                {
-                    GetAccount account = new GetAccount();
-                    AccountResult wtf = await account.GetAccountAsync(User.Response.profile.data.userInfo.membershipId, character, 250, 0);
-                    foreach (var activity in wtf.Response.Activities)
-                    {
-                        activity.Period.DateTime
-                    }
-                }
+                var User = (await profile.GetProfileWithComponentsAsync(BungieMembershipType.TigerBlizzard, item, DestinyComponentType.Profiles)).Response;
+                GuildMemberDict.Add(User.profile.data.userInfo.displayName, User.profile.data.dateLastPlayed);
             }
             await Task.CompletedTask;
         }

@@ -21,9 +21,10 @@ namespace DiscordBot.Modules.Commands
         [Command("test")]
         public async Task TestTask()
         {
-            int clanid = 3735687;
+            int firstClanId = 3526561;
+            int secondClanId = 3735687;
             //List<>
-            DestinyClanMemberWeekStat weekStat = new DestinyClanMemberWeekStat(clanid);
+            DestinyClanMemberWeekStat weekStat = new DestinyClanMemberWeekStat(firstClanId);
             await weekStat.GetGuildMemberId();
             await weekStat.GetGuildCharacterIds();
             
