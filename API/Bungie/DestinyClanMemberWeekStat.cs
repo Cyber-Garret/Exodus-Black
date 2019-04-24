@@ -14,12 +14,12 @@ using API.Bungie.Models.GroupV2.GetGroup;
 
 namespace API.Bungie
 {
-    public class DestinyClanMemberWeekStat
+    public class Destiny2ClanMemberStat
     {
         private int _clanId { get; set; }
         private Dictionary<string, string> UserId { get; set; }
         private List<GuidMember> guidMembers { get; set; }
-        public DestinyClanMemberWeekStat(int ClanId)
+        public Destiny2ClanMemberStat(int ClanId)
         {
             _clanId = ClanId;
             UserId = new Dictionary<string, string>();
