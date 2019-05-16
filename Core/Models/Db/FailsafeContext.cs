@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Models.Db
 {
-	internal class FailsafeContext : DbContext
+	public class FailsafeContext : DbContext
 	{
-		internal DbSet<Gear> Gears { get; set; }
-		internal DbSet<Guild> Guilds { get; set; }
+		public DbSet<Gear> Gears { get; set; }
+		public DbSet<Guild> Guilds { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder Options)
 		{
 			//string DbLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"/UserData/Neuromatrix.db";
 			string DbLocation = @"Neuromatrix.db";
-			Options.UseSqlite($"DataSource={DbLocation}");
+			Options.UseSqlite($"DataSource={DbLocation}", b => b.MigrationsAssembly("Web"));
+			base.OnConfiguring(Options);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
