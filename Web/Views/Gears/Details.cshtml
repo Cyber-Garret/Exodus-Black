@@ -1,102 +1,102 @@
 ﻿@model Core.Models.Db.Gear
 
 @{
-    ViewData["Title"] = "Подробней";
+	ViewData["Title"] = "Подробней";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <div>
 	<h4>Экзотическое оружие</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IconUrl)
-        </dt>
-        <dd class = "col-sm-10">
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Name)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Name)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Type)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Type)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.IconUrl)
+		</dt>
+		<dd class="col-sm-10">
 			<a href="@Html.DisplayFor(model => model.IconUrl)" target="_blank">@Html.DisplayFor(model => model.IconUrl)</a>
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class = "col-sm-10">
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.ImageUrl)
+		</dt>
+		<dd class="col-sm-10">
 			<a href="@Html.DisplayFor(model => model.ImageUrl)" target="_blank">@Html.DisplayFor(model => model.ImageUrl)</a>
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PerkName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PerkName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PerkDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PerkDescription)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SecondPerkName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SecondPerkName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SecondPerkDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SecondPerkDescription)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DropLocation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DropLocation)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Catalyst)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Catalyst)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.WhereCatalystDrop)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.WhereCatalystDrop)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CatalystQuest)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CatalystQuest)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CatalystBonus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CatalystBonus)
-        </dd>
-    </dl>
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Description)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Description)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.PerkName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.PerkName)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.PerkDescription)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.PerkDescription)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.SecondPerkName)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.SecondPerkName)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.SecondPerkDescription)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.SecondPerkDescription)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.DropLocation)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.DropLocation)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Catalyst)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Catalyst)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.WhereCatalystDrop)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.WhereCatalystDrop)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.CatalystQuest)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.CatalystQuest)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.CatalystBonus)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.CatalystBonus)
+		</dd>
+	</dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a> |
+	<a asp-action="Index">Назад к списку</a>
 </div>

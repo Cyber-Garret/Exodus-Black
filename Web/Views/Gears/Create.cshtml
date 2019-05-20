@@ -1,17 +1,17 @@
 ﻿@model Core.Models.Db.Gear
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Добавить";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Gear</h4>
+<h4>Экзотическое оружие</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -24,12 +24,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="IconUrl" class="control-label"></label>
-                <input asp-for="IconUrl" class="form-control" />
+                <input type="url" class="form-control" />
                 <span asp-validation-for="IconUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
+                <input type="url" class="form-control" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -62,11 +62,12 @@
                 <input asp-for="DropLocation" class="form-control" />
                 <span asp-validation-for="DropLocation" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Catalyst" class="control-label"></label>
-                <input asp-for="Catalyst" class="form-control" />
-                <span asp-validation-for="Catalyst" class="text-danger"></span>
-            </div>
+			<div class="form-group">
+				<label asp-for="Catalyst" class="control-label"></label> <br />
+				<input type="radio" name="Catalyst" value="true"> Есть <br />
+				<input type="radio" name="Catalyst" value="false"> Нет
+				<span asp-validation-for="Catalyst" class="text-danger"></span>
+			</div>
             <div class="form-group">
                 <label asp-for="WhereCatalystDrop" class="control-label"></label>
                 <input asp-for="WhereCatalystDrop" class="form-control" />
@@ -90,7 +91,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Назад к списку</a>
 </div>
 
 @section Scripts {
