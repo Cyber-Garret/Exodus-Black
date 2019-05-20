@@ -9,13 +9,26 @@ namespace Core.Models.Db
 		public DbSet<Gear> Gears { get; set; }
 		public DbSet<Guild> Guilds { get; set; }
 
-		protected override void OnConfiguring(DbContextOptionsBuilder Options)
+		public FailsafeContext()
 		{
-			//string DbLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @"/UserData/Neuromatrix.db";
-			string DbLocation = @"Neuromatrix.db";
-			Options.UseSqlite($"DataSource={DbLocation}", b => b.MigrationsAssembly("Web"));
-			base.OnConfiguring(Options);
+			Database.EnsureCreated();
 		}
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=sa;Password=yNRASo1FjL");
+		}
+		//public FailsafeContext(DbContextOptions<FailsafeContext> options)
+		//	: base(options)
+		//{
+		//	Database.EnsureCreated();
+		//}
+
+		//protected override void OnConfiguring(DbContextOptionsBuilder Options)
+		//{
+		//	Options.UseSqlite($"DataSource={DbLocation}", b => b.MigrationsAssembly("Web"));
+		//	base.OnConfiguring(Options);
+		//}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Core.Models.Db;
+
 namespace Web
 {
 	public class Startup
@@ -30,7 +32,7 @@ namespace Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			services.AddDbContext<Core.Models.Db.FailsafeContext>();
+			services.AddDbContext<FailsafeContext>();
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 		}
 

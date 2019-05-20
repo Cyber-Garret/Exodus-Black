@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 
 using Core.Models.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers
 {
@@ -17,6 +18,7 @@ namespace Web.Controllers
 		{
 			db = context;
 		}
+		#region Actions
 		public IActionResult Index()
 		{
 			return View();
@@ -27,9 +29,9 @@ namespace Web.Controllers
 			return View();
 		}
 
-		public IActionResult Exotic()
+		public IActionResult About()
 		{
-			return View(db.Gears.ToList());
+			return View();
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -37,5 +39,6 @@ namespace Web.Controllers
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
+		#endregion
 	}
 }
