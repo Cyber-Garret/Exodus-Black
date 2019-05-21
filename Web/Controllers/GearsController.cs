@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Core.Models.Db;
+using Web.Helpers;
 
 namespace Web.Controllers
 {
@@ -19,9 +20,54 @@ namespace Web.Controllers
 		}
 
 		// GET: Gears
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(
+			string sortOrder,
+			string currentFilter,
+			string searchString,
+			int? pageNumber)
 		{
-			return View(await _context.Gears.ToListAsync());
+			ViewData["CurrentSort"] = sortOrder;
+			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+			ViewData["CatalystSortParm"] = sortOrder == "Catalyst" ? "catalyst_desc" : "Catalyst";
+
+			if (searchString != null)
+			{
+				pageNumber = 1;
+			}
+			else
+			{
+				searchString = currentFilter;
+			}
+
+			ViewData["CurrentFilter"] = searchString;
+
+			var gears = from g in _context.Gears
+						select g;
+
+			if (!string.IsNullOrEmpty(searchString))
+			{
+				gears = gears.Where(s => s.Name.ToLower().Contains(searchString.ToLower())
+									   || s.Type.ToLower().Contains(searchString.ToLower()));
+			}
+
+			switch (sortOrder)
+			{
+				case "name_desc":
+					gears = gears.OrderByDescending(s => s.Name);
+					break;
+				case "Catalyst":
+					gears = gears.OrderBy(s => s.Catalyst);
+					break;
+				case "catalyst_desc":
+					gears = gears.OrderByDescending(s => s.Catalyst);
+					break;
+				default:
+					gears = gears.OrderBy(s => s.Name);
+					break;
+			}
+
+			int pageSize = 5;
+			return View(await PaginatedList<Gear>.CreateAsync(gears.AsNoTracking(), pageNumber ?? 1, pageSize));
 		}
 
 		// GET: Gears/Details/5
@@ -94,40 +140,52 @@ namespace Web.Controllers
 		// POST: Gears/Edit/5
 		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-		[HttpPost]
+		[HttpPost, ActionName("Edit")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Type,IconUrl,ImageUrl,Description,PerkName,PerkDescription,SecondPerkName,SecondPerkDescription,DropLocation,Catalyst,WhereCatalystDrop,CatalystQuest,CatalystBonus")] Gear gear)
+		public async Task<IActionResult> EditGear(int? id)
 		{
-			if (id != gear.Id)
+			if (id == null)
 			{
 				return NotFound();
 			}
-
-			if (ModelState.IsValid)
+			var GearToUpdate = await _context.Gears.FirstOrDefaultAsync(s => s.Id == id);
+			if (await TryUpdateModelAsync(
+				GearToUpdate,
+				"",
+				g => g.Name,
+				g => g.Type,
+				g => g.IconUrl,
+				g => g.ImageUrl,
+				g => g.Description,
+				g => g.PerkName,
+				g => g.PerkDescription,
+				g => g.SecondPerkName,
+				g => g.SecondPerkDescription,
+				g => g.DropLocation,
+				g => g.Catalyst,
+				g => g.WhereCatalystDrop,
+				g => g.CatalystQuest,
+				g => g.CatalystBonus
+				))
 			{
 				try
 				{
-					_context.Update(gear);
 					await _context.SaveChangesAsync();
+					return RedirectToAction(nameof(Index));
 				}
-				catch (DbUpdateConcurrencyException)
+				catch (DbUpdateException /* ex */)
 				{
-					if (!GearExists(gear.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
+					//Log the error (uncomment ex variable name and write a log.)
+					ModelState.AddModelError("", "Неудалось сохранить изменения. " +
+						"Попробуй немного позже, если ошибка все еще будет " +
+						"сообщи администратору.");
 				}
-				return RedirectToAction(nameof(Index));
 			}
-			return View(gear);
+			return View(GearToUpdate);
 		}
 
 		// GET: Gears/Delete/5
-		public async Task<IActionResult> Delete(int? id)
+		public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
 		{
 			if (id == null)
 			{
@@ -135,10 +193,18 @@ namespace Web.Controllers
 			}
 
 			var gear = await _context.Gears
+				.AsNoTracking()
 				.FirstOrDefaultAsync(m => m.Id == id);
 			if (gear == null)
 			{
 				return NotFound();
+			}
+
+			if (saveChangesError.GetValueOrDefault())
+			{
+				ViewData["ErrorMessage"] =
+					"Ошибка удаления. Попробуй немного позже, если ошибка все еще будет " +
+					"сообщи администратору.";
 			}
 
 			return View(gear);
@@ -150,9 +216,22 @@ namespace Web.Controllers
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			var gear = await _context.Gears.FindAsync(id);
-			_context.Gears.Remove(gear);
-			await _context.SaveChangesAsync();
-			return RedirectToAction(nameof(Index));
+			if (gear == null)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+			try
+			{
+				_context.Gears.Remove(gear);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+			}
+			catch (DbUpdateException /* ex */)
+			{
+				//Логгирование ошибки (Раскомментируй переменную ex и реализуй логгирование).
+				return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
+			}
+
 		}
 
 		private bool GearExists(int id)

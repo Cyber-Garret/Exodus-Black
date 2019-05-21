@@ -56,7 +56,7 @@ namespace DiscordBot.Modules.Commands
 			//Краткая история снаряжения.
 			embed.WithDescription(gear.Description);
 			//Если в бд отмечено что оружие имеет катализатор добавляем несколько полей.
-			if (gear.Catalyst == 1)
+			if (gear.Catalyst)
 			{
 				embed.AddField("Катализатор:", "Есть");
 				embed.AddField("Как получить катализатор:", gear.WhereCatalystDrop);

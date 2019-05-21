@@ -1,59 +1,90 @@
-﻿@model IEnumerable<Core.Models.Db.Gear>
+﻿@using Web.Helpers;
+
+@model PaginatedList<Core.Models.Db.Gear>
 
 @{
-    ViewData["Title"] = "Экзотическое вооружения";
+	ViewData["Title"] = "Экзотическое вооружения";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Добавить</a>
+	<a asp-action="Create">Добавить</a>
 </p>
+<form asp-action="Index" method="get">
+	<div class="form-actions no-color">
+		<p>
+			Поиск по названию или типу: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+			<input type="submit" value="Поиск" class="btn btn-outline-primary" /> |
+			<a asp-action="Index">Назад к полному списку</a>
+		</p>
+	</div>
+</form>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IconUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Catalyst)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-				<img src="@Html.DisplayFor(modelItem => item.IconUrl)" alt="@Html.DisplayFor(modelItem=> item.Name)" width="50">
-            </td>
-            <td>
-				<a href="@Html.DisplayFor(modelItem => item.ImageUrl)">Скриншот</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Catalyst)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
-				<a asp-action="Details" asp-route-id="@item.Id">Подробней</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"> Название</a>
+			</th>
+			<th>
+				Тип
+			</th>
+			<th>
+				Иконка
+			</th>
+			<th>
+				Скриншот
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["CatalystSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"> Катализатор</a>
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Type)
+				</td>
+				<td>
+					<img src="@Html.DisplayFor(modelItem => item.IconUrl)" alt="@Html.DisplayFor(modelItem=> item.Name)" width="50">
+				</td>
+				<td>
+					<a href="@Html.DisplayFor(modelItem => item.ImageUrl)">Скриншот</a>
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Catalyst)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+					<a asp-action="Details" asp-route-id="@item.Id">Подробней</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
+@{
+	var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+	var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-secondary @prevDisabled">
+	<
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-secondary @nextDisabled">
+	>
+</a>
