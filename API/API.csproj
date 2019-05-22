@@ -5,15 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Bungie\Models\Destiny2\" />
-    <Folder Include="Fortnite\" />
-    <Folder Include="Nekos.life\" />
-    <Folder Include="Shibe.online\" />
-    <Folder Include="Overwatch\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="RestSharp" Version="106.6.9" />
   </ItemGroup>
 
 </Project>

@@ -8,6 +8,7 @@ namespace Core.Models.Db
 	{
 		public DbSet<Gear> Gears { get; set; }
 		public DbSet<Guild> Guilds { get; set; }
+		public DbSet<ClanWeekOnline> ClanWeekOnlines { get; set; }
 
 		public FailsafeContext()
 		{
@@ -18,11 +19,6 @@ namespace Core.Models.Db
 		{
 			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=sa;Password=yNRASo1FjL");
 		}
-		//public FailsafeContext(DbContextOptions<FailsafeContext> options)
-		//	: base(options)
-		//{
-		//	Database.EnsureCreated();
-		//}
 
 		//protected override void OnConfiguring(DbContextOptionsBuilder Options)
 		//{
