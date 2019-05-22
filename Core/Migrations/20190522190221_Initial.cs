@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Core.Migrations
@@ -7,6 +8,22 @@ namespace Core.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Destiny2Clans",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(nullable: false),
+                    Motto = table.Column<string>(nullable: true),
+                    About = table.Column<string>(nullable: true),
+                    MemberCount = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Destiny2Clans", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Gears",
                 columns: table => new
@@ -52,6 +69,9 @@ namespace Core.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Destiny2Clans");
+
             migrationBuilder.DropTable(
                 name: "Gears");
 

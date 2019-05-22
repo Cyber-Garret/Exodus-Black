@@ -5,7 +5,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace API.Bungie.Models.Results.GroupV2
+namespace API.Bungie.Models.Results.GroupV2.GetMembersOfGroup
 {
 	public class GetMembersOfGroup : RootResult
 	{

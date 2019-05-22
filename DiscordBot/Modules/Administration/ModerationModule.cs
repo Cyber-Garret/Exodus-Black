@@ -219,7 +219,7 @@ namespace DiscordBot.Modules.Administration
 
 				//Initialize Bungie GroupV2
 				BungieApi bungieApi = new BungieApi();
-				var membersOfGroup =  await bungieApi.GetMembersOfGroupResponse(GuildId);
+				var membersOfGroup =  bungieApi.GetMembersOfGroupResponse(GuildId);
 				//Get GroupV2 main info
 				//var GuildInfo = weekStat.GuildInfoAsync(GuildId).Result.Response;
 				//Get GroupV2 Member info

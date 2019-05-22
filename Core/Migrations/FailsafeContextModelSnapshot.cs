@@ -19,29 +19,23 @@ namespace Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Core.Models.Db.ClanWeekOnline", b =>
+            modelBuilder.Entity("Core.Models.Db.Destiny2Clan", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<long>("Id");
 
-                    b.Property<string>("BungieName");
+                    b.Property<string>("About");
 
-                    b.Property<long>("ClanId");
+                    b.Property<DateTimeOffset>("CreateDate");
 
-                    b.Property<DateTimeOffset?>("ClanJoinDate");
+                    b.Property<long>("MemberCount");
 
-                    b.Property<string>("IconPath");
-
-                    b.Property<string>("MembershipId");
-
-                    b.Property<long>("MembershipType");
+                    b.Property<string>("Motto");
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClanWeekOnlines");
+                    b.ToTable("Destiny2Clans");
                 });
 
             modelBuilder.Entity("Core.Models.Db.Gear", b =>
