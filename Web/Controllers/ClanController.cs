@@ -20,9 +20,37 @@ namespace Web.Controllers
 		}
 
 		// GET: Clan
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string sortOrder)
 		{
-			return View(await _context.Destiny2Clans.ToListAsync());
+			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+			ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+			ViewData["CountSortParm"] = sortOrder == "Count" ? "count_desc" : "Count";
+			var clans = from c in _context.Destiny2Clans.Include(m => m.Members)
+						select c;
+
+			switch (sortOrder)
+			{
+				case "name_desc":
+					clans = clans.OrderByDescending(c => c.Name);
+					break;
+				case "Date":
+					clans = clans.OrderBy(c => c.CreateDate);
+					break;
+				case "date_desc":
+					clans = clans.OrderByDescending(c => c.CreateDate);
+					break;
+				case "Count":
+					clans = clans.OrderBy(c => c.MemberCount);
+					break;
+				case "count_desc":
+					clans = clans.OrderByDescending(c => c.MemberCount);
+					break;
+				default:
+					clans = clans.OrderBy(s => s.Name);
+					break;
+			}
+
+			return View(await clans.AsNoTracking().ToListAsync());
 		}
 
 		// GET: Clan/Details/5
@@ -33,8 +61,7 @@ namespace Web.Controllers
 				return NotFound();
 			}
 
-			var destiny2Clan = await _context.Destiny2Clans
-				.FirstOrDefaultAsync(m => m.Id == id);
+			var destiny2Clan = await _context.Destiny2Clans.Include(m => m.Members).FirstOrDefaultAsync(c => c.Id == id);
 			if (destiny2Clan == null)
 			{
 				return NotFound();

@@ -13,6 +13,7 @@ using DiscordBot.Extensions;
 using DiscordBot.Preconditions;
 
 using API.Bungie;
+using System.Linq;
 
 namespace DiscordBot.Modules.Administration
 {
@@ -219,7 +220,7 @@ namespace DiscordBot.Modules.Administration
 
 				//Initialize Bungie GroupV2
 				BungieApi bungieApi = new BungieApi();
-				var membersOfGroup =  bungieApi.GetMembersOfGroupResponse(GuildId);
+				var membersOfGroup = bungieApi.GetMembersOfGroupResponse(GuildId);
 				//Get GroupV2 main info
 				//var GuildInfo = weekStat.GuildInfoAsync(GuildId).Result.Response;
 				//Get GroupV2 Member info
@@ -441,6 +442,64 @@ namespace DiscordBot.Modules.Administration
 			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
 			await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение сохранено.");
+		}
+
+		[Command("initialize")]
+		[RequireOwner]
+		public async Task InitializeMembers(long ClanId)
+		{
+			try
+			{
+				if (!Destiny2ClanExists(ClanId))
+				{
+					await Context.Channel.SendMessageAsync("Такая гильдия незарегистрированна.");
+					return;
+				}
+				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
+				BungieApi api = new BungieApi();
+				var Members = api.GetMembersOfGroupResponse(ClanId).Response;
+				using (FailsafeContext failsafeContext = new FailsafeContext())
+				{
+					foreach (var item in Members.Results)
+					{
+						var Member = new Destiny2Clan_Member
+						{
+							DestinyMembershipType = item.DestinyUserInfo.MembershipType,
+							DestinyMembershipId = item.DestinyUserInfo.MembershipId,
+							ClanJoinDate = item.JoinDate,
+							Destiny2ClanId = item.GroupId
+						};
+						if (item.BungieNetUserInfo != null)
+						{
+							Member.Name = item.BungieNetUserInfo.DisplayName;
+							Member.BungieMembershipType = item.BungieNetUserInfo.MembershipType;
+							Member.BungieMembershipId = item.BungieNetUserInfo.MembershipId;
+							Member.IconPath = item.BungieNetUserInfo.IconPath;
+						}
+						else
+						{
+							Member.Name = item.DestinyUserInfo.DisplayName;
+						}
+						failsafeContext.Add(Member);
+						await failsafeContext.SaveChangesAsync();
+					}
+				}
+				await message.ModifyAsync(m => m.Content = "Готово");
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, $"initialize Command - {ex.Source}", ex.Message, ex.InnerException));
+				Console.WriteLine(ex.ToString());
+			}
+			
+		}
+
+		private bool Destiny2ClanExists(long id)
+		{
+			using (FailsafeContext context = new FailsafeContext())
+			{
+				return context.Destiny2Clans.Any(c => c.Id == id);
+			}
 		}
 	}
 }

@@ -32,6 +32,6 @@ namespace Core.Models.Db
 		public DbSet<Gear> Gears { get; set; }
 		public DbSet<Guild> Guilds { get; set; }
 		public DbSet<Destiny2Clan> Destiny2Clans { get; set; }
-		//public DbSet<ClanWeekOnline> ClanWeekOnlines { get; set; }
+		public DbSet<Destiny2Clan_Member> Destiny2Clan_Members { get; set; }
 	}
 }

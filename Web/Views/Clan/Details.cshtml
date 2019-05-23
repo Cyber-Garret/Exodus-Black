@@ -1,48 +1,84 @@
 ﻿@model Core.Models.Db.Destiny2Clan
 
 @{
-    ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = $"Клан {Model.Name}";
 }
 
-<h1>Details</h1>
-
+<h2>@Model.Name</h2>
 <div>
-    <h4>Destiny2Clan</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Motto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Motto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.About)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.About)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MemberCount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MemberCount)
-        </dd>
-    </dl>
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Motto)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Motto)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.CreateDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.CreateDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.MemberCount)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.MemberCount)/100
+		</dd>
+	</dl>
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.About)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.About)
+		</dd>
+	</dl>
+</div>
+@if (Model.Members[0].Name != null)
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Members[0].IconPath)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Members[0].Name)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Members[0].ClanJoinDate)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Members)
+			{
+				<tr>
+					<td>
+						@if (item.IconPath != null)
+						{
+							<img src="https://www.bungie.net/@item.IconPath" width="50" alt="@item.Name">
+						}
+						else
+						{
+							<span class="text-danger">Профиль скрыт или недоступен</span>
+						}
+					</td>
+					<td>
+						<a href="https://www.bungie.net/ru/Profile/@item.DestinyMembershipType/@item.DestinyMembershipId/" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ClanJoinDate)
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+<div>
+	<a asp-action="Index">Back to List</a>
 </div>

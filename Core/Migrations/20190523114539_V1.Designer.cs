@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Core.Migrations
 {
     [DbContext(typeof(FailsafeContext))]
-    [Migration("20190522190221_Initial")]
-    partial class Initial
+    [Migration("20190523114539_V1")]
+    partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,6 +38,34 @@ namespace Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Destiny2Clans");
+                });
+
+            modelBuilder.Entity("Core.Models.Db.Destiny2Clan_Member", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BungieMembershipId");
+
+                    b.Property<long?>("BungieMembershipType");
+
+                    b.Property<DateTimeOffset?>("ClanJoinDate");
+
+                    b.Property<long?>("Destiny2ClanId");
+
+                    b.Property<string>("DestinyMembershipId");
+
+                    b.Property<long>("DestinyMembershipType");
+
+                    b.Property<string>("IconPath");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Destiny2ClanId");
+
+                    b.ToTable("Destiny2Clan_Members");
                 });
 
             modelBuilder.Entity("Core.Models.Db.Gear", b =>
@@ -103,6 +131,13 @@ namespace Core.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Guilds");
+                });
+
+            modelBuilder.Entity("Core.Models.Db.Destiny2Clan_Member", b =>
+                {
+                    b.HasOne("Core.Models.Db.Destiny2Clan", "Destiny2Clan")
+                        .WithMany("Members")
+                        .HasForeignKey("Destiny2ClanId");
                 });
 #pragma warning restore 612, 618
         }

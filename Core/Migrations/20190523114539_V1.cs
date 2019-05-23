@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Core.Migrations
 {
-    public partial class Initial : Migration
+    public partial class V1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,18 +65,51 @@ namespace Core.Migrations
                 {
                     table.PrimaryKey("PK_Guilds", x => x.ID);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Destiny2Clan_Members",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    DestinyMembershipType = table.Column<long>(nullable: false),
+                    DestinyMembershipId = table.Column<string>(nullable: true),
+                    BungieMembershipType = table.Column<long>(nullable: true),
+                    BungieMembershipId = table.Column<string>(nullable: true),
+                    IconPath = table.Column<string>(nullable: true),
+                    ClanJoinDate = table.Column<DateTimeOffset>(nullable: true),
+                    Destiny2ClanId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Destiny2Clan_Members", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Destiny2Clan_Members_Destiny2Clans_Destiny2ClanId",
+                        column: x => x.Destiny2ClanId,
+                        principalTable: "Destiny2Clans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Destiny2Clan_Members_Destiny2ClanId",
+                table: "Destiny2Clan_Members",
+                column: "Destiny2ClanId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Destiny2Clans");
+                name: "Destiny2Clan_Members");
 
             migrationBuilder.DropTable(
                 name: "Gears");
 
             migrationBuilder.DropTable(
                 name: "Guilds");
+
+            migrationBuilder.DropTable(
+                name: "Destiny2Clans");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Core.Models.Db.Destiny2Clan>
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Список кланов";
 }
 
 <h1>Index</h1>
@@ -13,17 +13,18 @@
 	<thead>
 		<tr>
 			<th>
-				@Html.DisplayNameFor(model => model.Name)
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.CreateDate)
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.CreateDate)</a>
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.Motto)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.MemberCount)
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["CountSortParm"]">@Html.DisplayNameFor(model => model.MemberCount)</a>
 			</th>
+			<th></th>
 			<th></th>
 		</tr>
 	</thead>
@@ -32,7 +33,7 @@
 		{
 			<tr>
 				<td>
-					@Html.DisplayFor(modelItem => item.Name)
+					<a href="https://www.bungie.net/ru/ClanV2?groupId=@item.Id" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.CreateDate)
