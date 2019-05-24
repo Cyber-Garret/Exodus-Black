@@ -20,6 +20,6 @@ namespace Core.Models.Db
 		[Display(Name = "Участники")]
 		public long MemberCount { get; set; }
 
-		public List<Destiny2Clan_Member> Members { get; set; }
+		public virtual ICollection<Destiny2Clan_Member> Members { get; set; }
 	}
 }

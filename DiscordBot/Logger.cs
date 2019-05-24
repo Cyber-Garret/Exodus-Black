@@ -10,7 +10,7 @@ namespace DiscordBot
 		internal static Task Log(LogMessage logMessage)
 		{
 			Console.ForegroundColor = SeverityToConsoleColor(logMessage.Severity);
-			string message = string.Concat("[", DateTime.Now.ToShortTimeString(), " Source: ", logMessage.Source, "] ", logMessage.Message);
+			string message = string.Concat("[", DateTime.Now.ToLongTimeString(), " Source: ", logMessage.Source, "] ", logMessage.Message);
 			Console.WriteLine(message);
 			Console.ResetColor();
 			return Task.CompletedTask;

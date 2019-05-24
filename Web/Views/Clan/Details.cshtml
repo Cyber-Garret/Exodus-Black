@@ -38,20 +38,23 @@
 		</dd>
 	</dl>
 </div>
-@if (Model.Members[0].Name != null)
+@if (Model.Members.Count != 0)
 {
 	<table class="table">
 		<thead>
 			<tr>
 				<th>
-					@Html.DisplayNameFor(model => model.Members[0].IconPath)
+					Аватар
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Members[0].Name)
-				</th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
+</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Members[0].ClanJoinDate)
-				</th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Дата вступления</a>
+</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
+</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -63,16 +66,16 @@
 						{
 							<img src="https://www.bungie.net/@item.IconPath" width="50" alt="@item.Name">
 						}
-						else
-						{
-							<span class="text-danger">Профиль скрыт или недоступен</span>
-						}
 					</td>
 					<td>
 						<a href="https://www.bungie.net/ru/Profile/@item.DestinyMembershipType/@item.DestinyMembershipId/" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => item.ClanJoinDate)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.DateLastPlayed)
+						@*<span class="text-danger">Профиль скрыт или недоступен</span>*@
 					</td>
 				</tr>
 			}

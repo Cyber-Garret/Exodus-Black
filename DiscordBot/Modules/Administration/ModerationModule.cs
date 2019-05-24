@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -13,7 +14,7 @@ using DiscordBot.Extensions;
 using DiscordBot.Preconditions;
 
 using API.Bungie;
-using System.Linq;
+using API.Bungie.Models;
 
 namespace DiscordBot.Modules.Administration
 {
@@ -491,7 +492,7 @@ namespace DiscordBot.Modules.Administration
 				await Logger.Log(new LogMessage(LogSeverity.Error, $"initialize Command - {ex.Source}", ex.Message, ex.InnerException));
 				Console.WriteLine(ex.ToString());
 			}
-			
+
 		}
 
 		private bool Destiny2ClanExists(long id)
@@ -500,6 +501,47 @@ namespace DiscordBot.Modules.Administration
 			{
 				return context.Destiny2Clans.Any(c => c.Id == id);
 			}
+		}
+		private bool ProfileExists(string destinyMembershipId)
+		{
+			using (FailsafeContext failsafeContext = new FailsafeContext())
+			{
+				return failsafeContext.Destiny2Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
+			}
+		}
+
+		[Command("reload")]
+		[RequireOwner]
+		public async Task ReloadMembers()
+		{
+			try
+			{
+
+				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
+				using (FailsafeContext failsafeContext = new FailsafeContext())
+				{
+					var members = failsafeContext.Destiny2Clan_Members.ToList();
+					BungieApi bungieApi = new BungieApi();
+					foreach (var item in members)
+					{
+						var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
+
+						var member = failsafeContext.Destiny2Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
+
+						member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
+
+						failsafeContext.Update(member);
+						await failsafeContext.SaveChangesAsync();
+					}
+				}
+				await message.ModifyAsync(m => m.Content = "Готово");
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, $"reload Command - {ex.Source}", ex.Message, ex.InnerException));
+				Console.WriteLine(ex.ToString());
+			}
+
 		}
 	}
 }

@@ -17,8 +17,11 @@ namespace Core.Models.Db
 		[Display(Name = "Дата вступления")]
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
 		public DateTimeOffset? ClanJoinDate { get; set; }
+		[Display(Name = "Последний раз в сети")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:HH:mm dd.MM.yyyy}")]
+		public DateTimeOffset? DateLastPlayed { get; set; }
 
-		public long? Destiny2ClanId { get; set; }
+		public long Destiny2ClanId { get; set; }
 		public Destiny2Clan Destiny2Clan { get; set; }
 	}
 }

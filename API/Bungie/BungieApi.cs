@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 using API.Bungie.Models.Results.GroupV2.GetMembersOfGroup;
 using API.Bungie.Models.Results.GroupV2.GetGroup;
+using API.Bungie.Models.Results.Destiny2.GetProfile;
+using System;
+using API.Bungie.Models;
 
 namespace API.Bungie
 {
@@ -32,6 +35,16 @@ namespace API.Bungie
 			var response = client.Execute(request);
 
 			return JsonConvert.DeserializeObject<GetGroup>(response.Content);
+		}
+
+		public GetProfile GetProfileResult(string destinyMembershipId, BungieMembershipType membershipType, DestinyComponentType components)
+		{
+			var client = new RestClient(BaseUrl + $"/Destiny2/{membershipType}/Profile/{destinyMembershipId}/?components={(int)components}");
+			var request = new RestRequest(Method.GET);
+			request.AddHeader(ApiKeyName, ApiKey);
+			var response = client.Execute(request);
+
+			return JsonConvert.DeserializeObject<GetProfile>(response.Content);
 		}
 	}
 }
