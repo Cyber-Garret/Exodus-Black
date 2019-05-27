@@ -1,87 +1,89 @@
-﻿@model Core.Models.Db.Destiny2Clan
+﻿@model IEnumerable<Core.Models.Db.Destiny2Clan_Member>
 
 @{
-	ViewData["Title"] = $"Клан {Model.Name}";
+	ViewData["Title"] = $"Клан {Model.FirstOrDefault().Destiny2Clan.Name}";
 }
 
-<h2>@Model.Name</h2>
+<h2>@ViewData["Title"]</h2>
 <div>
 	<dl class="row">
 		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Motto)
+			@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.Motto)
 		</dt>
 		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Motto)
+			@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.Motto)
 		</dd>
 		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.CreateDate)
+			@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.CreateDate)
 		</dt>
 		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.CreateDate)
+			@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.CreateDate)
 		</dd>
 		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.MemberCount)
+			@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.MemberCount)
 		</dt>
 		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.MemberCount)/100
+			@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.MemberCount)/100
 		</dd>
 	</dl>
 </div>
 <div>
-	<hr />
 	<dl class="row">
 		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.About)
+			@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.About)
 		</dt>
 		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.About)
+			@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.About)
 		</dd>
 	</dl>
+	<p>
+		Данные о стражах обновляются раз в <span class="font-weight-bolder"> час</span>.
+	</p>
 </div>
-@if (Model.Members.Count != 0)
-{
-	<table class="table">
-		<thead>
+<div>
+	
+</div>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				Аватар
+			</th>
+			<th>
+				<a asp-action="Details" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
+			</th>
+			<th>
+				<a asp-action="Details" asp-route-sortOrder="@ViewData["DateSortParm"]">Дата вступления</a>
+			</th>
+			<th>
+				<a asp-action="Details" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
 			<tr>
-				<th>
-					Аватар
-				</th>
-				<th>
-					<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
-</th>
-				<th>
-					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Дата вступления</a>
-</th>
-				<th>
-					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
-</th>
+				<td>
+					@if (item.IconPath != null)
+					{
+						<img src="https://www.bungie.net/@item.IconPath" width="50" alt="@item.Name">
+					}
+				</td>
+				<td>
+					<a href="https://www.bungie.net/ru/Profile/@item.DestinyMembershipType/@item.DestinyMembershipId/" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ClanJoinDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DateLastPlayed)
+					@*<span class="text-danger">Профиль скрыт или недоступен</span>*@
+				</td>
 			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Members)
-			{
-				<tr>
-					<td>
-						@if (item.IconPath != null)
-						{
-							<img src="https://www.bungie.net/@item.IconPath" width="50" alt="@item.Name">
-						}
-					</td>
-					<td>
-						<a href="https://www.bungie.net/ru/Profile/@item.DestinyMembershipType/@item.DestinyMembershipId/" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.ClanJoinDate)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.DateLastPlayed)
-						@*<span class="text-danger">Профиль скрыт или недоступен</span>*@
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-}
+		}
+	</tbody>
+</table>
 <div>
 	<a asp-action="Index">Back to List</a>
 </div>

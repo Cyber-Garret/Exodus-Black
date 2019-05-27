@@ -4,11 +4,12 @@
 	ViewData["Title"] = "Список кланов";
 }
 
-<h1>Index</h1>
+<h3>@ViewData["Title"] Нейроматрицы</h3>
 
-<p>
+@*<p>
 	<a asp-action="Create">Create New</a>
-</p>
+</p>*@
+<p>Данные о гильдиях представленых ниже обновляються каждые <span class="font-weight-bold">15 минут.</span></p>
 <table class="table">
 	<thead>
 		<tr>
@@ -45,7 +46,10 @@
 					@Html.DisplayFor(modelItem => item.MemberCount)/100
 				</td>
 				<td>
-					<a asp-action="Details" asp-route-id="@item.Id">Подробней</a>
+					@if (item.Members.Count > 0)
+					{
+						<a asp-action="Details" asp-route-id="@item.Id">Подробней</a>
+					}
 				</td>
 			</tr>
 		}

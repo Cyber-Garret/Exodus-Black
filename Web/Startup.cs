@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using Web.BungieCache;
 using Core.Models.Db;
 
 namespace Web
@@ -34,10 +35,12 @@ namespace Web
 
 			services.AddDbContext<FailsafeContext>();
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+			services.AddSingleton<CacheService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, CacheService cacheService)
 		{
 			if (env.IsDevelopment())
 			{
@@ -47,9 +50,10 @@ namespace Web
 			{
 				app.UseExceptionHandler("/Home/Error");
 			}
-
 			app.UseStaticFiles();
 			app.UseCookiePolicy();
+
+			cacheService.InitializeTimers();
 
 			app.UseMvc(routes =>
 			{

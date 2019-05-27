@@ -25,7 +25,7 @@ namespace Web.Controllers
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 			ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 			ViewData["CountSortParm"] = sortOrder == "Count" ? "count_desc" : "Count";
-			var clans = from c in _context.Destiny2Clans
+			var clans = from c in _context.Destiny2Clans.Include(m => m.Members)
 						select c;
 
 			switch (sortOrder)
@@ -58,15 +58,15 @@ namespace Web.Controllers
 		{
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
 			ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
-			ViewData["DateLastPlayedSortParm"] = sortOrder == "DateLastPlayed" ? "DateLastPlayed" : "DateLastPlayed";
+			ViewData["DateLastPlayedSortParm"] = sortOrder == "DateLastPlayed" ? "DateLastPlayed_desc" : "DateLastPlayed";
 
 			if (id == null)
 			{
 				return NotFound();
 			}
 
-			var destiny2Clan = from d in _context.Destiny2Clans.Include(m => m.Members)
-							   where d.Id == id
+			var destiny2Clan = from d in _context.Destiny2Clan_Members.Include(c => c.Destiny2Clan)
+							   where d.Destiny2ClanId == id
 							   select d;
 			if (destiny2Clan == null)
 			{
@@ -76,22 +76,22 @@ namespace Web.Controllers
 			switch (sortOrder)
 			{
 				case "Name_desc":
-					destiny2Clan = _context.Destiny2Clans.Include(m => m.Members.OrderByDescending(members => members.Name)).Where(c => c.Id == id);
+					destiny2Clan = destiny2Clan.OrderByDescending(m => m.Name).Include(c => c.Destiny2Clan);
 					break;
 				case "Date":
-					destiny2Clan = _context.Destiny2Clans.Include(m => m.Members.OrderBy(members => members.ClanJoinDate)).Where(c => c.Id == id);
+					destiny2Clan = destiny2Clan.OrderBy(m => m.ClanJoinDate).Include(c => c.Destiny2Clan);
 					break;
 				case "Date_desc":
-					destiny2Clan = _context.Destiny2Clans.Include(m => m.Members.OrderByDescending(members => members.ClanJoinDate)).Where(c => c.Id == id);
+					destiny2Clan = destiny2Clan.OrderByDescending(m => m.ClanJoinDate).Include(c => c.Destiny2Clan);
 					break;
 				case "DateLastPlayed":
-					destiny2Clan = _context.Destiny2Clans.Include(m => m.Members.OrderBy(members => members.DateLastPlayed)).Where(c => c.Id == id);
+					destiny2Clan = destiny2Clan.OrderBy(m => m.DateLastPlayed).Include(c => c.Destiny2Clan);
 					break;
 				case "DateLastPlayed_desc":
-					destiny2Clan = _context.Destiny2Clans.Include(m => m.Members.OrderByDescending(members => members.DateLastPlayed)).Where(c => c.Id == id);
+					destiny2Clan = destiny2Clan.OrderByDescending(m => m.DateLastPlayed).Include(c => c.Destiny2Clan);
 					break;
 				default:
-					destiny2Clan = destiny2Clan.OrderBy(m => m.Members.OrderBy(mem => mem.Name));
+					destiny2Clan = destiny2Clan.OrderBy(m => m.Name).Include(c => c.Destiny2Clan);
 					break;
 			}
 
