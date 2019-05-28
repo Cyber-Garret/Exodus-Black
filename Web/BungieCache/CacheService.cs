@@ -1,28 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace Web.BungieCache
 {
 	public class CacheService
 	{
-		private TimeSpan startTimeSpan = TimeSpan.Zero;
-		private TimeSpan _15MinutePeriod = TimeSpan.FromMinutes(15);
-		private ClanUpdater ClanUpdater;
-		private MemberUpdater MemberUpdater;
+		private Timer ClanTimer;
+		private Timer MemberTimer;
+		private readonly double FifteenMinute = TimeSpan.FromMinutes(15).TotalMilliseconds;
+		private readonly double OneHour = TimeSpan.FromHours(1).TotalMilliseconds;
 
 		public void InitializeTimers()
 		{
-			ClanUpdater = new ClanUpdater();
-
-			var ClanTimer = new Timer((e) =>
+			ClanTimer = new Timer
 			{
-				Console.WriteLine("Clan timer go work");
-				ClanUpdater.UpdateAllClans();
-			}, null, startTimeSpan, _15MinutePeriod);
+				AutoReset = true,
+				Enabled = true,
+				Interval = FifteenMinute
+			};
+			ClanTimer.Elapsed += ClanTimer_Elapsed;
 
-			//TODO MEMBER UPDATER
+			MemberTimer = new Timer
+			{
+				AutoReset = true,
+				Enabled = true,
+				Interval = OneHour
+			};
+			MemberTimer.Elapsed += MemberTimer_Elapsed;
+		}
+
+		private void ClanTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			ClanUpdater updater = new ClanUpdater();
+			updater.UpdateAllClans();
+			updater.ClanMemberCheck();
+		}
+
+		private void MemberTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			MemberUpdater updater = new MemberUpdater();
+			updater.UpdateMembersLastPlayedTime();
 		}
 	}
 }

@@ -220,8 +220,8 @@ namespace DiscordBot.Modules.Administration
 				var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
 
 				//Initialize Bungie GroupV2
-				BungieApi bungieApi = new BungieApi();
-				var membersOfGroup = bungieApi.GetMembersOfGroupResponse(GuildId);
+				//BungieApi bungieApi = new BungieApi();
+				//var membersOfGroup = bungieApi.GetMembersOfGroupResponse(GuildId);
 				//Get GroupV2 main info
 				//var GuildInfo = weekStat.GuildInfoAsync(GuildId).Result.Response;
 				//Get GroupV2 Member info

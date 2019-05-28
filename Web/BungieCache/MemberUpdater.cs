@@ -4,48 +4,53 @@ using Core.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Web.BungieCache
 {
 	internal class MemberUpdater
 	{
-		public async Task UpdateClanMembersAsync()
+		public void UpdateMembersLastPlayedTime()
 		{
-			var ClanQueue = new Queue<long>();
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine($"{DateTime.Now.ToLongTimeString()} - Update Member timer go work");
+			Console.ResetColor();
+
+			var MemberQueue = new Queue<string>();
 			var bungieApi = new BungieApi();
 
 			using (FailsafeContext failsafe = new FailsafeContext())
 			{
-				//Grab all Destiny Clan ID and add to Queue
-				foreach (var item in failsafe.Destiny2Clans.Select(C => new { C.Id }))
+				//Grab all Member profile ID and add to Queue
+				foreach (var item in failsafe.Destiny2Clan_Members.OrderBy(M => M.DateLastPlayed))
 				{
-					ClanQueue.Enqueue(item.Id);
+					MemberQueue.Enqueue(item.DestinyMembershipId);
 				}
-				while (ClanQueue.Count > 0)
+
+				while (MemberQueue.Count > 0)
 				{
-					var ClanId = ClanQueue.Dequeue();
+					var ProfileId = MemberQueue.Dequeue();
 
 					try
 					{
-						var ClanMembersBungie = bungieApi.GetMembersOfGroupResponse(ClanId);
-						var members = failsafe.Destiny2Clan_Members.ToList();
+						Thread.Sleep(1000);
+						var profile = bungieApi.GetProfileResult(ProfileId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
 
-						foreach (var item in members)
-						{
-							var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
+						var member = failsafe.Destiny2Clan_Members.Single(m => m.DestinyMembershipId == ProfileId);
 
-							var member = failsafe.Destiny2Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
+						member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
 
-							member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
+						failsafe.Update(member);
 
-							failsafe.Update(member);
-						}
-						await failsafe.SaveChangesAsync();
+						failsafe.SaveChanges();
 					}
 					catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 				}
 			}
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine($"{DateTime.Now.ToLongTimeString()} - Update Member timer done work");
+			Console.ResetColor();
 
 		}
 	}
