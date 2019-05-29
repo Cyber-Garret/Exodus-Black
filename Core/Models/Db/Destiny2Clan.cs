@@ -17,7 +17,7 @@ namespace Core.Models.Db
 		public string Motto { get; set; }
 		[Display(Name = "О клане")]
 		public string About { get; set; }
-		[Display(Name = "Участники")]
+		[Display(Name = "Стражей")]
 		public long MemberCount { get; set; }
 
 		public virtual ICollection<Destiny2Clan_Member> Members { get; set; }

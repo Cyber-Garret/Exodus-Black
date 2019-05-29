@@ -1,0 +1,230 @@
+﻿blockquote.erro_p {
+	border: 1px dashed #c00;
+	color: #c00;
+	font-weight: bold;
+	padding-top: 12px;
+	padding-left: 30px;
+	background-color: #ffebe8;
+	background: #ffebe8 url(../img/error-p.png) no-repeat left center;
+	width: 240px;
+	height: 25px;
+	font-family: 'Calibri', 'newCalibri', 'Arial';
+	font-size: 11px;
+}
+
+	blockquote.erro_p a {
+		color: #00F;
+		font-size: 11px;
+		text-decoration: underline;
+		cursor: pointer
+	}
+
+blockquote.erro {
+	border: 1px dashed #c00;
+	color: #c00;
+	font-weight: bold;
+	padding-top: 13px;
+	padding-left: 40px;
+	background-color: #ffebe8;
+	background: #ffebe8 url(../img/error.png) no-repeat left center;
+	width: 550px;
+	height: 30px;
+}
+
+	blockquote.erro a {
+		color: #00F;
+		text-decoration: underline;
+		cursor: pointer
+	}
+
+blockquote.sucess_p {
+	border: 1px dashed #009900;
+	color: #009900;
+	font-weight: bold;
+	padding-top: 12px;
+	padding-left: 30px;
+	background-color: #DDFFDD;
+	background: #DDFFDD url(../img/sucess-p.png) no-repeat left center;
+	width: 240px;
+	height: 25px;
+	font-family: 'Calibri', 'newCalibri', 'Arial';
+	font-size: 11px;
+}
+
+blockquote.sucess {
+	border: 1px dashed #009900;
+	color: #009900;
+	font-weight: bold;
+	padding-top: 13px;
+	padding-left: 40px;
+	background-color: #DDFFDD;
+	background: #DDFFDD url(../img/sucess.png) no-repeat left center;
+	width: 550px;
+	height: 30px;
+}
+
+list h3 {
+	height: 45px;
+	padding-left: 15px;
+	padding-top: 20px;
+	padding-bottom: 6px;
+	background: #292929;
+	letter-spacing: 0px;
+	font-size: 1.2em;
+	color: #FFF;
+	font-weight: bold;
+}
+
+.orange_tooltip {
+	color: #FF8000;
+}
+
+.red_tooltip {
+	color: #F00;
+	font-weight: bold;
+}
+
+.purple_tooltip {
+	color: #A335EE;
+}
+
+.blue_tooltip {
+	color: #0070DD;
+}
+
+.green_tooltip {
+	color: #1EFF00;
+}
+
+.gray_tooltip {
+	color: #9D9D9D;
+}
+
+.white_tooltip {
+	color: #fff;
+}
+
+.gold_tooltip {
+	color: #E5CC80;
+}
+
+.warrior_color {
+	color: #C69B6D;
+}
+
+.paladin_color {
+	color: #F48CBA;
+}
+
+.hunter_color {
+	color: #AAD372;
+}
+
+.rogue_color {
+	color: #FFF468;
+}
+
+.priest_color {
+	color: #FFF;
+}
+
+.dk_color {
+	color: #C41E3B;
+}
+
+.shaman_color {
+	color: #2359FF;
+}
+
+.mage_color {
+	color: #68CCEF;
+}
+
+.warlock_color {
+	color: #9382C9;
+}
+
+.druid_color {
+	color: #FF7C0A;
+}
+
+.count_bar {
+	background: url(../img/bar.gif);
+	height: 15px;
+	padding-top: 5px;
+	margin-left: 0px;
+	font-size: 1px;
+	font-family: "tahoma";
+	border-radius: 2px 0 0 2px;
+	-moz-border-radius: 2px 0 0 2px;
+	-webkit-border-radius: 2px 0 0 2px;
+}
+
+.count_total {
+	background: url(../img/bar-progress.png);
+	height: 20px;
+	width: 230px;
+	font-size: 1px;
+	font-family: "tahoma"
+}
+
+.usual li {
+	list-style: none;
+	float: left;
+}
+
+.usual ul a {
+	display: block;
+	padding: 6px 10px;
+	text-decoration: none !important;
+	margin: 1px;
+	margin-left: 0;
+	padding-top: 7px;
+	font: 10px Verdana;
+	font-weight: bold;
+	color: #FFF;
+	height: 15px;
+	background: #444;
+}
+
+	.usual ul a:hover {
+		color: #FFF;
+		background: #111;
+	}
+
+	.usual ul a.selected {
+		margin-bottom: 0;
+		color: #FFF;
+		background: #444;
+		;
+		border-bottom: 1px solid snow;
+		cursor: default;
+	}
+
+.usual div {
+	padding: 10px 10px 8px 10px;
+	*padding-top: 3px;
+	*margin-top: -15px;
+	clear: left;
+	background: snow;
+	font: 10pt Georgia;
+}
+
+	.usual div a {
+		color: #FFF;
+		font-weight: bold;
+	}
+
+#tab1 {
+	background: transparent;
+}
+
+#tab2 {
+	background: transparent;
+}
+
+#tab3 {
+	background: transparent;
+}
+
+
