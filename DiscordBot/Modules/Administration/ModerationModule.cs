@@ -15,6 +15,7 @@ using DiscordBot.Preconditions;
 
 using API.Bungie;
 using API.Bungie.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscordBot.Modules.Administration
 {
@@ -219,94 +220,93 @@ namespace DiscordBot.Modules.Administration
 				//Send calculating message because stastic forming near 30-50 sec.
 				var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
 
-				//Initialize Bungie GroupV2
-				//BungieApi bungieApi = new BungieApi();
-				//var membersOfGroup = bungieApi.GetMembersOfGroupResponse(GuildId);
-				//Get GroupV2 main info
-				//var GuildInfo = weekStat.GuildInfoAsync(GuildId).Result.Response;
-				//Get GroupV2 Member info
-				//var GuildMembers = await weekStat.GetGuildCharacterIdsAsync();
+				using (var failsafe = new FailsafeContext())
+				{
+					var destiny2Clan = failsafe.Destiny2Clans.AsNoTracking().Include(m => m.Members).ToList().FirstOrDefault(c => c.Id == GuildId);
 
-				//EmbedBuilder embed = new EmbedBuilder();
-				//embed.WithTitle($"Онлайн статус стражей");
-				//embed.WithColor(Color.Orange);
-				////Bungie Clan link
-				//embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupId={GuildInfo.Detail.GroupId}");
-				////Some clan main info
-				//embed.WithDescription($"Клан зарегистрирован **{GuildInfo.Detail.CreationDate.ToString("dd-MM-yyyy")}**\n" +
-				//	$"В данный момент в клане **{GuildInfo.Detail.MemberCount}**/100 стражей.\n" +
-				//	$"Девиз клана - **{GuildInfo.Detail.Motto}**");
+					if (destiny2Clan == null)
+					{
+						await Context.Channel.SendMessageAsync(":x: Этой информации в моей базе данных нет. :frowning:");
+						return;
+					}
 
-				//#region list for member sorted for some days
-				//List<string> _ThisDay = new List<string>();
-				//List<string> _Yesterday = new List<string>();
-				//List<string> _FewDays = new List<string>();
-				//List<string> _ThisWeek = new List<string>();
-				//List<string> _MoreOneWeek = new List<string>();
-				//#endregion
 
-				////Main Sorting logic
-				//foreach (var item in GuildMembers)
-				//{
-				//	//Property for calculate how long days user did not enter the Destiny
-				//	var days = (DateTime.Today.Day - item.LastOnlineDate.Day);
+					EmbedBuilder embed = new EmbedBuilder();
+					embed.WithTitle($"Онлайн статус стражей");
+					embed.WithColor(Color.Orange);
+					////Bungie Clan link
+					embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupId={GuildId}");
+					////Some clan main info
+					embed.WithDescription($"Клан зарегистрирован **{destiny2Clan.CreateDate.ToString("dd-MM-yyyy")}**\n" +
+							$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
+						$"Девиз клана - **{destiny2Clan.Motto}**");
 
-				//	//Sorting user to right list
-				//	if (days == 0)
-				//	{
-				//		_ThisDay.Add(item.MemberName);
-				//	}
-				//	else if (days == 1)
-				//	{
-				//		_Yesterday.Add(item.MemberName);
-				//	}
-				//	else if (days > 1 && days < 5)
-				//	{
-				//		_FewDays.Add(item.MemberName);
-				//	}
-				//	else if (days > 4 && days < 7)
-				//	{
-				//		_ThisWeek.Add(item.MemberName);
-				//	}
-				//	else
-				//	{
-				//		//ProfileId is empty if user hide his profile from public
-				//		if (item.ProfileId == string.Empty)
-				//			_MoreOneWeek.Add($"{item.MemberName}(**Профиль скрыт**)");
-				//		else
-				//			_MoreOneWeek.Add($"[{item.MemberName}](https://www.bungie.net/ru/Profile/254/{item.ProfileId}/)");
+					#region list for member sorted for some days
+					List<string> _ThisDay = new List<string>();
+					List<string> _Yesterday = new List<string>();
+					List<string> _FewDays = new List<string>();
+					List<string> _ThisWeek = new List<string>();
+					List<string> _MoreOneWeek = new List<string>();
+					#endregion
 
-				//	}
-				//}
+					//Main Sorting logic
+					foreach (var member in destiny2Clan.Members)
+					{
+						//Property for calculate how long days user did not enter the Destiny
+						var days = (DateTime.Today.Day - member.DateLastPlayed.Value.Day);
 
-				////Create one string who enter to the game today, like "Petya,Vasia,Grisha",
-				////and if string ThisDay not empty add to embed message special field.
-				//string ThisDay = string.Join(',', _ThisDay);
-				//if (!string.IsNullOrEmpty(ThisDay))
-				//	embed.AddField("Был сегодня", ThisDay);
-				////Same as above, but who enter to the game yesterday
-				//string Yesterday = string.Join(',', _Yesterday);
-				//if (!string.IsNullOrEmpty(Yesterday))
-				//	embed.AddField("Был вчера", Yesterday);
-				////Same as above, but who enter to the game more 2 days but fewer 4 days ago
-				//string FewDays = string.Join(',', _FewDays);
-				//if (!string.IsNullOrEmpty(FewDays))
-				//	embed.AddField("Был в течении пары дней", FewDays);
-				////Same as above, but who enter to the game more 5 days but fewer 7 days ago
-				//string ThisWeek = string.Join(',', _ThisWeek);
-				//if (!string.IsNullOrEmpty(ThisWeek))
-				//	embed.AddField("Был на этой неделе", ThisWeek);
-				////Same as above, but who enter to the game more 7 days ago
-				//string MoreOneWeek = string.Join(',', _MoreOneWeek);
-				//if (!string.IsNullOrEmpty(MoreOneWeek))
-				//	embed.AddField("Был больше недели тому назад", MoreOneWeek);
-				////Simple footer with clan name
-				//embed.WithFooter($"Данные о клане {GuildInfo.Detail.Name}");
-				////Mention user with ready statistic
-				await Context.Channel.SendMessageAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", false/*, embed.Build()*/);
+						//Sorting user to right list
+						if (days == 0)
+						{
+							_ThisDay.Add(member.Name);
+						}
+						else if (days == 1)
+						{
+							_Yesterday.Add(member.Name);
+						}
+						else if (days > 1 && days < 5)
+						{
+							_FewDays.Add(member.Name);
+						}
+						else if (days > 4 && days < 7)
+						{
+							_ThisWeek.Add(member.Name);
+						}
+						else
+						{
+							_MoreOneWeek.Add($"[{member.Name}](https://www.bungie.net/ru/Profile/4/{member.DestinyMembershipId}/)");
+						}
+					}
 
-				//Delete message from start this command
-				await Context.Channel.DeleteMessageAsync(message);
+					//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
+					//and if string ThisDay not empty add to embed message special field.
+					string ThisDay = string.Join(',', _ThisDay);
+					if (!string.IsNullOrEmpty(ThisDay))
+						embed.AddField("Был сегодня", ThisDay);
+					//Same as above, but who enter to the game yesterday
+					string Yesterday = string.Join(',', _Yesterday);
+					if (!string.IsNullOrEmpty(Yesterday))
+						embed.AddField("Был вчера", Yesterday);
+					//Same as above, but who enter to the game more 2 days but fewer 4 days ago
+					string FewDays = string.Join(',', _FewDays);
+					if (!string.IsNullOrEmpty(FewDays))
+						embed.AddField("Был в течении пары дней", FewDays);
+					//Same as above, but who enter to the game more 5 days but fewer 7 days ago
+					string ThisWeek = string.Join(',', _ThisWeek);
+					if (!string.IsNullOrEmpty(ThisWeek))
+						embed.AddField("Был на этой неделе", ThisWeek);
+					//Same as above, but who enter to the game more 7 days ago
+					string MoreOneWeek = string.Join(',', _MoreOneWeek);
+					if (!string.IsNullOrEmpty(MoreOneWeek))
+						embed.AddField("Был больше недели тому назад", MoreOneWeek);
+					//Simple footer with clan name
+					embed.WithFooter($"Данные об онлайне стражей обновляються раз в 1 час.");
+					//Mention user with ready statistic
+					await Context.Channel.SendMessageAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", false, embed.Build());
+
+					//Delete message from start this command
+					await Context.Channel.DeleteMessageAsync(message);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -445,103 +445,6 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение сохранено.");
 		}
 
-		[Command("initialize")]
-		[RequireOwner]
-		public async Task InitializeMembers(long ClanId)
-		{
-			try
-			{
-				if (!Destiny2ClanExists(ClanId))
-				{
-					await Context.Channel.SendMessageAsync("Такая гильдия незарегистрированна.");
-					return;
-				}
-				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-				BungieApi api = new BungieApi();
-				var Members = api.GetMembersOfGroupResponse(ClanId).Response;
-				using (FailsafeContext failsafeContext = new FailsafeContext())
-				{
-					foreach (var item in Members.Results)
-					{
-						var Member = new Destiny2Clan_Member
-						{
-							DestinyMembershipType = item.DestinyUserInfo.MembershipType,
-							DestinyMembershipId = item.DestinyUserInfo.MembershipId,
-							ClanJoinDate = item.JoinDate,
-							Destiny2ClanId = item.GroupId
-						};
-						if (item.BungieNetUserInfo != null)
-						{
-							Member.Name = item.BungieNetUserInfo.DisplayName;
-							Member.BungieMembershipType = item.BungieNetUserInfo.MembershipType;
-							Member.BungieMembershipId = item.BungieNetUserInfo.MembershipId;
-							Member.IconPath = item.BungieNetUserInfo.IconPath;
-						}
-						else
-						{
-							Member.Name = item.DestinyUserInfo.DisplayName;
-						}
-						failsafeContext.Add(Member);
-						await failsafeContext.SaveChangesAsync();
-					}
-				}
-				await message.ModifyAsync(m => m.Content = "Готово");
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"initialize Command - {ex.Source}", ex.Message, ex.InnerException));
-				Console.WriteLine(ex.ToString());
-			}
 
-		}
-
-		private bool Destiny2ClanExists(long id)
-		{
-			using (FailsafeContext context = new FailsafeContext())
-			{
-				return context.Destiny2Clans.Any(c => c.Id == id);
-			}
-		}
-		private bool ProfileExists(string destinyMembershipId)
-		{
-			using (FailsafeContext failsafeContext = new FailsafeContext())
-			{
-				return failsafeContext.Destiny2Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
-			}
-		}
-
-		[Command("reload")]
-		[RequireOwner]
-		public async Task ReloadMembers()
-		{
-			try
-			{
-
-				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-				using (FailsafeContext failsafeContext = new FailsafeContext())
-				{
-					var members = failsafeContext.Destiny2Clan_Members.ToList();
-					BungieApi bungieApi = new BungieApi();
-					foreach (var item in members)
-					{
-						var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
-
-						var member = failsafeContext.Destiny2Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
-
-						member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
-
-						failsafeContext.Update(member);
-						await failsafeContext.SaveChangesAsync();
-					}
-				}
-				await message.ModifyAsync(m => m.Content = "Готово");
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"reload Command - {ex.Source}", ex.Message, ex.InnerException));
-				Console.WriteLine(ex.ToString());
-			}
-
-		}
 	}
 }

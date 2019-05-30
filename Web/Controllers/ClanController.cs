@@ -54,12 +54,13 @@ namespace Web.Controllers
 		}
 
 		// GET: Clan/Details/5
-		public async Task<IActionResult> Details(long? id, string sortOrder)
+		public async Task<IActionResult> Details(long? id, string sortOrder, string searchString)
 		{
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
 			ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
 			ViewData["DateLastPlayedSortParm"] = sortOrder == "DateLastPlayed" ? "DateLastPlayed_desc" : "DateLastPlayed";
-
+			ViewData["CurrentFilter"] = searchString;
+			ViewData["CurrentGuild"] = _context.Destiny2Clans.AsNoTracking().FirstOrDefault(C => C.Id == id);
 			if (id == null)
 			{
 				return NotFound();
@@ -68,6 +69,11 @@ namespace Web.Controllers
 			var destiny2Clan = from d in _context.Destiny2Clan_Members.Include(c => c.Destiny2Clan)
 							   where d.Destiny2ClanId == id
 							   select d;
+			if (!string.IsNullOrEmpty(searchString))
+			{
+				destiny2Clan = destiny2Clan.Where(m => m.Name.Contains(searchString)).Include(c => c.Destiny2Clan);
+			}
+
 			if (destiny2Clan == null)
 			{
 				return NotFound();

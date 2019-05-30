@@ -11,7 +11,6 @@ body {
 	padding: 25px;
 	color: #fff;
 	font-family: 'Calibri', 'newCalibri', 'Arial';
-	font-size: 11px;
 }
 
 /* Footer */
@@ -104,34 +103,27 @@ h4 {
 }
 
 /* Tables */
-table {
-	font-size: 12px !important;
+
+table.game-ranking {
+	border: 1px solid #666;
+	border-collapse: collapse;
+	width: 100%;
 }
 
-	table.game-ranking {
+	table.game-ranking th {
+		color: #999;
 		border: 1px solid #666;
-		border-collapse: collapse;
-		width: 100%;
+		padding: 10px 10px 10px 10px;
 	}
 
-		table.game-ranking th {
-			color: #999;
-			font-family: Tahoma, Geneva;
-			text-shadow: 0 -1px 0 #222;
-			border: 1px solid #666;
-			text-transform: uppercase;
-			padding: 10px 10px 10px 10px;
-			text-align: left;
-		}
+	table.game-ranking td {
+		vertical-align: middle;
+		text-align: center;
+	}
 
-		table.game-ranking td {
-			vertical-align: middle;
-			text-align: center;
-		}
-
-		table.game-ranking tr {
-			border: 1px solid #666;
-		}
+	table.game-ranking tr {
+		border: 1px solid #666;
+	}
 /* Some browsers seem to increase the size of the table font size. */
 
 /* Input boxes */
@@ -211,7 +203,7 @@ input[type="submit"] {
 
 	input[type="submit"]:hover {
 		background-image: url(../img/submit_bg.png);
-		opacity: 0.90
+		opacity: 0.80
 	}
 
 input[type="reset"] {
@@ -331,6 +323,7 @@ input[type="pselect"] {
 	float: left;
 	width: 60%;
 	margin-top: 30px;
+	opacity: 0.9;
 }
 
 #rightcontent {
@@ -945,13 +938,12 @@ span.moreinfo:hover {
 	background-color: #1E1E1E;
 	padding: 5px;
 	margin-top: 30px;
-	margin-bottom: 20px;
-	/*background-image: url(../img/content_left_bg.png);*/
-	background-repeat: repeat-x;
+	margin-bottom: 60px;
 	border: 1px solid #343434;
 	-moz-box-shadow: 0px 0px 14px #000;
 	-webkit-box-shadow: 0px 0px 14px #000;
 	box-shadow: 0px 0px 14px #000;
+	opacity: 0.9;
 }
 /*--Window/Masking Styles--*/
 .window {

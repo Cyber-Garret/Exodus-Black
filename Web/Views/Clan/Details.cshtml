@@ -1,45 +1,25 @@
-﻿@model IEnumerable<Core.Models.Db.Destiny2Clan_Member>
+﻿@using Core.Models.Db;
+@model IEnumerable<Core.Models.Db.Destiny2Clan_Member>
 
 @{
-	ViewData["Title"] = $"Клан {Model.FirstOrDefault().Destiny2Clan.Name}";
+	var CurrentClan = (Destiny2Clan)ViewData["CurrentGuild"];
+	ViewData["Title"] = $"Клан {CurrentClan.Name}";
 }
 <div>
-	<div id="rightcontent" class="main_view" style="display:inline-block;">
-		<dl class="row">
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.Motto)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.Motto)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.CreateDate)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.CreateDate)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.MemberCount)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.MemberCount)/100
-			</dd>
-		</dl>
-		<dl class="row">
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.FirstOrDefault().Destiny2Clan.About)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.FirstOrDefault().Destiny2Clan.About)
-			</dd>
-		</dl>
-		<p>
-			Данные о стражах обновляются раз в <span class="font-weight-bolder"> час</span>.
-		</p>
-	</div>
-	<div id="leftcontent" class="main_view" style="display:inline-block;">
+	<div class="main_view" style="display:inline-block;">
 		<h2>@ViewData["Title"]</h2>
-		<a asp-action="Index">Back to List</a>
+		<form asp-action="Details" method="get">
+			<div>
+				<p>
+					Поиск по имени: <input type="text" name="SearchString" value="@ViewData[" currentFilter"]" />
+					<input type="submit" value="Найти" /> |
+					<a asp-action="Details" asp-route-id="@CurrentClan.Id">Вернуться к полному списку</a>
+				</p>
+			</div>
+		</form>
+		<p>
+			Данные о персонажах обновляються раз в <b>15 минут</b>. Данные об онлайне обновляються раз в <b>1 час</b>.
+		</p>
 		<table class="game-ranking">
 			<thead>
 				<tr>
@@ -47,13 +27,13 @@
 						Аватар
 					</th>
 					<th>
-						<a asp-action="Details" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
+						<a asp-action="Details" asp-route-sortOrder="@ViewData[" NameSortParm"]">Имя</a>
 					</th>
 					<th>
-						<a asp-action="Details" asp-route-sortOrder="@ViewData["DateSortParm"]">Дата вступления</a>
+						<a asp-action="Details" asp-route-sortOrder="@ViewData[" DateSortParm"]">Дата вступления</a>
 					</th>
 					<th>
-						<a asp-action="Details" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
+						<a asp-action="Details" asp-route-sortOrder="@ViewData[" DateLastPlayedSortParm"]">Последний раз был в игре</a>
 					</th>
 				</tr>
 			</thead>
@@ -64,11 +44,11 @@
 						<td>
 							@if (item.IconPath != null)
 							{
-								<img src="https://www.bungie.net/@item.IconPath" width="50" alt="@item.Name">
+								<img src="https://www.bungie.net/@item.IconPath" width="50" alt="@item.Name" />
 							}
 							else
 							{
-								<p style="width:50px; height:50px;"></p>
+								<img src="https://www.bungie.net//img/profile/avatars/default_avatar.gif" width="50" alt="@item.Name" />
 							}
 						</td>
 						<td>
@@ -85,5 +65,6 @@
 				}
 			</tbody>
 		</table>
+		<p><a asp-action="Index">Вернуться к списку кланов</a></p>
 	</div>
 </div>
