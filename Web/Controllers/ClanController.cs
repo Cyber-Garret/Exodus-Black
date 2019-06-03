@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
+using Core;
 using Core.Models.Db;
+
 using API.Bungie;
 
 namespace Web.Controllers
@@ -105,6 +105,7 @@ namespace Web.Controllers
 		}
 
 		// GET: Clan/Create
+		[NonAction]
 		public IActionResult Create()
 		{
 			return View();
@@ -113,6 +114,7 @@ namespace Web.Controllers
 		// POST: Clan/Create
 		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[NonAction]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create([Bind("Id")] Destiny2Clan destiny2Clan)

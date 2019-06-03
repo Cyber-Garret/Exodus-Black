@@ -15,19 +15,27 @@
 				  crossorigin="anonymous"
 				  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
 		</environment>*@
-	<link rel="stylesheet" href="~/css/Neira.css" />
-	<link rel="stylesheet" href="~/css/Link.css" />
+	<link rel="stylesheet" href="~/css/site.css" />
 	<link rel="stylesheet" href="~/css/tooltip.css" type="text/css" />
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-141267991-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-141267991-1');
+	</script>
 </head>
 <body>
 	<div id="wrapper">
 		<div id="menu">
 			<a asp-controller="Home" asp-action="Index" class="current">Главная</a>
-			<a>Комманды</a>
+			<a asp-controller="Command" asp-action="Index">Команды</a>
 			<a asp-controller="Clan" asp-action="Index">Кланы</a>
 			<a asp-controller="Home" asp-action="About">О проекте</a>
 		</div>
-		<partial name="_CookieConsentPartial" />
+		@*<partial name="_CookieConsentPartial" />*@
 		<main role="main">
 			@RenderBody()
 		</main>

@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace Core.Models.Db
+using Core.Models.Db;
+
+namespace Core
 {
 	public class FailsafeContext : DbContext
 	{
@@ -15,7 +15,7 @@ namespace Core.Models.Db
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=sa;Password=yNRASo1FjL");
+			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV");
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)

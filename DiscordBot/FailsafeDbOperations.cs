@@ -8,7 +8,7 @@ using Core.Models.Db;
 
 namespace Core
 {
-	public static class FailsafeDbOperations
+	internal static class FailsafeDbOperations
 	{
 		#region Exotics
 
@@ -17,7 +17,7 @@ namespace Core
 		/// </summary>
 		/// <param name="ItemName">полное или частичное название вещи для поиска в бд.</param>
 		/// <returns>Gear class</returns>
-		public static Gear GetGears(string ItemName)
+		internal static Gear GetGears(string ItemName)
 		{
 			using (var Context = new FailsafeContext())
 			{
@@ -36,7 +36,7 @@ namespace Core
 		/// Возвращает список всех гильдий.
 		/// </summary>
 		/// <returns>IEnumerable<Guild></returns>
-		public static async Task<IEnumerable<Guild>> GetAllGuildsAsync()
+		internal static async Task<IEnumerable<Guild>> GetAllGuildsAsync()
 		{
 			using (var Context = new FailsafeContext())
 			{
@@ -50,7 +50,7 @@ namespace Core
 		/// </summary>
 		/// <param name="guildId">Discord SocketGuild Id</param>
 		/// <returns>Guild class</returns>
-		public static async Task<Guild> GetGuildAccountAsync(ulong guildId)
+		internal static async Task<Guild> GetGuildAccountAsync(ulong guildId)
 		{
 			using (var Context = new FailsafeContext())
 			{
@@ -74,7 +74,7 @@ namespace Core
 		}
 
 
-		public static Task SaveGuildAccountAsync(ulong GuildId, Guild guildAccount)
+		internal static Task SaveGuildAccountAsync(ulong GuildId, Guild guildAccount)
 		{
 			using (var Context = new FailsafeContext())
 			{
@@ -99,7 +99,7 @@ namespace Core
 			}
 		}
 
-		public static Task SaveWelcomeMessage(ulong GuildId, string value)
+		internal static Task SaveWelcomeMessage(ulong GuildId, string value)
 		{
 
 			using (var Context = new FailsafeContext())

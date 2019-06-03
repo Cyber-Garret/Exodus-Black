@@ -206,7 +206,7 @@ namespace DiscordBot.Modules.Administration
 		[RequireUserPermission(GuildPermission.Administrator,
 			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
 			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
-		public async Task GetGuildInfoFromBungie(int GuildId = 0)
+		public async Task GetGuildInfo(int GuildId = 0)
 		{
 			try
 			{

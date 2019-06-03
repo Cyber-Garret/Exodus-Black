@@ -1,15 +1,17 @@
-﻿using API.Bungie;
-using API.Bungie.Models;
-using Core.Models.Db;
+﻿using System;
+using System.Linq;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+
 using Discord;
 using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
+using Core;
+using Core.Models.Db;
+
+using API.Bungie;
+using API.Bungie.Models;
 
 namespace DiscordBot.Modules.Administration
 {
@@ -35,7 +37,7 @@ namespace DiscordBot.Modules.Administration
 		#endregion
 
 		[Command("initialize")]
-		[RequireOwner]
+		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 		public async Task InitializeMembers(long ClanId)
 		{
 			try
@@ -86,7 +88,7 @@ namespace DiscordBot.Modules.Administration
 
 
 		[Command("reload")]
-		[RequireOwner]
+		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 		public async Task ReloadMembers()
 		{
 			try
@@ -121,7 +123,7 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("статистика")]
 		[Summary("Выводит техническую информацию о боте.")]
-		[RequireOwner()]
+		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 		public async Task InfoAsync()
 		{
 			var app = await Context.Client.GetApplicationInfoAsync();

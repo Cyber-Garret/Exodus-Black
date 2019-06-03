@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Core.Models.Db;
+
 using Web.Helpers;
+
+using Core;
+using Core.Models.Db;
 
 namespace Web.Controllers
 {
@@ -66,7 +66,7 @@ namespace Web.Controllers
 					break;
 			}
 
-			int pageSize = 5;
+			int pageSize = 50;
 			return View(await PaginatedList<Gear>.CreateAsync(gears.AsNoTracking(), pageNumber ?? 1, pageSize));
 		}
 

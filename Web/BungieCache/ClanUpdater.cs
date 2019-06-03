@@ -1,11 +1,11 @@
-﻿using API.Bungie;
-using Core.Models.Db;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using Core;
+using Core.Models.Db;
+
+using API.Bungie;
 
 namespace Web.BungieCache
 {
