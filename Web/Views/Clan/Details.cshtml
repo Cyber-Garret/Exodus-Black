@@ -11,7 +11,7 @@
 		<form asp-action="Details" method="get">
 			<div>
 				<p>
-					Поиск по имени: <input type="text" name="SearchString" value="@ViewData[" currentFilter"]" />
+					Поиск по имени: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
 					<input type="submit" value="Найти" /> |
 					<a asp-action="Details" asp-route-id="@CurrentClan.Id">Вернуться к полному списку</a>
 				</p>
@@ -27,13 +27,13 @@
 						Аватар
 					</th>
 					<th>
-						<a asp-action="Details" asp-route-sortOrder="@ViewData[" NameSortParm"]">Имя</a>
+						<a asp-action="Details" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
 					</th>
 					<th>
-						<a asp-action="Details" asp-route-sortOrder="@ViewData[" DateSortParm"]">Дата вступления</a>
+						<a asp-action="Details" asp-route-sortOrder="@ViewData["DateSortParm"]">Дата вступления</a>
 					</th>
 					<th>
-						<a asp-action="Details" asp-route-sortOrder="@ViewData[" DateLastPlayedSortParm"]">Последний раз был в игре</a>
+						<a asp-action="Details" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
 					</th>
 				</tr>
 			</thead>

@@ -1,26 +1,52 @@
-﻿@model CommandViewModel
-@{
+﻿@{
 	ViewData["Title"] = "Команды";
 }
-<div id="leftcontent" class="main_view">
-	<h2>Актуальные команды Нейроматрицы</h2>
-	<p>Информация о командах, доступных в настоящее время для пользователей Нейроматрицы.</p>
-	<ul id="menu">
-		<li role="presentation" class="@(Model.ActiveTab == Tab.Basic ? "active" : string.Empty)"><a asp-route-tabname="Basic" asp-action="Basic">Основные</a></li>
-		<li role="presentation" class="@(Model.ActiveTab == Tab.Special ?"active" : string.Empty)"><a asp-route-tabname="Special" asp-action="Special">Oграниченные</a></li>
-	</ul>
-	<div>
-		@switch (Model.ActiveTab)
-		{
-			case Tab.Basic:
-				break;
-			case Tab.Special:
-				break;
-			default:
-				break;
-		}
+	<div id="leftcontent" class="main_view">
+		<h2>Актуальные команды Нейроматрицы</h2>
+		<p>Информация о командах, доступных в настоящее время для пользователей Нейроматрицы.</p>
+		<div class="tab">
+			<button class="tablinks" onclick="openTab(event, 'Basic')" id="defaultOpen">Основные</button>
+			<button class="tablinks" onclick="openTab(event, 'Special')">Ограниченные</button>
+		</div>
+
+		<!-- Tab content -->
+		<div id="Basic" class="tabcontent">
+			<h3>Basic</h3>
+			<p>Basic commands.</p>
+			<dl>
+				<dt>!справка</dt><dd>Основная справочная команда.</dd>
+				<dt>!зур</dt>
+				<dd>Информационная команда о посланнике девяти по имени Зур</dd>
+				<dt>!инфо</dt>
+				<dd>Информационная команда о экзотическом оружии и катализаторе.</dd>
+			</dl>
+		</div>
+
+		<div id="Special" class="tabcontent">
+			<h3>Special</h3>
+			<p>Special commands.</p>
+			<dl>
+				<dt>!Клан</dt>
+				<dd>Информационная справка о доступных командах администраторам клана.</dd>
+				<dt>!Клан инфо</dt>
+				<dd>Отображает все настройки Нейроматрицы в клане где была вызвана комманда.</dd>
+				<dt>!Клан новости</dt>
+				<dd>Сохраняет ID канала для использования в новостных сообщениях.</dd>
+				<dt>!Клан логи</dt>
+				<dd>Сохраняет ID канала для использования в тех сообщениях.</dd>
+				<dt>!Клан статус</dt>
+				<dd>Возвращает результат онлайна соклановцев заданой гильдии</dd>
+				<dt>!Логи статус</dt>
+				<dd>Вкл. или Выкл. тех. сообщения.</dd>
+				<dt>!Новости статус</dt>
+				<dd>Включает или выключает новости о зуре.</dd>
+				<dt>!Посмотреть приветствие</dt>
+				<dd>Команда предпросмотра приветственного сообщения</dd>
+				<dt>!Сохранить приветствие</dt>
+				<dd>Сохраняет сообщение для отправки всем кто пришел в гильдию.</dd>
+			</dl>
+		</div>
 	</div>
-</div>
 <div id="rightcontent">
 	<div class="box_one">
 		<div class="box_one_title">Информация</div>
