@@ -235,7 +235,7 @@ namespace DiscordBot.Modules.Administration
 					embed.WithTitle($"Онлайн статус стражей");
 					embed.WithColor(Color.Orange);
 					////Bungie Clan link
-					embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupId={GuildId}");
+					embed.WithUrl($"http://neira.link/Clan/Details/{GuildId}");
 					////Some clan main info
 					embed.WithDescription($"Клан зарегистрирован **{destiny2Clan.CreateDate.ToString("dd-MM-yyyy")}**\n" +
 							$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +

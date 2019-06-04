@@ -38,10 +38,9 @@ body {
 
 /* Logo */
 #logo {
-	background: url(../img/header.png) no-repeat;
-	height: 200px;
-	width: 1000px;
-	background-size: cover;
+	font-family: 'Russo One', sans-serif;
+	font-size: 40pt;
+	margin-bottom: 1rem;
 }
 
 	#logo:hover {
@@ -354,7 +353,7 @@ input[type="pselect"] {
 	}
 
 		#menu a:hover {
-			background-color: #004D71;
+			background-color: #CC6229;
 			/*background-image: url(../img/menu_item_hover.png);*/
 		}
 
@@ -464,7 +463,7 @@ input[type="pselect"] {
 	color: #00A7F7;
 }
 
-.blued_text {
+.main_color_text {
 	color: #CC6229;
 }
 

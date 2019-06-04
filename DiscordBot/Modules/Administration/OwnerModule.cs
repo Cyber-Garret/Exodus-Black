@@ -36,52 +36,47 @@ namespace DiscordBot.Modules.Administration
 		}
 		#endregion
 
-		[Command("initialize")]
+		[Command("add clan")]
 		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
-		public async Task InitializeMembers(long ClanId)
+		public async Task AddClan(long ClanId)
 		{
 			try
 			{
-				if (!Destiny2ClanExists(ClanId))
+				if (Destiny2ClanExists(ClanId))
 				{
-					await Context.Channel.SendMessageAsync("Такая гильдия незарегистрированна.");
+					await Context.Channel.SendMessageAsync("Клан с таким ID уже зарегистрирован.");
 					return;
 				}
 				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-				BungieApi api = new BungieApi();
-				var Members = api.GetMembersOfGroupResponse(ClanId).Response;
-				using (FailsafeContext failsafeContext = new FailsafeContext())
+				using (FailsafeContext failsafe = new FailsafeContext())
 				{
-					foreach (var item in Members.Results)
+					BungieApi bungie = new BungieApi();
+					var claninfo = bungie.GetGroupResult(ClanId);
+					if (claninfo.Response != null)
 					{
-						var Member = new Destiny2Clan_Member
+						var destiny2Clan = new Destiny2Clan
 						{
-							DestinyMembershipType = item.DestinyUserInfo.MembershipType,
-							DestinyMembershipId = item.DestinyUserInfo.MembershipId,
-							ClanJoinDate = item.JoinDate,
-							Destiny2ClanId = item.GroupId
+
+							Id = claninfo.Response.Detail.GroupId,
+							Name = claninfo.Response.Detail.Name,
+							CreateDate = claninfo.Response.Detail.CreationDate,
+							Motto = claninfo.Response.Detail.Motto,
+							About = claninfo.Response.Detail.About,
+							MemberCount = claninfo.Response.Detail.MemberCount
 						};
-						if (item.BungieNetUserInfo != null)
-						{
-							Member.Name = item.BungieNetUserInfo.DisplayName;
-							Member.BungieMembershipType = item.BungieNetUserInfo.MembershipType;
-							Member.BungieMembershipId = item.BungieNetUserInfo.MembershipId;
-							Member.IconPath = item.BungieNetUserInfo.IconPath;
-						}
-						else
-						{
-							Member.Name = item.DestinyUserInfo.DisplayName;
-						}
-						failsafeContext.Add(Member);
-						await failsafeContext.SaveChangesAsync();
+
+
+						failsafe.Add(destiny2Clan);
+						await failsafe.SaveChangesAsync();
 					}
+					await message.ModifyAsync(m => m.Content = "Готово");
 				}
-				await message.ModifyAsync(m => m.Content = "Готово");
 			}
 			catch (Exception ex)
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Error, $"initialize Command - {ex.Source}", ex.Message, ex.InnerException));
 				Console.WriteLine(ex.ToString());
+				await Context.Channel.SendMessageAsync("Ошибка добавления клана. Подробности в консоли.");
 			}
 
 		}
@@ -121,7 +116,7 @@ namespace DiscordBot.Modules.Administration
 
 		}
 
-		[Command("статистика")]
+		[Command("stat")]
 		[Summary("Выводит техническую информацию о боте.")]
 		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 		public async Task InfoAsync()
