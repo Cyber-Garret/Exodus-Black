@@ -3,15 +3,10 @@
 @{
 	ViewData["Title"] = "Список кланов";
 }
-<div class="main_view">
+<div class="container-fluid">
 	<h3>@ViewData["Title"] Нейроматрицы</h3>
 	<p>Данные о гильдиях, представленых ниже, обновляются каждые <span class="font-weight-bold">15 минут.</span></p>
-
-
-	@*<p>
-			<a asp-action="Create">Create New</a>
-		</p>*@
-	<table class="game-ranking">
+	<table class="table">
 		<thead>
 			<tr>
 				<th>
@@ -45,10 +40,11 @@
 						@Html.DisplayFor(modelItem => item.Motto)
 					</td>
 					<td>
-						<div style="width:auto;float:left; text-align:center; margin-left:10px;">@Html.DisplayFor(modelItem => item.MemberCount) / 100</div>
-						<div class="count_total">
-							<div class="count_bar" style="width:@item.MemberCount%"></div>
-						</div>
+						<a href="#" data-toggle="tooltip" title="@item.MemberCount/100">
+							<div class="progress">
+								<div class="progress-bar" style="width:@item.MemberCount%"></div>
+							</div>
+						</a>
 					</td>
 					<td>
 						@if (item.Members.Count > 0)

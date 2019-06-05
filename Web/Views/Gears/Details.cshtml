@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = "Подробней";
 }
-<div class="main_view">
+<div class="container-fluid">
 
 	<h1>@ViewData["Title"]</h1>
 
@@ -27,13 +27,13 @@
 				@Html.DisplayNameFor(model => model.IconUrl)
 			</dt>
 			<dd class="col-sm-10">
-				<a href="@Html.DisplayFor(model => model.IconUrl)" target="_blank">@Html.DisplayFor(model => model.IconUrl)</a>
+				<a href="@Html.DisplayFor(model => model.IconUrl)" target="_blank"><img src="@Html.DisplayFor(model => model.IconUrl)" style="width:3rem;" /></a>
 			</dd>
 			<dt class="col-sm-2">
 				@Html.DisplayNameFor(model => model.ImageUrl)
 			</dt>
 			<dd class="col-sm-10">
-				<a href="@Html.DisplayFor(model => model.ImageUrl)" target="_blank">@Html.DisplayFor(model => model.ImageUrl)</a>
+				<a href="@Html.DisplayFor(model => model.ImageUrl)" target="_blank"><img src="@Html.DisplayFor(model => model.ImageUrl)" style="width:20rem;" /></a>
 			</dd>
 			<dt class="col-sm-2">
 				@Html.DisplayNameFor(model => model.Description)

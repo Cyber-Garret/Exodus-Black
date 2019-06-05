@@ -232,49 +232,49 @@ namespace DiscordBot.Modules.Administration
 
 
 					EmbedBuilder embed = new EmbedBuilder();
-					embed.WithTitle($"Онлайн статус стражей");
+					embed.WithTitle($"Онлайн статус стражей клана {destiny2Clan.Name}");
 					embed.WithColor(Color.Orange);
 					////Bungie Clan link
 					embed.WithUrl($"http://neira.link/Clan/Details/{GuildId}");
 					////Some clan main info
-					embed.WithDescription($"Клан зарегистрирован **{destiny2Clan.CreateDate.ToString("dd-MM-yyyy")}**\n" +
-							$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
-						$"Девиз клана - **{destiny2Clan.Motto}**");
+					embed.WithDescription(
+						$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" + 
+						$"Сортировка происходит от времени, когда вызвали данную команду.");
 
 					#region list for member sorted for some days
 					List<string> _ThisDay = new List<string>();
 					List<string> _Yesterday = new List<string>();
-					List<string> _FewDays = new List<string>();
 					List<string> _ThisWeek = new List<string>();
 					List<string> _MoreOneWeek = new List<string>();
+					List<string> _NoData = new List<string>();
 					#endregion
 
 					//Main Sorting logic
 					foreach (var member in destiny2Clan.Members)
 					{
 						//Property for calculate how long days user did not enter the Destiny
-						var days = (DateTime.Today.Day - member.DateLastPlayed.Value.Day);
+						var LastOnlineTime = (DateTime.Today.Date - member.DateLastPlayed.Value.Date).Days;
 
 						//Sorting user to right list
-						if (days == 0)
+						if (LastOnlineTime < 1)
 						{
 							_ThisDay.Add(member.Name);
 						}
-						else if (days == 1)
+						else if (LastOnlineTime >= 1 && LastOnlineTime < 2)
 						{
 							_Yesterday.Add(member.Name);
 						}
-						else if (days > 1 && days < 5)
-						{
-							_FewDays.Add(member.Name);
-						}
-						else if (days > 4 && days < 7)
+						else if (LastOnlineTime >= 2 && LastOnlineTime <= 7)
 						{
 							_ThisWeek.Add(member.Name);
 						}
+						else if (LastOnlineTime > 7)
+						{
+							_MoreOneWeek.Add(member.Name);
+						}
 						else
 						{
-							_MoreOneWeek.Add($"[{member.Name}](https://www.bungie.net/ru/Profile/4/{member.DestinyMembershipId}/)");
+							_NoData.Add(member.Name);
 						}
 					}
 
@@ -282,23 +282,23 @@ namespace DiscordBot.Modules.Administration
 					//and if string ThisDay not empty add to embed message special field.
 					string ThisDay = string.Join(',', _ThisDay);
 					if (!string.IsNullOrEmpty(ThisDay))
-						embed.AddField("Был сегодня", ThisDay);
+						embed.AddField("Был(a) сегодня", ThisDay);
 					//Same as above, but who enter to the game yesterday
 					string Yesterday = string.Join(',', _Yesterday);
 					if (!string.IsNullOrEmpty(Yesterday))
-						embed.AddField("Был вчера", Yesterday);
-					//Same as above, but who enter to the game more 2 days but fewer 4 days ago
-					string FewDays = string.Join(',', _FewDays);
-					if (!string.IsNullOrEmpty(FewDays))
-						embed.AddField("Был в течении пары дней", FewDays);
+						embed.AddField("Был(a) вчера", Yesterday);
 					//Same as above, but who enter to the game more 5 days but fewer 7 days ago
 					string ThisWeek = string.Join(',', _ThisWeek);
 					if (!string.IsNullOrEmpty(ThisWeek))
-						embed.AddField("Был на этой неделе", ThisWeek);
+						embed.AddField("Был(a) на этой неделе", ThisWeek);
 					//Same as above, but who enter to the game more 7 days ago
 					string MoreOneWeek = string.Join(',', _MoreOneWeek);
 					if (!string.IsNullOrEmpty(MoreOneWeek))
-						embed.AddField("Был больше недели тому назад", MoreOneWeek);
+						embed.AddField("Был(a) больше недели тому назад", MoreOneWeek);
+					//For user who not have any data.
+					string NoData = string.Join(',', _NoData);
+					if (!string.IsNullOrEmpty(NoData))
+						embed.AddField("Нет данных", NoData);
 					//Simple footer with clan name
 					embed.WithFooter($"Данные об онлайне стражей обновляються раз в 1 час.");
 					//Mention user with ready statistic

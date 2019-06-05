@@ -6,7 +6,7 @@
 	ViewData["Title"] = $"Клан {CurrentClan.Name}";
 }
 <div>
-	<div class="main_view" style="display:inline-block;">
+	<div class="container-fluid">
 		<h2>@ViewData["Title"]</h2>
 		<form asp-action="Details" method="get">
 			<div>
@@ -20,19 +20,19 @@
 		<p>
 			Данные о персонажах обновляются раз в <b>15 минут</b>. Данные об онлайне - раз в <b>час</b>.
 		</p>
-		<table class="game-ranking">
+		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th>
+					<th class="sticky-top bg-light">
 						Аватар
 					</th>
-					<th>
+					<th class="sticky-top bg-light">
 						<a asp-action="Details" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
 					</th>
-					<th>
+					<th class="sticky-top bg-light">
 						<a asp-action="Details" asp-route-sortOrder="@ViewData["DateSortParm"]">Дата вступления</a>
 					</th>
-					<th>
+					<th class="sticky-top bg-light">
 						<a asp-action="Details" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
 					</th>
 				</tr>
