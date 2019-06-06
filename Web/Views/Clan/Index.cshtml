@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Core.Models.Db.Destiny2Clan>
+
+@{
+	ViewData["Title"] = "Список кланов";
+}
+<div class="container-fluid">
+	<h3>@ViewData["Title"] Нейроматрицы</h3>
+	<p>Данные о гильдиях, представленных ниже, обновляются каждые <span class="font-weight-bold">15 минут.</span></p>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.CreateDate)</a>
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Motto)
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["CountSortParm"]">@Html.DisplayNameFor(model => model.MemberCount)</a>
+				</th>
+				<th>
+					Действия
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						<a href="https://www.bungie.net/ru/ClanV2?groupId=@item.Id" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.CreateDate)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Motto)
+					</td>
+					<td>
+						<a href="#" data-toggle="tooltip" title="@item.MemberCount/100">
+							<div class="progress">
+								<div class="progress-bar" style="width:@item.MemberCount%"></div>
+							</div>
+						</a>
+					</td>
+					<td>
+						@if (item.Members.Count > 0)
+						{
+							<a asp-action="Details" asp-route-id="@item.Id">Состав</a>
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+</div>
