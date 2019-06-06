@@ -2,9 +2,15 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-	white-space: normal;
-	text-align: center;
-	word-break: break-all;
+	background: url(../img/Neira_emblem.png) no-repeat left center;
+	background-size: contain;
+	text-indent:3rem;
+}
+
+a.current {
+	pointer-events: none;
+	cursor: not-allowed;
+	opacity: 0.8;
 }
 
 /* Sticky footer styles

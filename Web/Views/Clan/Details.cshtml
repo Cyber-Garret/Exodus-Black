@@ -11,8 +11,8 @@
 		<form asp-action="Details" method="get">
 			<div>
 				<p>
-					Поиск по имени: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-					<input type="submit" value="Найти" /> |
+					Поиск по имени: <input type="text" class="form-control-sm" name="SearchString" value="@ViewData["currentFilter"]" />
+					<input type="submit" class="btn btn-outline-primary" value="Найти" /> |
 					<a asp-action="Details" asp-route-id="@CurrentClan.Id">Вернуться к полному списку</a>
 				</p>
 			</div>

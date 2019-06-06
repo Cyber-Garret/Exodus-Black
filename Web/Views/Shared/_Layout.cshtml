@@ -21,9 +21,14 @@
 </head>
 <body>
 	<header>
+		@{
+			var currentController = ViewContext.RouteData.Values["controller"] as string ?? "Home";
+			var currentAction = ViewContext.RouteData.Values["action"] as string ?? "Index";
+			var currentPage = (currentController + "-" + currentAction).ToLower();
+		}
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
 			<div class="container-fluid">
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="https://www.bungie.net/common/destiny2_content/icons/a802d6f4595db175154f3c465210af0f.png" alt="Нейроматрица" style="width:40px;" />Нейроматрица</a>
+				@Html.ActionLink("Нейроматрица","Index","Home",null, new {@class = currentPage == "home-index" ? "navbar-brand current": "navbar-brand" })
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -31,13 +36,14 @@
 				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
-							<a class="nav-link text-light" asp-area="" asp-controller="Command" asp-action="Index">Команды</a>
+							@Html.ActionLink("Команды", "Index", "Command", null, new { @class = currentPage == "command-index" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-light" asp-area="" asp-controller="Clan" asp-action="Index">Кланы</a>
+							@Html.ActionLink("Кланы", "Index", "Clan", null, new { @class = currentPage == "clan-index" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="About">О нас</a>
+							@Html.ActionLink("О нас", "About", "Home", null, new { @class = currentPage == "home-about" ? "nav-link text-light current" : "nav-link text-light" })
+							@*<a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="About">О нас</a>*@
 						</li>
 					</ul>
 				</div>
