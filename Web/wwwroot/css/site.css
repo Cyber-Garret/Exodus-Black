@@ -4,7 +4,7 @@ for details on configuring this project to bundle and minify static web assets. 
 a.navbar-brand {
 	background: url(../img/Neira_emblem.png) no-repeat left center;
 	background-size: contain;
-	text-indent:3rem;
+	text-indent: 3rem;
 }
 
 a.current {
@@ -17,6 +17,8 @@ a.current {
 -------------------------------------------------- */
 html {
 	font-size: 14px;
+	background: url(../img/bg.jpg) no-repeat center center fixed;
+	background-size: cover;
 }
 
 @media (min-width: 768px) {
@@ -52,6 +54,14 @@ html {
 body {
 	/* Margin bottom by footer height */
 	margin-bottom: 60px;
+	background-color: transparent;
+}
+
+.background {
+	background-color: white;
+	border-radius: 1rem;
+	padding: 1rem;
+	opacity: 0.9;
 }
 
 .footer {
