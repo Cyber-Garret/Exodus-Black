@@ -213,7 +213,20 @@ namespace DiscordBot.Modules.Administration
 				#region Checks
 				if (GuildId == 0)
 				{
-					await Context.Channel.SendMessageAsync("Капитан, ты не указал ID гильдии.\nЧтобы узнать ID достаточно открыть любой клан на сайте Bungie, например: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n Синтаксис команды простой: **!клан статус 3526561**");
+					var app = await Context.Client.GetApplicationInfoAsync();
+					EmbedBuilder embed = new EmbedBuilder();
+					embed.WithColor(Color.Gold);
+					embed.WithTitle("Капитан, ты не указал ID гильдии.");
+					embed.WithDescription(
+						$"Чтобы узнать ID, достаточно открыть любой клан на сайте Bungie.\nНапример: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n" +
+						$"Синтаксис команды простой: **!клан статус 3526561**\n");
+					embed.AddField("Кэш данных о клане Destiny 2",
+						"Если ты желаешь, чтобы я начала обновлять данные о клане которого нет [тут](http://neira.link/Clan).\n" +
+						$"Напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
+						"Только так я могу оперативно отображать данные о твоих стражах.\n");
+					embed.WithFooter("Ты можешь посетить Черный исход по ссылке в описании и получать любую оперативную помощь и информацию от моего создателя.");
+
+					await Context.Channel.SendMessageAsync(null, false, embed.Build());
 					return;
 				}
 				#endregion
@@ -238,7 +251,7 @@ namespace DiscordBot.Modules.Administration
 					embed.WithUrl($"http://neira.link/Clan/Details/{GuildId}");
 					////Some clan main info
 					embed.WithDescription(
-						$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" + 
+						$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
 						$"Сортировка происходит от времени, когда вызвали данную команду.");
 
 					#region list for member sorted for some days

@@ -46,6 +46,12 @@ namespace Web.Controllers
 		{
 			return RedirectPermanent(@"https://discord.gg/WcuNPM9");
 		}
+
+		[Route("DevelopmentBoard")]
+		public IActionResult Trello()
+		{
+			return RedirectPermanent(@"https://trello.com/b/HhOiSSn4");
+		}
 		#endregion
 	}
 }

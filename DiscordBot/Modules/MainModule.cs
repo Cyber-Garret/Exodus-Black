@@ -28,8 +28,8 @@ namespace DiscordBot.Modules.Commands
 		{
 			EmbedBuilder embedBuilder = new EmbedBuilder();
 			embedBuilder.WithColor(Color.Gold);
+			embedBuilder.WithTitle($"Доброго времени суток. Меня зовут Нейроматрица, я ИИ \"Черного исхода\" адаптированный для Discord");
 			embedBuilder.WithDescription(
-				$"Доброго времени суток. Я Нейроматрица версии {Global.Version}.\n" +
 				"Моя основная цель своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
 				"Так же я могу предоставить информацию о экзотическом вооружении.\n" +
 				"В текущий момент в моей базе данных зарегистрированны такие команды:");
@@ -41,7 +41,8 @@ namespace DiscordBot.Modules.Commands
 			embedBuilder.AddField(
 				"Команда: **!зур**",
 				"Команда отображает находится ли в данный момент Зур в игре или нет.");
-			embedBuilder.WithFooter("Для дальнейшей работы введите одну из команд представленых выше.");
+			embedBuilder.WithUrl("http://neira.link/");
+			embedBuilder.WithFooter("Еще больше информации обо мне ты найдешь, нажав на заголовок этого сообщения.");
 
 			await Context.Channel.SendMessageAsync("", false, embedBuilder.Build());
 		}
