@@ -12,7 +12,7 @@ namespace DiscordBot.Services
 	public class ReminderService
 	{
 		#region Private fields
-		private readonly DiscordShardedClient _client = Program._client;
+		private readonly DiscordShardedClient _client = Program.Client;
 		private Timer _timer;
 		#endregion
 

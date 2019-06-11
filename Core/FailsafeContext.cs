@@ -15,6 +15,7 @@ namespace Core
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
+			//optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=sa;Password=yNRASo1FjL");
 			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV");
 		}
 
@@ -33,5 +34,9 @@ namespace Core
 		public DbSet<Guild> Guilds { get; set; }
 		public DbSet<Destiny2Clan> Destiny2Clans { get; set; }
 		public DbSet<Destiny2Clan_Member> Destiny2Clan_Members { get; set; }
+
+		//Catalyst's
+		public DbSet<Catalyst> Catalysts { get; set; }
+		public DbSet<Catalyst_Category> Catalyst_Categories { get; set; }
 	}
 }

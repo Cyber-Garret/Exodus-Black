@@ -16,8 +16,9 @@ namespace DiscordBot
 {
 	class Program
 	{
+		public static DiscordShardedClient Client;
+
 		#region Private fields
-		public static DiscordShardedClient _client;
 		private IServiceProvider _services;
 		private static string _config_path;
 		private readonly int[] _shardIds = { 0, 1 };
@@ -34,7 +35,7 @@ namespace DiscordBot
 
 		private async Task StartAsync()
 		{
-			_client = new DiscordShardedClient(_shardIds, new DiscordSocketConfig
+			Client = new DiscordShardedClient(_shardIds, new DiscordSocketConfig
 			{
 				LogLevel = LogSeverity.Verbose,
 				DefaultRetryMode = RetryMode.AlwaysRetry,
@@ -42,7 +43,7 @@ namespace DiscordBot
 				TotalShards = 2
 			});
 
-			_client.Log += Logger.Log;
+			Client.Log += Logger.Log;
 
 			#region Configure services
 			_services = BuildServices();
@@ -56,12 +57,12 @@ namespace DiscordBot
 			var token = _services.GetRequiredService<Configuration>().Token;
 
 
-			await _client.LoginAsync(TokenType.Bot, token);
-			await _client.StartAsync();
+			await Client.LoginAsync(TokenType.Bot, token);
+			await Client.StartAsync();
 
 
-			await _client.SetGameAsync("!справка");
-			await _client.SetStatusAsync(UserStatus.Online);
+			await Client.SetGameAsync("!справка");
+			await Client.SetStatusAsync(UserStatus.Online);
 
 			await Task.Delay(-1);
 		}

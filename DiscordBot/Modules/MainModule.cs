@@ -8,6 +8,7 @@ using DiscordBot.Preconditions;
 
 using Core;
 using Core.Models.Db;
+using DiscordBot.Features.Catalyst;
 
 namespace DiscordBot.Modules.Commands
 {
@@ -180,6 +181,19 @@ namespace DiscordBot.Modules.Commands
 
 
 			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, embed.Build());
+		}
+
+
+		[Command("катализатор"), Summary("Выводит информацию об известных катализаторах."), Cooldown(10)]
+		public async Task Catalyst([Remainder]string Name = null)
+		{
+			var msg = await Context.Channel.SendMessageAsync("", false, CatalystData.CatalystStartingEmbed().Build());
+			Global.CatalystMessages.Add(new CatalystCore(msg.Id, Context.User.Id));
+			await msg.AddReactionAsync(CatalystData.ReactOptions["ok"]);
+			await msg.AddReactionAsync(CatalystData.ReactOptions["left"]);
+			await msg.AddReactionAsync(CatalystData.ReactOptions["right"]);
+
+
 		}
 	}
 }

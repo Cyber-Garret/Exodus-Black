@@ -10,7 +10,7 @@ namespace DiscordBot.Services
 	public class CommandHandlerService
 	{
 		#region Private fields
-		private readonly DiscordShardedClient _client = Program._client;
+		private readonly DiscordShardedClient _client = Program.Client;
 		private CommandService _commands;
 		private readonly IServiceProvider _services;
 		#endregion
