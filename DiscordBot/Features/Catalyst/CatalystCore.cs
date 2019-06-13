@@ -16,7 +16,7 @@ namespace DiscordBot.Features.Catalyst
 		// Используется для идентификации реакций сообщения к этой игре.
 		internal ulong GameMessageId;
 
-		internal Catalyst_Category Category;
+		internal Core.Models.Db.Catalyst Сatalyst;
 
 		//private readonly List<Core.Models.Db.Catalyst> previousCatalysts;
 		private Core.Models.Db.Catalyst _currentCatalyst;
@@ -26,11 +26,12 @@ namespace DiscordBot.Features.Catalyst
 
 		private const int CategoriesPerPage = 4;
 
-		internal CatalystCore(ulong gameMessageId, ulong playerId, string category = "любая")
+		internal CatalystCore(ulong gameMessageId, ulong playerId, string category = "любой")
 		{
 			PlayerId = playerId;
 			GameMessageId = gameMessageId;
 			//previousCatalysts = new List<Core.Models.Db.Catalyst>();
+			Сatalyst = CatalystData.Catalysts.Find(cat => cat.WeaponName.ToLower() == category);
 			_currentCategoryPage = 1;
 			_messagestate = MessageStates.StartPage;
 			_emb = CatalystData.CatalystStartingEmbed(this);
@@ -44,7 +45,7 @@ namespace DiscordBot.Features.Catalyst
 				case (MessageStates.StartPage):
 					await HandleStartPageInput(socketMsg, reaction);
 					break;
-				case (MessageStates.ChangingCategory):
+				case (MessageStates.PickingCatalyst):
 					HandleSelectCategoryInput(socketMsg, reaction);
 					break;
 				case (MessageStates.Browse):
@@ -100,11 +101,11 @@ namespace DiscordBot.Features.Catalyst
 			}
 			if (reaction.Emote.Equals(CatalystData.ReactOptions["right"]))
 			{
-				_currentCategoryPage = Math.Min(_currentCategoryPage + 1, 1 + CatalystData.Categories.Count / CategoriesPerPage);
+				_currentCategoryPage = Math.Min(_currentCategoryPage + 1, 1 + CatalystData.Catalysts.Count / CategoriesPerPage);
 				PrepareCategoryEmb();
 				return;
 			}
-			Category = PickCategory(socketMsg.Embeds.FirstOrDefault(), reaction);
+			Сatalyst = PickCategory(socketMsg.Embeds.FirstOrDefault(), reaction);
 			_messagestate = MessageStates.StartPage;
 			PrepareStartMenu();
 		}
@@ -114,19 +115,20 @@ namespace DiscordBot.Features.Catalyst
 		/// </summary>
 		/// <param name="emb">Embed с категориями в виде отдельных полей и реакциями для их выбора</param>
 		/// <param name="reaction">Реакция которую нажал пользователь при выборе категории</param>
-		private Catalyst_Category PickCategory(IEmbed emb, IReaction reaction)
+		private Core.Models.Db.Catalyst PickCategory(IEmbed emb, IReaction reaction)
 		{
 			// Ищет какое embed поле соответствует представленой реакции.
 			var categoryString = emb.Fields
 				.Select(fi => fi.Name)
 				.Where(field => field.StartsWith(reaction.Emote.Name));
 			var enumerable = categoryString as string[] ?? categoryString.ToArray();
+			
 			return !enumerable.Any()
 				// Если не была выбрана какая либо из предложеных категорий тогда выбираем "Любая"
-				? new Catalyst_Category { Id = 0, Value = "Любая" }
+				? new Core.Models.Db.Catalyst { Id = 0, WeaponName = "Любой" }
 				// Так же обязательно удаляем реакцию и пробелы с обоих сторон из значения, чтобы получить правильную категорию
-				: CatalystData.Categories.FirstOrDefault(cat =>
-						cat.Value == enumerable.ToArray()[0].Replace(reaction.Emote.Name, ""
+				: CatalystData.Catalysts.FirstOrDefault(cat =>
+						cat.WeaponName == enumerable.ToArray()[0].Replace(reaction.Emote.Name, ""
 					).Trim());
 		}
 
@@ -139,15 +141,18 @@ namespace DiscordBot.Features.Catalyst
 			// Если пользователь хочет сменить категорию
 			if (reactionName == CatalystData.ReactOptions["1"].Name)
 			{
+				await socketMsg.AddReactionAsync(CatalystData.ReactOptions["2"]);
+				await socketMsg.AddReactionAsync(CatalystData.ReactOptions["3"]);
+				await socketMsg.AddReactionAsync(CatalystData.ReactOptions["4"]);
 				await socketMsg.AddReactionAsync(CatalystData.ReactOptions["left"]);
 				await socketMsg.AddReactionAsync(CatalystData.ReactOptions["right"]);
 				PrepareCategoryEmb();
-				_messagestate = MessageStates.ChangingCategory;
+				_messagestate = MessageStates.PickingCatalyst;
 				return;
 			}
-			// Если пользователь хочет начать викторину
+			// Если пользователь хочет просмотреть катализатор.
 			if (reactionName == CatalystData.ReactOptions["ok"].Name)
-				await PreparePlayEmb(socketMsg, reaction);
+				await PreparePlayEmb(socketMsg);
 		}
 
 		/// <summary>
@@ -157,13 +162,13 @@ namespace DiscordBot.Features.Catalyst
 		{
 			_emb.Fields.Clear();
 			_emb.WithDescription(
-				"Выбери категорию с вопросами соответствующей реакцией.\n" +
+				"Выбери интересующий тебя катализатор оружия соответствующей реакцией.\n" +
 				$"Ты можешь листать страницы при помощи {CatalystData.ReactOptions["left"]} и {CatalystData.ReactOptions["right"]} " +
-				$"или нажать {CatalystData.ReactOptions["ok"]} что-бы вернуться назад без смены категории.");
+				$"или нажать {CatalystData.ReactOptions["ok"]} что-бы вернуться назад.");
 			var categories = CatalystData.CategoriesPaged(_currentCategoryPage, CategoriesPerPage);
 			for (var i = 1; i <= categories.Count; i++)
 			{
-				_emb.AddField(CatalystData.ReactOptions[i.ToString()].Name + "  " + categories[i - 1].Value, Global.InvisibleString);
+				_emb.AddField(CatalystData.ReactOptions[i.ToString()].Name + "  " + categories[i - 1].WeaponName, Global.InvisibleString);
 			}
 		}
 
@@ -179,19 +184,19 @@ namespace DiscordBot.Features.Catalyst
 				return;
 			}
 
-			await PreparePlayEmb(socketMsg, reaction);
+			await PreparePlayEmb(socketMsg);
 		}
 
 		/// <summary>
 		/// Переписывает embed викторины для отображения вопроса + показывает результат предыдущего вопроса.
 		/// </summary>
-		private async Task PreparePlayEmb(IUserMessage socketMsg, IReaction reaction)
+		private async Task PreparePlayEmb(IUserMessage socketMsg)
 		{
 			await NewCatalyst();
 			// Меняем режим викторины в случае когда мы впервые пришли из главного меню.
 			_messagestate = MessageStates.Browse;
-			_emb = CatalystData.CatalystToEmbed(_currentCatalyst, _emb);
-			_emb.AddField(Global.InvisibleString, $"Нажми {CatalystData.ReactOptions["ok"]} для возвращения в главное меню.");
+			_emb = await CatalystData.CatalystToEmbedAsync(_currentCatalyst, _emb);
+			await socketMsg.RemoveAllReactionsAsync();
 		}
 
 		/// <summary>
@@ -199,12 +204,7 @@ namespace DiscordBot.Features.Catalyst
 		/// </summary>
 		private async Task NewCatalyst()
 		{
-			if (_messagestate == MessageStates.Browse)
-				previousCatalysts.Add(_currentCatalyst);
-			_currentCatalyst =
-			   (await CatalystData.GetCatalysts(
-					categoryId: Category.Id))
-				.FirstOrDefault();
+			_currentCatalyst = (await CatalystData.GetCatalysts(categoryId: Сatalyst.Id)).FirstOrDefault();
 		}
 	}
 }

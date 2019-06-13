@@ -16,14 +16,16 @@ namespace DiscordBot.Features.Catalyst
 	{
 		/// Сопостовляет простые строки с Discord реакциями для более удобного использования.
 		public static readonly Dictionary<string, Emoji> ReactOptions;
+		public static readonly List<Core.Models.Db.Catalyst> Catalysts;
 
 		static CatalystData()
 		{
 			ReactOptions = new Dictionary<string, Emoji>
 			{
+				{ "1", new Emoji("1⃣")}, { "2", new Emoji("2⃣")}, {"3", new Emoji("3⃣")}, {"4", new Emoji("4⃣")},
 				{"ok", new Emoji("🆗")}, { "right", new Emoji("➡") }, {"left", new Emoji("⬅")}
 			};
-			Categories = GetCategories();
+			Catalysts = GetCategories();
 		}
 
 		/// <summary>
@@ -58,6 +60,16 @@ namespace DiscordBot.Features.Catalyst
 			}
 		}
 
+		private static List<Core.Models.Db.Catalyst> GetCategories()
+		{
+			using (var Db = new FailsafeContext())
+			{
+				var cats = Db.Catalysts.AsNoTracking().ToList();
+				cats.Add(new Core.Models.Db.Catalyst { Id = 0, WeaponName = "Любой" });
+				return cats;
+			}
+		}
+
 		/// <summary>
 		/// Отправяет запрос в https://opentdb.com/api.php с параметрами. (Все параметры опциональны).
 		/// </summary>
@@ -72,10 +84,10 @@ namespace DiscordBot.Features.Catalyst
 			using (var Db = new FailsafeContext())
 			{
 				if (categoryId == 0)
-					return await Db.Catalysts.Include(c => c.Category).AsNoTracking().ToListAsync();
+					return await Db.Catalysts.AsNoTracking().ToListAsync();
 				else
 				{
-					return await Db.Catalysts.Include(c => c.Category.Id == categoryId).AsNoTracking().ToListAsync();
+					return await Db.Catalysts.Where(c => c.Id == categoryId).AsNoTracking().ToListAsync();
 				}
 			}
 
@@ -87,12 +99,16 @@ namespace DiscordBot.Features.Catalyst
 		/// <param name="message">Опционально | Если представлено то принимает такие параметры TriviaGame как (Сложность, Тип вопроса, Категорию)</param>
 		internal static EmbedBuilder CatalystStartingEmbed(CatalystCore message = null)
 		{
+			var category = message == null ? "Любой" : message.Сatalyst.WeaponName;
+
 			return new EmbedBuilder()
 				.WithAuthor("Добро пожаловать в базу данных катализаторов экзотического оружия Нейроматрицы")
+				.WithThumbnailUrl("https://bungie.net/common/destiny2_content/icons/d8acfda580e28f7765dd6a813394c847.png")
 				.WithDescription("Что будем делать?")
 				.WithColor(Color.Blue)
 				.WithFooter("Используй реакции ниже, чтобы произвести выбор. \n(Только тот, кто вызвал данную команду, сможет использовать их. Остальных я игнорирую.)")
-				.AddField(Global.InvisibleString, ReactOptions["ok"] + " **Начинаем**");
+				.AddField(ReactOptions["1"] + " Выбрать катализатор", category, true)
+				.AddField(Global.InvisibleString, ReactOptions["ok"] + " **Посмотреть катализатор**");
 		}
 
 		/// <summary>
@@ -100,18 +116,32 @@ namespace DiscordBot.Features.Catalyst
 		/// </summary>
 		/// <param name="q">Вопрос для отображения</param>
 		/// <param name="emb">EmbedBuilder который наследует такие свойства как (Заголовок, Автор, Футер)</param>
-		internal static EmbedBuilder CatalystToEmbed(Core.Models.Db.Catalyst catalyst, EmbedBuilder emb)
+		internal static async Task<EmbedBuilder> CatalystToEmbedAsync(Core.Models.Db.Catalyst catalyst, EmbedBuilder emb)
 		{
 			// Наследование информации из представленогого embed сообщения
-			var embB = new EmbedBuilder()
-				.WithTitle(emb.Title)
-				.WithAuthor(emb.Author)
-				.WithFooter(emb.Footer);
-			// Устанавливает Цвет и Описание embed сообщения
-			embB.WithColor(emb.Color.GetValueOrDefault(Color.Gold))
-				.WithDescription($"[{catalyst.Category.Value}]\n" +
-							$"**{catalyst.Description}**");
-			embB.AddField(Global.InvisibleString, $"{catalyst.WeaponName}");
+			var embB = new EmbedBuilder();
+			embB.WithTitle(emb.Title + $"{catalyst.WeaponName}");
+			embB.WithAuthor(emb.Author);
+			embB.WithColor(Color.Gold);
+			if (!string.IsNullOrWhiteSpace(catalyst.Icon))
+				embB.WithThumbnailUrl(catalyst.Icon);
+			if (!string.IsNullOrWhiteSpace(catalyst.Description))
+				embB.WithDescription(catalyst.Description);
+			if (!string.IsNullOrWhiteSpace(catalyst.DropLocation))
+				embB.AddField("Как получить катализатор", catalyst.DropLocation);
+			if (!string.IsNullOrWhiteSpace(catalyst.Quest))
+				embB.AddField("Задание катализатора", catalyst.Quest);
+			if (!string.IsNullOrWhiteSpace(catalyst.Masterwork))
+				embB.AddField("Бонус катализатор", catalyst.Masterwork);
+			try
+			{
+				var app = await Program.Client.GetApplicationInfoAsync();
+				embB.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
 
 			//for (var i = 1; i <= answersShuffled.Count; i++)
 			//{
@@ -132,11 +162,11 @@ namespace DiscordBot.Features.Catalyst
 		/// <param name="page">Страница для доступа (Может быть только одна)</param>
 		/// <param name="pagesize">Количество категорий на страницу</param>
 		/// <returns>Список категорий размером с pagesize (или меньше если это последняя страница)</returns>
-		internal static List<Catalyst_Category> CategoriesPaged(int page, int pagesize)
+		internal static List<Core.Models.Db.Catalyst> CategoriesPaged(int page, int pagesize)
 		{
 			page--;
 			var startIndex = page * pagesize;
-			return Categories.GetRange(startIndex, Math.Min(pagesize, Categories.Count - (startIndex)));
+			return Catalysts.GetRange(startIndex, Math.Min(pagesize, Catalysts.Count - (startIndex)));
 		}
 	}
 
@@ -145,6 +175,6 @@ namespace DiscordBot.Features.Catalyst
 	/// </summary>
 	internal enum MessageStates
 	{
-		StartPage, ChangingCategory, Browse
+		StartPage, PickingCatalyst, Browse
 	}
 }

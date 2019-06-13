@@ -184,16 +184,16 @@ namespace DiscordBot.Modules.Commands
 		}
 
 
-		[Command("катализатор"), Summary("Выводит информацию об известных катализаторах."), Cooldown(10)]
-		public async Task Catalyst([Remainder]string Name = null)
+		[Command("катализатор"), Summary("Выводит информацию об известных катализаторах."), Cooldown(10), RequireContext(ContextType.Guild, ErrorMessage = "Прошу прощения страж, но данная команда не работает в личных сообщениях.")]
+		public async Task Catalyst()
 		{
 			var msg = await Context.Channel.SendMessageAsync("", false, CatalystData.CatalystStartingEmbed().Build());
 			Global.CatalystMessages.Add(new CatalystCore(msg.Id, Context.User.Id));
 			await msg.AddReactionAsync(CatalystData.ReactOptions["ok"]);
-			await msg.AddReactionAsync(CatalystData.ReactOptions["left"]);
-			await msg.AddReactionAsync(CatalystData.ReactOptions["right"]);
-
-
+			await msg.AddReactionAsync(CatalystData.ReactOptions["1"]);
+			//await msg.AddReactionAsync(CatalystData.ReactOptions["2"]);
+			//await msg.AddReactionAsync(CatalystData.ReactOptions["3"]);
+			//await msg.AddReactionAsync(CatalystData.ReactOptions["4"]);
 		}
 	}
 }
