@@ -96,6 +96,7 @@ namespace DiscordBot.Modules.Commands
 				EmbedBuilder Embed = new EmbedBuilder()
 					.WithColor(Color.Gold)
 					.WithTitle($"Уважаемый пользователь {Context.User}")
+					.WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
 					.WithDescription("По моим данным Зур в данный момент в пределах солнечной системы, но\n" +
 					"так как мои алгоритмы глобального позиционирования пока еще в разработке, определить точное положение я не могу.\n" +
 					"[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)\n" +
@@ -108,6 +109,7 @@ namespace DiscordBot.Modules.Commands
 				EmbedBuilder Embed = new EmbedBuilder()
 					.WithColor(Color.Red)
 					.WithDescription("По моим данным Зур не в пределах солнечной системы.")
+					.WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
 					.WithFooter("Зур прибудет в пятницу 20:00 по МСК. Я сообщу.");
 				await Context.Channel.SendMessageAsync("", false, Embed.Build());
 			}
@@ -134,6 +136,10 @@ namespace DiscordBot.Modules.Commands
 					return "MIDA";
 				if (Input == "сурос")
 					return "SUROS";
+				if (Input == "морозники")
+					return "M0р03ники";
+				if (Input == "топотуны")
+					return "Т0п0тунЬI";
 				return Input;
 			}
 			//Запрашиваем информацию из локальной бд.
@@ -155,29 +161,33 @@ namespace DiscordBot.Modules.Commands
 			embed.WithThumbnailUrl(gear.IconUrl);
 			//Краткая история снаряжения.
 			embed.WithDescription(gear.Description);
-			//Если в бд отмечено что оружие имеет катализатор добавляем несколько полей.
-			if (gear.Catalyst)
+			if (gear.isWeapon)
 			{
-				embed.AddField("Катализатор:", "Есть");
-				embed.AddField("Как получить катализатор:", gear.WhereCatalystDrop);
-				embed.AddField("Задание катализатора:", gear.CatalystQuest);
-				embed.AddField("Бонус катализатора:", gear.CatalystBonus);
-			}
-			else
-			{
-				embed.AddField("Катализатор:", "Отсутствует");
+				//Если в бд отмечено что оружие имеет катализатор добавляем несколько полей.
+				if (gear.Catalyst)
+				{
+					embed.AddField("Катализатор:", "Есть");
+					embed.AddField("Как получить катализатор:", gear.WhereCatalystDrop);
+					embed.AddField("Задание катализатора:", gear.CatalystQuest);
+					embed.AddField("Бонус катализатора:", gear.CatalystBonus);
+				}
+				else
+				{
+					embed.AddField("Катализатор:", "Отсутствует");
+				}
 			}
 			//Экзотическое свойство.
 			embed.AddField(gear.PerkName, gear.PerkDescription, true);
 			//Второе уникальное или не очень свойство.
-			embed.AddField(gear.SecondPerkName, gear.SecondPerkDescription, true);
+			if (gear.SecondPerkName != null && gear.SecondPerkDescription != null)
+				embed.AddField(gear.SecondPerkName, gear.SecondPerkDescription, true);
 			//Информация о том как получить снаряжение.
 			embed.AddField("Как получить:", gear.DropLocation, true);
 			//Скриншот снаряжения.
 			embed.WithImageUrl(gear.ImageUrl);
 
 			var app = await Context.Client.GetApplicationInfoAsync();
-			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}", app.Owner.GetAvatarUrl());
+			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", "https://bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png");
 
 
 			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, embed.Build());
