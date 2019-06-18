@@ -6,7 +6,7 @@
 	ViewData["Title"] = $"Клан {CurrentClan.Name}";
 }
 <div>
-	<div class="container-fluid">
+	<div class="container text-center background">
 		<h2>@ViewData["Title"]</h2>
 		<form asp-action="Details" method="get">
 			<div>
@@ -24,9 +24,6 @@
 			<thead>
 				<tr>
 					<th class="sticky-top bg-light">
-						Аватар
-					</th>
-					<th class="sticky-top bg-light">
 						<a asp-action="Details" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
 					</th>
 					<th class="sticky-top bg-light">
@@ -42,17 +39,7 @@
 				{
 					<tr>
 						<td>
-							@if (item.IconPath != null)
-							{
-								<img src="https://www.bungie.net/@item.IconPath" width="50" alt="@item.Name" />
-							}
-							else
-							{
-								<img src="https://www.bungie.net//img/profile/avatars/default_avatar.gif" width="50" alt="@item.Name" />
-							}
-						</td>
-						<td>
-							<a href="https://www.bungie.net/ru/Profile/@item.DestinyMembershipType/@item.DestinyMembershipId/" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
+							<a asp-area="" asp-controller="Clan" asp-action="OpenProfile" asp-route-type="@item.DestinyMembershipType" asp-route-id="@item.DestinyMembershipId" rel="nofollow" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
 						</td>
 						<td>
 							@Html.DisplayFor(modelItem => item.ClanJoinDate)

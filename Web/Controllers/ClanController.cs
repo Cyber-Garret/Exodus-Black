@@ -147,6 +147,13 @@ namespace Web.Controllers
 			return View(destiny2Clan);
 		}
 
+		[Route("OpenProfile")]
+		public IActionResult OpenProfile(long type, string id)
+		{
+
+			return RedirectPermanent($"https://www.bungie.net/ru/Profile/{type}/{id}/");
+		}
+
 		private bool Destiny2ClanExists(long id)
 		{
 			return _context.Destiny2Clans.Any(e => e.Id == id);

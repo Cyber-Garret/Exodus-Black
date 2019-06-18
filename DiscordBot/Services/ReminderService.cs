@@ -12,7 +12,7 @@ namespace DiscordBot.Services
 	public class ReminderService
 	{
 		#region Private fields
-		private readonly DiscordShardedClient _client = Program._client;
+		private readonly DiscordShardedClient _client = Program.Client;
 		private Timer _timer;
 		#endregion
 
@@ -41,7 +41,7 @@ namespace DiscordBot.Services
 			var embed = new EmbedBuilder()
 				.WithColor(Color.Orange)
 				.WithTitle("Стражи! Зур прибыл в солнечную систему!")
-				.WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
+				.WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
 				.WithDescription("Нажмите на заголовок сообщения чтобы узнать точное местоположение посланника Зура.")
 				.WithUrl("https://whereisxur.com/")
 				.WithFooter("Напоминаю! Зур покинет солнечную систему во вторник в 20:00 по МСК.")
@@ -74,7 +74,7 @@ namespace DiscordBot.Services
 			var embed = new EmbedBuilder()
 			   .WithColor(Color.Red)
 			   .WithTitle("Внимание! Зур покинул солнечную систему.")
-			   .WithThumbnailUrl("http://159.69.21.188/Icon/xur_emblem.png")
+			   .WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
 			   .WithDescription("Он просто испарился! Как только он придёт я сообщу.")
 			   .WithFooter("Напоминаю! В следующий раз Зур прибудет в пятницу в 20:00 по МСК.")
 			   .WithCurrentTimestamp();

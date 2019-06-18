@@ -35,6 +35,23 @@ namespace Web.Controllers
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
+
+		[Route("AddMe")]
+		public IActionResult Add_Me()
+		{
+			return RedirectPermanent(@"https://discordapp.com/oauth2/authorize?client_id=521693707238506498&scope=bot&permissions=8");
+		}
+		[Route("JoinMe")]
+		public IActionResult Join_Me()
+		{
+			return RedirectPermanent(@"https://discord.gg/WcuNPM9");
+		}
+
+		[Route("DevelopmentBoard")]
+		public IActionResult Trello()
+		{
+			return RedirectPermanent(@"https://trello.com/b/HhOiSSn4");
+		}
 		#endregion
 	}
 }

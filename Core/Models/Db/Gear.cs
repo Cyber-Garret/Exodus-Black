@@ -48,6 +48,9 @@ namespace Core.Models.Db
 		[Display(Name = "Как получить")]
 		public string DropLocation { get; set; }
 
+		[Display(Name = "Это оружие?")]
+		public bool isWeapon { get; set; }
+
 		/// <summary> Пример: false - Отсутствует. true - Есть.</summary>
 		[Display(Name = "Катализатор")]
 		public bool Catalyst { get; set; }

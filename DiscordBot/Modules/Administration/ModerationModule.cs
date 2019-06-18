@@ -198,123 +198,6 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-
-		[Command("Клан статус")]
-		[Summary("Возвращает результат онлайна соклановцев заданой гильдии")]
-		[Cooldown(5)]
-		[RequireBotPermission(ChannelPermission.SendMessages)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
-		public async Task GetGuildInfo(int GuildId = 0)
-		{
-			try
-			{
-				#region Checks
-				if (GuildId == 0)
-				{
-					await Context.Channel.SendMessageAsync("Капитан, ты не указал ID гильдии.\nЧтобы узнать ID достаточно открыть любой клан на сайте Bungie, например: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n Синтаксис команды простой: **!клан статус 3526561**");
-					return;
-				}
-				#endregion
-				//Send calculating message because stastic forming near 30-50 sec.
-				var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
-
-				using (var failsafe = new FailsafeContext())
-				{
-					var destiny2Clan = failsafe.Destiny2Clans.AsNoTracking().Include(m => m.Members).ToList().FirstOrDefault(c => c.Id == GuildId);
-
-					if (destiny2Clan == null)
-					{
-						await Context.Channel.SendMessageAsync(":x: Этой информации в моей базе данных нет. :frowning:");
-						return;
-					}
-
-
-					EmbedBuilder embed = new EmbedBuilder();
-					embed.WithTitle($"Онлайн статус стражей клана {destiny2Clan.Name}");
-					embed.WithColor(Color.Orange);
-					////Bungie Clan link
-					embed.WithUrl($"http://neira.link/Clan/Details/{GuildId}");
-					////Some clan main info
-					embed.WithDescription(
-						$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" + 
-						$"Сортировка происходит от времени, когда вызвали данную команду.");
-
-					#region list for member sorted for some days
-					List<string> _ThisDay = new List<string>();
-					List<string> _Yesterday = new List<string>();
-					List<string> _ThisWeek = new List<string>();
-					List<string> _MoreOneWeek = new List<string>();
-					List<string> _NoData = new List<string>();
-					#endregion
-
-					//Main Sorting logic
-					foreach (var member in destiny2Clan.Members)
-					{
-						//Property for calculate how long days user did not enter the Destiny
-						var LastOnlineTime = (DateTime.Today.Date - member.DateLastPlayed.Value.Date).Days;
-
-						//Sorting user to right list
-						if (LastOnlineTime < 1)
-						{
-							_ThisDay.Add(member.Name);
-						}
-						else if (LastOnlineTime >= 1 && LastOnlineTime < 2)
-						{
-							_Yesterday.Add(member.Name);
-						}
-						else if (LastOnlineTime >= 2 && LastOnlineTime <= 7)
-						{
-							_ThisWeek.Add(member.Name);
-						}
-						else if (LastOnlineTime > 7)
-						{
-							_MoreOneWeek.Add(member.Name);
-						}
-						else
-						{
-							_NoData.Add(member.Name);
-						}
-					}
-
-					//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
-					//and if string ThisDay not empty add to embed message special field.
-					string ThisDay = string.Join(',', _ThisDay);
-					if (!string.IsNullOrEmpty(ThisDay))
-						embed.AddField("Был(a) сегодня", ThisDay);
-					//Same as above, but who enter to the game yesterday
-					string Yesterday = string.Join(',', _Yesterday);
-					if (!string.IsNullOrEmpty(Yesterday))
-						embed.AddField("Был(a) вчера", Yesterday);
-					//Same as above, but who enter to the game more 5 days but fewer 7 days ago
-					string ThisWeek = string.Join(',', _ThisWeek);
-					if (!string.IsNullOrEmpty(ThisWeek))
-						embed.AddField("Был(a) на этой неделе", ThisWeek);
-					//Same as above, but who enter to the game more 7 days ago
-					string MoreOneWeek = string.Join(',', _MoreOneWeek);
-					if (!string.IsNullOrEmpty(MoreOneWeek))
-						embed.AddField("Был(a) больше недели тому назад", MoreOneWeek);
-					//For user who not have any data.
-					string NoData = string.Join(',', _NoData);
-					if (!string.IsNullOrEmpty(NoData))
-						embed.AddField("Нет данных", NoData);
-					//Simple footer with clan name
-					embed.WithFooter($"Данные об онлайне стражей обновляються раз в 1 час.");
-					//Mention user with ready statistic
-					await Context.Channel.SendMessageAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", false, embed.Build());
-
-					//Delete message from start this command
-					await Context.Channel.DeleteMessageAsync(message);
-				}
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"ClanStatus Command - {ex.Source}", ex.Message, ex.InnerException));
-				Console.WriteLine(ex.ToString());
-			}
-		}
-
 		[Command("Логи статус")]
 		[Summary("Вкл. или Выкл. тех. сообщения.")]
 		[Cooldown(5)]
@@ -445,6 +328,48 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение сохранено.");
 		}
 
+		[Command("рассылка")]
+		[Cooldown(5)]
+		[RequireContext(ContextType.Guild, ErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
+		public async Task SendMessage(IRole _role, [Remainder] string message)
+		{
+			var GuildOwner = Context.Guild.OwnerId;
+			if (Context.User.Id != GuildOwner)
+			{
+				await Context.Channel.SendMessageAsync(":x: | Прошу прощения страж, но эта команда доступна только капитану корабля!");
+				return;
+			}
 
+			var workMessage = await Context.Channel.SendMessageAsync("Приступаю к рассылке сообщений.");
+			try
+			{
+				var Users = Context.Guild.Users;
+				var role = Context.Guild.Roles.FirstOrDefault(r => r.Id == _role.Id);
+				int count = 0;
+				foreach (var user in Users)
+				{
+					if (user.Roles.Contains(role))
+					{
+						var DM = await user.GetOrCreateDMChannelAsync();
+
+						EmbedBuilder embed = new EmbedBuilder();
+						embed.WithAuthor($"Сообщение от {Context.User.Username}");
+						embed.WithColor(Color.Gold);
+						embed.WithDescription(message);
+						embed.WithThumbnailUrl(Context.Guild.IconUrl);
+						embed.WithCurrentTimestamp();
+
+						await DM.SendMessageAsync(null, false, embed.Build());
+						count += 1;
+					}
+				}
+				await workMessage.ModifyAsync(m => m.Content = $"Готово. Я разослала сообщением всем у кого есть роль {role.Name}.\nСообщение получили {count} стражей.");
+			}
+			catch (Exception ex)
+			{
+				await workMessage.ModifyAsync(m => m.Content = "Ошибка рассылки! Сообщите моему создателю для исправления моих логических цепей.");
+				await Logger.Log(new LogMessage(LogSeverity.Error, $"SendMessage command - {ex.Source}", ex.Message, ex.InnerException));
+			}
+		}
 	}
 }
