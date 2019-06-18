@@ -52,6 +52,7 @@ namespace Web
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseCookiePolicy();
+			app.UseAuthentication();
 
 			cacheService.InitializeTimers();
 
