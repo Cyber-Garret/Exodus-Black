@@ -83,8 +83,13 @@ namespace DiscordBot.Features.Catalyst
 		{
 			using (var Db = new FailsafeContext())
 			{
+				//return random Catalyst
+				int total = Db.Catalysts.Count();
+				Random r = new Random();
+				int offset = r.Next(0, total);
+
 				if (categoryId == 0)
-					return await Db.Catalysts.AsNoTracking().ToListAsync();
+					return await Db.Catalysts.Skip(offset).ToListAsync();
 				else
 				{
 					return await Db.Catalysts.Where(c => c.Id == categoryId).AsNoTracking().ToListAsync();
@@ -106,7 +111,7 @@ namespace DiscordBot.Features.Catalyst
 				.WithThumbnailUrl("https://bungie.net/common/destiny2_content/icons/d8acfda580e28f7765dd6a813394c847.png")
 				.WithDescription("Что будем делать?")
 				.WithColor(Color.Blue)
-				.WithFooter("Используй реакции ниже, чтобы произвести выбор. \n(Только тот, кто вызвал данную команду, сможет использовать их. Остальных я игнорирую.)")
+				.WithFooter("Используй реакции ниже, чтобы произвести выбор. \n(Только тот, кто вызвал данную команду, сможет использовать их. Остальных я игнорирую.)", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg")
 				.AddField(ReactOptions["1"] + " Выбрать катализатор", category, true)
 				.AddField(Global.InvisibleString, ReactOptions["ok"] + " **Посмотреть катализатор**");
 		}
@@ -120,8 +125,7 @@ namespace DiscordBot.Features.Catalyst
 		{
 			// Наследование информации из представленогого embed сообщения
 			var embB = new EmbedBuilder();
-			embB.WithTitle(emb.Title + $"{catalyst.WeaponName}");
-			embB.WithAuthor(emb.Author);
+			embB.WithTitle("Информация о катализаторе для оружия " + $"{catalyst.WeaponName}");
 			embB.WithColor(Color.Gold);
 			if (!string.IsNullOrWhiteSpace(catalyst.Icon))
 				embB.WithThumbnailUrl(catalyst.Icon);

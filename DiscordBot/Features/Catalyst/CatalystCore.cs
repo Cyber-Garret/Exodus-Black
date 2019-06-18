@@ -18,7 +18,6 @@ namespace DiscordBot.Features.Catalyst
 
 		internal Core.Models.Db.Catalyst Сatalyst;
 
-		//private readonly List<Core.Models.Db.Catalyst> previousCatalysts;
 		private Core.Models.Db.Catalyst _currentCatalyst;
 		private MessageStates _messagestate;
 		private EmbedBuilder _emb;
@@ -30,7 +29,6 @@ namespace DiscordBot.Features.Catalyst
 		{
 			PlayerId = playerId;
 			GameMessageId = gameMessageId;
-			//previousCatalysts = new List<Core.Models.Db.Catalyst>();
 			Сatalyst = CatalystData.Catalysts.Find(cat => cat.WeaponName.ToLower() == category);
 			_currentCategoryPage = 1;
 			_messagestate = MessageStates.StartPage;
@@ -122,7 +120,12 @@ namespace DiscordBot.Features.Catalyst
 				.Select(fi => fi.Name)
 				.Where(field => field.StartsWith(reaction.Emote.Name));
 			var enumerable = categoryString as string[] ?? categoryString.ToArray();
-			
+
+			//Random catalyst
+			int total = CatalystData.Catalysts.Count();
+			Random r = new Random();
+			int offset = r.Next(0, total);
+
 			return !enumerable.Any()
 				// Если не была выбрана какая либо из предложеных категорий тогда выбираем "Любая"
 				? new Core.Models.Db.Catalyst { Id = 0, WeaponName = "Любой" }
@@ -168,7 +171,7 @@ namespace DiscordBot.Features.Catalyst
 			var categories = CatalystData.CategoriesPaged(_currentCategoryPage, CategoriesPerPage);
 			for (var i = 1; i <= categories.Count; i++)
 			{
-				_emb.AddField(CatalystData.ReactOptions[i.ToString()].Name + "  " + categories[i - 1].WeaponName, Global.InvisibleString,true);
+				_emb.AddField(CatalystData.ReactOptions[i.ToString()].Name + "  " + categories[i - 1].WeaponName, Global.InvisibleString, true);
 			}
 		}
 
