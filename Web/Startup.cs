@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Web.BungieCache;
 using Core;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Web
 {
@@ -31,6 +32,13 @@ namespace Web
 			});
 
 			services.AddDbContext<FailsafeContext>();
+			// установка конфигурации подключения
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(options => //CookieAuthenticationOptions
+				{
+					options.LoginPath = new PathString("/Account/Login");
+				});
+
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 			services.AddSingleton<CacheService>();

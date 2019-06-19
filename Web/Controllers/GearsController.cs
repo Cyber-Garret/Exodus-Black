@@ -7,6 +7,7 @@ using Web.Helpers;
 
 using Core;
 using Core.Models.Db;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -20,6 +21,7 @@ namespace Web.Controllers
 		}
 
 		// GET: Gears
+		[Authorize]
 		public async Task<IActionResult> Index(
 			string sortOrder,
 			string currentFilter,
