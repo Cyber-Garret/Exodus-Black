@@ -14,7 +14,6 @@ namespace Core
 			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV");
 		}
 		//Global
-		public DbSet<NeiraUser> NeiraUsers { get; set; }
 		public DbSet<Gear> Gears { get; set; }
 		public DbSet<Guild> Guilds { get; set; }
 		public DbSet<Destiny2Clan> Destiny2Clans { get; set; }

@@ -33,6 +33,27 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+					<ul class="navbar-nav flex-grow-0">
+						@if (User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item text-light">@User.Identity.Name</li>
+							@*<form method="post" asp-controller="Account" asp-action="LogOff">
+								<input type="submit" value="Выход" />
+							</form>*@
+							<li class="nav-item">
+									@Html.ActionLink("Выход", "LogOff", "Account")
+								</li>
+						}
+						else
+						{
+							<li class="nav-item">
+								@Html.ActionLink("Вход", "Login", "Account", null, new { @class = currentPage == "login-account" ? "nav-link text-light current" : "nav-link text-light" })
+							</li>
+							<li class="nav-item">
+								@Html.ActionLink("Регистрация", "Register", "Account", null, new { @class = currentPage == "register-account" ? "nav-link text-light current" : "nav-link text-light" })
+							</li>
+						}
+					</ul>
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
 							@Html.ActionLink("Команды", "Index", "Command", null, new { @class = currentPage == "command-index" ? "nav-link text-light current" : "nav-link text-light" })
@@ -44,6 +65,8 @@
 							@Html.ActionLink("О проекте", "About", "Home", null, new { @class = currentPage == "home-about" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>
 					</ul>
+
+
 				</div>
 			</div>
 		</nav>

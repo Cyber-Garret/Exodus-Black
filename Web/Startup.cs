@@ -9,6 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Web.BungieCache;
 using Core;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Web.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 
 namespace Web
 {
@@ -30,13 +34,21 @@ namespace Web
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
-
 			services.AddDbContext<FailsafeContext>();
-			// установка конфигурации подключения
-			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-				.AddCookie(options => //CookieAuthenticationOptions
+
+			services.AddDbContext<WebContext>(options =>
+							options.UseSqlServer(Configuration.GetConnectionString("WebContextConnection")));
+
+			services.AddIdentity<NeiraUser, IdentityRole>()
+				.AddEntityFrameworkStores<WebContext>()
+				.AddDefaultUI(UIFramework.Bootstrap4);
+
+			services.AddAuthentication()
+				.AddDiscord(x =>
 				{
-					options.LoginPath = new PathString("/Account/Login");
+					x.AppId = Configuration["Discord:AppId"];
+					x.AppSecret = Configuration["Discord:AppSecret"];
+					x.Scope.Add("guilds");
 				});
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -60,7 +72,6 @@ namespace Web
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseCookiePolicy();
-			app.UseAuthentication();
 
 			cacheService.InitializeTimers();
 
@@ -68,6 +79,8 @@ namespace Web
 			{
 				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 			});
+
+			app.UseAuthentication();
 
 			app.UseMvc(routes =>
 			{

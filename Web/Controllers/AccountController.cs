@@ -1,46 +1,23 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Web.Models;
 using Web.ViewModels;
-using Core.Models.Db;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Core;
-using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers
 {
-    public class AccountController : Controller
-    {
-		private FailsafeContext db;
-		public AccountController(FailsafeContext context)
-		{
-			db = context;
-		}
-		[HttpGet]
-		public IActionResult Login()
-		{
-			return View();
-		}
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Login(LoginModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				NeiraUser user = await db.NeiraUsers.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
-				if (user != null)
-				{
-					await Authenticate(model.Email); // аутентификация
+	public class AccountController : Controller
+	{
+		private readonly UserManager<NeiraUser> _userManager;
+		private readonly SignInManager<NeiraUser> _signInManager;
 
-					return RedirectToAction("Index", "Home");
-				}
-				ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-			}
-			return View(model);
+		public AccountController(UserManager<NeiraUser> userManager, SignInManager<NeiraUser> signInManager)
+		{
+			_userManager = userManager;
+			_signInManager = signInManager;
 		}
 		[HttpGet]
 		public IActionResult Register()
@@ -48,45 +25,71 @@ namespace Web.Controllers
 			return View();
 		}
 		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Register(RegisterModel model)
+		public async Task<IActionResult> Register(RegisterViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
-				NeiraUser user = await db.NeiraUsers.FirstOrDefaultAsync(u => u.Email == model.Email);
-				if (user == null)
+				NeiraUser user = new NeiraUser { Email = model.Email, UserName = model.Email, Year = model.Year };
+				// добавляем пользователя
+				var result = await _userManager.CreateAsync(user, model.Password);
+				if (result.Succeeded)
 				{
-					// добавляем пользователя в бд
-					db.NeiraUsers.Add(new NeiraUser { Email = model.Email, Password = model.Password });
-					await db.SaveChangesAsync();
-
-					await Authenticate(model.Email); // аутентификация
-
+					// установка куки
+					await _signInManager.SignInAsync(user, false);
 					return RedirectToAction("Index", "Home");
 				}
 				else
-					ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+				{
+					foreach (var error in result.Errors)
+					{
+						ModelState.AddModelError(string.Empty, error.Description);
+					}
+				}
 			}
 			return View(model);
 		}
 
-		private async Task Authenticate(string userName)
+		[HttpGet]
+		public IActionResult Login(string returnUrl = null)
 		{
-			// создаем один claim
-			var claims = new List<Claim>
-			{
-				new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
-			};
-			// создаем объект ClaimsIdentity
-			ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-			// установка аутентификационных куки
-			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+			return View(new LoginViewModel { ReturnUrl = returnUrl });
 		}
 
-		public async Task<IActionResult> Logout()
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Login(LoginViewModel model)
 		{
-			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-			return RedirectToAction("Login", "Account");
+			if (ModelState.IsValid)
+			{
+				var result =
+					await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+				if (result.Succeeded)
+				{
+					// проверяем, принадлежит ли URL приложению
+					if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+					{
+						return Redirect(model.ReturnUrl);
+					}
+					else
+					{
+						return RedirectToAction("Index", "Home");
+					}
+				}
+				else
+				{
+					ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+				}
+			}
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> LogOff()
+		{
+			// удаляем аутентификационные куки
+			await _signInManager.SignOutAsync();
+			return RedirectToAction("Index", "Home");
 		}
 	}
 }
