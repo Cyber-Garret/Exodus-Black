@@ -13,5 +13,7 @@ namespace Web
 	{
 		public WebContext(DbContextOptions<WebContext> options)
 			: base(options) => Database.EnsureCreated();
+
+		public DbSet<NeiraRole> NeiraRoles { get; set; }
 	}
 }

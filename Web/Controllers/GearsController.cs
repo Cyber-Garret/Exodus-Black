@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
+	[Authorize(Roles = "admin")]
 	public class GearsController : Controller
 	{
 		private readonly FailsafeContext _context;

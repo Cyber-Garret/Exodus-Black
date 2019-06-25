@@ -36,21 +36,20 @@
 					<ul class="navbar-nav flex-grow-0">
 						@if (User.Identity.IsAuthenticated)
 						{
-							<li class="nav-item text-light">@User.Identity.Name</li>
-							@*<form method="post" asp-controller="Account" asp-action="LogOff">
-								<input type="submit" value="Выход" />
-							</form>*@
+							<li class="nav-item"><div class="nav-link text-light">Привет @User.Identity.Name</div></li>
 							<li class="nav-item">
-									@Html.ActionLink("Выход", "LogOff", "Account")
-								</li>
+								<form class="form-inline" asp-controller="Account" asp-action="LogOff">
+									<button type="submit" class="nav-link btn btn-link text-light">Выход</button>
+								</form>
+							</li>
 						}
 						else
 						{
 							<li class="nav-item">
-								@Html.ActionLink("Вход", "Login", "Account", null, new { @class = currentPage == "login-account" ? "nav-link text-light current" : "nav-link text-light" })
+								@Html.ActionLink("Вход", "Login", "Account", null, new { @class = currentPage == "account-login" ? "nav-link text-light current" : "nav-link text-light" })
 							</li>
 							<li class="nav-item">
-								@Html.ActionLink("Регистрация", "Register", "Account", null, new { @class = currentPage == "register-account" ? "nav-link text-light current" : "nav-link text-light" })
+								@Html.ActionLink("Регистрация", "Register", "Account", null, new { @class = currentPage == "account-register" ? "nav-link text-light current" : "nav-link text-light" })
 							</li>
 						}
 					</ul>

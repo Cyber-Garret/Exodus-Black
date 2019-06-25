@@ -1,0 +1,24 @@
+﻿@model Web.Models.NeiraRole
+@{
+	ViewData["Title"] = "Добавить роль";
+}
+<div class="container background">
+
+	<div asp-validation-summary="All" class="text-danger"></div>
+
+	<form asp-action="Create" method="post">
+		<div class="form-group">
+			<label for="name">Новая роль</label>
+			<input name="name" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="Icon">Иконка</label>
+			<input name="Icon" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="DisplayName">Отображаемое имя роли</label>
+			<input name="DisplayName" class="form-control" />
+		</div>
+		<button type="submit" class="btn btn-primary">Добавить</button>
+	</form>
+</div>

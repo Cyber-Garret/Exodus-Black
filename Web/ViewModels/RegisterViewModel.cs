@@ -5,11 +5,15 @@ namespace Web.ViewModels
 	public class RegisterViewModel
 	{
 		[Required]
+		[Display(Name = "Имя")]
+		public string DisplayName { get; set; }
+
+		[Required]
 		[Display(Name = "Email")]
 		public string Email { get; set; }
 
 		[Required]
-		[Display(Name = "Год рождения")]
+		[Range(1912, 2077), Display(Name = "Год рождения")]
 		public int Year { get; set; }
 
 		[Required]

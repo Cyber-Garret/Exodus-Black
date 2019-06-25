@@ -39,9 +39,10 @@ namespace Web
 			services.AddDbContext<WebContext>(options =>
 							options.UseSqlServer(Configuration.GetConnectionString("WebContextConnection")));
 
-			services.AddIdentity<NeiraUser, IdentityRole>()
+			services.AddIdentity<NeiraUser, NeiraRole>()
 				.AddEntityFrameworkStores<WebContext>()
-				.AddDefaultUI(UIFramework.Bootstrap4);
+				.AddDefaultUI(UIFramework.Bootstrap4)
+				.AddDefaultTokenProviders();
 
 			services.AddAuthentication()
 				.AddDiscord(x =>
