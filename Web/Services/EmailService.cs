@@ -13,7 +13,7 @@ namespace Web.Services
 		{
 			var emailMessage = new MimeMessage();
 
-			emailMessage.From.Add(new MailboxAddress("Администрация сайта", "info@neira.link"));
+			emailMessage.From.Add(new MailboxAddress("Нейроматрица", "info@neira.link"));
 			emailMessage.To.Add(new MailboxAddress("", email));
 			emailMessage.Subject = subject;
 			emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)

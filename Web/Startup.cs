@@ -34,6 +34,7 @@ namespace Web
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
+
 			services.AddDbContext<FailsafeContext>();
 
 			services.AddDbContext<WebContext>(options =>
@@ -52,7 +53,6 @@ namespace Web
 				options.User.RequireUniqueEmail = true;
 			})
 				.AddEntityFrameworkStores<WebContext>()
-				.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddDefaultTokenProviders();
 
 			services.AddAuthentication()
@@ -93,7 +93,6 @@ namespace Web
 			});
 
 			app.UseAuthentication();
-
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(

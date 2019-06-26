@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Identity;
 
 using Web.Models;
 using Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
+	[Authorize(Roles ="Admin")]
 	public class UsersController : Controller
 	{
 		UserManager<NeiraUser> _userManager;
@@ -25,7 +27,7 @@ namespace Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				NeiraUser user = new NeiraUser { Email = model.Email, UserName = model.Email, Year = model.Year };
+				NeiraUser user = new NeiraUser { Email = model.Email, UserName = model.Email };
 				var result = await _userManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)
 				{
@@ -49,7 +51,7 @@ namespace Web.Controllers
 			{
 				return NotFound();
 			}
-			EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email, Year = user.Year };
+			EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email };
 			return View(model);
 		}
 
@@ -62,8 +64,7 @@ namespace Web.Controllers
 				if (user != null)
 				{
 					user.Email = model.Email;
-					user.UserName = model.Email;
-					user.Year = model.Year;
+					user.UserName = model.DisplayName;
 
 					var result = await _userManager.UpdateAsync(user);
 					if (result.Succeeded)

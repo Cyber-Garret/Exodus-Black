@@ -52,6 +52,12 @@ namespace Web.Controllers
 		{
 			return RedirectPermanent(@"https://trello.com/b/HhOiSSn4");
 		}
+
+		[Route("Unauthorized")]
+		public IActionResult Unauthorized()
+		{
+			return View("");
+		}
 		#endregion
 	}
 }

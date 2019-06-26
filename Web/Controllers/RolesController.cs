@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Web.Models;
 using Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
+	[Authorize(Roles ="Admin")]
 	public class RolesController : Controller
 	{
 		RoleManager<NeiraRole> _roleManager;

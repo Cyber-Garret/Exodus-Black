@@ -31,7 +31,7 @@ namespace Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				NeiraUser user = new NeiraUser { Email = model.Email, UserName = model.DisplayName, Year = model.Year };
+				NeiraUser user = new NeiraUser { Email = model.Email, UserName = model.DisplayName };
 				// добавляем пользователя
 				var result = await _userManager.CreateAsync(user, model.Password);
 				if (result.Succeeded)
@@ -44,10 +44,10 @@ namespace Web.Controllers
 						new { userId = user.Id, code },
 						protocol: HttpContext.Request.Scheme);
 					EmailService emailService = new EmailService();
-					await emailService.SendEmailAsync(model.Email, "Confirm your account",
+					await emailService.SendEmailAsync(model.Email, "Подтверждение регистрации",
 						$"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
 
-					return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+					return View("SuccessRegister");
 				}
 				else
 				{
@@ -105,7 +105,7 @@ namespace Web.Controllers
 				var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 				var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
 				EmailService emailService = new EmailService();
-				await emailService.SendEmailAsync(model.Email, "Reset Password",
+				await emailService.SendEmailAsync(model.Email, "Сброс пароля",
 					$"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
 				return View("ForgotPasswordConfirmation");
 			}
@@ -146,9 +146,11 @@ namespace Web.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Login(string returnUrl = null)
+		public async Task<IActionResult> Login(string returnUrl = null)
 		{
-			return View(new LoginViewModel { ReturnUrl = returnUrl });
+			var systems = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+			return View(new LoginViewModel { ReturnUrl = returnUrl, ExternalLogins = systems });
 		}
 
 		[HttpPost]
@@ -168,7 +170,7 @@ namespace Web.Controllers
 					}
 				}
 
-				var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+				var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
 				if (result.Succeeded)
 				{
 					return RedirectToAction("Index", "Home");
@@ -188,6 +190,12 @@ namespace Web.Controllers
 			// удаляем аутентификационные куки
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
+		}
+		
+		[HttpGet]
+		public IActionResult AccessDenied()
+		{
+			return View();
 		}
 	}
 }

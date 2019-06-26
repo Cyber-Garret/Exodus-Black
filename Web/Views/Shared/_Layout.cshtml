@@ -60,6 +60,12 @@
 						<li class="nav-item">
 							@Html.ActionLink("Кланы", "Index", "Clan", null, new { @class = currentPage == "clan-index" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>
+						@if (User.IsInRole("Admin"))
+						{
+							<li class="nav-item">
+								@Html.ActionLink("Экзотики", "Index", "Gears", null, new { @class = currentPage == "gears-index" ? "nav-link text-light current" : "nav-link text-light" })
+							</li>
+						}
 						<li class="nav-item">
 							@Html.ActionLink("О проекте", "About", "Home", null, new { @class = currentPage == "home-about" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>
@@ -71,7 +77,7 @@
 		</nav>
 	</header>
 	<div>
-		@*<partial name="_CookieConsentPartial" />*@
+		<partial name="_CookieConsentPartial" />
 		<main role="main" class="pb-3">
 			@RenderBody()
 		</main>
