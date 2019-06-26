@@ -39,7 +39,18 @@ namespace Web
 			services.AddDbContext<WebContext>(options =>
 							options.UseSqlServer(Configuration.GetConnectionString("WebContextConnection")));
 
-			services.AddIdentity<NeiraUser, NeiraRole>()
+			services.AddIdentity<NeiraUser, NeiraRole>(options =>
+			{
+				//Password options
+				options.Password.RequiredLength = 5;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequireDigit = false;
+
+				//User options
+				options.User.RequireUniqueEmail = true;
+			})
 				.AddEntityFrameworkStores<WebContext>()
 				.AddDefaultUI(UIFramework.Bootstrap4)
 				.AddDefaultTokenProviders();
