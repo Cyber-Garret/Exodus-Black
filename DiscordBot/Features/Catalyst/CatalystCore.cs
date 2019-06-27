@@ -171,7 +171,7 @@ namespace DiscordBot.Features.Catalyst
 			var categories = CatalystData.CategoriesPaged(_currentCategoryPage, CategoriesPerPage);
 			for (var i = 1; i <= categories.Count; i++)
 			{
-				_emb.AddField(CatalystData.ReactOptions[i.ToString()].Name + "  " + categories[i - 1].WeaponName, Global.InvisibleString, true);
+				_emb.AddField(CatalystData.ReactOptions[i.ToString()].Name + "  " + categories[i - 1].WeaponName, Global.InvisibleString);
 			}
 		}
 

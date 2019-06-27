@@ -2,9 +2,8 @@
 @{
 	ViewBag.Title = "Список пользователей";
 }
-<div class="container-fluid background">
-	<a asp-action="Create">Добавить пользователя</a>
-
+<div class="container background">
+	<a class="btn btn-sm btn-primary" asp-action="Create">Добавить пользователя</a>
 	<table class="table">
 		<tr><th>Имя</th><th>Email</th><th></th></tr>
 		@foreach (var user in Model)

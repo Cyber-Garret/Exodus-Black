@@ -36,6 +36,16 @@
 					<ul class="navbar-nav flex-grow-0">
 						@if (User.Identity.IsAuthenticated)
 						{
+							@if (User.IsInRole("Admin"))
+							{
+								<li class="dropdown nav-item">
+									<a href="#" class="dropdown-toggle nav-link text-light" data-toggle="dropdown" role="button" aria-expanded="false">Настройки <span class="caret"></span></a>
+									<ul class="dropdown-menu" role="menu">
+										<li>@Html.ActionLink("Роли", "Index", "Roles", null, new { @class = currentPage == "roles-index" ? "nav-link text-dark current" : "nav-link text-dark" })</li>
+										<li>@Html.ActionLink("Пользователи", "Index", "Users", null, new { @class = currentPage == "users-index" ? "nav-link text-dark current" : "nav-link text-dark" })</li>
+									</ul>
+								</li>
+							}
 							<li class="nav-item"><div class="nav-link text-light">Привет @User.Identity.Name</div></li>
 							<li class="nav-item">
 								<form class="form-inline" asp-controller="Account" asp-action="LogOff">
@@ -60,12 +70,14 @@
 						<li class="nav-item">
 							@Html.ActionLink("Кланы", "Index", "Clan", null, new { @class = currentPage == "clan-index" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>
-						@if (User.IsInRole("Admin"))
-						{
-							<li class="nav-item">
-								@Html.ActionLink("Экзотики", "Index", "Gears", null, new { @class = currentPage == "gears-index" ? "nav-link text-light current" : "nav-link text-light" })
-							</li>
-						}
+						<li class="dropdown nav-item">
+							<a href="#" class="dropdown-toggle nav-link text-light" data-toggle="dropdown">Информация <span class="caret"></span></a>
+							<ul class="dropdown-menu" role="menu">
+								<li>@Html.ActionLink("Экзотики", "Index", "Gears", null, new { @class = currentPage == "gears-index" ? "nav-link text-dark current" : "nav-link text-dark" })</li>
+								<li>@Html.ActionLink("Катализаторы", "Index", "Catalysts", null, new { @class = currentPage == "catalysts-index" ? "nav-link text-dark current" : "nav-link text-dark" })</li>
+							</ul>
+						</li>
+
 						<li class="nav-item">
 							@Html.ActionLink("О проекте", "About", "Home", null, new { @class = currentPage == "home-about" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>

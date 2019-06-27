@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
-	[Authorize(Roles ="Admin")]
+	[Authorize(Roles = "Admin")]
 	public class RolesController : Controller
 	{
 		RoleManager<NeiraRole> _roleManager;
@@ -28,7 +28,7 @@ namespace Web.Controllers
 		{
 			if (!string.IsNullOrEmpty(role.Name))
 			{
-				IdentityResult result = await _roleManager.CreateAsync(new NeiraRole { Name = role.Name, Icon = role.Icon, DisplayName= role.DisplayName });
+				IdentityResult result = await _roleManager.CreateAsync(new NeiraRole { Name = role.Name, Icon = role.Icon, DisplayName = role.DisplayName });
 				if (result.Succeeded)
 				{
 					return RedirectToAction("Index");
@@ -69,6 +69,7 @@ namespace Web.Controllers
 				ChangeRoleViewModel model = new ChangeRoleViewModel
 				{
 					UserId = user.Id,
+					UserName = user.UserName,
 					UserEmail = user.Email,
 					UserRoles = userRoles,
 					AllRoles = allRoles

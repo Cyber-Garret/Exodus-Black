@@ -9,22 +9,22 @@ namespace Core.Models.Db
 	{
 		public int Id { get; set; }
 
-		[MaxLength(256)]
+		[Display(Name ="Оружие"), MaxLength(256)]
 		public string WeaponName { get; set; }
 
-		[MaxLength(1000)]
+		[Display(Name ="Иконка"),MaxLength(1000)]
 		public string Icon { get; set; }
 
-		[MaxLength(2048)]
+		[Display(Name ="Описание"),MaxLength(2048)]
 		public string Description { get; set; }
 
-		[MaxLength(1024)]
+		[Display(Name ="Источник"),MaxLength(1024)]
 		public string DropLocation { get; set; }
 
-		[MaxLength(1024)]
+		[Display(Name = "Задание"), MaxLength(1024)]
 		public string Quest { get; set; }
 
-		[MaxLength(1024)]
+		[Display(Name = "Бонус"), MaxLength(1024)]
 		public string Masterwork { get; set; }
 	}
 }

@@ -4,11 +4,8 @@
 	ViewData["Title"] = "Подробней";
 }
 <div class="container-fluid background">
-
-	<h1>@ViewData["Title"]</h1>
-
 	<div>
-		<h4>Экзотическое оружие</h4>
+		<h4>@ViewData["Title"] о @Html.DisplayFor(model => model.Name)</h4>
 		<hr />
 		<dl class="row">
 			<dt class="col-sm-2">
@@ -77,28 +74,13 @@
 			<dd class="col-sm-10">
 				@Html.DisplayFor(model => model.Catalyst)
 			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.WhereCatalystDrop)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.WhereCatalystDrop)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.CatalystQuest)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.CatalystQuest)
-			</dd>
-			<dt class="col-sm-2">
-				@Html.DisplayNameFor(model => model.CatalystBonus)
-			</dt>
-			<dd class="col-sm-10">
-				@Html.DisplayFor(model => model.CatalystBonus)
-			</dd>
 		</dl>
 	</div>
 	<div>
-		<a asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a> |
-		<a asp-action="Index">Назад к списку</a>
+		@if (User.IsInRole("Admin"))
+		{
+			<a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+		}
+		<a class="btn btn-sm btn-primary" asp-action="Index">Назад к списку</a>
 	</div>
 </div>

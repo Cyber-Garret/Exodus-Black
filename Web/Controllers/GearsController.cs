@@ -22,12 +22,8 @@ namespace Web.Controllers
 		}
 
 		// GET: Gears
-		[Authorize]
-		public async Task<IActionResult> Index(
-			string sortOrder,
-			string currentFilter,
-			string searchString,
-			int? pageNumber)
+		[AllowAnonymous]
+		public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
 		{
 			ViewData["CurrentSort"] = sortOrder;
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -74,6 +70,7 @@ namespace Web.Controllers
 		}
 
 		// GET: Gears/Details/5
+		[AllowAnonymous]
 		public async Task<IActionResult> Details(int? id)
 		{
 			if (id == null)

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
-	[Authorize(Roles ="Admin")]
+	[Authorize(Roles = "Admin")]
 	public class UsersController : Controller
 	{
 		UserManager<NeiraUser> _userManager;
@@ -51,7 +51,7 @@ namespace Web.Controllers
 			{
 				return NotFound();
 			}
-			EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email };
+			EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email, DisplayName = user.UserName };
 			return View(model);
 		}
 

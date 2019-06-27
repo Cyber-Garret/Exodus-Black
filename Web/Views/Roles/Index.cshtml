@@ -1,6 +1,9 @@
 ﻿@model IEnumerable<Web.Models.NeiraRole>
+@{ 
+	ViewData["Title"] = "Список ролей";
+}
 <div class="container background">
-	<h2>Список ролей</h2>
+	<h2>@ViewData["Title"]</h2>
 	<table class="table">
 		@foreach (var role in Model)
 		{
@@ -18,6 +21,6 @@
 			</tr>
 		}
 	</table>
-	<a asp-action="Create">Добавить роль</a>
-	<a asp-action="UserList">Список пользователей</a>
+	<a class="btn btn-sm btn-primary" asp-action="Create">Добавить роль</a>
+	<a class="btn btn-sm btn-primary" asp-action="UserList">Список пользователей</a>
 </div>
