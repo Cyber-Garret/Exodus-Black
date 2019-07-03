@@ -8,6 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Web.BungieCache;
 using Core;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Web.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 
 namespace Web
 {
@@ -31,6 +36,33 @@ namespace Web
 			});
 
 			services.AddDbContext<FailsafeContext>();
+
+			services.AddDbContext<WebContext>(options =>
+							options.UseSqlServer(Configuration.GetConnectionString("WebContextConnection")));
+
+			services.AddIdentity<NeiraUser, NeiraRole>(options =>
+			{
+				//Password options
+				options.Password.RequiredLength = 5;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireLowercase = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequireDigit = false;
+
+				//User options
+				options.User.RequireUniqueEmail = true;
+			})
+				.AddEntityFrameworkStores<WebContext>()
+				.AddDefaultTokenProviders();
+
+			services.AddAuthentication()
+				.AddDiscord(x =>
+				{
+					x.AppId = Configuration["Discord:AppId"];
+					x.AppSecret = Configuration["Discord:AppSecret"];
+					x.Scope.Add("guilds");
+				});
+
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 			services.AddSingleton<CacheService>();
@@ -60,6 +92,7 @@ namespace Web
 				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 			});
 
+			app.UseAuthentication();
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(

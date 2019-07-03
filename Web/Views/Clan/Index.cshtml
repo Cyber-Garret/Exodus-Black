@@ -44,9 +44,9 @@
 						@Html.DisplayFor(modelItem => item.Motto)
 					</td>
 					<td>
-						<a href="#" data-toggle="tooltip" title="@item.MemberCount/100">
+						<a href="#" data-toggle="tooltip" title="@item.Members.Count/100">
 							<div class="progress">
-								<div class="progress-bar" style="width:@item.MemberCount%"></div>
+								<div class="progress-bar" style="width:@item.Members.Count%"></div>
 							</div>
 						</a>
 					</td>

@@ -7,9 +7,11 @@ using Web.Helpers;
 
 using Core;
 using Core.Models.Db;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
+	[Authorize(Roles = "Admin")]
 	public class GearsController : Controller
 	{
 		private readonly FailsafeContext _context;
@@ -20,11 +22,8 @@ namespace Web.Controllers
 		}
 
 		// GET: Gears
-		public async Task<IActionResult> Index(
-			string sortOrder,
-			string currentFilter,
-			string searchString,
-			int? pageNumber)
+		[AllowAnonymous]
+		public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
 		{
 			ViewData["CurrentSort"] = sortOrder;
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -71,6 +70,7 @@ namespace Web.Controllers
 		}
 
 		// GET: Gears/Details/5
+		[AllowAnonymous]
 		public async Task<IActionResult> Details(int? id)
 		{
 			if (id == null)

@@ -12,6 +12,7 @@ using Core.Models.Db;
 
 using API.Bungie;
 using API.Bungie.Models;
+using Discord.WebSocket;
 
 namespace DiscordBot.Modules.Administration
 {
@@ -139,6 +140,38 @@ namespace DiscordBot.Modules.Administration
 				$"- Пользователей: {Context.Client.Guilds.Sum(g => g.Users.Count)}", true);
 
 			await Context.Channel.SendMessageAsync(null, false, embed.Build());
+		}
+
+		[Command("очистить")]
+		[Summary("Удаляет заданное количество сообщений где была вызвана команда.")]
+		[RequireOwner]
+		[RequireBotPermission(ChannelPermission.ManageMessages)]
+		public async Task PurgeChat(int amount)
+		{
+			try
+			{
+				await ReplyAsync("Начинаю очистку канала.");
+				var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+				if (messages.Count() < 1)
+					return;
+				foreach (var item in messages)
+				{
+					await Task.Delay(1000);
+					await (Context.Channel as ITextChannel).DeleteMessageAsync(item.Id);
+				}
+				//await (Context.Channel as ITextChannel).DeleteMessagesAsync(messages);
+
+				const int delay = 5000;
+				var m = await Context.Channel.SendMessageAsync($"Задание успешно выполнено. _Это сообщение будет удалено через {delay / 1000} сек._");
+				await Task.Delay(delay);
+				await m.DeleteAsync();
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, $"Purge Command - {ex.Source}", ex.Message, ex.InnerException));
+				Console.WriteLine(ex.ToString());
+				await Context.Channel.SendMessageAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
+			}
 		}
 	}
 }

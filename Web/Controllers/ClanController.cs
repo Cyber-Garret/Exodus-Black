@@ -7,6 +7,7 @@ using Core;
 using Core.Models.Db;
 
 using API.Bungie;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -114,7 +115,7 @@ namespace Web.Controllers
 		// POST: Clan/Create
 		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-		[NonAction]
+		[Authorize(Roles ="Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create([Bind("Id")] Destiny2Clan destiny2Clan)
