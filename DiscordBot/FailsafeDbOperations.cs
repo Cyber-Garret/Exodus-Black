@@ -76,27 +76,36 @@ namespace Core
 
 		internal static Task SaveGuildAccountAsync(ulong GuildId, Guild guildAccount)
 		{
-			using (var Context = new FailsafeContext())
+			try
 			{
-				if (Context.Guilds.Where(G => G.ID == GuildId).Count() < 1)
+				using (var Context = new FailsafeContext())
 				{
-					var newGuild = new Guild
+					if (Context.Guilds.Where(G => G.ID == GuildId).Count() < 1)
 					{
-						ID = GuildId
-					};
+						var newGuild = new Guild
+						{
+							ID = GuildId
+						};
 
-					Context.Guilds.Add(newGuild);
-					Context.SaveChangesAsync();
+						Context.Guilds.Add(newGuild);
+						Context.SaveChangesAsync();
 
-					return Task.CompletedTask;
-				}
-				else
-				{
-					Context.Entry(guildAccount).State = EntityState.Modified;
-					Context.SaveChangesAsync();
-					return Task.CompletedTask;
+						return Task.CompletedTask;
+					}
+					else
+					{
+						Context.Entry(guildAccount).State = EntityState.Modified;
+						Context.SaveChangesAsync();
+						return Task.CompletedTask;
+					}
 				}
 			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return Task.CompletedTask;
+			}
+
 		}
 
 		internal static Task SaveWelcomeMessage(ulong GuildId, string value)

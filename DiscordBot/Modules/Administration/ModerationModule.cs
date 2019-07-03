@@ -19,6 +19,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiscordBot.Modules.Administration
 {
+	[RequireUserPermission(GuildPermission.Administrator,
+			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
+			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
+	[Cooldown(5)]
 	public class ModerationModule : BotModuleBase
 	{
 		#region Functions
@@ -30,10 +34,6 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Клан")]
 		[Summary("Информационная справка о доступных командах администраторам клана.")]
-		[Cooldown(5)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task GuildInfo()
 		{
 			// Get some bot info
@@ -60,10 +60,6 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Клан инфо")]
 		[Summary("Отображает все настройки бота в гильдии где была вызвана комманда.")]
-		[Cooldown(5)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
@@ -106,11 +102,7 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Клан новости")]
 		[Summary("Сохраняет ID канала для использования в новостных сообщениях.")]
-		[Cooldown(5)]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task SetNotificationChannel()
 		{
 			// Get or create personal guild settings
@@ -153,11 +145,7 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Клан логи")]
 		[Summary("Сохраняет ID канала для использования в тех сообщениях.")]
-		[Cooldown(5)]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task SetLogChannel()
 		{
 			// Get or create personal guild settings
@@ -200,10 +188,6 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Логи статус")]
 		[Summary("Вкл. или Выкл. тех. сообщения.")]
-		[Cooldown(5)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task ToggleLogging()
 		{
 			// Get or create personal guild settings
@@ -245,10 +229,6 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Новости статус")]
 		[Summary("Включает или выключает новости о зуре")]
-		[Cooldown(5)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task ToggleNews()
 		{
 			// Get or create personal guild settings
@@ -289,10 +269,6 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Посмотреть приветствие")]
 		[Summary("Команда предпросмотра приветственного сообщения")]
-		[Cooldown(5)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
@@ -309,10 +285,6 @@ namespace DiscordBot.Modules.Administration
 
 		[Command("Сохранить приветствие")]
 		[Summary("Сохраняет сообщение для отправки всем кто пришел в гильдию")]
-		[Cooldown(5)]
-		[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task SaveWelcomeMessage([Remainder]string message)
 		{
 			// Get or create personal guild settings
@@ -329,7 +301,6 @@ namespace DiscordBot.Modules.Administration
 		}
 
 		[Command("рассылка")]
-		[Cooldown(5)]
 		[RequireContext(ContextType.Guild, ErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task SendMessage(IRole _role, [Remainder] string message)
 		{
@@ -370,6 +341,22 @@ namespace DiscordBot.Modules.Administration
 				await workMessage.ModifyAsync(m => m.Content = "Ошибка рассылки! Сообщите моему создателю для исправления моих логических цепей.");
 				await Logger.Log(new LogMessage(LogSeverity.Error, $"SendMessage command - {ex.Source}", ex.Message, ex.InnerException));
 			}
+		}
+
+		[Command("АвтоРоль")]
+		[Summary("Автоматически добавляет роль всем новым пользователям")]
+		public async Task AutoRoleRoleAdd(IRole _role)
+		{
+			var guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			guild.AutoroleID = _role.Id;
+			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+
+			var embed = new EmbedBuilder();
+			embed.WithDescription($"Автороль **{_role.Name}** сохранена для всех новых стражей.");
+			embed.WithColor(Color.Gold);
+			embed.WithFooter("Пожалуйста убедись, что моя роль выше автороли и у меня есть права на выдачу ролей, тогда я без проблем буду выдавать роль всем новеньким стражам и сообщать об этом в сервисных сообщениях.");
+
+			await Context.Channel.SendMessageAsync(null, false, embed.Build());
 		}
 	}
 }

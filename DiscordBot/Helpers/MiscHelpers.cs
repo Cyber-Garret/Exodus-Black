@@ -2,6 +2,8 @@
 using Discord.WebSocket;
 
 using Core;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DiscordBot.Helpers
 {
@@ -14,7 +16,7 @@ namespace DiscordBot.Helpers
 			var embed = new EmbedBuilder()
 			{
 				Color = Color.Orange,
-				Title = $"Добро пожаловать на сервер клана {guildUser.Guild.Name} в Destiny 2",
+				Title = $"Добро пожаловать на сервер {guildUser.Guild.Name}",
 				Description = text
 			};
 			//if guild have picture add to message.
@@ -22,6 +24,17 @@ namespace DiscordBot.Helpers
 				embed.ThumbnailUrl = guildUser.Guild.IconUrl;
 
 			return embed;
+		}
+
+		public static async Task Autorole(SocketGuildUser user)
+		{
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(user.Guild.Id);
+			if (guild.AutoroleID != 0)
+			{
+				var targetRole = user.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleID);
+				if (targetRole != null)
+					await user.AddRoleAsync(targetRole);
+			}
 		}
 	}
 }
