@@ -343,7 +343,7 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("АвтоРоль")]
+		[Command("Автороль")]
 		[Summary("Автоматически добавляет роль всем новым пользователям")]
 		public async Task AutoRoleRoleAdd(IRole _role)
 		{
@@ -352,9 +352,9 @@ namespace DiscordBot.Modules.Administration
 			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
 			var embed = new EmbedBuilder();
-			embed.WithDescription($"Автороль **{_role.Name}** сохранена для всех новых стражей.");
+			embed.WithDescription($"Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим.");
 			embed.WithColor(Color.Gold);
-			embed.WithFooter("Пожалуйста убедись, что моя роль выше автороли и у меня есть права на выдачу ролей, тогда я без проблем буду выдавать роль всем новеньким стражам и сообщать об этом в сервисных сообщениях.");
+			embed.WithFooter("Пожалуйста, убедись, что моя роль выше авто роли и у меня есть права на выдачу ролей. Тогда я без проблем буду выдавать роль всем прибывшим на корабль и сообщать об этом в сервисных сообщениях.");
 
 			await Context.Channel.SendMessageAsync(null, false, embed.Build());
 		}

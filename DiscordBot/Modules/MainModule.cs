@@ -11,11 +11,11 @@ using DiscordBot.Preconditions;
 
 using Core;
 using Core.Models.Db;
-using DiscordBot.Features.Catalyst;
 
 namespace DiscordBot.Modules.Commands
 {
 	[Cooldown(5)]
+	[RequireBotPermission(ChannelPermission.SendMessages)]
 	public class MainModule : BotModuleBase
 	{
 		#region Global fields
@@ -24,6 +24,23 @@ namespace DiscordBot.Modules.Commands
 		static TimeSpan end = start; //setting the same value as your start and end time is same
 		DateTime fridayStartCheck = new DateTime();
 		DateTime tuesdayEndCheck = new DateTime();
+		#endregion
+		#region Functions
+		string Alias(string name)
+		{
+			if (name == "дарси")
+				return "Д.А.Р.С.И.";
+			else if (name == "мида")
+				return "MIDA";
+			else if (name == "сурос")
+				return "SUROS";
+			else if (name == "морозники")
+				return "M0р03ники";
+			else if (name == "топотуны")
+				return "Т0п0тунЬI";
+			else
+				return name;
+		}
 		#endregion
 
 		[Command("справка")]
@@ -51,8 +68,8 @@ namespace DiscordBot.Modules.Commands
 			await Context.Channel.SendMessageAsync("", false, embedBuilder.Build());
 		}
 
-		[Command("зур"), Summary("Информационная комманда о посланнике девяти по имени Зур")]
-		
+		[Command("зур")]
+		[Summary("Информационная комманда о посланнике девяти по имени Зур")]
 		public async Task XurCommand()
 		{
 
@@ -119,7 +136,6 @@ namespace DiscordBot.Modules.Commands
 		}
 
 		[Command("инфо")]
-		[Cooldown(10)]
 		public async Task GearInfo([Remainder]string Input = null)
 		{
 			#region Checks
@@ -129,24 +145,8 @@ namespace DiscordBot.Modules.Commands
 				await Context.Channel.SendMessageAsync(":x: Пожалуйста, введите полное или частичное название экзотического снаряжения.");
 				return;
 			}
-
-			///Функция синонимов.
-			string Alias()
-			{
-				if (Input == "дарси")
-					return "Д.А.Р.С.И.";
-				if (Input == "мида")
-					return "MIDA";
-				if (Input == "сурос")
-					return "SUROS";
-				if (Input == "морозники")
-					return "M0р03ники";
-				if (Input == "топотуны")
-					return "Т0п0тунЬI";
-				return Input;
-			}
 			//Запрашиваем информацию из локальной бд.
-			Gear gear = FailsafeDbOperations.GetGears(Alias());
+			Gear gear = FailsafeDbOperations.GetGears(Alias(Input));
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
 			if (gear == null)
 			{
@@ -193,24 +193,59 @@ namespace DiscordBot.Modules.Commands
 			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, embed.Build());
 		}
 
-
-		[Command("катализатор"),
-			Summary("Выводит информацию об известных катализаторах."),
-			Cooldown(10),
-			RequireContext(ContextType.Guild, ErrorMessage = "Прошу прощения страж, но данная команда не работает в личных сообщениях."),
-			RequireBotPermission(ChannelPermission.AddReactions| ChannelPermission.SendMessages, ErrorMessage = "Прошу прощения, но я не могу выполнить эту команду пока не получу доступ на отправку сообщений и добавление реакций в этом канале.")]
-		public async Task Catalyst()
+		[Command("катализатор")]
+		[Summary("Выводит информацию об известных катализаторах.")]
+		public async Task Catalyst([Remainder]string Input = null)
 		{
-			var msg = await Context.Channel.SendMessageAsync("", false, CatalystData.CatalystStartingEmbed().Build());
-			Global.CatalystMessages.Add(new CatalystCore(msg.Id, Context.User.Id));
-			await msg.AddReactionAsync(CatalystData.ReactOptions["ok"]);
-			await msg.AddReactionAsync(CatalystData.ReactOptions["1"]);
+			var app = await Program.Client.GetApplicationInfoAsync();
+			var Embed = new EmbedBuilder();
+			#region Checks
+			//Проверяем ввел ли пользователь параметры для поиска.
+			if (Input == null)
+			{
+				Embed.WithAuthor("Добро пожаловать в базу данных катализаторов экзотического оружия Нейроматрицы");
+				Embed.WithThumbnailUrl("https://bungie.net/common/destiny2_content/icons/d8acfda580e28f7765dd6a813394c847.png");
+				Embed.WithDescription("Для того чтобы найти информацию о нужном тебе катализаторе теперь достаточно написать `!катализатор мида` и я сразу отображу что я о нем знаю.\n" +
+					"А еще ты можешь написать `!катализатор любой` и я выдам тебе случайный катализатор.");
+				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](http://neira.link/Catalysts).");
+				Embed.WithColor(Color.Blue);
+				Embed.WithFooter($"Если нашли какие либо неточности или у вас есть предложения, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
+
+				await Context.Channel.SendMessageAsync(null, false, Embed.Build());
+				return;
+			}
+			//Запрашиваем информацию из локальной бд.
+			var Catalyst = FailsafeDbOperations.GetCatalyst(Alias(Input));
+			//Если бд вернула null сообщаем пользователю что ничего не нашли.
+			if (Catalyst == null)
+			{
+				Embed.WithDescription(":x: Этой информации в моей базе данных нет. :frowning:");
+				Embed.WithColor(Color.Red);
+				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](http://neira.link/Catalysts).");
+				await Context.Channel.SendMessageAsync(null, false, Embed.Build());
+				return;
+			}
+			#endregion
+
+			Embed.WithTitle("Информация о катализаторе для оружия " + $"{Catalyst.WeaponName}");
+			Embed.WithColor(Color.Gold);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Icon))
+				Embed.WithThumbnailUrl(Catalyst.Icon);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Description))
+				Embed.WithDescription(Catalyst.Description);
+			if (!string.IsNullOrWhiteSpace(Catalyst.DropLocation))
+				Embed.AddField("Как получить катализатор", Catalyst.DropLocation);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Quest))
+				Embed.AddField("Задание катализатора", Catalyst.Quest);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Masterwork))
+				Embed.AddField("Бонус катализатор", Catalyst.Masterwork);
+			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
+
+			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, Embed.Build());
 		}
 
 		[Command("клан статус")]
 		[Summary("Возвращает результат онлайна соклановцев заданой гильдии")]
-		[Cooldown(5)]
-		[RequireBotPermission(ChannelPermission.SendMessages)]
 		public async Task GetGuildInfo(int GuildId = 0)
 		{
 			try
