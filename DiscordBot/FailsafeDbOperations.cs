@@ -28,6 +28,24 @@ namespace Core
 					return gear;
 			}
 		}
+
+		internal static Catalyst GetCatalyst(string name)
+		{
+			using (var Db = new FailsafeContext())
+			{
+				if (name.ToLower() == "любой")
+				{
+					Random r = new Random();
+					int randomId = r.Next(1, Db.Catalysts.Count());
+					return Db.Catalysts.Skip(randomId).Take(1).FirstOrDefault();
+				}
+				else
+				{
+					Catalyst catalyst = Db.Catalysts.Where(c => c.WeaponName.IndexOf(name, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+					return catalyst;
+				}
+			}
+		}
 		#endregion
 
 		#region Guilds
@@ -74,29 +92,34 @@ namespace Core
 		}
 
 
-		internal static Task SaveGuildAccountAsync(ulong GuildId, Guild guildAccount)
+		internal static async Task SaveGuildAccountAsync(ulong GuildId, Guild guildAccount)
 		{
-			using (var Context = new FailsafeContext())
+			try
 			{
-				if (Context.Guilds.Where(G => G.ID == GuildId).Count() < 1)
+				using (var Context = new FailsafeContext())
 				{
-					var newGuild = new Guild
+					if (Context.Guilds.Where(G => G.ID == GuildId).Count() < 1)
 					{
-						ID = GuildId
-					};
+						var newGuild = new Guild
+						{
+							ID = GuildId
+						};
 
-					Context.Guilds.Add(newGuild);
-					Context.SaveChangesAsync();
-
-					return Task.CompletedTask;
-				}
-				else
-				{
-					Context.Entry(guildAccount).State = EntityState.Modified;
-					Context.SaveChangesAsync();
-					return Task.CompletedTask;
+						Context.Guilds.Add(newGuild);
+						await Context.SaveChangesAsync();
+					}
+					else
+					{
+						Context.Entry(guildAccount).State = EntityState.Modified;
+						await Context.SaveChangesAsync();
+					}
 				}
 			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
+
 		}
 
 		internal static Task SaveWelcomeMessage(ulong GuildId, string value)

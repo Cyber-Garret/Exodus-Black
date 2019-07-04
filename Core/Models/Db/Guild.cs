@@ -8,5 +8,6 @@
 		public bool EnableLogging { get; set; }
 		public bool EnableNotification { get; set; }
 		public string WelcomeMessage { get; set; }
+		public ulong AutoroleID { get; set; }
 	}
 }

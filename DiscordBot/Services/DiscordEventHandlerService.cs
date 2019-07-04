@@ -76,7 +76,12 @@ namespace DiscordBot.Services
 		}
 		private async Task _client_RoleCreatedAsync(SocketRole arg) => await RoleCreated(arg);
 		private async Task _client_RoleDeletedAsync(SocketRole arg) => await RoleDeleted(arg);
-		private async Task _client_UserJoinedAsync(SocketGuildUser arg) => await UserJoined(arg);
+		private async Task _client_UserJoinedAsync(SocketGuildUser arg)
+		{
+			await UserJoined(arg);
+			await MiscHelpers.Autorole(arg);
+		}
+
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
 		private async Task _client_ReactionAddedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionAdded(cache, channel, reaction);
 		#endregion
@@ -552,22 +557,40 @@ namespace DiscordBot.Services
 				#region Message
 				embed.WithColor(Color.Red);
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
+				embed.WithTitle("💢 Страж покинул клан");
 				embed.WithThumbnailUrl($"{arg.GetAvatarUrl()}");
-				embed.AddField($"💢 Страж покинул клан",
+				embed.AddField(Global.InvisibleString,
 					$"На корабле был известен как:\n**{arg.Nickname ?? arg.Username}**\n" +
 					$"Discord имя стража\n**{arg.Username}#{arg.Discriminator}**");
 				embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", arg.Mention);
 				if (audit[0].Action == ActionType.Kick)
 				{
-					var name = audit[0].User.Username ?? "Неизвестно";
-					embed.AddField("Причина изгнания:",
-						 $"{audit[0].Reason ?? "Не указана."}\n\n" +
-						 $"Кто выгнал: {name}");
+					var test = audit[0].Data as KickAuditLogData;
+					if (test.Target.Id == arg.Id)
+					{
+						embed.WithTitle("🦶 Страж был выгнан");
+						var name = audit[0].User.Username ?? "Неизвестно";
+						embed.AddField("Причина изгнания:",
+							 $"{audit[0].Reason ?? "Не указана."}\n\n" +
+							 $"Кто выгнал: {name}");
+					}
+				}
+				if (audit[0].Action == ActionType.Ban)
+				{
+					var test = audit[0].Data as BanAuditLogData;
+					if (test.Target.Id == arg.Id)
+					{
+						embed.WithTitle("🔨 Страж был забанен");
+						var name = audit[0].User.Username ?? "Неизвестно";
+						embed.AddField("Причина бана:",
+							 $"{audit[0].Reason ?? "Не указана."}\n\n" +
+							 $"Кто забанил: {name}");
+					}
 				}
 				embed.WithFooter($"Если ссылка на профиль некорректно отображается то просто скопируй <@{arg.Id}> вместе с <> и отправь в любой чат сообщением.");
 				#endregion
 
-				var guild = FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id).Result;
+				var guild = (await FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id));
 				if (guild.EnableLogging == true)
 				{
 					await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
