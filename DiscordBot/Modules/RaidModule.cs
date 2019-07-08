@@ -40,18 +40,11 @@ namespace DiscordBot.Modules
 			embed.WithFooter("Что бы за вами закрепили место нажмите на реакцию, соответствующую месту.");
 			var msg = await Context.Channel.SendMessageAsync(embed: embed.Build());
 			//Slots
-			try
-			{
-				await msg.AddReactionAsync(ActiveRaids.ReactOptions["2"]);
-				await msg.AddReactionAsync(ActiveRaids.ReactOptions["3"]);
-				await msg.AddReactionAsync(ActiveRaids.ReactOptions["4"]);
-				await msg.AddReactionAsync(ActiveRaids.ReactOptions["5"]);
-				await msg.AddReactionAsync(ActiveRaids.ReactOptions["6"]);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-			}
+			await msg.AddReactionAsync(ActiveRaids.ReactOptions["2"]);
+			await msg.AddReactionAsync(ActiveRaids.ReactOptions["3"]);
+			await msg.AddReactionAsync(ActiveRaids.ReactOptions["4"]);
+			await msg.AddReactionAsync(ActiveRaids.ReactOptions["5"]);
+			await msg.AddReactionAsync(ActiveRaids.ReactOptions["6"]);
 
 		}
 	}

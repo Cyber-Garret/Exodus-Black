@@ -20,5 +20,11 @@ namespace DiscordBot.Features.Raid
 				{ "6", new Emoji("6\u20e3")}
 			};
 		}
+
+		internal static EmbedBuilder RegisterRaid(Core.Models.Db.Raid raidModel)
+		{
+			
+			return new EmbedBuilder()
+		}
 	}
 }
