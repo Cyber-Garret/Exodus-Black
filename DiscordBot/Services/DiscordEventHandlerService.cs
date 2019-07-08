@@ -8,7 +8,6 @@ using Discord.WebSocket;
 
 using Core;
 using DiscordBot.Helpers;
-using DiscordBot.Features.Catalyst;
 
 namespace DiscordBot.Services
 {
@@ -607,7 +606,7 @@ namespace DiscordBot.Services
 			if (!reaction.User.Value.IsBot)
 			{
 				//Проверяет, связана ли реакция с запущенной игрой от того же пользователя, который выполнил команду - если это так, обрабатывает ее
-				await CatalystData.HandleReactionAdded(cache, reaction);
+				//await CatalystData.HandleReactionAdded(cache, reaction);
 			}
 		}
 		#endregion

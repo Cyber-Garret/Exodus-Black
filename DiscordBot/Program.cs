@@ -49,7 +49,7 @@ namespace DiscordBot
 			_services = BuildServices();
 
 			_services.GetRequiredService<ConfigurationService>().Configure();
-			_services.GetRequiredService<ReminderService>().Configure();
+			_services.GetRequiredService<TimerService>().Configure();
 			_services.GetRequiredService<DiscordEventHandlerService>().Configure();
 			await _services.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 			#endregion
@@ -60,8 +60,6 @@ namespace DiscordBot
 			await Client.LoginAsync(TokenType.Bot, token);
 			await Client.StartAsync();
 
-
-			await Client.SetGameAsync("!справка");
 			await Client.SetStatusAsync(UserStatus.Online);
 
 			await Task.Delay(-1);
@@ -75,7 +73,7 @@ namespace DiscordBot
 				.AddSingleton<CommandService>()
 				.AddSingleton<CommandHandlerService>()
 				.AddSingleton<DiscordEventHandlerService>()
-				.AddSingleton<ReminderService>()
+				.AddSingleton<TimerService>()
 				.BuildServiceProvider();
 		}
 

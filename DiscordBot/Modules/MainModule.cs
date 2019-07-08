@@ -48,20 +48,14 @@ namespace DiscordBot.Modules.Commands
 		public async Task MainHelp()
 		{
 			EmbedBuilder embedBuilder = new EmbedBuilder();
+			var app = await Program.Client.GetApplicationInfoAsync();
 			embedBuilder.WithColor(Color.Gold);
-			embedBuilder.WithTitle($"Доброго времени суток. Меня зовут Нейроматрица, я ИИ \"Черного исхода\" адаптированный для Discord");
+			embedBuilder.WithTitle($"Доброго времени суток. Меня зовут Нейроматрица, я ИИ \"Черного исхода\" адаптированный для Discord. Успешно функционирую с {app.CreatedAt.ToString("dd.MM.yyyy")}");
 			embedBuilder.WithDescription(
-				"Моя основная цель своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
-				"Так же я могу предоставить информацию о экзотическом вооружении.\n" +
-				"В текущий момент в моей базе данных зарегистрированны такие команды:");
-			embedBuilder.AddField(
-				"Команда: **!инфо [название снаряжения]**",
-				"Эта команда несет полную информацию о экзотическом вооружении представленном в игре.\n" +
-				"Синтаксис довольно простой, можно искать как по полному названию так и частичному.\n" +
-				"Например: **!инфо дело** предоставит информацию об автомате Милое Дело.");
-			embedBuilder.AddField(
-				"Команда: **!зур**",
-				"Команда отображает находится ли в данный момент Зур в игре или нет.");
+				"Моя основная цель - своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
+				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n" +
+				"Актуальные команды и полную справку о них ты всегда можешь посмотреть [тут](http://neira.link/Command)");
+
 			embedBuilder.WithUrl("http://neira.link/");
 			embedBuilder.WithFooter("Еще больше информации обо мне ты найдешь, нажав на заголовок этого сообщения.");
 
@@ -368,6 +362,19 @@ namespace DiscordBot.Modules.Commands
 				await Logger.Log(new LogMessage(LogSeverity.Error, $"ClanStatus Command - {ex.Source}", ex.Message, ex.InnerException));
 				Console.WriteLine(ex.ToString());
 			}
+		}
+
+		[Command("респект"), Alias("помощь", "донат")]
+		[Summary("Информация о том как помочь развитию бота")]
+		public async Task Donate()
+		{
+			EmbedBuilder embed = new EmbedBuilder();
+			var app = await Program.Client.GetApplicationInfoAsync();
+			embed.WithColor(Color.Green);
+			embed.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку на любую сумму. [Подписка](https://www.patreon.com/Cyber_Garret) придаст мне, как разработчику, больше мотивации развивать бота и придавать ему больше возможностей и функций. И, как минимум, покрыть расходы на ежемесячную аренду сервера. А в будущем от подписки у тебя будет больше возможностей. :smiley: ");
+			embed.WithFooter($"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}");
+
+			await ReplyAsync(embed: embed.Build());
 		}
 	}
 }

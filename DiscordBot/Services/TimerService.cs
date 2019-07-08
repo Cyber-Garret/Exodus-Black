@@ -9,23 +9,63 @@ using Core;
 
 namespace DiscordBot.Services
 {
-	public class ReminderService
+	public class TimerService
 	{
 		#region Private fields
 		private readonly DiscordShardedClient _client = Program.Client;
 		private Timer _timer;
+		private Timer _statusTimer;
 		#endregion
 
 		public void Configure()
 		{
 			// Initialize timer for 10 sec.
-			_timer = new Timer(10000);
-			_timer.Elapsed += OnTimedEventAsync;
+			_timer = new Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
+			_timer.Elapsed += XurTimer;
 			_timer.AutoReset = true;
 			_timer.Enabled = true;
+
+			// Initialize timer for 15 Min.
+			_statusTimer = new Timer(TimeSpan.FromSeconds(30).TotalMilliseconds);
+			_statusTimer.Elapsed += ChangeGameStatus;
+			_statusTimer.AutoReset = true;
+			_statusTimer.Enabled = true;
 		}
 
-		private async void OnTimedEventAsync(object sender, ElapsedEventArgs e)
+		private async void ChangeGameStatus(object sender, ElapsedEventArgs e)
+		{
+			string[] commands = new string[]
+			{
+				"!справка",
+				"!зур",
+				"!клан статус",
+				"!респект",
+				"!помощь",
+				"!донат",
+				"!клан",
+				"!инфо дело",
+				"!инфо свет",
+				"!инфо морозники",
+				"!инфо бешеный",
+				"!катализатор свет",
+				"!катализатор мида",
+				"!катализатор бремя"
+			};
+
+			Random rand = new Random();
+			int randomIndex = rand.Next(commands.Length);
+			string text = commands[randomIndex];
+			try
+			{
+				await _client.SetGameAsync(text, null, ActivityType.Playing);
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, $"ChangeGameStatus Method - {ex.Source}", ex.Message, ex.InnerException));
+			}
+		}
+
+		private async void XurTimer(object sender, ElapsedEventArgs e)
 		{
 			// If signal time equal Friday 20:00 we will send message Xur is arrived in game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)

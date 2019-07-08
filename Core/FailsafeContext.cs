@@ -22,5 +22,8 @@ namespace Core
 
 		//Catalyst's
 		public DbSet<Catalyst> Catalysts { get; set; }
+
+		//Raids
+		public DbSet<Raid> Raids { get; set; }
 	}
 }
