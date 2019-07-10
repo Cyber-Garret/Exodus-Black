@@ -152,7 +152,7 @@ namespace DiscordBot.Services
 				{
 					if (elapsed.SignalTime.Date == item.DateExpire.Date
 						&& elapsed.SignalTime.Hour == item.DateExpire.Hour
-						&& elapsed.SignalTime.Minute == item.DateExpire.Minute
+						&& elapsed.SignalTime.AddMinutes(15).Minute == item.DateExpire.Minute
 						&& elapsed.SignalTime.Second < 10)
 					{
 						await RaidNotificationAsync(item.User1, item);
@@ -172,6 +172,7 @@ namespace DiscordBot.Services
 				EmbedBuilder embed = new EmbedBuilder();
 				embed.WithTitle($"Доброго времени суток {User.Username}");
 				embed.WithColor(Color.DarkMagenta);
+				embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
 				embed.WithDescription($"Хочу вам напомнить что у вас через 15 минут рейд {raid.Name}");
 				#endregion
 
