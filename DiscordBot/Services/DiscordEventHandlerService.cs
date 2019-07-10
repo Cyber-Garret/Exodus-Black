@@ -8,6 +8,7 @@ using Discord.WebSocket;
 
 using Core;
 using DiscordBot.Helpers;
+using DiscordBot.Features.Raid;
 
 namespace DiscordBot.Services
 {
@@ -40,7 +41,10 @@ namespace DiscordBot.Services
 			_client.UserJoined += _client_UserJoinedAsync;
 			_client.UserLeft += _client_UserLeftAsync;
 			_client.ReactionAdded += _client_ReactionAddedAsync;
+			_client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
+
+		
 		#region Events
 		private async Task _client_ShardDisconnectedAsync(Exception ex, DiscordSocketClient client)
 		{
@@ -83,6 +87,7 @@ namespace DiscordBot.Services
 
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
 		private async Task _client_ReactionAddedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionAdded(cache, channel, reaction);
+		private async Task _client_ReactionRemovedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionRemoved(cache, channel, reaction);
 		#endregion
 
 		#region Methods
@@ -607,6 +612,15 @@ namespace DiscordBot.Services
 			{
 				//Проверяет, связана ли реакция с запущенной игрой от того же пользователя, который выполнил команду - если это так, обрабатывает ее
 				//await CatalystData.HandleReactionAdded(cache, reaction);
+				await RaidsHelpers.HandleReactionAdded(cache, reaction);
+			}
+		}
+
+		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache,ISocketMessageChannel channel,SocketReaction reaction)
+		{
+			if (!reaction.User.Value.IsBot)
+			{
+				await RaidsHelpers.HandleReactionRemoved(cache, reaction);
 			}
 		}
 		#endregion

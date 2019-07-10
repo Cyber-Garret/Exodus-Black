@@ -17,34 +17,15 @@ namespace DiscordBot.Modules
 		[Command("сбор")]
 		public async Task RaidCollection(string raidName, [Remainder]string raidTime)
 		{
-			var _raidTime = DateTime.Parse(raidTime);
-			//var raid = new Raid
-			//{
-			//	Id = msg.Id,
-			//	Name = raidName,
-			//	dueDate = _raidTime,
-			//	User1 = Context.User.Id
-			//};
 
-			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithTitle($"{_raidTime.Date.ToShortDateString()} в {_raidTime.TimeOfDay} по МСК. Рейд: Последнее желание");
-			embed.WithColor(Color.DarkMagenta);
-			embed.WithDescription($"Начало рейда: {_raidTime}");
-
-			embed.AddField("Страж #1", Context.User.Mention, true);
-			embed.AddField("Страж #2", "Свободно", true);
-			embed.AddField("Страж #3", "Свободно", true);
-			embed.AddField("Страж #4", "Свободно", true);
-			embed.AddField("Страж #5", "Свободно", true);
-			embed.AddField("Страж #6", "Свободно", true);
-			embed.WithFooter("Что бы за вами закрепили место нажмите на реакцию, соответствующую месту.");
-			var msg = await Context.Channel.SendMessageAsync(embed: embed.Build());
+			var msg = await Context.Channel.SendMessageAsync(embed: RaidsCore.RaidEmbed(Context.User, raidName, raidTime).Build());
+			RaidsCore.RegisterRaid(msg.Id, Context.User.Id, raidName, raidTime);
 			//Slots
-			await msg.AddReactionAsync(ActiveRaids.ReactOptions["2"]);
-			await msg.AddReactionAsync(ActiveRaids.ReactOptions["3"]);
-			await msg.AddReactionAsync(ActiveRaids.ReactOptions["4"]);
-			await msg.AddReactionAsync(ActiveRaids.ReactOptions["5"]);
-			await msg.AddReactionAsync(ActiveRaids.ReactOptions["6"]);
+			await msg.AddReactionAsync(RaidsCore.ReactOptions["2"]);
+			await msg.AddReactionAsync(RaidsCore.ReactOptions["3"]);
+			await msg.AddReactionAsync(RaidsCore.ReactOptions["4"]);
+			await msg.AddReactionAsync(RaidsCore.ReactOptions["5"]);
+			await msg.AddReactionAsync(RaidsCore.ReactOptions["6"]);
 
 		}
 	}

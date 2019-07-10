@@ -6,6 +6,8 @@ using Discord;
 using Discord.WebSocket;
 
 using Core;
+using System.Linq;
+using Core.Models.Db;
 
 namespace DiscordBot.Services
 {
@@ -21,7 +23,7 @@ namespace DiscordBot.Services
 		{
 			// Initialize timer for 10 sec.
 			_timer = new Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
-			_timer.Elapsed += XurTimer;
+			_timer.Elapsed += MainTimer;
 			_timer.AutoReset = true;
 			_timer.Enabled = true;
 
@@ -65,7 +67,7 @@ namespace DiscordBot.Services
 			}
 		}
 
-		private async void XurTimer(object sender, ElapsedEventArgs e)
+		private async void MainTimer(object sender, ElapsedEventArgs e)
 		{
 			// If signal time equal Friday 20:00 we will send message Xur is arrived in game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
@@ -73,6 +75,7 @@ namespace DiscordBot.Services
 			// If signal time equal Tuesday 20:00 we will send message Xur is leave game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
 				await XurLeave();
+			await RaidRemainder(e);
 		}
 
 		private async Task XurArrived()
@@ -139,6 +142,42 @@ namespace DiscordBot.Services
 
 				}
 			}
+		}
+
+		private async Task RaidRemainder(ElapsedEventArgs elapsed)
+		{
+			using (FailsafeContext Db = new FailsafeContext())
+			{
+				foreach (var item in Db.ActiveRaids.ToList())
+				{
+					if (elapsed.SignalTime.Date == item.DateExpire.Date
+						&& elapsed.SignalTime.Hour == item.DateExpire.Hour
+						&& elapsed.SignalTime.Minute == item.DateExpire.Minute
+						&& elapsed.SignalTime.Second < 10)
+					{
+						await RaidNotificationAsync(item.User1, item);
+					}
+				}
+			}
+		}
+
+		private async Task RaidNotificationAsync(ulong userId, ActiveRaid raid)
+		{
+			if (userId != 0)
+			{
+				SocketUser User = Program.Client.GetUser(userId);
+				IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
+
+				#region Message
+				EmbedBuilder embed = new EmbedBuilder();
+				embed.WithTitle($"Доброго времени суток {User.Username}");
+				embed.WithColor(Color.DarkMagenta);
+				embed.WithDescription($"Хочу вам напомнить что у вас через 15 минут рейд {raid.Name}");
+				#endregion
+
+				await Dm.SendMessageAsync(embed: embed.Build());
+			}
+
 		}
 	}
 }
