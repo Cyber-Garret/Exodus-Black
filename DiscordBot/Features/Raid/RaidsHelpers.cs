@@ -13,88 +13,88 @@ namespace DiscordBot.Features.Raid
 	{
 		internal static async Task HandleReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
-			Core.Models.Db.ActiveRaid RaidMessage;
+			Core.Models.Db.ActiveRaid currentRaid;
 			using (FailsafeContext context = new FailsafeContext())
 			{
-				RaidMessage = context.ActiveRaids.FirstOrDefault(r => r.Id == reaction.MessageId);
+				currentRaid = context.ActiveRaids.FirstOrDefault(r => r.Id == reaction.MessageId);
 
-				if (RaidMessage != null)
+				if (currentRaid != null)
 				{
 					var msg = await cache.GetOrDownloadAsync();
 
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["2"]))
 					{
-						if (RaidMessage.User2 == 0)
-							RaidMessage.User2 = reaction.User.Value.Id;
+						if (currentRaid.User2 == 0)
+							currentRaid.User2 = reaction.User.Value.Id;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["3"]))
 					{
-						if (RaidMessage.User3 == 0)
-							RaidMessage.User3 = reaction.User.Value.Id;
+						if (currentRaid.User3 == 0)
+							currentRaid.User3 = reaction.User.Value.Id;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["4"]))
 					{
-						if (RaidMessage.User4 == 0)
-							RaidMessage.User4 = reaction.User.Value.Id;
+						if (currentRaid.User4 == 0)
+							currentRaid.User4 = reaction.User.Value.Id;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["5"]))
 					{
-						if (RaidMessage.User5 == 0)
-							RaidMessage.User5 = reaction.User.Value.Id;
+						if (currentRaid.User5 == 0)
+							currentRaid.User5 = reaction.User.Value.Id;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["6"]))
 					{
-						if (RaidMessage.User6 == 0)
-							RaidMessage.User6 = reaction.User.Value.Id;
+						if (currentRaid.User6 == 0)
+							currentRaid.User6 = reaction.User.Value.Id;
 					}
 					//await RaidsCore.HandleReaction(msg, reaction);
-					await UpdateMessage(msg, RebuildEmbed(RaidMessage));
+					await UpdateMessage(msg, RebuildEmbed(currentRaid));
 
-					context.ActiveRaids.Update(RaidMessage);
+					context.ActiveRaids.Update(currentRaid);
 					context.SaveChanges();
 				}
 			}
 		}
 		internal static async Task HandleReactionRemoved(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
-			Core.Models.Db.ActiveRaid RaidMessage;
+			Core.Models.Db.ActiveRaid currentRaid;
 			using (FailsafeContext context = new FailsafeContext())
 			{
-				RaidMessage = context.ActiveRaids.FirstOrDefault(r => r.Id == reaction.MessageId);
+				currentRaid = context.ActiveRaids.FirstOrDefault(r => r.Id == reaction.MessageId);
 
-				if (RaidMessage != null)
+				if (currentRaid != null)
 				{
 					var msg = await cache.GetOrDownloadAsync();
 
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["2"]))
 					{
-						if (RaidMessage.User2 == reaction.User.Value.Id)
-							RaidMessage.User2 = 0;
+						if (currentRaid.User2 == reaction.User.Value.Id)
+							currentRaid.User2 = 0;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["3"]))
 					{
-						if (RaidMessage.User3 == reaction.User.Value.Id)
-							RaidMessage.User3 = 0;
+						if (currentRaid.User3 == reaction.User.Value.Id)
+							currentRaid.User3 = 0;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["4"]))
 					{
-						if (RaidMessage.User4 == reaction.User.Value.Id)
-							RaidMessage.User4 = 0;
+						if (currentRaid.User4 == reaction.User.Value.Id)
+							currentRaid.User4 = 0;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["5"]))
 					{
-						if (RaidMessage.User5 == reaction.User.Value.Id)
-							RaidMessage.User5 = 0;
+						if (currentRaid.User5 == reaction.User.Value.Id)
+							currentRaid.User5 = 0;
 					}
 					if (reaction.Emote.Equals(RaidsCore.ReactOptions["6"]))
 					{
-						if (RaidMessage.User6 == reaction.User.Value.Id)
-							RaidMessage.User6 = 0;
+						if (currentRaid.User6 == reaction.User.Value.Id)
+							currentRaid.User6 = 0;
 					}
 					//await RaidsCore.HandleReaction(msg, reaction);
-					await UpdateMessage(msg, RebuildEmbed(RaidMessage));
+					await UpdateMessage(msg, RebuildEmbed(currentRaid));
 
-					context.ActiveRaids.Update(RaidMessage);
+					context.ActiveRaids.Update(currentRaid);
 					context.SaveChanges();
 				}
 			}
@@ -106,7 +106,7 @@ namespace DiscordBot.Features.Raid
 			embed.WithTitle($"{raid.DateExpire.ToShortDateString()} в {raid.DateExpire.TimeOfDay} по МСК. Рейд: {raid.Name}");
 			embed.WithColor(Color.DarkMagenta);
 			embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-			embed.WithDescription($"**О рейде:** {raid.Description}");
+			embed.WithDescription(raid.Description);
 
 			embed.AddField("Рейд лидер", Program.Client.GetUser(raid.User1).Mention);
 
@@ -146,6 +146,30 @@ namespace DiscordBot.Features.Raid
 				// message.Content =  Constants.InvisibleString;
 			});
 		}
+
+		#region Functions
+		internal static (string, string) GetRaidInfo(RaidName raid)
+		{
+
+			switch (raid)
+			{
+				case RaidName.Leviathan:
+					return ("Левиафан", "Короткое инфо о левике");
+				case RaidName.EaterOfWorlds:
+					return ("Пожиратель миров", "Короткое инфо о пожирателе");
+				case RaidName.SpireOfStars:
+					return ("Звездный шпиль", "Короткое инфо о шпиле");
+				case RaidName.LastWish:
+					return ("Последнее желание", "Короткое инфо о пж");
+				case RaidName.ScourgeOfThePast:
+					return ("Истребители прошлого", "Короткое инфо о ип");
+				case RaidName.CrownOfSorrow:
+					return ("Корона скорби", "Короткое инфо о короне");
+				default:
+					return ("Неизвестно", "У меня нет информации о том, чего я не знаю.");
+			}
+		}
+		#endregion
 	}
 
 	internal enum RaidName

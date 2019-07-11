@@ -11,6 +11,7 @@ namespace Core.Models.Db
 		[DatabaseGenerated(DatabaseGeneratedOption.None)]
 		[Key]
 		public ulong Id { get; set; }
+		public string Guild { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public DateTime DateExpire { get; set; }

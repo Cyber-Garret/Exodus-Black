@@ -27,22 +27,16 @@ namespace DiscordBot.Features.Raid
 			};
 		}
 
-		internal static EmbedBuilder RaidEmbed(SocketUser user, string raidname, string date)
+		internal static EmbedBuilder StartRaidEmbed(SocketUser user, RaidName raid, DateTime date)
 		{
 			EmbedBuilder embed = new EmbedBuilder();
 
-			var raidEnum = RaidEnumFromString(raidname);
+			var raidInfo = RaidsHelpers.GetRaidInfo(raid);
 
-			if (raidEnum == RaidName.None)
-				return embed;
-
-			var _raidTime = DateTime.Parse(date);
-			var raidInfo = GetRaidInfo(raidEnum);
-
-			embed.WithTitle($"{_raidTime.Date.ToShortDateString()} в {_raidTime.TimeOfDay} по МСК. Рейд: {raidInfo.Item1}");
+			embed.WithTitle($"{date.Date.ToShortDateString()} в {date.TimeOfDay} по МСК. Рейд: {raidInfo.Item1}");
 			embed.WithColor(Color.DarkMagenta);
 			embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-			embed.WithDescription($"**О рейде:** {raidInfo.Item2}");
+			embed.WithDescription(raidInfo.Item2);
 
 			embed.AddField("Рейд лидер", user.Mention);
 			embed.AddField("Страж #2", "Свободно");
@@ -55,33 +49,28 @@ namespace DiscordBot.Features.Raid
 			return embed;
 		}
 
-		internal static void RegisterRaid(ulong msgId, ulong firstUser, string raidname, string date)
+		internal static void RegisterRaid(ulong msgId, string GuildName, ulong raidLeader, RaidName raid, DateTime date)
 		{
 			try
 			{
-				var raidEnum = RaidEnumFromString(raidname);
-
-				if (raidEnum == RaidName.None)
-					return;
+				var raidInfo = RaidsHelpers.GetRaidInfo(raid);
 				using (FailsafeContext Db = new FailsafeContext())
 				{
-					var _raidTime = DateTime.Parse(date);
-					var raidInfo = GetRaidInfo(raidEnum);
-
-					Core.Models.Db.ActiveRaid raid = new Core.Models.Db.ActiveRaid
+					Core.Models.Db.ActiveRaid activeRaid = new Core.Models.Db.ActiveRaid
 					{
 						Id = msgId,
+						Guild = GuildName,
 						Name = raidInfo.Item1,
 						Description = raidInfo.Item2,
-						DateExpire = _raidTime,
-						User1 = firstUser,
+						DateExpire = date,
+						User1 = raidLeader,
 						User2 = 0,
 						User3 = 0,
 						User4 = 0,
 						User5 = 0,
 						User6 = 0
 					};
-					Db.ActiveRaids.Add(raid);
+					Db.ActiveRaids.Add(activeRaid);
 					Db.SaveChanges();
 				}
 			}
@@ -91,46 +80,5 @@ namespace DiscordBot.Features.Raid
 			}
 
 		}
-
-		#region Functions
-		static (string, string) GetRaidInfo(RaidName raid)
-		{
-
-			switch (raid)
-			{
-				case RaidName.Leviathan:
-					return ("Левиафан", "Короткое инфо о левике");
-				case RaidName.EaterOfWorlds:
-					return ("Пожиратель миров", "Короткое инфо о пожирателе");
-				case RaidName.SpireOfStars:
-					return ("Звездный шпиль", "Короткое инфо о шпиле");
-				case RaidName.LastWish:
-					return ("Последнее желание", "Короткое инфо о пж");
-				case RaidName.ScourgeOfThePast:
-					return ("Истребители прошлого", "Короткое инфо о ип");
-				case RaidName.CrownOfSorrow:
-					return ("Корона скорби", "Короткое инфо о короне");
-				default:
-					return ("Неизвестно", "Неизвестный мне рейд.");
-			}
-		}
-		static RaidName RaidEnumFromString(string raidname)
-		{
-			if (raidname == "Левик")
-				return RaidName.Leviathan;
-			else if (raidname == "пм")
-				return RaidName.EaterOfWorlds;
-			else if (raidname == "зш")
-				return RaidName.SpireOfStars;
-			else if (raidname == "пж")
-				return RaidName.LastWish;
-			else if (raidname == "ип")
-				return RaidName.ScourgeOfThePast;
-			else if (raidname == "кс")
-				return RaidName.CrownOfSorrow;
-			else
-				return RaidName.None;
-		}
-		#endregion
 	}
 }

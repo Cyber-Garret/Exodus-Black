@@ -156,6 +156,11 @@ namespace DiscordBot.Services
 						&& elapsed.SignalTime.Second < 10)
 					{
 						await RaidNotificationAsync(item.User1, item);
+						await RaidNotificationAsync(item.User2, item);
+						await RaidNotificationAsync(item.User3, item);
+						await RaidNotificationAsync(item.User4, item);
+						await RaidNotificationAsync(item.User5, item);
+						await RaidNotificationAsync(item.User6, item);
 					}
 				}
 			}
@@ -165,18 +170,28 @@ namespace DiscordBot.Services
 		{
 			if (userId != 0)
 			{
-				SocketUser User = Program.Client.GetUser(userId);
-				IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
+				try
+				{
+					SocketUser User = Program.Client.GetUser(userId);
+					IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
 
-				#region Message
-				EmbedBuilder embed = new EmbedBuilder();
-				embed.WithTitle($"Доброго времени суток {User.Username}");
-				embed.WithColor(Color.DarkMagenta);
-				embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-				embed.WithDescription($"Хочу вам напомнить что у вас через 15 минут рейд {raid.Name}");
-				#endregion
+					#region Message
+					EmbedBuilder embed = new EmbedBuilder();
+					embed.WithAuthor($"Доброго времени суток, {User.Username}");
+					embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется рейд.");
+					embed.WithColor(Color.DarkMagenta);
+					embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
+					embed.WithDescription(raid.Description);
+					embed.WithFooter($"Рейд: {raid.Name}. Сервер: {raid.Guild}");
+					#endregion
 
-				await Dm.SendMessageAsync(embed: embed.Build());
+					await Dm.SendMessageAsync(embed: embed.Build());
+				}
+				catch (Exception ex)
+				{
+					await Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
+				}
+
 			}
 
 		}
