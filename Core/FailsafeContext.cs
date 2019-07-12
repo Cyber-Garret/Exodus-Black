@@ -25,5 +25,6 @@ namespace Core
 
 		//Raids
 		public DbSet<ActiveRaid> ActiveRaids { get; set; }
+		public DbSet<RaidInfo> RaidInfos { get; set; }
 	}
 }

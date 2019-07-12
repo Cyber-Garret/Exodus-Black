@@ -359,7 +359,7 @@ namespace DiscordBot.Modules.Commands
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"ClanStatus Command - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 				Console.WriteLine(ex.ToString());
 			}
 		}

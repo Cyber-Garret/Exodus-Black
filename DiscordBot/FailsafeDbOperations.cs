@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
+using Discord;
+
+using Core;
 using Core.Models.Db;
 
-namespace Core
+namespace DiscordBot
 {
 	internal static class FailsafeDbOperations
 	{
@@ -22,10 +25,7 @@ namespace Core
 			using (var Context = new FailsafeContext())
 			{
 				Gear gear = Context.Gears.Where(g => g.Name.IndexOf(ItemName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
-				if (gear == null)
-					return null;
-				else
-					return gear;
+				return gear;
 			}
 		}
 
@@ -117,7 +117,7 @@ namespace Core
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString());
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -132,6 +132,61 @@ namespace Core
 				Context.Guilds.Update(GuildData);
 				Context.SaveChanges();
 				return Task.CompletedTask;
+			}
+		}
+		#endregion
+
+		#region Raids
+		internal static RaidInfo GetRaidInfo(string raidName)
+		{
+			using (var Db = new FailsafeContext())
+			{
+				var raid = Db.RaidInfos.Where(r =>
+				r.Name.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
+				r.Alias.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+				return raid;
+			}
+		}
+
+		internal static async Task<ActiveRaid> GetRaidAsync(ulong msgId)
+		{
+			using (var Db = new FailsafeContext())
+			{
+				try
+				{
+
+				}
+				catch (Exception ex)
+				{
+					await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+					throw;
+				}
+				var raid = Db.ActiveRaids.Include(r => r.RaidInfo).Where(r => r.MessageId == msgId).FirstOrDefault();
+				return raid;
+			}
+		}
+
+		internal static async Task SaveRaidAsync(ActiveRaid raid)
+		{
+			using (var Db = new FailsafeContext())
+			{
+				try
+				{
+					if (Db.ActiveRaids.Where(r => r.MessageId == raid.MessageId).Count() < 1)
+					{
+						Db.ActiveRaids.Add(raid);
+						await Db.SaveChangesAsync();
+					}
+					else
+					{
+						Db.ActiveRaids.Update(raid);
+						await Db.SaveChangesAsync();
+					}
+				}
+				catch (Exception ex)
+				{
+					await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				}
 			}
 		}
 		#endregion

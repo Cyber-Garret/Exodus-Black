@@ -1,12 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 using Discord;
 using Discord.WebSocket;
 
-using Core;
+using Core.Models.Db;
 
 namespace DiscordBot.Features.Raid
 {
@@ -27,16 +26,14 @@ namespace DiscordBot.Features.Raid
 			};
 		}
 
-		internal static EmbedBuilder StartRaidEmbed(SocketUser user, RaidName raid, DateTime date)
+		internal static EmbedBuilder StartRaidEmbed(SocketUser user, RaidInfo info, DateTime date)
 		{
 			EmbedBuilder embed = new EmbedBuilder();
 
-			var raidInfo = RaidsHelpers.GetRaidInfo(raid);
-
-			embed.WithTitle($"{date.Date.ToShortDateString()} в {date.TimeOfDay} по МСК. Рейд: {raidInfo.Item1}");
+			embed.WithTitle($"{date.Date.ToShortDateString()} в {date.TimeOfDay} по МСК. Рейд: {info.Name}");
 			embed.WithColor(Color.DarkMagenta);
 			embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-			embed.WithDescription(raidInfo.Item2);
+			embed.WithDescription(info.PreviewDesc);
 
 			embed.AddField("Рейд лидер", user.Mention);
 			embed.AddField("Страж #2", "Свободно");
@@ -49,34 +46,28 @@ namespace DiscordBot.Features.Raid
 			return embed;
 		}
 
-		internal static void RegisterRaid(ulong msgId, string GuildName, ulong raidLeader, RaidName raid, DateTime date)
+		internal static async Task RegisterRaidAsync(ulong msgId, string GuildName, ulong raidLeader, int raidInfoId, DateTime date)
 		{
 			try
 			{
-				var raidInfo = RaidsHelpers.GetRaidInfo(raid);
-				using (FailsafeContext Db = new FailsafeContext())
+				var newRaid = new ActiveRaid
 				{
-					Core.Models.Db.ActiveRaid activeRaid = new Core.Models.Db.ActiveRaid
-					{
-						Id = msgId,
-						Guild = GuildName,
-						Name = raidInfo.Item1,
-						Description = raidInfo.Item2,
-						DateExpire = date,
-						User1 = raidLeader,
-						User2 = 0,
-						User3 = 0,
-						User4 = 0,
-						User5 = 0,
-						User6 = 0
-					};
-					Db.ActiveRaids.Add(activeRaid);
-					Db.SaveChanges();
-				}
+					MessageId = msgId,
+					Guild = GuildName,
+					RaidInfoId = raidInfoId,
+					DateExpire = date,
+					User1 = raidLeader,
+					User2 = 0,
+					User3 = 0,
+					User4 = 0,
+					User5 = 0,
+					User6 = 0
+				};
+				await FailsafeDbOperations.SaveRaidAsync(newRaid);
 			}
 			catch (Exception ex)
 			{
-				Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}

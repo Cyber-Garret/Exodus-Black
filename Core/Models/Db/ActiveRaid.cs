@@ -10,10 +10,12 @@ namespace Core.Models.Db
 	{
 		[DatabaseGenerated(DatabaseGeneratedOption.None)]
 		[Key]
-		public ulong Id { get; set; }
+		public ulong MessageId { get; set; }
 		public string Guild { get; set; }
-		public string Name { get; set; }
-		public string Description { get; set; }
+
+		public int RaidInfoId { get; set; }
+		public RaidInfo RaidInfo { get; set; }
+
 		public DateTime DateExpire { get; set; }
 		public ulong User1 { get; set; }
 		public ulong User2 { get; set; }

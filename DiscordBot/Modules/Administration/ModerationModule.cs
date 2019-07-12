@@ -340,7 +340,7 @@ namespace DiscordBot.Modules.Administration
 			catch (Exception ex)
 			{
 				await workMessage.ModifyAsync(m => m.Content = "Ошибка рассылки! Сообщите моему создателю для исправления моих логических цепей.");
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"SendMessage command - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 		}
 

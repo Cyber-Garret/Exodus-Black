@@ -8,6 +8,7 @@ using Discord.WebSocket;
 using Core;
 using System.Linq;
 using Core.Models.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscordBot.Services
 {
@@ -63,7 +64,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"ChangeGameStatus Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 		}
 
@@ -104,8 +105,7 @@ namespace DiscordBot.Services
 					}
 					catch (Exception ex)
 					{
-						LogMessage message = new LogMessage(LogSeverity.Error, $"Xur Arrived Method - {ex.Source}", ex.Message, ex.InnerException);
-						await Logger.Log(message);
+						await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 					}
 
 				}
@@ -136,8 +136,7 @@ namespace DiscordBot.Services
 					}
 					catch (Exception ex)
 					{
-						LogMessage message = new LogMessage(LogSeverity.Error, $"Xur Leave Method - {ex.Source}", ex.Message, ex.InnerException);
-						await Logger.Log(message);
+						await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 					}
 
 				}
@@ -148,11 +147,11 @@ namespace DiscordBot.Services
 		{
 			using (FailsafeContext Db = new FailsafeContext())
 			{
-				foreach (var item in Db.ActiveRaids.ToList())
+				foreach (var item in Db.ActiveRaids.Include(r => r.RaidInfo).ToList())
 				{
 					if (elapsed.SignalTime.Date == item.DateExpire.Date
 						&& elapsed.SignalTime.Hour == item.DateExpire.Hour
-						&& elapsed.SignalTime.AddMinutes(15).Minute == item.DateExpire.Minute
+						&& elapsed.SignalTime.AddMinutes(1).Minute == item.DateExpire.Minute
 						&& elapsed.SignalTime.Second < 10)
 					{
 						await RaidNotificationAsync(item.User1, item);
@@ -181,15 +180,15 @@ namespace DiscordBot.Services
 					embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется рейд.");
 					embed.WithColor(Color.DarkMagenta);
 					embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-					embed.WithDescription(raid.Description);
-					embed.WithFooter($"Рейд: {raid.Name}. Сервер: {raid.Guild}");
+					embed.WithDescription(raid.RaidInfo.PreviewDesc);
+					embed.WithFooter($"Рейд: {raid.RaidInfo.Name}. Сервер: {raid.Guild}");
 					#endregion
 
 					await Dm.SendMessageAsync(embed: embed.Build());
 				}
 				catch (Exception ex)
 				{
-					await Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
+					await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 				}
 
 			}
