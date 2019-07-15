@@ -26,14 +26,14 @@ namespace DiscordBot.Features.Raid
 			};
 		}
 
-		internal static EmbedBuilder StartRaidEmbed(SocketUser user, RaidInfo info, DateTime date)
+		internal static EmbedBuilder StartRaidEmbed(SocketUser user, RaidInfo info, DateTime date, string userMemo)
 		{
 			EmbedBuilder embed = new EmbedBuilder();
 
-			embed.WithTitle($"{date.Date.ToShortDateString()} в {date.TimeOfDay} по МСК. Рейд: {info.Name}");
+			embed.WithTitle($"{date.Date.ToString("d.M.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. Рейд: {info.Name}");
 			embed.WithColor(Color.DarkMagenta);
 			embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-			embed.WithDescription(info.PreviewDesc);
+			embed.WithDescription($"**Заметка от рейд-лидера:**\n" + userMemo);
 
 			embed.AddField("Рейд лидер", user.Mention);
 			embed.AddField("Страж #2", "Свободно");
@@ -41,12 +41,12 @@ namespace DiscordBot.Features.Raid
 			embed.AddField("Страж #4", "Свободно");
 			embed.AddField("Страж #5", "Свободно");
 			embed.AddField("Страж #6", "Свободно");
-			embed.WithFooter("Что бы за вами закрепили место нажмите на реакцию, соответствующую месту.");
+			embed.WithFooter("Чтобы за вами закрепили место нажмите на реакцию, соответствующую месту.");
 
 			return embed;
 		}
 
-		internal static async Task RegisterRaidAsync(ulong msgId, string GuildName, ulong raidLeader, int raidInfoId, DateTime date)
+		internal static async Task RegisterRaidAsync(ulong msgId, string GuildName, ulong raidLeader, int raidInfoId, DateTime date, string userMemo)
 		{
 			try
 			{
@@ -55,6 +55,7 @@ namespace DiscordBot.Features.Raid
 					MessageId = msgId,
 					Guild = GuildName,
 					RaidInfoId = raidInfoId,
+					Memo = userMemo,
 					DateExpire = date,
 					User1 = raidLeader,
 					User2 = 0,

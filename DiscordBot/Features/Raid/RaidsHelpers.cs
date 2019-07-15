@@ -101,10 +101,11 @@ namespace DiscordBot.Features.Raid
 			try
 			{
 				EmbedBuilder embed = new EmbedBuilder();
-				embed.WithTitle($"{raid.DateExpire.ToShortDateString()} в {raid.DateExpire.TimeOfDay} по МСК. Рейд: {raid.RaidInfo.Name}");
+
+				embed.WithTitle($"{raid.DateExpire.ToString("d.M.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(raid.DateExpire.DayOfWeek)} в {raid.DateExpire.ToString("HH:mm")} по МСК. Рейд: {raid.RaidInfo.Name}");
 				embed.WithColor(Color.DarkMagenta);
 				embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-				embed.WithDescription(raid.RaidInfo.PreviewDesc);
+				embed.WithDescription($"**Заметка от рейд-лидера:**\n" + raid.Memo);
 
 				embed.AddField("Рейд лидер", Program.Client.GetUser(raid.User1).Mention);
 
@@ -129,7 +130,7 @@ namespace DiscordBot.Features.Raid
 				else
 					embed.AddField("Страж #6", "Свободно");
 
-				embed.WithFooter("Что бы за вами закрепили место нажмите на реакцию, соответствующую месту.");
+				embed.WithFooter("Чтобы за вами закрепили место нажмите на реакцию, соответствующую месту.");
 
 				return embed;
 			}

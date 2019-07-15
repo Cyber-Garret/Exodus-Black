@@ -180,7 +180,7 @@ namespace DiscordBot.Services
 					embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется рейд.");
 					embed.WithColor(Color.DarkMagenta);
 					embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-					embed.WithDescription(raid.RaidInfo.PreviewDesc);
+					embed.WithDescription($"**Заметка от рейд-лидера:**\n" + raid.Memo);
 					embed.WithFooter($"Рейд: {raid.RaidInfo.Name}. Сервер: {raid.Guild}");
 					#endregion
 
