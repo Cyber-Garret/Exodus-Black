@@ -28,7 +28,7 @@ namespace DiscordBot.Services
 			_timer.AutoReset = true;
 			_timer.Enabled = true;
 
-			// Initialize timer for 15 Min.
+			// Initialize timer for 30 sec.
 			_statusTimer = new Timer(TimeSpan.FromSeconds(30).TotalMilliseconds);
 			_statusTimer.Elapsed += ChangeGameStatus;
 			_statusTimer.AutoReset = true;
@@ -76,7 +76,7 @@ namespace DiscordBot.Services
 			// If signal time equal Tuesday 20:00 we will send message Xur is leave game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
 				await XurLeave();
-			await RaidRemainder(e);
+			await RaidRemainder();
 		}
 
 		private async Task XurArrived()
@@ -143,16 +143,18 @@ namespace DiscordBot.Services
 			}
 		}
 
-		private async Task RaidRemainder(ElapsedEventArgs elapsed)
+		private async Task RaidRemainder()
 		{
+			var timer = DateTime.Now.AddMinutes(15);
+
 			using (FailsafeContext Db = new FailsafeContext())
 			{
 				foreach (var item in Db.ActiveRaids.Include(r => r.RaidInfo).ToList())
 				{
-					if (elapsed.SignalTime.Date == item.DateExpire.Date
-						&& elapsed.SignalTime.Hour == item.DateExpire.Hour
-						&& elapsed.SignalTime.AddMinutes(1).Minute == item.DateExpire.Minute
-						&& elapsed.SignalTime.Second < 10)
+					if (timer.Date == item.DateExpire.Date
+						&& timer.Hour == item.DateExpire.Hour
+						&& timer.Minute == item.DateExpire.Minute
+						&& timer.Second < 10)
 					{
 						await RaidNotificationAsync(item.User1, item);
 						await RaidNotificationAsync(item.User2, item);
