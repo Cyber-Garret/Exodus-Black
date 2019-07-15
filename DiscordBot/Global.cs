@@ -1,4 +1,6 @@
-﻿namespace DiscordBot
+﻿using System.Globalization;
+
+namespace DiscordBot
 {
 	internal static class Global
 	{
@@ -6,6 +8,7 @@
 		internal static string Version { get; set; }
 
 		internal static readonly string InvisibleString = "\u200b";
+		internal static CultureInfo culture = new CultureInfo("ru-Ru");
 
 	}
 }

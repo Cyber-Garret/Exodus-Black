@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 using Discord;
@@ -14,6 +15,15 @@ namespace DiscordBot
 			Console.WriteLine(message);
 			Console.ResetColor();
 			return Task.CompletedTask;
+		}
+
+		internal static string GetExecutingMethodName(Exception exception)
+		{
+			var trace = new StackTrace(exception);
+			var frame = trace.GetFrame(0);
+			var method = frame.GetMethod();
+
+			return string.Concat(method.DeclaringType.FullName, ".", method.Name);
 		}
 
 		private static ConsoleColor SeverityToConsoleColor(LogSeverity severity)

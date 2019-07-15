@@ -75,7 +75,7 @@ namespace DiscordBot.Modules.Administration
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"initialize Command - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 				Console.WriteLine(ex.ToString());
 				await Context.Channel.SendMessageAsync("Ошибка добавления клана. Подробности в консоли.");
 			}
@@ -111,7 +111,7 @@ namespace DiscordBot.Modules.Administration
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"reload Command - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 				Console.WriteLine(ex.ToString());
 			}
 
@@ -151,7 +151,7 @@ namespace DiscordBot.Modules.Administration
 			try
 			{
 				await ReplyAsync("Начинаю очистку канала.");
-				var messages = await Context.Channel.GetMessagesAsync(amount).FlattenAsync();
+				var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
 				if (messages.Count() < 1)
 					return;
 				foreach (var item in messages)
@@ -168,7 +168,7 @@ namespace DiscordBot.Modules.Administration
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"Purge Command - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 				Console.WriteLine(ex.ToString());
 				await Context.Channel.SendMessageAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
 			}

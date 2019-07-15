@@ -8,7 +8,7 @@ using Discord.WebSocket;
 
 using Core;
 using DiscordBot.Helpers;
-using DiscordBot.Features.Catalyst;
+using DiscordBot.Features.Raid;
 
 namespace DiscordBot.Services
 {
@@ -41,11 +41,14 @@ namespace DiscordBot.Services
 			_client.UserJoined += _client_UserJoinedAsync;
 			_client.UserLeft += _client_UserLeftAsync;
 			_client.ReactionAdded += _client_ReactionAddedAsync;
+			_client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
+
+		
 		#region Events
 		private async Task _client_ShardDisconnectedAsync(Exception ex, DiscordSocketClient client)
 		{
-			await Logger.Log(new LogMessage(LogSeverity.Warning, $"Shard {client.ShardId} Disconnected", ex.Message, ex.InnerException));
+			await Logger.Log(new LogMessage(LogSeverity.Warning, $"Shard {client.ShardId} Disconnected", ex.Message, ex));
 		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
@@ -84,6 +87,7 @@ namespace DiscordBot.Services
 
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
 		private async Task _client_ReactionAddedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionAdded(cache, channel, reaction);
+		private async Task _client_ReactionRemovedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionRemoved(cache, channel, reaction);
 		#endregion
 
 		#region Methods
@@ -125,7 +129,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"ChannelCreated Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -170,7 +174,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"ChannelDestroyed Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 		}
 		private async Task GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
@@ -275,7 +279,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"GuildMemberUpdated Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -375,7 +379,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"MessageUpdated Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -442,7 +446,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"MessageDeleted Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -477,7 +481,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"RoleCreated Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -514,7 +518,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"RoleDeleted Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -535,7 +539,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"UserJoined Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
 		}
@@ -599,7 +603,7 @@ namespace DiscordBot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, $"UserLeft Method - {ex.Source}", ex.Message, ex.InnerException));
+				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 		}
 		private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
@@ -607,7 +611,16 @@ namespace DiscordBot.Services
 			if (!reaction.User.Value.IsBot)
 			{
 				//Проверяет, связана ли реакция с запущенной игрой от того же пользователя, который выполнил команду - если это так, обрабатывает ее
-				await CatalystData.HandleReactionAdded(cache, reaction);
+				//await CatalystData.HandleReactionAdded(cache, reaction);
+				await RaidsHelpers.HandleReactionAdded(cache, reaction);
+			}
+		}
+
+		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache,ISocketMessageChannel channel,SocketReaction reaction)
+		{
+			if (!reaction.User.Value.IsBot)
+			{
+				await RaidsHelpers.HandleReactionRemoved(cache, reaction);
 			}
 		}
 		#endregion
