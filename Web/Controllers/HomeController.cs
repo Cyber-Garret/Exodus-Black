@@ -19,17 +19,26 @@ namespace Web.Controllers
 		{
 			return View();
 		}
-
+		[Route("Privacy")]
 		public IActionResult Privacy()
 		{
 			return View();
 		}
-
+		[Route("About")]
 		public IActionResult About()
 		{
 			return View();
 		}
-
+		[Route("Donate")]
+		public IActionResult Donate()
+		{
+			return View();
+		}
+		[Route("Contact")]
+		public IActionResult Contact()
+		{
+			return View();
+		}
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{

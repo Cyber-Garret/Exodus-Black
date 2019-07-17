@@ -70,13 +70,13 @@ namespace DiscordBot.Services
 
 		private async void MainTimer(object sender, ElapsedEventArgs e)
 		{
+			_ = RaidRemainder();
 			// If signal time equal Friday 20:00 we will send message Xur is arrived in game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
 				await XurArrived();
 			// If signal time equal Tuesday 20:00 we will send message Xur is leave game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
 				await XurLeave();
-			await RaidRemainder();
 		}
 
 		private async Task XurArrived()
@@ -149,51 +149,55 @@ namespace DiscordBot.Services
 
 			using (FailsafeContext Db = new FailsafeContext())
 			{
-				foreach (var item in Db.ActiveRaids.Include(r => r.RaidInfo).ToList())
+				var query = await Db.ActiveRaids.Include(r => r.RaidInfo).Where(d => d.DateExpire > DateTime.Now).OrderBy(o => o.DateExpire).ToListAsync();
+				if (query.Count > 0)
 				{
-					if (timer.Date == item.DateExpire.Date
-						&& timer.Hour == item.DateExpire.Hour
-						&& timer.Minute == item.DateExpire.Minute
-						&& timer.Second < 10)
+					foreach (var item in query)
 					{
-						await RaidNotificationAsync(item.User1, item);
-						await RaidNotificationAsync(item.User2, item);
-						await RaidNotificationAsync(item.User3, item);
-						await RaidNotificationAsync(item.User4, item);
-						await RaidNotificationAsync(item.User5, item);
-						await RaidNotificationAsync(item.User6, item);
+						if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
+						{
+							ulong[] users = { item.User1, item.User2, item.User3, item.User4, item.User5, item.User6 };
+
+							await RaidNotificationAsync(users, item);
+						}
 					}
 				}
 			}
 		}
 
-		private async Task RaidNotificationAsync(ulong userId, ActiveRaid raid)
+		private async Task RaidNotificationAsync(ulong[] userId, ActiveRaid raid)
 		{
-			if (userId != 0)
+			foreach (var item in userId)
 			{
-				try
+				if (item != 0)
 				{
-					SocketUser User = Program.Client.GetUser(userId);
-					IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
+					try
+					{
+						SocketUser User = Program.Client.GetUser(item);
+						IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
 
-					#region Message
-					EmbedBuilder embed = new EmbedBuilder();
-					embed.WithAuthor($"Доброго времени суток, {User.Username}");
-					embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется рейд.");
-					embed.WithColor(Color.DarkMagenta);
-					embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-					embed.WithDescription($"**Заметка от рейд-лидера:**\n" + raid.Memo);
-					embed.WithFooter($"Рейд: {raid.RaidInfo.Name}. Сервер: {raid.Guild}");
-					#endregion
+						#region Message
+						EmbedBuilder embed = new EmbedBuilder();
+						embed.WithAuthor($"Доброго времени суток, {User.Username}");
+						embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется {raid.RaidInfo.Type.ToLower()}.");
+						embed.WithColor(Color.DarkMagenta);
+						if (raid.RaidInfo.PreviewDesc != null)
+							embed.WithDescription(raid.RaidInfo.PreviewDesc);
+						embed.WithThumbnailUrl(raid.RaidInfo.Icon);
+						embed.AddField("Заметка от лидера:", raid.Memo);
+						embed.WithFooter($"{raid.RaidInfo.Type}: {raid.RaidInfo.Name}. Сервер: {raid.Guild}");
+						#endregion
 
-					await Dm.SendMessageAsync(embed: embed.Build());
+						await Dm.SendMessageAsync(embed: embed.Build());
+					}
+					catch (Exception ex)
+					{
+						await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+					}
+
 				}
-				catch (Exception ex)
-				{
-					await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
-				}
-
 			}
+
 
 		}
 	}

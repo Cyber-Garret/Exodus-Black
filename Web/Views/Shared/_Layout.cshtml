@@ -78,9 +78,14 @@
 								<li>@Html.ActionLink("Катализаторы", "Index", "Catalysts", null, new { @class = currentPage == "catalysts-index" ? "nav-link text-dark current" : "nav-link text-dark" })</li>
 							</ul>
 						</li>
-
 						<li class="nav-item">
 							@Html.ActionLink("О проекте", "About", "Home", null, new { @class = currentPage == "home-about" ? "nav-link text-light current" : "nav-link text-light" })
+						</li>
+						<li class="nav-item">
+							@Html.ActionLink("Помочь проекту", "Donate", "Home", null, new { @class = currentPage == "donate-about" ? "nav-link text-light current" : "nav-link text-light" })
+						</li>
+						<li class="nav-item">
+							@Html.ActionLink("Контакты", "Contact", "Home", null, new { @class = currentPage == "contact-about" ? "nav-link text-light current" : "nav-link text-light" })
 						</li>
 					</ul>
 

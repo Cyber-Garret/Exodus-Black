@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
+using Core.Models.Db;
+
 namespace DiscordBot.Features.Raid
 {
 	internal static class RaidsHelpers
@@ -22,37 +24,49 @@ namespace DiscordBot.Features.Raid
 				if (reaction.Emote.Equals(RaidsCore.ReactOptions["2"]))
 				{
 					if (raid.User2 == 0)
+					{
 						raid.User2 = reaction.User.Value.Id;
+						RaidsCore.HandleReaction(msg, raid);
+					}
+
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["3"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["3"]))
 				{
 					if (raid.User3 == 0)
+					{
 						raid.User3 = reaction.User.Value.Id;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["4"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["4"]))
 				{
 					if (raid.User4 == 0)
+					{
 						raid.User4 = reaction.User.Value.Id;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["5"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["5"]))
 				{
 					if (raid.User5 == 0)
+					{
 						raid.User5 = reaction.User.Value.Id;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["6"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["6"]))
 				{
 					if (raid.User6 == 0)
+					{
 						raid.User6 = reaction.User.Value.Id;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				//await RaidsCore.HandleReaction(msg, reaction);
-				var newEmbed = await RebuildEmbedAsync(raid);
-				if (newEmbed.Length != 0)
-					await UpdateMessage(msg, newEmbed);
 
-				await FailsafeDbOperations.SaveRaidAsync(raid);
 			}
 
 		}
+
 		internal static async Task HandleReactionRemoved(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
 			var raid = await FailsafeDbOperations.GetRaidAsync(cache.Id);
@@ -64,69 +78,99 @@ namespace DiscordBot.Features.Raid
 				if (reaction.Emote.Equals(RaidsCore.ReactOptions["2"]))
 				{
 					if (raid.User2 == reaction.User.Value.Id)
+					{
 						raid.User2 = 0;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["3"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["3"]))
 				{
 					if (raid.User3 == reaction.User.Value.Id)
+					{
 						raid.User3 = 0;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["4"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["4"]))
 				{
 					if (raid.User4 == reaction.User.Value.Id)
+					{
 						raid.User4 = 0;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["5"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["5"]))
 				{
 					if (raid.User5 == reaction.User.Value.Id)
+					{
 						raid.User5 = 0;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				if (reaction.Emote.Equals(RaidsCore.ReactOptions["6"]))
+				else if (reaction.Emote.Equals(RaidsCore.ReactOptions["6"]))
 				{
 					if (raid.User6 == reaction.User.Value.Id)
+					{
 						raid.User6 = 0;
+						RaidsCore.HandleReaction(msg, raid);
+					}
 				}
-				//await RaidsCore.HandleReaction(msg, reaction);
-				var newEmbed = await RebuildEmbedAsync(raid);
-				if (newEmbed.Length != 0)
-					await UpdateMessage(msg, newEmbed);
-
-				await FailsafeDbOperations.SaveRaidAsync(raid);
-
 			}
 		}
 
-		internal static async Task<EmbedBuilder> RebuildEmbedAsync(Core.Models.Db.ActiveRaid raid)
+		internal static async Task<EmbedBuilder> RebuildEmbedAsync(ActiveRaid raid)
 		{
 			try
 			{
 				EmbedBuilder embed = new EmbedBuilder();
 
-				embed.WithTitle($"{raid.DateExpire.ToString("d.M.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(raid.DateExpire.DayOfWeek)} в {raid.DateExpire.ToString("HH:mm")} по МСК. Рейд: {raid.RaidInfo.Name}");
+				embed.WithTitle($"{raid.DateExpire.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(raid.DateExpire.DayOfWeek)} в {raid.DateExpire.ToString("HH:mm")} по МСК. {raid.RaidInfo.Type}: {raid.RaidInfo.Name}");
 				embed.WithColor(Color.DarkMagenta);
-				embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-				embed.WithDescription($"**Заметка от рейд-лидера:**\n" + raid.Memo);
+				embed.WithThumbnailUrl(raid.RaidInfo.Icon);
+				if (raid.RaidInfo.PreviewDesc != null)
+					embed.WithDescription(raid.RaidInfo.PreviewDesc);
 
-				embed.AddField("Рейд лидер", Program.Client.GetUser(raid.User1).Mention);
+				embed.AddField("Заметка от лидера", raid.Memo);
+
+				embed.AddField("Страж #1", $"{Program.Client.GetUser(raid.User1).Mention} - {Program.Client.GetUser(raid.User1).Username}");
 
 				if (raid.User2 != 0)
-					embed.AddField("Страж #2", Program.Client.GetUser(raid.User2).Mention);
+				{
+					var user = Program.Client.GetUser(raid.User2);
+					embed.AddField("Страж #2", $"{user.Mention} - {user.Username}");
+				}
 				else
 					embed.AddField("Страж #2", "Свободно");
+
 				if (raid.User3 != 0)
-					embed.AddField("Страж #3", Program.Client.GetUser(raid.User3).Mention);
+				{
+					var user = Program.Client.GetUser(raid.User3);
+					embed.AddField("Страж #3", $"{user.Mention} - {user.Username}");
+				}
 				else
 					embed.AddField("Страж #3", "Свободно");
+
 				if (raid.User4 != 0)
-					embed.AddField("Страж #4", Program.Client.GetUser(raid.User4).Mention);
+				{
+					var user = Program.Client.GetUser(raid.User4);
+					embed.AddField("Страж #4", $"{user.Mention} - {user.Username}");
+				}
 				else
 					embed.AddField("Страж #4", "Свободно");
+
 				if (raid.User5 != 0)
-					embed.AddField("Страж #5", Program.Client.GetUser(raid.User5).Mention);
+				{
+					var user = Program.Client.GetUser(raid.User5);
+					embed.AddField("Страж #5", $"{user.Mention} - {user.Username}");
+				}
 				else
 					embed.AddField("Страж #5", "Свободно");
+
 				if (raid.User6 != 0)
-					embed.AddField("Страж #6", Program.Client.GetUser(raid.User6).Mention);
+				{
+					var user = Program.Client.GetUser(raid.User6);
+					embed.AddField("Страж #6", $"{user.Mention} - {user.Username}");
+				}
 				else
 					embed.AddField("Страж #6", "Свободно");
 
@@ -142,7 +186,7 @@ namespace DiscordBot.Features.Raid
 
 		}
 
-		private static async Task UpdateMessage(IUserMessage socketMsg, EmbedBuilder embed)
+		internal static async Task UpdateMessage(IUserMessage socketMsg, EmbedBuilder embed)
 		{
 			await socketMsg.ModifyAsync(message =>
 			{

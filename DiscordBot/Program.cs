@@ -61,20 +61,21 @@ namespace DiscordBot
 			await Client.StartAsync();
 
 			await Client.SetStatusAsync(UserStatus.Online);
-
 			await Task.Delay(-1);
 		}
 
 		public ServiceProvider BuildServices()
 		{
-			return new ServiceCollection()
-				.AddSingleton(_ => Toml.ReadFile<Configuration>(_config_path))
-				.AddSingleton<ConfigurationService>()
-				.AddSingleton<CommandService>()
-				.AddSingleton<CommandHandlerService>()
-				.AddSingleton<DiscordEventHandlerService>()
-				.AddSingleton<TimerService>()
-				.BuildServiceProvider();
+			var services = new ServiceCollection();
+
+			services.AddSingleton(_ => Toml.ReadFile<Configuration>(_config_path));
+			services.AddSingleton<ConfigurationService>();
+			services.AddSingleton<CommandService>();
+			services.AddSingleton<CommandHandlerService>();
+			services.AddSingleton<DiscordEventHandlerService>();
+			services.AddSingleton<TimerService>();
+
+			return services.BuildServiceProvider();
 		}
 
 	}

@@ -30,12 +30,13 @@ namespace DiscordBot.Features.Raid
 		{
 			EmbedBuilder embed = new EmbedBuilder();
 
-			embed.WithTitle($"{date.Date.ToString("d.M.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. Рейд: {info.Name}");
+			embed.WithTitle($"{date.Date.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. {info.Type}: {info.Name}");
 			embed.WithColor(Color.DarkMagenta);
-			embed.WithThumbnailUrl("http://neira.link/img/Raid_emblem.png");
-			embed.WithDescription($"**Заметка от рейд-лидера:**\n" + userMemo);
-
-			embed.AddField("Рейд лидер", user.Mention);
+			embed.WithThumbnailUrl(info.Icon);
+			if (info.PreviewDesc != null)
+				embed.WithDescription(info.PreviewDesc);
+			embed.AddField("Заметка от лидера", userMemo);
+			embed.AddField("Страж #1", $"{user.Mention} - {user.Username}");
 			embed.AddField("Страж #2", "Свободно");
 			embed.AddField("Страж #3", "Свободно");
 			embed.AddField("Страж #4", "Свободно");
@@ -71,6 +72,15 @@ namespace DiscordBot.Features.Raid
 				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 
+		}
+
+		internal static async void HandleReaction(IUserMessage message, ActiveRaid activeRaid)
+		{
+			var newEmbed = await RaidsHelpers.RebuildEmbedAsync(activeRaid);
+			if (newEmbed.Length != 0)
+				await RaidsHelpers.UpdateMessage(message, newEmbed);
+
+			await FailsafeDbOperations.SaveRaidAsync(activeRaid);
 		}
 	}
 }
