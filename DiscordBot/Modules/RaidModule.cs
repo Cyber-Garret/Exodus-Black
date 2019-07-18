@@ -40,11 +40,11 @@ namespace DiscordBot.Modules
 
 			DateTime.TryParseExact(raidTime, "dd.MM.yyyy-HH:mm", CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
 
-			if (dateTime == new DateTime() || dateTime < DateTime.Now)
+			if (dateTime == new DateTime())
 			{
 				var message = new EmbedBuilder()
 					.WithTitle("Страж, ты указал неизвестный мне формат времени")
-					.WithColor(Color.Red)
+					.WithColor(Color.Gold)
 					.AddField("Я понимаю время начала рейда в таком формате",
 					"Формат времени: **<день>.<месяц>.<год>-<час>:<минута>**\n" +
 					"**День:** от 01 до 31\n" +
@@ -55,6 +55,14 @@ namespace DiscordBot.Modules
 					"В итоге у тебя должно получиться: **05.07.2019-20:05**")
 					.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
 					.WithFooter("Пример: !сбор пж 21.05.2018-20:00");
+				await ReplyAsync(embed: message.Build());
+				return;
+			}
+			if (dateTime < DateTime.Now)
+			{
+				var message = new EmbedBuilder()
+					.WithColor(Color.Red)
+					.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи в {DateTime.Now.Year - 1000} г. и передай привет моему капитану.");
 				await ReplyAsync(embed: message.Build());
 				return;
 			}

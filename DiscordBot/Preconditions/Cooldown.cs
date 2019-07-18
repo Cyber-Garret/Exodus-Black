@@ -32,7 +32,7 @@ namespace DiscordBot.Preconditions
 				// Сообщение если команда все еще в откате.
 				if (difference.Ticks > 0)
 				{
-					return Task.FromResult(PreconditionResult.FromError($"Ты сможешь использовать эту комманду через {timeSpanString}"));
+					return Task.FromResult(PreconditionResult.FromError($"Ты сможешь использовать эту команду через {timeSpanString}"));
 				}
 				// Обновляет время отката.
 				var time = DateTime.UtcNow.Add(CooldownLength);
