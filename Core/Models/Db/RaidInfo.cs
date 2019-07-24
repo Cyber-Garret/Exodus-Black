@@ -11,9 +11,12 @@ namespace Core.Models.Db
 		public string Name { get; set; }
 		[MaxLength(50)]
 		public string Alias { get; set; }
-		public int Count { get; set; }
 		[MaxLength(1024)]
 		public string PreviewDesc { get; set; }
+		[MaxLength(50)]
+		public string Type { get; set; }
+		[MaxLength(1000)]
+		public string Icon { get; set; }
 
 		public List<ActiveRaid> ActiveRaids { get; set; }
 	}

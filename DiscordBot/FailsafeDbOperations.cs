@@ -137,14 +137,23 @@ namespace DiscordBot
 		#endregion
 
 		#region Raids
-		internal static RaidInfo GetRaidInfo(string raidName)
+		internal static async Task<RaidInfo> GetRaidInfo(string raidName)
 		{
 			using (var Db = new FailsafeContext())
 			{
-				var raid = Db.RaidInfos.Where(r =>
+				var raid = await Db.RaidInfos.Where(r =>
 				r.Name.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
-				r.Alias.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+				r.Alias.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
 				return raid;
+			}
+		}
+
+		internal static async Task<IEnumerable<RaidInfo>> GetAllRaidsInfo()
+		{
+			using (var Context = new FailsafeContext())
+			{
+				IEnumerable<RaidInfo> raids = await Context.RaidInfos.ToListAsync();
+				return raids;
 			}
 		}
 

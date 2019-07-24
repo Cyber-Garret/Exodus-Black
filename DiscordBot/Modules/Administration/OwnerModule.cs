@@ -137,7 +137,8 @@ namespace DiscordBot.Modules.Administration
 				$"- Heap Size: {GetHeapSize()}MiB\n" +
 				$"- Всего серверов: {Context.Client.Guilds.Count}\n" +
 				$"- Всего каналов: {Context.Client.Guilds.Sum(g => g.Channels.Count)}\n" +
-				$"- Пользователей: {Context.Client.Guilds.Sum(g => g.Users.Count)}", true);
+				$"- Пользователей: {Context.Client.Guilds.Sum(g => g.Users.Count)}\n" + 
+				$"- Текущее время сервера: {DateTime.Now}", true);
 
 			await Context.Channel.SendMessageAsync(null, false, embed.Build());
 		}

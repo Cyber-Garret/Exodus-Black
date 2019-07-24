@@ -10,50 +10,59 @@ using System.Globalization;
 
 namespace DiscordBot.Modules
 {
-	[Cooldown(10)]
-	[Group("рейд")]
 	public class RaidModule : BotModuleBase
 	{
 		[Command("сбор")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
-		public async Task RaidCollection(string raidName, string raidTime, [Remainder]string userMemo = "Рейд-лидер не указал какие-либо особенности или требования.")
+		[Cooldown(10)]
+		public async Task RaidCollection(string raidName, string raidTime, [Remainder]string userMemo = "Лидер не указал какие-либо особенности или требования.")
 		{
-			var raidInfo = FailsafeDbOperations.GetRaidInfo(raidName);
-
+			var raidInfo = await FailsafeDbOperations.GetRaidInfo(raidName);
 
 			if (raidInfo == null)
 			{
+				var AvailableRaids = "Доступные для регистрации активности:\n\n";
+				var info = await FailsafeDbOperations.GetAllRaidsInfo();
+
+				foreach (var item in info)
+				{
+					AvailableRaids += $"**{item.Name}** или просто **{item.Alias}**\n";
+				}
+
 				var message = new EmbedBuilder()
-					.WithTitle("Страж, я не разобрала в какой рейд ты хочешь пойти")
+					.WithTitle("Страж, я не разобрала в какую активность ты хочешь пойти")
 					.WithColor(Color.Red)
-					.AddField(Global.InvisibleString,
-					"Известные мне рейды:\n" +
-					"**Левиафан**, или просто **левик**.\n" +
-					"**Пожиратель миров** или просто **пм**.\n" +
-					"**Звездный шпиль** или просто **зш**.\n" +
-					"**Последнее желание** или просто **пж**.\n" +
-					"**Истребители прошлого** или просто **ип**.\n" +
-					"**Корона скорби** или просто **кс**.")
+					.WithDescription(AvailableRaids += "\nПример: !сбор пж 17.07.2019-20:00")
 					.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному.");
 				await ReplyAsync(embed: message.Build());
 				return;
 			}
-			DateTime.TryParseExact(raidTime, "d.M.yy-HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
 
-			if (dateTime == new DateTime() || dateTime < DateTime.Now)
+			DateTime.TryParseExact(raidTime, "dd.MM.yyyy-HH:mm", CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
+
+			if (dateTime == new DateTime())
 			{
 				var message = new EmbedBuilder()
 					.WithTitle("Страж, ты указал неизвестный мне формат времени")
-					.WithColor(Color.Red)
+					.WithColor(Color.Gold)
 					.AddField("Я понимаю время начала рейда в таком формате",
 					"Формат времени: **<день>.<месяц>.<год>-<час>:<минута>**\n" +
-					"**День:** от 1 до 31\n" +
-					"**Месяц:** от 1 до 12\n" +
-					"**Год:** последние две цифры, например: 19\n" +
+					"**День:** от 01 до 31\n" +
+					"**Месяц:** от 01 до 12\n" +
+					"**Год:** Например: 2019\n" +
 					"**Час:** от 00 до 23\n" +
-					"**Минута:** от 01 до 59\n" +
-					"В итоге у тебя должно получиться: **20.7.19-20:05**")
-					.WithFooter("Пример: !рейд сбор пж 21.5.18-20:00");
+					"**Минута:** от 00 до 59\n" +
+					"В итоге у тебя должно получиться: **05.07.2019-20:05**")
+					.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
+					.WithFooter("Пример: !сбор пж 21.05.2018-20:00");
+				await ReplyAsync(embed: message.Build());
+				return;
+			}
+			if (dateTime < DateTime.Now)
+			{
+				var message = new EmbedBuilder()
+					.WithColor(Color.Red)
+					.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи в {DateTime.Now.Year - 1000} г. и передай привет моему капитану.");
 				await ReplyAsync(embed: message.Build());
 				return;
 			}
