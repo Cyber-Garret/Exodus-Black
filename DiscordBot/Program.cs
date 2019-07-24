@@ -9,8 +9,11 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
+using Core;
+
 using DiscordBot.Models;
 using DiscordBot.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscordBot
 {
@@ -69,6 +72,7 @@ namespace DiscordBot
 			var services = new ServiceCollection();
 
 			services.AddSingleton(_ => Toml.ReadFile<Configuration>(_config_path));
+			services.AddDbContext<FailsafeContext>(options => options.UseSqlite("Data Source=Neuromatrix.db"));
 			services.AddSingleton<ConfigurationService>();
 			services.AddSingleton<CommandService>();
 			services.AddSingleton<CommandHandlerService>();
