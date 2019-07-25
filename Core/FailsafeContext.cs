@@ -6,18 +6,14 @@ namespace Core
 {
 	public class FailsafeContext : DbContext
 	{
-		public FailsafeContext(DbContextOptions<FailsafeContext> options) : base(options)
-		{
-			Database.EnsureCreated();
-		}
+		public FailsafeContext() { }
 
-		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		//{
-		//	//optionsBuilder.UseSqlite("Data Source=Neuromatrix.db");
-		//	//optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=sa;Password=yNRASo1FjL");
-		//	//optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV;" +
-		//	//	"MultipleActiveResultSets=True");
-		//}
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			//optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=sa;Password=yNRASo1FjL");
+			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV;" +
+				"MultipleActiveResultSets=True");
+		}
 		//Global
 		public DbSet<Gear> Gears { get; set; }
 		public DbSet<Guild> Guilds { get; set; }

@@ -16,15 +16,10 @@ namespace DiscordBot.Services
 	{
 		#region Private fields
 		private readonly DiscordShardedClient _client = Program.Client;
-		readonly FailsafeContext db;
 		private Timer _timer;
 		private Timer _statusTimer;
 		#endregion
 
-		public TimerService(FailsafeContext context)
-		{
-			db = context;
-		}
 		public void Configure()
 		{
 			// Initialize timer for 10 sec.
@@ -97,7 +92,7 @@ namespace DiscordBot.Services
 				.WithCurrentTimestamp();
 			#endregion
 
-			var guilds = await db.Guilds.ToListAsync();
+			var guilds = await FailsafeDbOperations.GetAllGuildsAsync();
 
 			foreach (var guild in guilds)
 			{
@@ -128,7 +123,7 @@ namespace DiscordBot.Services
 			   .WithCurrentTimestamp();
 			#endregion
 
-			var guilds = await db.Guilds.ToListAsync();
+			var guilds = await FailsafeDbOperations.GetAllGuildsAsync();
 
 			foreach (var guild in guilds)
 			{
@@ -152,9 +147,9 @@ namespace DiscordBot.Services
 		{
 			var timer = DateTime.Now.AddMinutes(15);
 
-			using (db)
+			using (FailsafeContext Db = new FailsafeContext())
 			{
-				var query = await db.ActiveRaids.Include(r => r.RaidInfo).Where(d => d.DateExpire > DateTime.Now).OrderBy(o => o.DateExpire).ToListAsync();
+				var query = await Db.ActiveRaids.Include(r => r.RaidInfo).Where(d => d.DateExpire > DateTime.Now).OrderBy(o => o.DateExpire).ToListAsync();
 				if (query.Count > 0)
 				{
 					foreach (var item in query)

@@ -18,11 +18,6 @@ namespace DiscordBot.Modules.Commands
 	[RequireBotPermission(ChannelPermission.SendMessages)]
 	public class MainModule : BotModuleBase
 	{
-		readonly FailsafeContext db;
-		public MainModule(FailsafeContext context)
-		{
-			db = context;
-		}
 		#region Global fields
 		readonly DateTime today = DateTime.Now;
 		static TimeSpan start = new TimeSpan(20, 0, 0);
@@ -145,7 +140,7 @@ namespace DiscordBot.Modules.Commands
 				return;
 			}
 			//Запрашиваем информацию из локальной бд.
-			Gear gear = db.Gears.Where(g => g.Name.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+			Gear gear = FailsafeDbOperations.GetGears(Alias(Input));
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
 			if (gear == null)
 			{
@@ -214,19 +209,9 @@ namespace DiscordBot.Modules.Commands
 				return;
 			}
 			//Запрашиваем информацию из локальной бд.
-			Catalyst CatalystInfo;
-			if (Alias(Input).ToLower() == "любой")
-			{
-				Random r = new Random();
-				int randomId = r.Next(1, db.Catalysts.Count());
-				CatalystInfo = db.Catalysts.Skip(randomId).Take(1).FirstOrDefault();
-			}
-			else
-			{
-				CatalystInfo = db.Catalysts.Where(c => c.WeaponName.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
-			}
+			var Catalyst = FailsafeDbOperations.GetCatalyst(Alias(Input));
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
-			if (CatalystInfo == null)
+			if (Catalyst == null)
 			{
 				Embed.WithDescription(":x: Этой информации в моей базе данных нет. :frowning:");
 				Embed.WithColor(Color.Red);
@@ -236,18 +221,18 @@ namespace DiscordBot.Modules.Commands
 			}
 			#endregion
 
-			Embed.WithTitle("Информация о катализаторе для оружия " + $"{CatalystInfo.WeaponName}");
+			Embed.WithTitle("Информация о катализаторе для оружия " + $"{Catalyst.WeaponName}");
 			Embed.WithColor(Color.Gold);
-			if (!string.IsNullOrWhiteSpace(CatalystInfo.Icon))
-				Embed.WithThumbnailUrl(CatalystInfo.Icon);
-			if (!string.IsNullOrWhiteSpace(CatalystInfo.Description))
-				Embed.WithDescription(CatalystInfo.Description);
-			if (!string.IsNullOrWhiteSpace(CatalystInfo.DropLocation))
-				Embed.AddField("Как получить катализатор", CatalystInfo.DropLocation);
-			if (!string.IsNullOrWhiteSpace(CatalystInfo.Quest))
-				Embed.AddField("Задание катализатора", CatalystInfo.Quest);
-			if (!string.IsNullOrWhiteSpace(CatalystInfo.Masterwork))
-				Embed.AddField("Бонус катализатор", CatalystInfo.Masterwork);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Icon))
+				Embed.WithThumbnailUrl(Catalyst.Icon);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Description))
+				Embed.WithDescription(Catalyst.Description);
+			if (!string.IsNullOrWhiteSpace(Catalyst.DropLocation))
+				Embed.AddField("Как получить катализатор", Catalyst.DropLocation);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Quest))
+				Embed.AddField("Задание катализатора", Catalyst.Quest);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Masterwork))
+				Embed.AddField("Бонус катализатор", Catalyst.Masterwork);
 			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
 			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, Embed.Build());
@@ -282,9 +267,9 @@ namespace DiscordBot.Modules.Commands
 				//Send calculating message because stastic forming near 30-50 sec.
 				var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
 
-				using (db)
+				using (var failsafe = new FailsafeContext())
 				{
-					var destiny2Clan = db.Destiny2Clans.AsNoTracking().Include(m => m.Members).ToList().FirstOrDefault(c => c.Id == GuildId);
+					var destiny2Clan = failsafe.Destiny2Clans.AsNoTracking().Include(m => m.Members).ToList().FirstOrDefault(c => c.Id == GuildId);
 
 					if (destiny2Clan == null)
 					{

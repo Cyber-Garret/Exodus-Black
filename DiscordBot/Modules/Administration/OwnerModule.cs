@@ -18,26 +18,21 @@ namespace DiscordBot.Modules.Administration
 {
 	public class OwnerModule : BotModuleBase
 	{
-		readonly FailsafeContext db;
-		public OwnerModule(FailsafeContext context)
-		{
-			db = context;
-		}
 		#region Functions
 		private static string GetUptime() => (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString(@"dd\.hh\:mm\:ss");
 		private static string GetHeapSize() => Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2).ToString();
 		private bool Destiny2ClanExists(long id)
 		{
-			using (db)
+			using (FailsafeContext context = new FailsafeContext())
 			{
-				return db.Destiny2Clans.Any(c => c.Id == id);
+				return context.Destiny2Clans.Any(c => c.Id == id);
 			}
 		}
 		private bool ProfileExists(string destinyMembershipId)
 		{
-			using (db)
+			using (FailsafeContext failsafeContext = new FailsafeContext())
 			{
-				return db.Destiny2Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
+				return failsafeContext.Destiny2Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
 			}
 		}
 		#endregion
@@ -54,7 +49,7 @@ namespace DiscordBot.Modules.Administration
 					return;
 				}
 				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-				using (db)
+				using (FailsafeContext failsafe = new FailsafeContext())
 				{
 					BungieApi bungie = new BungieApi();
 					var claninfo = bungie.GetGroupResult(ClanId);
@@ -72,8 +67,8 @@ namespace DiscordBot.Modules.Administration
 						};
 
 
-						db.Add(destiny2Clan);
-						await db.SaveChangesAsync();
+						failsafe.Add(destiny2Clan);
+						await failsafe.SaveChangesAsync();
 					}
 					await message.ModifyAsync(m => m.Content = "Готово");
 				}
@@ -96,20 +91,20 @@ namespace DiscordBot.Modules.Administration
 			{
 
 				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-				using (db)
+				using (FailsafeContext failsafeContext = new FailsafeContext())
 				{
-					var members = db.Destiny2Clan_Members.ToList();
+					var members = failsafeContext.Destiny2Clan_Members.ToList();
 					BungieApi bungieApi = new BungieApi();
 					foreach (var item in members)
 					{
 						var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
 
-						var member = db.Destiny2Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
+						var member = failsafeContext.Destiny2Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
 
 						member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
 
-						db.Update(member);
-						await db.SaveChangesAsync();
+						failsafeContext.Update(member);
+						await failsafeContext.SaveChangesAsync();
 					}
 				}
 				await message.ModifyAsync(m => m.Content = "Готово");

@@ -11,13 +11,8 @@ using Core.Models.Db;
 
 namespace DiscordBot
 {
-	internal class FailsafeDbOperations
+	internal static class FailsafeDbOperations
 	{
-		readonly FailsafeContext db;
-		public FailsafeDbOperations(FailsafeContext context)
-		{
-			db = context;
-		}
 		#region Exotics
 
 		/// <summary>
@@ -25,28 +20,28 @@ namespace DiscordBot
 		/// </summary>
 		/// <param name="ItemName">полное или частичное название вещи для поиска в бд.</param>
 		/// <returns>Gear class</returns>
-		internal Gear GetGears(string ItemName)
+		internal static Gear GetGears(string ItemName)
 		{
-			using (db)
+			using (var Context = new FailsafeContext())
 			{
-				Gear gear = db.Gears.Where(g => g.Name.IndexOf(ItemName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+				Gear gear = Context.Gears.Where(g => g.Name.IndexOf(ItemName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
 				return gear;
 			}
 		}
 
-		internal Catalyst GetCatalyst(string name)
+		internal static Catalyst GetCatalyst(string name)
 		{
-			using (db)
+			using (var Db = new FailsafeContext())
 			{
 				if (name.ToLower() == "любой")
 				{
 					Random r = new Random();
-					int randomId = r.Next(1, db.Catalysts.Count());
-					return db.Catalysts.Skip(randomId).Take(1).FirstOrDefault();
+					int randomId = r.Next(1, Db.Catalysts.Count());
+					return Db.Catalysts.Skip(randomId).Take(1).FirstOrDefault();
 				}
 				else
 				{
-					Catalyst catalyst = db.Catalysts.Where(c => c.WeaponName.IndexOf(name, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+					Catalyst catalyst = Db.Catalysts.Where(c => c.WeaponName.IndexOf(name, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
 					return catalyst;
 				}
 			}
@@ -59,11 +54,11 @@ namespace DiscordBot
 		/// Возвращает список всех гильдий.
 		/// </summary>
 		/// <returns>IEnumerable<Guild></returns>
-		internal async Task<IEnumerable<Guild>> GetAllGuildsAsync()
+		internal static async Task<IEnumerable<Guild>> GetAllGuildsAsync()
 		{
-			using (db)
+			using (var Context = new FailsafeContext())
 			{
-				IEnumerable<Guild> guilds = await db.Guilds.ToListAsync();
+				IEnumerable<Guild> guilds = await Context.Guilds.ToListAsync();
 				return guilds;
 			}
 		}
@@ -73,50 +68,50 @@ namespace DiscordBot
 		/// </summary>
 		/// <param name="guildId">Discord SocketGuild Id</param>
 		/// <returns>Guild class</returns>
-		internal async Task<Guild> GetGuildAccountAsync(ulong guildId)
+		internal static async Task<Guild> GetGuildAccountAsync(ulong guildId)
 		{
-			using (db)
+			using (var Context = new FailsafeContext())
 			{
-				if (db.Guilds.Where(G => G.ID == guildId).Count() < 1)
+				if (Context.Guilds.Where(G => G.ID == guildId).Count() < 1)
 				{
 					var newGuild = new Guild
 					{
 						ID = guildId
 					};
 
-					db.Guilds.Add(newGuild);
-					await db.SaveChangesAsync();
+					Context.Guilds.Add(newGuild);
+					await Context.SaveChangesAsync();
 
 					return newGuild;
 				}
 				else
 				{
-					return db.Guilds.SingleOrDefault(G => G.ID == guildId);
+					return Context.Guilds.SingleOrDefault(G => G.ID == guildId);
 				}
 			}
 		}
 
 
-		internal async Task SaveGuildAccountAsync(ulong GuildId, Guild guildAccount)
+		internal static async Task SaveGuildAccountAsync(ulong GuildId, Guild guildAccount)
 		{
 			try
 			{
-				using (db)
+				using (var Context = new FailsafeContext())
 				{
-					if (db.Guilds.Where(G => G.ID == GuildId).Count() < 1)
+					if (Context.Guilds.Where(G => G.ID == GuildId).Count() < 1)
 					{
 						var newGuild = new Guild
 						{
 							ID = GuildId
 						};
 
-						db.Guilds.Add(newGuild);
-						await db.SaveChangesAsync();
+						Context.Guilds.Add(newGuild);
+						await Context.SaveChangesAsync();
 					}
 					else
 					{
-						db.Entry(guildAccount).State = EntityState.Modified;
-						await db.SaveChangesAsync();
+						Context.Entry(guildAccount).State = EntityState.Modified;
+						await Context.SaveChangesAsync();
 					}
 				}
 			}
@@ -127,44 +122,44 @@ namespace DiscordBot
 
 		}
 
-		internal Task SaveWelcomeMessage(ulong GuildId, string value)
+		internal static Task SaveWelcomeMessage(ulong GuildId, string value)
 		{
 
-			using (db)
+			using (var Context = new FailsafeContext())
 			{
-				var GuildData = db.Guilds.First(g => g.ID == GuildId);
+				var GuildData = Context.Guilds.First(g => g.ID == GuildId);
 				GuildData.WelcomeMessage = value;
-				db.Guilds.Update(GuildData);
-				db.SaveChanges();
+				Context.Guilds.Update(GuildData);
+				Context.SaveChanges();
 				return Task.CompletedTask;
 			}
 		}
 		#endregion
 
 		#region Raids
-		internal async Task<RaidInfo> GetRaidInfo(string raidName)
+		internal static async Task<RaidInfo> GetRaidInfo(string raidName)
 		{
-			using (db)
+			using (var Db = new FailsafeContext())
 			{
-				var raid = await db.RaidInfos.Where(r =>
+				var raid = await Db.RaidInfos.Where(r =>
 				r.Name.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
 				r.Alias.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
 				return raid;
 			}
 		}
 
-		internal async Task<IEnumerable<RaidInfo>> GetAllRaidsInfo()
+		internal static async Task<IEnumerable<RaidInfo>> GetAllRaidsInfo()
 		{
-			using (db)
+			using (var Context = new FailsafeContext())
 			{
-				IEnumerable<RaidInfo> raids = await db.RaidInfos.ToListAsync();
+				IEnumerable<RaidInfo> raids = await Context.RaidInfos.ToListAsync();
 				return raids;
 			}
 		}
 
-		internal async Task<ActiveRaid> GetRaidAsync(ulong msgId)
+		internal static async Task<ActiveRaid> GetRaidAsync(ulong msgId)
 		{
-			using (db)
+			using (var Db = new FailsafeContext())
 			{
 				try
 				{
@@ -175,26 +170,26 @@ namespace DiscordBot
 					await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 					throw;
 				}
-				var raid = db.ActiveRaids.Include(r => r.RaidInfo).Where(r => r.MessageId == msgId).FirstOrDefault();
+				var raid = Db.ActiveRaids.Include(r => r.RaidInfo).Where(r => r.MessageId == msgId).FirstOrDefault();
 				return raid;
 			}
 		}
 
-		internal async Task SaveRaidAsync(ActiveRaid raid)
+		internal static async Task SaveRaidAsync(ActiveRaid raid)
 		{
-			using (db)
+			using (var Db = new FailsafeContext())
 			{
 				try
 				{
-					if (db.ActiveRaids.Where(r => r.MessageId == raid.MessageId).Count() < 1)
+					if (Db.ActiveRaids.Where(r => r.MessageId == raid.MessageId).Count() < 1)
 					{
-						db.ActiveRaids.Add(raid);
-						await db.SaveChangesAsync();
+						Db.ActiveRaids.Add(raid);
+						await Db.SaveChangesAsync();
 					}
 					else
 					{
-						db.ActiveRaids.Update(raid);
-						await db.SaveChangesAsync();
+						Db.ActiveRaids.Update(raid);
+						await Db.SaveChangesAsync();
 					}
 				}
 				catch (Exception ex)
