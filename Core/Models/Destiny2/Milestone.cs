@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.Models.Db
+namespace Core.Models.Destiny2
 {
-	public class RaidInfo
+	public class Milestone
 	{
 		[Key]
 		public int Id { get; set; }
@@ -18,6 +18,6 @@ namespace Core.Models.Db
 		[MaxLength(1000)]
 		public string Icon { get; set; }
 
-		public List<ActiveRaid> ActiveRaids { get; set; }
+		public List<ActiveMilestone> ActiveMilestones { get; set; }
 	}
 }

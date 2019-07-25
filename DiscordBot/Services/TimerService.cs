@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Timers;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 using Discord;
 using Discord.WebSocket;
 
 using Core;
-using System.Linq;
-using Core.Models.Db;
-using Microsoft.EntityFrameworkCore;
+using Core.Models.Destiny2;
+using DiscordBot.Services.Bungie;
 
 namespace DiscordBot.Services
 {
@@ -16,26 +17,59 @@ namespace DiscordBot.Services
 	{
 		#region Private fields
 		private readonly DiscordShardedClient _client = Program.Client;
-		private Timer _timer;
-		private Timer _statusTimer;
+		private Timer MainTimer;
+		private Timer GameStatusTimer;
+		private Timer ClanTimer;
+		private Timer MemberTimer;
 		#endregion
 
 		public void Configure()
 		{
-			// Initialize timer for 10 sec.
-			_timer = new Timer(TimeSpan.FromSeconds(10).TotalMilliseconds);
-			_timer.Elapsed += MainTimer;
-			_timer.AutoReset = true;
-			_timer.Enabled = true;
+			MainTimer = new Timer
+			{
+				Enabled = true,
+				AutoReset = true,
+				Interval = TimeSpan.FromSeconds(10).TotalMilliseconds
+			};
+			MainTimer.Elapsed += MainTimer_Elapsed;
 
-			// Initialize timer for 30 sec.
-			_statusTimer = new Timer(TimeSpan.FromSeconds(30).TotalMilliseconds);
-			_statusTimer.Elapsed += ChangeGameStatus;
-			_statusTimer.AutoReset = true;
-			_statusTimer.Enabled = true;
+			GameStatusTimer = new Timer
+			{
+				Enabled = true,
+				AutoReset = true,
+				Interval = TimeSpan.FromSeconds(30).TotalMilliseconds
+			};
+			GameStatusTimer.Elapsed += GameStatus_Elapsed;
+
+			ClanTimer = new Timer
+			{
+				Enabled = true,
+				AutoReset = true,
+				Interval = TimeSpan.FromMinutes(15).TotalMilliseconds
+			};
+			ClanTimer.Elapsed += ClanTimer_Elapsed;
+
+			MemberTimer = new Timer
+			{
+				Enabled = true,
+				AutoReset = true,
+				Interval = TimeSpan.FromHours(1).TotalMilliseconds
+			};
+			MemberTimer.Elapsed += MemberTimer_Elapsed;
 		}
 
-		private async void ChangeGameStatus(object sender, ElapsedEventArgs e)
+		#region Elapsed events
+		private async void MainTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			_ = RaidRemainder();
+			// If signal time equal Friday 20:00 we will send message Xur is arrived in game.
+			if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
+				await XurArrived();
+			// If signal time equal Tuesday 20:00 we will send message Xur is leave game.
+			if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
+				await XurLeave();
+		}
+		private async void GameStatus_Elapsed(object sender, ElapsedEventArgs e)
 		{
 			string[] commands = new string[]
 			{
@@ -67,18 +101,20 @@ namespace DiscordBot.Services
 				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
 			}
 		}
-
-		private async void MainTimer(object sender, ElapsedEventArgs e)
+		private void ClanTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			_ = RaidRemainder();
-			// If signal time equal Friday 20:00 we will send message Xur is arrived in game.
-			if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
-				await XurArrived();
-			// If signal time equal Tuesday 20:00 we will send message Xur is leave game.
-			if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
-				await XurLeave();
+			ClanUpdater updater = new ClanUpdater();
+			updater.UpdateAllClans();
+			updater.ClanMemberCheck();
 		}
+		private void MemberTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			MemberUpdater updater = new MemberUpdater();
+			updater.UpdateMembersLastPlayedTime();
+		}
+		#endregion
 
+		#region Methods
 		private async Task XurArrived()
 		{
 			#region Message
@@ -100,12 +136,12 @@ namespace DiscordBot.Services
 				{
 					try
 					{
-						await _client.GetGuild(guild.ID).GetTextChannel(guild.NotificationChannel)
+						await _client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
 					   .SendMessageAsync(null, false, embed.Build());
 					}
 					catch (Exception ex)
 					{
-						await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+						await Logger.Log(new LogMessage(LogSeverity.Error, "XurArrived", ex.Message, ex));
 					}
 
 				}
@@ -131,25 +167,24 @@ namespace DiscordBot.Services
 				{
 					try
 					{
-						await _client.GetGuild(guild.ID).GetTextChannel(guild.NotificationChannel)
+						await _client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
 					   .SendMessageAsync(null, false, embed.Build());
 					}
 					catch (Exception ex)
 					{
-						await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+						await Logger.Log(new LogMessage(LogSeverity.Error, "XurLeave", ex.Message, ex));
 					}
 
 				}
 			}
 		}
-
 		private async Task RaidRemainder()
 		{
 			var timer = DateTime.Now.AddMinutes(15);
 
 			using (FailsafeContext Db = new FailsafeContext())
 			{
-				var query = await Db.ActiveRaids.Include(r => r.RaidInfo).Where(d => d.DateExpire > DateTime.Now).OrderBy(o => o.DateExpire).ToListAsync();
+				var query = await Db.ActiveMilestones.Include(r => r.Milestone).Where(d => d.DateExpire > DateTime.Now).OrderBy(o => o.DateExpire).ToListAsync();
 				if (query.Count > 0)
 				{
 					foreach (var item in query)
@@ -164,8 +199,7 @@ namespace DiscordBot.Services
 				}
 			}
 		}
-
-		private async Task RaidNotificationAsync(ulong[] userId, ActiveRaid raid)
+		private async Task RaidNotificationAsync(ulong[] userId, ActiveMilestone milestone)
 		{
 			foreach (var item in userId)
 			{
@@ -179,13 +213,13 @@ namespace DiscordBot.Services
 						#region Message
 						EmbedBuilder embed = new EmbedBuilder();
 						embed.WithAuthor($"Доброго времени суток, {User.Username}");
-						embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется {raid.RaidInfo.Type.ToLower()}.");
+						embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется {milestone.Milestone.Type.ToLower()}.");
 						embed.WithColor(Color.DarkMagenta);
-						if (raid.RaidInfo.PreviewDesc != null)
-							embed.WithDescription(raid.RaidInfo.PreviewDesc);
-						embed.WithThumbnailUrl(raid.RaidInfo.Icon);
-						embed.AddField("Заметка от лидера:", raid.Memo);
-						embed.WithFooter($"{raid.RaidInfo.Type}: {raid.RaidInfo.Name}. Сервер: {raid.Guild}");
+						if (milestone.Milestone.PreviewDesc != null)
+							embed.WithDescription(milestone.Milestone.PreviewDesc);
+						embed.WithThumbnailUrl(milestone.Milestone.Icon);
+						embed.AddField("Заметка от лидера:", milestone.Memo);
+						embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {milestone.GuildName}");
 						#endregion
 
 						await Dm.SendMessageAsync(embed: embed.Build());
@@ -200,5 +234,17 @@ namespace DiscordBot.Services
 
 
 		}
+		#endregion
+
+
+
+
+
+
+
+
+
+
+
 	}
 }

@@ -17,12 +17,12 @@ namespace DiscordBot.Modules
 		[Cooldown(10)]
 		public async Task RaidCollection(string raidName, string raidTime, [Remainder]string userMemo = "Лидер не указал какие-либо особенности или требования.")
 		{
-			var raidInfo = await FailsafeDbOperations.GetRaidInfo(raidName);
+			var raidInfo = await FailsafeDbOperations.GetMilestone(raidName);
 
 			if (raidInfo == null)
 			{
 				var AvailableRaids = "Доступные для регистрации активности:\n\n";
-				var info = await FailsafeDbOperations.GetAllRaidsInfo();
+				var info = await FailsafeDbOperations.GetAllMilestones();
 
 				foreach (var item in info)
 				{

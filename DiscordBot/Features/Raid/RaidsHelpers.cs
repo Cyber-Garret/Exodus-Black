@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
-using Core.Models.Db;
+using Core.Models.Destiny2;
 
 namespace DiscordBot.Features.Raid
 {
@@ -15,7 +15,7 @@ namespace DiscordBot.Features.Raid
 		internal static async Task HandleReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
 			//get raid
-			var raid = await FailsafeDbOperations.GetRaidAsync(cache.Id);
+			var raid = await FailsafeDbOperations.GetActiveMilestone(cache.Id);
 
 			if (raid != null)
 			{
@@ -69,7 +69,7 @@ namespace DiscordBot.Features.Raid
 
 		internal static async Task HandleReactionRemoved(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
-			var raid = await FailsafeDbOperations.GetRaidAsync(cache.Id);
+			var raid = await FailsafeDbOperations.GetActiveMilestone(cache.Id);
 
 			if (raid != null)
 			{
@@ -118,57 +118,57 @@ namespace DiscordBot.Features.Raid
 			}
 		}
 
-		internal static async Task<EmbedBuilder> RebuildEmbedAsync(ActiveRaid raid)
+		internal static async Task<EmbedBuilder> RebuildEmbedAsync(ActiveMilestone activeMilestone)
 		{
 			try
 			{
 				EmbedBuilder embed = new EmbedBuilder();
 
-				embed.WithTitle($"{raid.DateExpire.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(raid.DateExpire.DayOfWeek)} в {raid.DateExpire.ToString("HH:mm")} по МСК. {raid.RaidInfo.Type}: {raid.RaidInfo.Name}");
+				embed.WithTitle($"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}");
 				embed.WithColor(Color.DarkMagenta);
-				embed.WithThumbnailUrl(raid.RaidInfo.Icon);
-				if (raid.RaidInfo.PreviewDesc != null)
-					embed.WithDescription(raid.RaidInfo.PreviewDesc);
+				embed.WithThumbnailUrl(activeMilestone.Milestone.Icon);
+				if (activeMilestone.Milestone.PreviewDesc != null)
+					embed.WithDescription(activeMilestone.Milestone.PreviewDesc);
 
-				embed.AddField("Заметка от лидера", raid.Memo);
+				embed.AddField("Заметка от лидера", activeMilestone.Memo);
 
-				embed.AddField("Страж #1", $"{Program.Client.GetUser(raid.User1).Mention} - {Program.Client.GetUser(raid.User1).Username}");
+				embed.AddField("Страж #1", $"{Program.Client.GetUser(activeMilestone.User1).Mention} - {Program.Client.GetUser(activeMilestone.User1).Username}");
 
-				if (raid.User2 != 0)
+				if (activeMilestone.User2 != 0)
 				{
-					var user = Program.Client.GetUser(raid.User2);
+					var user = Program.Client.GetUser(activeMilestone.User2);
 					embed.AddField("Страж #2", $"{user.Mention} - {user.Username}");
 				}
 				else
 					embed.AddField("Страж #2", "Свободно");
 
-				if (raid.User3 != 0)
+				if (activeMilestone.User3 != 0)
 				{
-					var user = Program.Client.GetUser(raid.User3);
+					var user = Program.Client.GetUser(activeMilestone.User3);
 					embed.AddField("Страж #3", $"{user.Mention} - {user.Username}");
 				}
 				else
 					embed.AddField("Страж #3", "Свободно");
 
-				if (raid.User4 != 0)
+				if (activeMilestone.User4 != 0)
 				{
-					var user = Program.Client.GetUser(raid.User4);
+					var user = Program.Client.GetUser(activeMilestone.User4);
 					embed.AddField("Страж #4", $"{user.Mention} - {user.Username}");
 				}
 				else
 					embed.AddField("Страж #4", "Свободно");
 
-				if (raid.User5 != 0)
+				if (activeMilestone.User5 != 0)
 				{
-					var user = Program.Client.GetUser(raid.User5);
+					var user = Program.Client.GetUser(activeMilestone.User5);
 					embed.AddField("Страж #5", $"{user.Mention} - {user.Username}");
 				}
 				else
 					embed.AddField("Страж #5", "Свободно");
 
-				if (raid.User6 != 0)
+				if (activeMilestone.User6 != 0)
 				{
-					var user = Program.Client.GetUser(raid.User6);
+					var user = Program.Client.GetUser(activeMilestone.User6);
 					embed.AddField("Страж #6", $"{user.Mention} - {user.Username}");
 				}
 				else

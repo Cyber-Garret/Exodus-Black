@@ -216,7 +216,7 @@ namespace API.Bungie.Models.Results.GroupV2.GetGroup
 	public partial class UserInfo
 	{
 		[JsonProperty("supplementalDisplayName", NullValueHandling = NullValueHandling.Ignore)]
-		public long? SupplementalDisplayName { get; set; }
+		public string SupplementalDisplayName { get; set; }
 
 		[JsonProperty("iconPath")]
 		public string IconPath { get; set; }

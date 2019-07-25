@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -50,7 +51,11 @@ namespace DiscordBot.Services
 			{
 
 				var cmdSearchResult = _commands.Search(context, argPos);
-				if (cmdSearchResult.Commands.Count == 0) await context.Channel.SendMessageAsync($"{context.User.Mention}, это неизвестная мне команда.");
+				if (cmdSearchResult.Commands == null)
+				{
+					await Logger.Log(new LogMessage(LogSeverity.Warning, "HandleCommand", $"Command {msg.Content} return {cmdSearchResult.Error}"));
+					return;
+				}
 
 				var executionTask = _commands.ExecuteAsync(context, argPos, _services);
 

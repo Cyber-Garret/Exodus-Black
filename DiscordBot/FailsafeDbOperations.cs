@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Discord;
 
 using Core;
-using Core.Models.Db;
+using Core.Models.Discord;
+using Core.Models.Destiny2;
 
 namespace DiscordBot
 {
@@ -72,11 +73,11 @@ namespace DiscordBot
 		{
 			using (var Context = new FailsafeContext())
 			{
-				if (Context.Guilds.Where(G => G.ID == guildId).Count() < 1)
+				if (Context.Guilds.Where(G => G.Id == guildId).Count() < 1)
 				{
 					var newGuild = new Guild
 					{
-						ID = guildId
+						Id = guildId
 					};
 
 					Context.Guilds.Add(newGuild);
@@ -86,7 +87,7 @@ namespace DiscordBot
 				}
 				else
 				{
-					return Context.Guilds.SingleOrDefault(G => G.ID == guildId);
+					return Context.Guilds.SingleOrDefault(G => G.Id == guildId);
 				}
 			}
 		}
@@ -98,11 +99,11 @@ namespace DiscordBot
 			{
 				using (var Context = new FailsafeContext())
 				{
-					if (Context.Guilds.Where(G => G.ID == GuildId).Count() < 1)
+					if (Context.Guilds.Where(G => G.Id == GuildId).Count() < 1)
 					{
 						var newGuild = new Guild
 						{
-							ID = GuildId
+							Id = GuildId
 						};
 
 						Context.Guilds.Add(newGuild);
@@ -127,7 +128,7 @@ namespace DiscordBot
 
 			using (var Context = new FailsafeContext())
 			{
-				var GuildData = Context.Guilds.First(g => g.ID == GuildId);
+				var GuildData = Context.Guilds.First(g => g.Id == GuildId);
 				GuildData.WelcomeMessage = value;
 				Context.Guilds.Update(GuildData);
 				Context.SaveChanges();
@@ -136,65 +137,56 @@ namespace DiscordBot
 		}
 		#endregion
 
-		#region Raids
-		internal static async Task<RaidInfo> GetRaidInfo(string raidName)
+		#region Milestones
+		internal static async Task<Milestone> GetMilestone(string milestoneName)
 		{
 			using (var Db = new FailsafeContext())
 			{
-				var raid = await Db.RaidInfos.Where(r =>
-				r.Name.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
-				r.Alias.IndexOf(raidName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
-				return raid;
+				var milestone = await Db.Milestones.Where(r =>
+				r.Name.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
+				r.Alias.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
+				return milestone;
 			}
 		}
 
-		internal static async Task<IEnumerable<RaidInfo>> GetAllRaidsInfo()
+		internal static async Task<IEnumerable<Milestone>> GetAllMilestones()
 		{
 			using (var Context = new FailsafeContext())
 			{
-				IEnumerable<RaidInfo> raids = await Context.RaidInfos.ToListAsync();
-				return raids;
+				IEnumerable<Milestone> milestones = await Context.Milestones.ToListAsync();
+				return milestones;
 			}
 		}
 
-		internal static async Task<ActiveRaid> GetRaidAsync(ulong msgId)
+		internal static async Task<ActiveMilestone> GetActiveMilestone(ulong msgId)
+		{
+			using (var Db = new FailsafeContext())
+			{
+				ActiveMilestone activeMilestone = await Db.ActiveMilestones.Include(r => r.Milestone).Where(r => r.MessageId == msgId).FirstOrDefaultAsync();
+				return activeMilestone;
+			}
+		}
+
+		internal static async Task SaveActiveMilestone(ActiveMilestone activeMilestone)
 		{
 			using (var Db = new FailsafeContext())
 			{
 				try
 				{
-
-				}
-				catch (Exception ex)
-				{
-					await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
-					throw;
-				}
-				var raid = Db.ActiveRaids.Include(r => r.RaidInfo).Where(r => r.MessageId == msgId).FirstOrDefault();
-				return raid;
-			}
-		}
-
-		internal static async Task SaveRaidAsync(ActiveRaid raid)
-		{
-			using (var Db = new FailsafeContext())
-			{
-				try
-				{
-					if (Db.ActiveRaids.Where(r => r.MessageId == raid.MessageId).Count() < 1)
+					if (Db.ActiveMilestones.Where(r => r.MessageId == activeMilestone.MessageId).Count() < 1)
 					{
-						Db.ActiveRaids.Add(raid);
+						Db.ActiveMilestones.Add(activeMilestone);
 						await Db.SaveChangesAsync();
 					}
 					else
 					{
-						Db.ActiveRaids.Update(raid);
+						Db.ActiveMilestones.Update(activeMilestone);
 						await Db.SaveChangesAsync();
 					}
 				}
 				catch (Exception ex)
 				{
-					await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+					await Logger.Log(new LogMessage(LogSeverity.Error, "SaveActiveMilestone", ex.Message, ex));
 				}
 			}
 		}

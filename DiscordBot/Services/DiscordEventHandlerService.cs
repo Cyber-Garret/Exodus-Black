@@ -123,7 +123,7 @@ namespace DiscordBot.Services
 				var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
@@ -166,7 +166,7 @@ namespace DiscordBot.Services
 					var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIguildChannel.Guild.Id).Result;
 					if (guild.EnableLogging == true)
 					{
-						await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -219,7 +219,7 @@ namespace DiscordBot.Services
 
 					if (guild.EnableLogging == true)
 					{
-						await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -270,7 +270,7 @@ namespace DiscordBot.Services
 
 					if (guild.EnableLogging == true)
 					{
-						await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -372,7 +372,7 @@ namespace DiscordBot.Services
 					if (guild.EnableLogging == true)
 					{
 
-						await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -438,7 +438,7 @@ namespace DiscordBot.Services
 					if (guild.EnableLogging == true)
 					{
 
-						await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embedDel.Build());
 					}
 
@@ -475,7 +475,7 @@ namespace DiscordBot.Services
 
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
@@ -512,7 +512,7 @@ namespace DiscordBot.Services
 
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
@@ -597,7 +597,7 @@ namespace DiscordBot.Services
 				var guild = (await FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id));
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.ID).GetTextChannel(guild.LoggingChannel)
+					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}

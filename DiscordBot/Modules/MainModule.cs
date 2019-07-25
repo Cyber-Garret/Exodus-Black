@@ -10,7 +10,7 @@ using Discord.Commands;
 using DiscordBot.Preconditions;
 
 using Core;
-using Core.Models.Db;
+using Core.Models.Destiny2;
 
 namespace DiscordBot.Modules.Commands
 {
@@ -161,7 +161,7 @@ namespace DiscordBot.Modules.Commands
 			if (gear.isWeapon)
 			{
 				//Если в бд отмечено что оружие имеет катализатор добавляем несколько полей.
-				if (gear.Catalyst)
+				if (gear.isHaveCatalyst)
 				{
 					embed.AddField("Катализатор:", "**Есть**");
 				}
@@ -171,10 +171,10 @@ namespace DiscordBot.Modules.Commands
 				}
 			}
 			//Экзотическое свойство.
-			embed.AddField(gear.PerkName, gear.PerkDescription, true);
+			embed.AddField(gear.Perk, gear.PerkDescription, true);
 			//Второе уникальное или не очень свойство.
-			if (gear.SecondPerkName != null && gear.SecondPerkDescription != null)
-				embed.AddField(gear.SecondPerkName, gear.SecondPerkDescription, true);
+			if (gear.SecondPerk != null && gear.SecondPerkDescription != null)
+				embed.AddField(gear.SecondPerk, gear.SecondPerkDescription, true);
 			//Информация о том как получить снаряжение.
 			embed.AddField("Как получить:", gear.DropLocation, true);
 			//Скриншот снаряжения.
@@ -229,10 +229,10 @@ namespace DiscordBot.Modules.Commands
 				Embed.WithDescription(Catalyst.Description);
 			if (!string.IsNullOrWhiteSpace(Catalyst.DropLocation))
 				Embed.AddField("Как получить катализатор", Catalyst.DropLocation);
-			if (!string.IsNullOrWhiteSpace(Catalyst.Quest))
-				Embed.AddField("Задание катализатора", Catalyst.Quest);
 			if (!string.IsNullOrWhiteSpace(Catalyst.Masterwork))
-				Embed.AddField("Бонус катализатор", Catalyst.Masterwork);
+				Embed.AddField("Задание катализатора", Catalyst.Masterwork);
+			if (!string.IsNullOrWhiteSpace(Catalyst.Bonus))
+				Embed.AddField("Бонус катализатор", Catalyst.Bonus);
 			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
 			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, Embed.Build());
@@ -269,7 +269,7 @@ namespace DiscordBot.Modules.Commands
 
 				using (var failsafe = new FailsafeContext())
 				{
-					var destiny2Clan = failsafe.Destiny2Clans.AsNoTracking().Include(m => m.Members).ToList().FirstOrDefault(c => c.Id == GuildId);
+					var destiny2Clan = failsafe.Clans.AsNoTracking().Include(m => m.Members).ToList().FirstOrDefault(c => c.Id == GuildId);
 
 					if (destiny2Clan == null)
 					{

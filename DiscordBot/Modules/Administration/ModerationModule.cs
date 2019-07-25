@@ -7,7 +7,7 @@ using Discord;
 using Discord.Commands;
 
 using Core;
-using Core.Models.Db;
+using Core.Models.Discord;
 
 using DiscordBot.Helpers;
 using DiscordBot.Extensions;
