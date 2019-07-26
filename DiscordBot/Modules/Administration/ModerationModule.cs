@@ -32,7 +32,7 @@ namespace DiscordBot.Modules.Administration
 		}
 		#endregion
 
-		[Command("Клан")]
+		[Command("клан")]
 		[Summary("Информационная справка о доступных командах администраторам клана.")]
 		public async Task GuildInfo()
 		{
@@ -59,7 +59,7 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync(null, false, embed.Build());
 		}
 
-		[Command("Клан инфо")]
+		[Command("клан инфо")]
 		[Summary("Отображает все настройки бота в гильдии где была вызвана комманда.")]
 		public async Task GetGuildConfig()
 		{
@@ -101,7 +101,7 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync(null, false, embed.Build());
 		}
 
-		[Command("Клан новости")]
+		[Command("клан новости")]
 		[Summary("Сохраняет ID канала для использования в новостных сообщениях.")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		public async Task SetNotificationChannel()
@@ -144,7 +144,7 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("Клан логи")]
+		[Command("клан логи")]
 		[Summary("Сохраняет ID канала для использования в тех сообщениях.")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		public async Task SetLogChannel()
@@ -187,7 +187,7 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("Логи статус")]
+		[Command("логи статус")]
 		[Summary("Вкл. или Выкл. тех. сообщения.")]
 		public async Task ToggleLogging()
 		{
@@ -228,7 +228,7 @@ namespace DiscordBot.Modules.Administration
 
 		}
 
-		[Command("Новости статус")]
+		[Command("новости статус")]
 		[Summary("Включает или выключает новости о зуре")]
 		public async Task ToggleNews()
 		{
@@ -268,7 +268,7 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("Посмотреть приветствие")]
+		[Command("посмотреть приветствие")]
 		[Summary("Команда предпросмотра приветственного сообщения")]
 		public async Task WelcomeMessagePreview()
 		{
@@ -284,7 +284,7 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.", embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build());
 		}
 
-		[Command("Сохранить приветствие")]
+		[Command("сохранить приветствие")]
 		[Summary("Сохраняет сообщение для отправки всем кто пришел в гильдию")]
 		public async Task SaveWelcomeMessage([Remainder]string message)
 		{
@@ -344,7 +344,7 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("Автороль")]
+		[Command("автороль")]
 		[Summary("Автоматически добавляет роль всем новым пользователям")]
 		[RequireBotPermission(GuildPermission.ManageRoles)]
 		public async Task AutoRoleRoleAdd(IRole _role)
