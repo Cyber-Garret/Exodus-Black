@@ -35,7 +35,8 @@ namespace DiscordBot.Features.Raid
 			embed.WithThumbnailUrl(milestone.Icon);
 			if (milestone.PreviewDesc != null)
 				embed.WithDescription(milestone.PreviewDesc);
-			embed.AddField("Заметка от лидера", userMemo);
+			if (userMemo != null)
+				embed.AddField("Заметка от лидера", userMemo);
 			embed.AddField("Страж #1", $"{user.Mention} - {user.Username}");
 			embed.AddField("Страж #2", "Свободно");
 			embed.AddField("Страж #3", "Свободно");

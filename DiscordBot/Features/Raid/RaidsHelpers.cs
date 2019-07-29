@@ -130,7 +130,8 @@ namespace DiscordBot.Features.Raid
 				if (activeMilestone.Milestone.PreviewDesc != null)
 					embed.WithDescription(activeMilestone.Milestone.PreviewDesc);
 
-				embed.AddField("Заметка от лидера", activeMilestone.Memo);
+				if (activeMilestone.Memo != null)
+					embed.AddField("Заметка от лидера", activeMilestone.Memo);
 
 				embed.AddField("Страж #1", $"{Program.Client.GetUser(activeMilestone.User1).Mention} - {Program.Client.GetUser(activeMilestone.User1).Username}");
 
@@ -180,7 +181,7 @@ namespace DiscordBot.Features.Raid
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Critical, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "RebuildEmbedAsync", ex.Message, ex));
 				return new EmbedBuilder();
 			}
 

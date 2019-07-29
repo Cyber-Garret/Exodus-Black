@@ -143,7 +143,7 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync(null, false, embed.Build());
 		}
 
-		[Command("очистить")]
+		[Command("clean")]
 		[Summary("Удаляет заданное количество сообщений где была вызвана команда.")]
 		[RequireOwner]
 		[RequireBotPermission(ChannelPermission.ManageMessages)]
@@ -157,7 +157,7 @@ namespace DiscordBot.Modules.Administration
 					return;
 				foreach (var item in messages)
 				{
-					await Task.Delay(1000);
+					await Task.Delay(500);
 					await (Context.Channel as ITextChannel).DeleteMessageAsync(item.Id);
 				}
 				//await (Context.Channel as ITextChannel).DeleteMessagesAsync(messages);

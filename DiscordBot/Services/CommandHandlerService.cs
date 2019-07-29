@@ -44,10 +44,19 @@ namespace DiscordBot.Services
 			// Ignore all bots
 			if (context.User.IsBot) return;
 
+			string prefix;
+			if (!context.IsPrivate)
+			{
+				var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
+				prefix = config.CommandPrefix ?? "!";
+			}
+			else
+				prefix = "!";
+			
 
 			var argPos = 0;
 			// Ignore if not mention this bot or command not start from char !
-			if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos) || msg.HasCharPrefix('!', ref argPos))) return;
+			if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos) || msg.HasStringPrefix(prefix, ref argPos))) return;
 			{
 
 				var cmdSearchResult = _commands.Search(context, argPos);

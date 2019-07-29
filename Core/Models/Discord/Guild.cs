@@ -14,5 +14,6 @@ namespace Core.Models.Discord
 		public string WelcomeMessage { get; set; }
 		public string LeaveMessage { get; set; }
 		public ulong AutoroleID { get; set; } = 0;
+		public string CommandPrefix { get; set; }
 	}
 }

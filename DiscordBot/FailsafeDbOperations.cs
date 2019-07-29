@@ -14,40 +14,6 @@ namespace DiscordBot
 {
 	internal static class FailsafeDbOperations
 	{
-		#region Exotics
-
-		/// <summary>
-		/// Поиск экзотического снаряжения в БД по названию вещи.
-		/// </summary>
-		/// <param name="ItemName">полное или частичное название вещи для поиска в бд.</param>
-		/// <returns>Gear class</returns>
-		internal static Gear GetGears(string ItemName)
-		{
-			using (var Context = new FailsafeContext())
-			{
-				Gear gear = Context.Gears.Where(g => g.Name.IndexOf(ItemName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
-				return gear;
-			}
-		}
-
-		internal static Catalyst GetCatalyst(string name)
-		{
-			using (var Db = new FailsafeContext())
-			{
-				if (name.ToLower() == "любой")
-				{
-					Random r = new Random();
-					int randomId = r.Next(1, Db.Catalysts.Count());
-					return Db.Catalysts.Skip(randomId).Take(1).FirstOrDefault();
-				}
-				else
-				{
-					Catalyst catalyst = Db.Catalysts.Where(c => c.WeaponName.IndexOf(name, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
-					return catalyst;
-				}
-			}
-		}
-		#endregion
 
 		#region Guilds
 

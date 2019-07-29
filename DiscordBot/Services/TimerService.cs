@@ -121,11 +121,11 @@ namespace DiscordBot.Services
 			var embed = new EmbedBuilder()
 				.WithColor(Color.Orange)
 				.WithTitle("Стражи! Зур прибыл в солнечную систему!")
-				.WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
-				.WithDescription("Нажмите на заголовок сообщения чтобы узнать точное местоположение посланника Зура.")
-				.WithUrl("https://whereisxur.com/")
-				.WithFooter("Напоминаю! Зур покинет солнечную систему во вторник в 20:00 по МСК.")
-				.WithCurrentTimestamp();
+				.WithThumbnailUrl("https://i.imgur.com/sFZZlwF.png")
+				.WithDescription("Мои алгоритмы глобального позиционирования пока еще в разработке потому определить точное местоположение Зур-а я не могу.\n" +
+					"[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)\n" +
+					"[Или тут](https://ftw.in/game/destiny-2/find-xur)")
+				.WithFooter("Напоминаю! Зур покинет солнечную систему во вторник в 20:00 по МСК.");
 			#endregion
 
 			var guilds = await FailsafeDbOperations.GetAllGuildsAsync();
@@ -153,10 +153,9 @@ namespace DiscordBot.Services
 			var embed = new EmbedBuilder()
 			   .WithColor(Color.Red)
 			   .WithTitle("Внимание! Зур покинул солнечную систему.")
-			   .WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
+			   .WithThumbnailUrl("https://i.imgur.com/sFZZlwF.png")
 			   .WithDescription("Он просто испарился! Как только он придёт я сообщу.")
-			   .WithFooter("Напоминаю! В следующий раз Зур прибудет в пятницу в 20:00 по МСК.")
-			   .WithCurrentTimestamp();
+			   .WithFooter("Напоминаю! В следующий раз Зур прибудет в пятницу в 20:00 по МСК.");
 			#endregion
 
 			var guilds = await FailsafeDbOperations.GetAllGuildsAsync();

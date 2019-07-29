@@ -31,7 +31,6 @@ namespace DiscordBot.Modules.Commands
 		readonly FailsafeContext db;
 		readonly CommandService commandService;
 		#endregion
-		#region Functions
 		string Alias(string name)
 		{
 			if (name == "дарси")
@@ -47,7 +46,6 @@ namespace DiscordBot.Modules.Commands
 			else
 				return name;
 		}
-		#endregion
 
 		public MainModule(FailsafeContext context, CommandService command)
 		{
@@ -60,6 +58,7 @@ namespace DiscordBot.Modules.Commands
 		public async Task MainHelp()
 		{
 			List<CommandInfo> commands = commandService.Commands.ToList();
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			EmbedBuilder embedBuilder = new EmbedBuilder();
 			var app = await Program.Client.GetApplicationInfoAsync();
@@ -74,9 +73,9 @@ namespace DiscordBot.Modules.Commands
 			foreach (CommandInfo command in commands)
 			{
 				if (command.Module.Name == typeof(MainModule).Name)
-					mainCommands += $"!{command.Name}, ";
+					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
-					adminCommands += $"!{command.Name}, ";
+					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 
 			}
 
@@ -87,6 +86,8 @@ namespace DiscordBot.Modules.Commands
 		}
 
 		[Command("инфо")]
+		[Summary("Отображает полную информацию о команде.")]
+		[Remarks("Пример: !инфо <команда>, например !инфо клан статус")]
 		public async Task Info([Remainder] string searchCommand = null)
 		{
 			if (searchCommand == null)
@@ -101,28 +102,33 @@ namespace DiscordBot.Modules.Commands
 				return;
 			}
 			var embed = new EmbedBuilder();
+
+			var guild = await db.Guilds.AsNoTracking().FirstOrDefaultAsync(g => g.Id == Context.Guild.Id);
+
 			embed.WithAuthor(Program.Client.CurrentUser);
 			embed.WithTitle($"Информация о команде: {command.Name}");
+			embed.WithColor(Color.Gold);
 			embed.WithDescription(command.Summary ?? "Команда без описания.");
-
+			// First alias always command atribute
 			if (command.Aliases.Count > 1)
 			{
 				string alias = string.Empty;
-
-				foreach (var item in command.Aliases)
+				//Skip command atribute
+				foreach (var item in command.Aliases.Skip(1))
 				{
-					alias += $"!{item}, ";
+					alias += $"{guild.CommandPrefix ?? "!"}{item}, ";
 				}
 				embed.AddField("Синонимы команды:", alias.Substring(0, alias.Length - 2));
 			}
 			if (command.Remarks != null)
-				embed.AddField("Пример команды:", command.Remarks);
+				embed.AddField("Заметка:", command.Remarks);
 
 			await ReplyAsync(embed: embed.Build());
 		}
 
 		[Command("зур")]
 		[Summary("Отвечает в данный момент Зур в системе или нет, если да, то отображает ссылки на сторонние ресурсы с его расположением и ассортиментом.")]
+		[Remarks("Пример: !зур, префикс команды может отличаться от стандартного.")]
 		public async Task XurCommand()
 		{
 
@@ -164,46 +170,60 @@ namespace DiscordBot.Modules.Commands
 			}
 			#endregion
 
+			EmbedBuilder Embed = new EmbedBuilder()
+				.WithThumbnailUrl("https://i.imgur.com/sFZZlwF.png");
+
 			if (today >= fridayStartCheck && today <= tuesdayEndCheck)
 			{
-				EmbedBuilder Embed = new EmbedBuilder()
-					.WithColor(Color.Gold)
+
+				Embed.WithColor(Color.Gold)
 					.WithTitle($"Уважаемый пользователь {Context.User}")
-					.WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
 					.WithDescription("По моим данным Зур в данный момент в пределах солнечной системы, но\n" +
-					"так как мои алгоритмы глобального позиционирования пока еще в разработке, определить точное положение я не могу.\n" +
+					"так как мои алгоритмы глобального позиционирования пока еще в разработке, определить его точное местоположение я не могу.\n" +
 					"[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)\n" +
 					"[Или тут](https://ftw.in/game/destiny-2/find-xur)")
 					.WithFooter("Напоминаю! Зур покинет пределы солнечной системы во вторник 20:00 по МСК.");
-				await Context.Channel.SendMessageAsync("", false, Embed.Build());
+
 			}
 			else
 			{
-				EmbedBuilder Embed = new EmbedBuilder()
-					.WithColor(Color.Red)
+				Embed.WithColor(Color.Red)
+					.WithTitle($"Уважаемый пользователь {Context.User}")
 					.WithDescription("По моим данным Зур не в пределах солнечной системы.")
-					.WithThumbnailUrl("http://neira.link/img/Xur_emblem.png")
 					.WithFooter("Зур прибудет в пятницу 20:00 по МСК. Я сообщу.");
-				await Context.Channel.SendMessageAsync("", false, Embed.Build());
 			}
+			await ReplyAsync(embed: Embed.Build());
 		}
 
 		[Command("экзот")]
+		[Summary("Отображает информацию о экзотическом снаряжении. Ищет как по полному названию, так и частичному.")]
+		[Remarks("Пример: !экзот буря")]
 		public async Task Exotic([Remainder]string Input = null)
 		{
 			#region Checks
-			//Проверяем ввел ли пользователь параметры для поиска.
 			if (Input == null)
 			{
-				await Context.Channel.SendMessageAsync(":x: Пожалуйста, введите полное или частичное название экзотического снаряжения.");
+				await ReplyAsync(":x: Пожалуйста, введите полное или частичное название экзотического снаряжения.");
 				return;
 			}
-			//Запрашиваем информацию из локальной бд.
-			Gear gear = FailsafeDbOperations.GetGears(Alias(Input));
-			//Если бд вернула null сообщаем пользователю что ничего не нашли.
+
+			Gear gear = null;
+
+			//Get random Exotic gear
+			if (Input.ToLower() == "любой")
+			{
+				Random r = new Random();
+				int randomId = r.Next(1, db.Gears.Count());
+				gear = db.Gears.AsNoTracking().Skip(randomId).Take(1).FirstOrDefault();
+			}
+			else
+			{
+				gear = db.Gears.AsNoTracking().Where(c => c.Name.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+			}
+			//If not found gear by user input
 			if (gear == null)
 			{
-				await Context.Channel.SendMessageAsync(":x: Этой информации в моей базе данных нет. :frowning:");
+				await ReplyAsync(":x: Этой информации в моей базе данных нет. :frowning:");
 				return;
 			}
 			#endregion
@@ -211,90 +231,86 @@ namespace DiscordBot.Modules.Commands
 			EmbedBuilder embed = new EmbedBuilder();
 
 			embed.WithColor(Color.Gold);
-			//Тип снаряжение и его имя.
-			embed.WithTitle(gear.Type + " - " + gear.Name);
-			//Иконка снаряжения.
-			embed.WithThumbnailUrl(gear.IconUrl);
-			//Краткая история снаряжения.
-			embed.WithDescription(gear.Description);
-			if (gear.isWeapon)
+			embed.WithTitle(gear.Type + " - " + gear.Name);//Exotic type and Name
+			embed.WithThumbnailUrl(gear.IconUrl);//Icon
+			embed.WithDescription(gear.Description);//Lore
+			if (gear.isWeapon)//Only weapon can have catalyst
 			{
-				//Если в бд отмечено что оружие имеет катализатор добавляем несколько полей.
-				if (gear.isHaveCatalyst)
-				{
-					embed.AddField("Катализатор:", "**Есть**");
-				}
-				else
-				{
-					embed.AddField("Катализатор:", "**Отсутствует**");
-				}
+				embed.AddField("Катализатор", gear.isHaveCatalyst == true ? "**Есть**" : "**Отсутствует**");
 			}
-			//Экзотическое свойство.
-			embed.AddField(gear.Perk, gear.PerkDescription, true);
-			//Второе уникальное или не очень свойство.
-			if (gear.SecondPerk != null && gear.SecondPerkDescription != null)
+			embed.AddField(gear.Perk, gear.PerkDescription, true);//Main Exotic perk
+			if (gear.SecondPerk != null && gear.SecondPerkDescription != null)//Second perk if have.
 				embed.AddField(gear.SecondPerk, gear.SecondPerkDescription, true);
-			//Информация о том как получить снаряжение.
-			embed.AddField("Как получить:", gear.DropLocation, true);
-			//Скриншот снаряжения.
-			embed.WithImageUrl(gear.ImageUrl);
+			embed.AddField("Как получить:", gear.DropLocation, true);//How to obtain this exotic gear
+			embed.WithImageUrl(gear.ImageUrl);//Exotic screenshot
 
-			var app = await Context.Client.GetApplicationInfoAsync();
-			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", "https://bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png");
+			var app = await Context.Client.GetApplicationInfoAsync();//Get some bot info from discord api
+			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", "https://www.bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png");
 
 
 			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, embed.Build());
 		}
 
 		[Command("катализатор")]
-		[Summary("Выводит информацию об известных катализаторах.")]
-		public async Task Catalyst([Remainder]string Input = null)
+		[Summary("Отображает информацию о катализаторе для оружия.")]
+		[Remarks("Пример: !катализатор мида")]
+		public async Task GetCatalyst([Remainder]string Input = null)
 		{
 			var app = await Program.Client.GetApplicationInfoAsync();
 			var Embed = new EmbedBuilder();
 			#region Checks
-			//Проверяем ввел ли пользователь параметры для поиска.
+			//check user input
 			if (Input == null)
 			{
 				Embed.WithAuthor("Добро пожаловать в базу данных катализаторов экзотического оружия Нейроматрицы");
 				Embed.WithThumbnailUrl("https://bungie.net/common/destiny2_content/icons/d8acfda580e28f7765dd6a813394c847.png");
 				Embed.WithDescription("Для того чтобы найти информацию о нужном тебе катализаторе теперь достаточно написать `!катализатор мида` и я сразу отображу что я о нем знаю.\n" +
 					"А еще ты можешь написать `!катализатор любой` и я выдам тебе случайный катализатор.");
-				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](http://neira.link/Catalysts).");
+				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://vk.com/topic-184785875_40234113).");
 				Embed.WithColor(Color.Blue);
 				Embed.WithFooter($"Если нашли какие либо неточности или у вас есть предложения, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
-				await Context.Channel.SendMessageAsync(null, false, Embed.Build());
+				await ReplyAsync(embed: Embed.Build());
 				return;
 			}
-			//Запрашиваем информацию из локальной бд.
-			var Catalyst = FailsafeDbOperations.GetCatalyst(Alias(Input));
+			Catalyst catalyst = null;
+			//Get random catalyst
+			if (Input.ToLower() == "любой")
+			{
+				Random r = new Random();
+				int randomId = r.Next(1, db.Catalysts.Count());
+				catalyst = db.Catalysts.AsNoTracking().Skip(randomId).Take(1).FirstOrDefault();
+			}
+			else
+			{
+				catalyst = db.Catalysts.AsNoTracking().Where(c => c.WeaponName.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
+			}
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
-			if (Catalyst == null)
+			if (catalyst == null)
 			{
 				Embed.WithDescription(":x: Этой информации в моей базе данных нет. :frowning:");
 				Embed.WithColor(Color.Red);
-				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](http://neira.link/Catalysts).");
+				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://vk.com/topic-184785875_40234113).");
 				await Context.Channel.SendMessageAsync(null, false, Embed.Build());
 				return;
 			}
 			#endregion
 
-			Embed.WithTitle("Информация о катализаторе для оружия " + $"{Catalyst.WeaponName}");
+			Embed.WithTitle("Информация о катализаторе для оружия " + $"{catalyst.WeaponName}");
 			Embed.WithColor(Color.Gold);
-			if (!string.IsNullOrWhiteSpace(Catalyst.Icon))
-				Embed.WithThumbnailUrl(Catalyst.Icon);
-			if (!string.IsNullOrWhiteSpace(Catalyst.Description))
-				Embed.WithDescription(Catalyst.Description);
-			if (!string.IsNullOrWhiteSpace(Catalyst.DropLocation))
-				Embed.AddField("Как получить катализатор", Catalyst.DropLocation);
-			if (!string.IsNullOrWhiteSpace(Catalyst.Masterwork))
-				Embed.AddField("Задание катализатора", Catalyst.Masterwork);
-			if (!string.IsNullOrWhiteSpace(Catalyst.Bonus))
-				Embed.AddField("Бонус катализатор", Catalyst.Bonus);
+			if (!string.IsNullOrWhiteSpace(catalyst.Icon))
+				Embed.WithThumbnailUrl(catalyst.Icon);
+			if (!string.IsNullOrWhiteSpace(catalyst.Description))
+				Embed.WithDescription(catalyst.Description);
+			if (!string.IsNullOrWhiteSpace(catalyst.DropLocation))
+				Embed.AddField("Как получить катализатор", catalyst.DropLocation);
+			if (!string.IsNullOrWhiteSpace(catalyst.Masterwork))
+				Embed.AddField("Задание катализатора", catalyst.Masterwork);
+			if (!string.IsNullOrWhiteSpace(catalyst.Bonus))
+				Embed.AddField("Бонус катализатор", catalyst.Bonus);
 			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
-			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, Embed.Build());
+			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", false, Embed.Build());
 		}
 
 		[Command("респект"), Alias("помощь", "донат")]
@@ -311,9 +327,11 @@ namespace DiscordBot.Modules.Commands
 		}
 
 		[Command("сбор")]
+		[Summary("Команда для анонса активностей.")]
+		[Remarks("Пример: !сбор <Название> <Дата и время начала активности> <Заметка лидера(Не обязательно)>, например !сбор пн 17.07.2019-20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
 		[Cooldown(10)]
-		public async Task RaidCollection(string raidName, string raidTime, [Remainder]string userMemo = "Лидер не указал какие-либо особенности или требования.")
+		public async Task RaidCollection(string raidName, string raidTime, [Remainder]string userMemo = null)
 		{
 			var raidInfo = await FailsafeDbOperations.GetMilestone(raidName);
 
@@ -365,10 +383,7 @@ namespace DiscordBot.Modules.Commands
 				return;
 			}
 
-			//if (string.IsNullOrWhiteSpace(userMemo))
-			//	userMemo = "**Рейд-лидер не указал какие-либо особенности или требования.**";
-
-			var msg = await Context.Channel.SendMessageAsync(text: "@everyone", embed: RaidsCore.StartRaidEmbed(Context.User, raidInfo, dateTime, userMemo).Build());
+			var msg = await Context.Channel.SendMessageAsync(text: "@here", embed: RaidsCore.StartRaidEmbed(Context.User, raidInfo, dateTime, userMemo).Build());
 			await RaidsCore.RegisterRaidAsync(msg.Id, Context.Guild.Name, Context.User.Id, raidInfo.Id, dateTime, userMemo);
 			//Slots
 			await msg.AddReactionAsync(RaidsCore.ReactOptions["2"]);
@@ -380,7 +395,8 @@ namespace DiscordBot.Modules.Commands
 		}
 
 		[Command("клан статус")]
-		[Summary("Возвращает результат онлайна соклановцев заданой гильдии")]
+		[Summary("Отображает отсортированный онлайн Destiny 2 клана, зарегистрированного в базе данных моим создателем.")]
+		[Remarks("Пример: !клан статус <ID клана>, например !клан статус 3772661 или введите !клан статус без ID для отображения как добавить клан.")]
 		public async Task GetGuildInfo(int GuildId = 0)
 		{
 			try
@@ -396,12 +412,12 @@ namespace DiscordBot.Modules.Commands
 						$"Чтобы узнать ID, достаточно открыть любой клан на сайте Bungie.\nНапример: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n" +
 						$"Синтаксис команды простой: **!клан статус 3526561**\n");
 					embed.AddField("Кэш данных о клане Destiny 2",
-						"Если ты желаешь, чтобы я начала обновлять данные о клане которого нет [тут](http://neira.link/Clan).\n" +
-						$"Напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
+						"Если ты желаешь, чтобы я начала обновлять и отображать актуальные данные о твоем клане,\n" +
+						$"напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
 						"Только так я могу оперативно отображать данные о твоих стражах.\n");
 					embed.WithFooter("Ты можешь посетить Черный исход по ссылке в описании и получать любую оперативную помощь и информацию от моего создателя.");
 
-					await Context.Channel.SendMessageAsync(null, false, embed.Build());
+					await ReplyAsync(embed: embed.Build());
 					return;
 				}
 				#endregion
@@ -414,7 +430,7 @@ namespace DiscordBot.Modules.Commands
 
 					if (destiny2Clan == null)
 					{
-						await Context.Channel.SendMessageAsync(":x: Этой информации в моей базе данных нет. :frowning:");
+						await ReplyAsync(":x: Этой информации в моей базе данных нет. :frowning:");
 						return;
 					}
 
@@ -423,7 +439,7 @@ namespace DiscordBot.Modules.Commands
 					embed.WithTitle($"Онлайн статус стражей клана {destiny2Clan.Name}");
 					embed.WithColor(Color.Orange);
 					////Bungie Clan link
-					embed.WithUrl($"http://neira.link/Clan/Details/{GuildId}");
+					embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={GuildId}");
 					////Some clan main info
 					embed.WithDescription(
 						$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
@@ -490,9 +506,9 @@ namespace DiscordBot.Modules.Commands
 					if (!string.IsNullOrEmpty(NoData))
 						embed.AddField("Нет данных", NoData);
 					//Simple footer with clan name
-					embed.WithFooter($"Данные об онлайне стражей обновляються раз в 1 час.");
+					embed.WithFooter($"Данные об онлайне стражей обновляються раз в час. Информация о клане и его составе раз в 15 минут.");
 					//Mention user with ready statistic
-					await Context.Channel.SendMessageAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", false, embed.Build());
+					await ReplyAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", false, embed.Build());
 
 					//Delete message from start this command
 					await Context.Channel.DeleteMessageAsync(message);
@@ -500,8 +516,7 @@ namespace DiscordBot.Modules.Commands
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
-				Console.WriteLine(ex.ToString());
+				await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message, ex));
 			}
 		}
 	}
