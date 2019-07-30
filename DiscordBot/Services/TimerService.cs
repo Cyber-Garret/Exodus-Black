@@ -193,6 +193,10 @@ namespace DiscordBot.Services
 							ulong[] users = { item.User1, item.User2, item.User3, item.User4, item.User5, item.User6 };
 
 							await RaidNotificationAsync(users, item);
+
+							//Remove expired Milestone
+							Db.ActiveMilestones.Remove(item);
+							await Db.SaveChangesAsync();
 						}
 					}
 				}
@@ -217,7 +221,8 @@ namespace DiscordBot.Services
 						if (milestone.Milestone.PreviewDesc != null)
 							embed.WithDescription(milestone.Milestone.PreviewDesc);
 						embed.WithThumbnailUrl(milestone.Milestone.Icon);
-						embed.AddField("Заметка от лидера:", milestone.Memo);
+						if (milestone.Memo != null)
+							embed.AddField("Заметка от лидера:", milestone.Memo);
 						embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {milestone.GuildName}");
 						#endregion
 
@@ -225,7 +230,7 @@ namespace DiscordBot.Services
 					}
 					catch (Exception ex)
 					{
-						await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+						await Logger.Log(new LogMessage(LogSeverity.Error, "RaidNotification", ex.Message, ex));
 					}
 
 				}
