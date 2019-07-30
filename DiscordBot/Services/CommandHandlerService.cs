@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -43,14 +44,27 @@ namespace DiscordBot.Services
 			// Ignore all bots
 			if (context.User.IsBot) return;
 
+			string prefix;
+			if (!context.IsPrivate)
+			{
+				var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
+				prefix = config.CommandPrefix ?? "!";
+			}
+			else
+				prefix = "!";
+			
 
 			var argPos = 0;
 			// Ignore if not mention this bot or command not start from char !
-			if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos) || msg.HasCharPrefix('!', ref argPos))) return;
+			if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos) || msg.HasStringPrefix(prefix, ref argPos))) return;
 			{
 
 				var cmdSearchResult = _commands.Search(context, argPos);
-				if (cmdSearchResult.Commands.Count == 0) await context.Channel.SendMessageAsync($"{context.User.Mention}, это неизвестная мне команда.");
+				if (cmdSearchResult.Commands == null)
+				{
+					await Logger.Log(new LogMessage(LogSeverity.Warning, "HandleCommand", $"Command {msg.Content} return {cmdSearchResult.Error}"));
+					return;
+				}
 
 				var executionTask = _commands.ExecuteAsync(context, argPos, _services);
 

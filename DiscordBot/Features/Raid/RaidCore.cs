@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 
-using Core.Models.Db;
+using Core.Models.Destiny2;
 
 namespace DiscordBot.Features.Raid
 {
@@ -26,16 +26,17 @@ namespace DiscordBot.Features.Raid
 			};
 		}
 
-		internal static EmbedBuilder StartRaidEmbed(SocketUser user, RaidInfo info, DateTime date, string userMemo)
+		internal static EmbedBuilder StartRaidEmbed(SocketUser user, Milestone milestone, DateTime date, string userMemo)
 		{
 			EmbedBuilder embed = new EmbedBuilder();
 
-			embed.WithTitle($"{date.Date.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. {info.Type}: {info.Name}");
+			embed.WithTitle($"{date.Date.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. {milestone.Type}: {milestone.Name}");
 			embed.WithColor(Color.DarkMagenta);
-			embed.WithThumbnailUrl(info.Icon);
-			if (info.PreviewDesc != null)
-				embed.WithDescription(info.PreviewDesc);
-			embed.AddField("Заметка от лидера", userMemo);
+			embed.WithThumbnailUrl(milestone.Icon);
+			if (milestone.PreviewDesc != null)
+				embed.WithDescription(milestone.PreviewDesc);
+			if (userMemo != null)
+				embed.AddField("Заметка от лидера", userMemo);
 			embed.AddField("Страж #1", $"{user.Mention} - {user.Username}");
 			embed.AddField("Страж #2", "Свободно");
 			embed.AddField("Страж #3", "Свободно");
@@ -51,11 +52,11 @@ namespace DiscordBot.Features.Raid
 		{
 			try
 			{
-				var newRaid = new ActiveRaid
+				ActiveMilestone newMilestone = new ActiveMilestone
 				{
 					MessageId = msgId,
-					Guild = GuildName,
-					RaidInfoId = raidInfoId,
+					GuildName = GuildName,
+					MilestoneId = raidInfoId,
 					Memo = userMemo,
 					DateExpire = date,
 					User1 = raidLeader,
@@ -65,7 +66,7 @@ namespace DiscordBot.Features.Raid
 					User5 = 0,
 					User6 = 0
 				};
-				await FailsafeDbOperations.SaveRaidAsync(newRaid);
+				await FailsafeDbOperations.SaveActiveMilestone(newMilestone);
 			}
 			catch (Exception ex)
 			{
@@ -74,13 +75,13 @@ namespace DiscordBot.Features.Raid
 
 		}
 
-		internal static async void HandleReaction(IUserMessage message, ActiveRaid activeRaid)
+		internal static async void HandleReaction(IUserMessage message, ActiveMilestone activeMilestone)
 		{
-			var newEmbed = await RaidsHelpers.RebuildEmbedAsync(activeRaid);
+			var newEmbed = await RaidsHelpers.RebuildEmbedAsync(activeMilestone);
 			if (newEmbed.Length != 0)
 				await RaidsHelpers.UpdateMessage(message, newEmbed);
 
-			await FailsafeDbOperations.SaveRaidAsync(activeRaid);
+			await FailsafeDbOperations.SaveActiveMilestone(activeMilestone);
 		}
 	}
 }

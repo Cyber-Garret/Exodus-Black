@@ -9,6 +9,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
+using Core;
 using DiscordBot.Models;
 using DiscordBot.Services;
 
@@ -69,6 +70,7 @@ namespace DiscordBot
 			var services = new ServiceCollection();
 
 			services.AddSingleton(_ => Toml.ReadFile<Configuration>(_config_path));
+			services.AddDbContext<FailsafeContext>();
 			services.AddSingleton<ConfigurationService>();
 			services.AddSingleton<CommandService>();
 			services.AddSingleton<CommandHandlerService>();

@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Models.Db
+namespace Core.Models.Destiny2
 {
-	public class Destiny2Clan
+	public class Clan
 	{
-		[Display(Name = "ID")]
+		[Key, Required, DatabaseGenerated(DatabaseGeneratedOption.None)]
 		public long Id { get; set; }
-		[Display(Name = "Название")]
 		public string Name { get; set; }
-		[Display(Name = "Дата создания")]
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
 		public DateTimeOffset CreateDate { get; set; }
-		[Display(Name = "Девиз")]
 		public string Motto { get; set; }
-		[Display(Name = "О клане")]
 		public string About { get; set; }
-		[Display(Name = "Стражей")]
 		public long MemberCount { get; set; }
-
-		public virtual ICollection<Destiny2Clan_Member> Members { get; set; }
+		public virtual ICollection<Clan_Member> Members { get; set; }
 	}
 }

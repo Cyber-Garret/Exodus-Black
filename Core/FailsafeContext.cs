@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Core.Models.Db;
+using Core.Models.Discord;
+using Core.Models.Destiny2;
 
 namespace Core
 {
@@ -10,21 +11,20 @@ namespace Core
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			//optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=sa;Password=yNRASo1FjL");
-			optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV;" +
-				"MultipleActiveResultSets=True");
+			optionsBuilder.UseSqlite("Data Source=Failsafe.db");
+			//optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV;" +
+			//	"MultipleActiveResultSets=True");
 		}
-		//Global
-		public DbSet<Gear> Gears { get; set; }
+
+		//Discord
 		public DbSet<Guild> Guilds { get; set; }
-		public DbSet<Destiny2Clan> Destiny2Clans { get; set; }
-		public DbSet<Destiny2Clan_Member> Destiny2Clan_Members { get; set; }
 
-		//Catalyst's
+		//Destiny 2
+		public DbSet<Gear> Gears { get; set; }
 		public DbSet<Catalyst> Catalysts { get; set; }
-
-		//Raids
-		public DbSet<ActiveRaid> ActiveRaids { get; set; }
-		public DbSet<RaidInfo> RaidInfos { get; set; }
+		public DbSet<Clan> Clans { get; set; }
+		public DbSet<Clan_Member> Clan_Members { get; set; }
+		public DbSet<Milestone> Milestones { get; set; }
+		public DbSet<ActiveMilestone> ActiveMilestones { get; set; }
 	}
 }

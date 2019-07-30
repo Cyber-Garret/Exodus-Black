@@ -3,28 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Core.Models.Db
+namespace Core.Models.Destiny2
 {
 	public class Catalyst
 	{
+		[Key]
 		public int Id { get; set; }
-
-		[Display(Name ="Оружие"), MaxLength(256)]
+		[Required, MaxLength(100)]
 		public string WeaponName { get; set; }
-
-		[Display(Name ="Иконка"),MaxLength(1000)]
+		[Required, MaxLength(1000)]
 		public string Icon { get; set; }
-
-		[Display(Name ="Описание"),MaxLength(2048)]
+		[Required, MaxLength(2000)]
 		public string Description { get; set; }
-
-		[Display(Name ="Источник"),MaxLength(1024)]
+		[Required, MaxLength(1000)]
 		public string DropLocation { get; set; }
-
-		[Display(Name = "Задание"), MaxLength(1024)]
-		public string Quest { get; set; }
-
-		[Display(Name = "Бонус"), MaxLength(1024)]
+		[Required, MaxLength(1000)]
 		public string Masterwork { get; set; }
+		[Required, MaxLength(1000)]
+		public string Bonus { get; set; }
 	}
 }

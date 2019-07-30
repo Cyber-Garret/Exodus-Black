@@ -7,7 +7,7 @@ using Discord;
 using Discord.Commands;
 
 using Core;
-using Core.Models.Db;
+using Core.Models.Discord;
 
 using DiscordBot.Helpers;
 using DiscordBot.Extensions;
@@ -16,6 +16,7 @@ using DiscordBot.Preconditions;
 using API.Bungie;
 using API.Bungie.Models;
 using Microsoft.EntityFrameworkCore;
+using Discord.WebSocket;
 
 namespace DiscordBot.Modules.Administration
 {
@@ -25,42 +26,13 @@ namespace DiscordBot.Modules.Administration
 	[Cooldown(5)]
 	public class ModerationModule : BotModuleBase
 	{
-		#region Functions
 		public static string ConvertBoolean(bool? boolean)
 		{
 			return boolean == true ? "**Да**" : "**Нет**";
 		}
-		#endregion
 
-		[Command("Клан")]
-		[Summary("Информационная справка о доступных командах администраторам клана.")]
-		public async Task GuildInfo()
-		{
-			// Get some bot info
-			var app = await Context.Client.GetApplicationInfoAsync();
-
-			#region Message
-			EmbedBuilder embed = new EmbedBuilder()
-				.WithColor(Color.Orange)
-				.WithTitle($"Приветствую страж {Context.User.Username}")
-				.WithDescription("Краткий ликбез о том какие команды доступны избранным стражам и капитану.")
-				.AddField("Команда: **!клан инфо**", "Эта команда выводит мои настройки для текущей гильдии, так же содержит некоторую полезную и не очень информацию.")
-				.AddField("Команда: **!клан новости**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда информационные сообщения например о Зуре.")
-				.AddField("Команда: **!новости статус**", "Эта команда позволяет включить или выключить оповещения о Зур-е")
-				.AddField("Команда: **!клан логи**", "Эту команду нужно писать в том чате где ты хочешь чтобы я отправляла туда сервисные сообщения например о том что кто-то покинул сервер.")
-				.AddField("Команда: **!логи статус**", "Эта команда позволяет включить или выключить Тех. сообщения.")
-				.AddField("Команда: **!посмотреть приветствие**", "Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.")
-				.AddField("Команда: **!сохранить приветствие <Message>**", "Сохраняет сообщение-приветствие и включает механизм отправки сообщения.\nПоддерживает синтаксис MarkDown для красивого оформления.")
-				.AddField("Команда: **!автороль @Роль**", "Сохраняет ID роли, которую Нейроматрица будет выдавать всем новым пользователям, пришедшим на сервер.\n" +
-				"**Важно! Роль Нейроматрицы должна быть над ролью, которую она будет автоматически выдавать.Имеется ввиду в списке Ваш сервер->Настройки сервера->Роли.**")
-				.WithFooter($"Любые предложения по улучшению или исправлении ошибок пожалуйста сообщи моему создателю {app.Owner.Username}#{app.Owner.Discriminator}", app.Owner.GetAvatarUrl());
-			#endregion
-
-			await Context.Channel.SendMessageAsync(null, false, embed.Build());
-		}
-
-		[Command("Клан инфо")]
-		[Summary("Отображает все настройки бота в гильдии где была вызвана комманда.")]
+		[Command("настройки")]
+		[Summary("Эта команда выводит мои настройки для текущего корабля, так же содержит некоторую полезную и не очень информацию.")]
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
@@ -68,19 +40,9 @@ namespace DiscordBot.Modules.Administration
 
 			#region Data
 			var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
-			string NotificationChannel = "Не указан";
-			string LogChannel = "Не указан";
 			string FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
 			string logs = ConvertBoolean(guild.EnableLogging);
 			string news = ConvertBoolean(guild.EnableNotification);
-			#endregion
-
-			#region Checks for Data
-			if (guild.NotificationChannel != 0)
-				NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
-
-			if (guild.LoggingChannel != 0)
-				LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
 			#endregion
 
 			#region Message
@@ -92,29 +54,22 @@ namespace DiscordBot.Modules.Administration
 				.AddField("Сейчас на корабле:",
 				$"Всего каналов: **{Context.Guild.Channels.Count}**\n" +
 				$"Стражей на корабле: **{Context.Guild.Users.Count}**")
-				.AddField("Новостной канал", $"В данный момент используется **{NotificationChannel}** для сообщений о Зур-е.")
+				.AddField("Новостной канал", $"В данный момент используется **<#{guild.NotificationChannel}>** для сообщений о Зур-е.")
 				.AddField("Оповещения о Зур-е включены?", news)
-				.AddField("Технический канал", $"В данный момент используется **{LogChannel}** для сервисных сообщений клана")
+				.AddField("Технический канал", $"В данный момент используется **<#{guild.LoggingChannel}>** для сервисных сообщений клана.")
 				.AddField("Тех. сообщения включены?", logs);
 			#endregion
 
 			await Context.Channel.SendMessageAsync(null, false, embed.Build());
 		}
 
-		[Command("Клан новости")]
-		[Summary("Сохраняет ID канала для использования в новостных сообщениях.")]
+		[Command("новости")]
+		[Summary("Эту команду нужно писать в том канале, где ты хочешь чтобы я отправляла информационные сообщения, например о Зуре.")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		public async Task SetNotificationChannel()
 		{
 			// Get or create personal guild settings
 			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
-
-			string NotificationChannel = "Не указан";
-			string news = ConvertBoolean(guild.EnableNotification);
-
-			//Get notification channel name
-			if (guild.NotificationChannel != 0)
-				NotificationChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
 
 			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
@@ -126,15 +81,14 @@ namespace DiscordBot.Modules.Administration
 			}
 			else
 			{
-				embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **{NotificationChannel}**.";
+				embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **<#{guild.NotificationChannel}>**.";
 			}
-			embed.AddField("Оповещения о Зур-е включены?", news);
+			embed.AddField("Оповещения о Зур-е включены?", ConvertBoolean(guild.EnableNotification));
 			embed.WithFooter($"Хотите я запишу этот канал как новостной? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
 			#endregion
 
 			var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
 
-			//Если true обновляем id новостного канала.
 			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
 			if (choice == true)
@@ -144,20 +98,13 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("Клан логи")]
-		[Summary("Сохраняет ID канала для использования в тех сообщениях.")]
+		[Command("логи")]
+		[Summary("Эту команду нужно писать в том канале, где ты хочешь, чтобы я отправляла туда сервисные сообщения, например о том, что кто-то покинул сервер.")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		public async Task SetLogChannel()
 		{
 			// Get or create personal guild settings
 			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
-
-			string LogChannel = "Не указан";
-			string logs = ConvertBoolean(guild.EnableLogging);
-
-			//Get logging channel name
-			if (guild.LoggingChannel != 0)
-				LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
 
 			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
@@ -169,9 +116,9 @@ namespace DiscordBot.Modules.Administration
 			}
 			else
 			{
-				embed.Description = $"В данный момент у меня записанно что все сервисные сообщения я должна отправлять в **#{LogChannel}**.";
+				embed.Description = $"В данный момент у меня записанно что все сервисные сообщения я должна отправлять в **<#{guild.LoggingChannel}>**.";
 			}
-			embed.AddField("Cервисные сообщения включены?", logs);
+			embed.AddField("Cервисные сообщения включены?", ConvertBoolean(guild.EnableLogging));
 			embed.WithFooter($"Хотите я запишу этот канал как технический? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
 			#endregion
 
@@ -187,26 +134,19 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("Логи статус")]
-		[Summary("Вкл. или Выкл. тех. сообщения.")]
+		[Command("статус логов")]
+		[Summary("Эта команда позволяет включить или выключить Тех. сообщения.")]
 		public async Task ToggleLogging()
 		{
 			// Get or create personal guild settings
 			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
 
-			string LogChannel = "Не указан";
-			string logs = ConvertBoolean(guild.EnableLogging);
-
-			//Get logging channel name
-			if (guild.LoggingChannel != 0)
-				LogChannel = Context.Guild.GetChannel(guild.LoggingChannel).Name;
-
 			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
 			.WithColor(Color.Orange)
 			.WithTitle("Технические сообщения")
-			.WithDescription($"В данный момент все технические сообщения я отправляю в канал **{LogChannel}**")
-			.AddField("Оповещения включены?", logs, true)
+			.WithDescription($"В данный момент все технические сообщения я отправляю в канал **<#{guild.LoggingChannel}>**")
+			.AddField("Оповещения включены?", ConvertBoolean(guild.EnableLogging))
 			.WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
 			#endregion
 
@@ -228,26 +168,19 @@ namespace DiscordBot.Modules.Administration
 
 		}
 
-		[Command("Новости статус")]
-		[Summary("Включает или выключает новости о зуре")]
+		[Command("статус новостей")]
+		[Summary("Эта команда позволяет включить или выключить оповещения о Зур-е.")]
 		public async Task ToggleNews()
 		{
 			// Get or create personal guild settings
-			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
-
-			string NewsChannel = "Не указан";
-			string news = ConvertBoolean(guild.EnableNotification);
-
-			//Get notification channel name
-			if (guild.NotificationChannel != 0)
-				NewsChannel = Context.Guild.GetChannel(guild.NotificationChannel).Name;
+			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
 				.WithColor(Color.Orange)
 				.WithTitle("Новостные сообщения")
-				.WithDescription($"В данный момент все новостные сообщения о Зур-е я отправляю в канал **{NewsChannel}**")
-				.AddField("Оповещения включены?", news, true)
+				.WithDescription($"В данный момент все новостные сообщения о Зур-е я отправляю в канал **<#{guild.NotificationChannel}>**")
+				.AddField("Оповещения включены?", ConvertBoolean(guild.EnableNotification))
 				.WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
 			#endregion
 
@@ -268,8 +201,8 @@ namespace DiscordBot.Modules.Administration
 			}
 		}
 
-		[Command("Посмотреть приветствие")]
-		[Summary("Команда предпросмотра приветственного сообщения")]
+		[Command("посмотреть приветствие")]
+		[Summary("Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.")]
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
@@ -284,12 +217,13 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.", embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build());
 		}
 
-		[Command("Сохранить приветствие")]
-		[Summary("Сохраняет сообщение для отправки всем кто пришел в гильдию")]
+		[Command("сохранить приветствие")]
+		[Summary("Сохраняет сообщение-приветствие и включает механизм отправки сообщения всем новоприбывшим на сервер.\nПоддерживает синтаксис MarkDown для красивого оформления.")]
+		[Remarks("Пример: !сохранить приветствие <Сообщение>")]
 		public async Task SaveWelcomeMessage([Remainder]string message)
 		{
 			// Get or create personal guild settings
-			var guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			//Dont save empty welcome message.
 			if (string.IsNullOrWhiteSpace(message)) return;
@@ -301,8 +235,50 @@ namespace DiscordBot.Modules.Administration
 			await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение сохранено.");
 		}
 
+		[Command("префикс")]
+		[Summary("Позволяет администраторам изменить префикс команд для текущего сервера. ")]
+		public async Task GuildPrefix(string prefix = null)
+		{
+			var config = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+
+			string message;
+			if (prefix == null)
+			{
+				config.CommandPrefix = null;
+				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, config);
+
+				message = $"Для команд установлен префикс по умолчанию **!**";
+			}
+			else
+			{
+				config.CommandPrefix = prefix;
+				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, config);
+
+				message = $"Для команд установлен префикс **{prefix}**";
+			}
+
+			await ReplyAsync(message);
+		}
+
+		[Command("автороль")]
+		[Summary("Сохраняет роль, которую я буду выдавать всем новым пользователям, пришедшим на сервер.\n" +
+			"**Важно! Моя роль должна быть над ролью, которую я буду автоматически выдавать всем новоприбывшим. Имеется ввиду в списке Ваш сервер->Настройки сервера->Роли.**")]
+		[RequireBotPermission(GuildPermission.ManageRoles)]
+		public async Task AutoRoleRoleAdd(IRole _role)
+		{
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			guild.AutoroleID = _role.Id;
+			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+
+			var embed = new EmbedBuilder();
+			embed.WithDescription($"Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим.");
+			embed.WithColor(Color.Gold);
+			embed.WithFooter("Пожалуйста, убедись, что моя роль выше авто роли и у меня есть права на выдачу ролей. Тогда я без проблем буду выдавать роль всем прибывшим на корабль и сообщать об этом в сервисных сообщениях.");
+
+			await ReplyAsync(embed: embed.Build());
+		}
+
 		[Command("рассылка")]
-		[RequireContext(ContextType.Guild, ErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
 		public async Task SendMessage(IRole _role, [Remainder] string message)
 		{
 			var GuildOwner = Context.Guild.OwnerId;
@@ -313,14 +289,15 @@ namespace DiscordBot.Modules.Administration
 			}
 
 			var workMessage = await Context.Channel.SendMessageAsync("Приступаю к рассылке сообщений.");
-			try
+			var Users = Context.Guild.Users;
+			var role = Context.Guild.Roles.FirstOrDefault(r => r.Id == _role.Id);
+			int SucessCount = 0;
+			int FailCount = 0;
+			foreach (var user in Users)
 			{
-				var Users = Context.Guild.Users;
-				var role = Context.Guild.Roles.FirstOrDefault(r => r.Id == _role.Id);
-				int count = 0;
-				foreach (var user in Users)
+				if (user.Roles.Contains(role))
 				{
-					if (user.Roles.Contains(role))
+					try
 					{
 						var DM = await user.GetOrCreateDMChannelAsync();
 
@@ -332,33 +309,21 @@ namespace DiscordBot.Modules.Administration
 						embed.WithCurrentTimestamp();
 
 						await DM.SendMessageAsync(null, false, embed.Build());
-						count += 1;
+						SucessCount += 1;
+					}
+					catch (Exception ex)
+					{
+						FailCount += 1;
+						await Logger.Log(new LogMessage(LogSeverity.Error, "SendMessage command", ex.Message, ex));
 					}
 				}
-				await workMessage.ModifyAsync(m => m.Content = $"Готово. Я разослала сообщением всем у кого есть роль {role.Name}.\nСообщение получили {count} стражей.");
 			}
-			catch (Exception ex)
-			{
-				await workMessage.ModifyAsync(m => m.Content = "Ошибка рассылки! Сообщите моему создателю для исправления моих логических цепей.");
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
-			}
+			await workMessage.ModifyAsync(m => m.Content =
+			$"Готово. Я разослала сообщением всем у кого есть роль {role.Name}.\n" +
+			$"- Всего получателей: {SucessCount + FailCount}\n" +
+			$"- Успешно доставлено: {SucessCount}\n" +
+			$"- Не удалось отправить: {FailCount}");
 		}
 
-		[Command("Автороль")]
-		[Summary("Автоматически добавляет роль всем новым пользователям")]
-		[RequireBotPermission(GuildPermission.ManageRoles)]
-		public async Task AutoRoleRoleAdd(IRole _role)
-		{
-			var guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
-			guild.AutoroleID = _role.Id;
-			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
-
-			var embed = new EmbedBuilder();
-			embed.WithDescription($"Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим.");
-			embed.WithColor(Color.Gold);
-			embed.WithFooter("Пожалуйста, убедись, что моя роль выше авто роли и у меня есть права на выдачу ролей. Тогда я без проблем буду выдавать роль всем прибывшим на корабль и сообщать об этом в сервисных сообщениях.");
-
-			await Context.Channel.SendMessageAsync(null, false, embed.Build());
-		}
 	}
 }
