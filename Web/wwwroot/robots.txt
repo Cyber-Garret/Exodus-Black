@@ -1,7 +1,0 @@
-﻿User-agent: *
-Disallow:
-Disallow: /Account/*
-Crawl-delay: 3
-Clean-param: ref /Clan
-Clean-param: ref /Clan/Details/*
-Host: neira.link
