@@ -1,84 +1,120 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-
-using Nett;
+﻿using Core;
 
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Core;
 using DiscordBot.Models;
 using DiscordBot.Services;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using Nett;
+
+using System;
+using System.IO;
+using System.Runtime.Loader;
+using System.Threading.Tasks;
 
 namespace DiscordBot
 {
 	class Program
 	{
-		public static DiscordShardedClient Client;
+		private const string userPath = "UserData";
+		private const string fileName = "config.toml";
 
-		#region Private fields
-		private IServiceProvider _services;
-		private static string _config_path;
-		private readonly int[] _shardIds = { 0, 1 };
-		#endregion
+		private IServiceProvider service;
+		private static BotSettings config;
 
 
 		private static void Main()
 		{
-			Console.Title = $"Neuromatrix Discord Bot (Discord.Net v{DiscordConfig.Version})";
-			_config_path = Directory.GetCurrentDirectory() + "/UserData/config.tml";
+			AssemblyLoadContext.Default.Unloading += SigTermEventHandler; //register sigterm event handler.
+			Console.CancelKeyPress += CancelHandler; //register sigint event handler
 
-			new Program().StartAsync().GetAwaiter().GetResult();
+			config = GetBotSettings();
+
+			Console.Title = $"{config.BotName} Discord Bot (Discord.NET v{DiscordConfig.Version})";
+
+			try
+			{
+				new Program().StartAsync().GetAwaiter().GetResult();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}, Source: Main] Message: {ex.Message}");
+			}
 		}
 
 		private async Task StartAsync()
 		{
-			Client = new DiscordShardedClient(_shardIds, new DiscordSocketConfig
-			{
-				LogLevel = LogSeverity.Verbose,
-				DefaultRetryMode = RetryMode.AlwaysRetry,
-				MessageCacheSize = 100,
-				TotalShards = 2
-			});
+			service = BuildServices();
 
-			Client.Log += Logger.Log;
+			var shardedClient = service.GetRequiredService<DiscordShardedClient>();
+			shardedClient.Log += Logger.Log;
 
-			#region Configure services
-			_services = BuildServices();
-
-			_services.GetRequiredService<ConfigurationService>().Configure();
-			_services.GetRequiredService<TimerService>().Configure();
-			_services.GetRequiredService<DiscordEventHandlerService>().Configure();
-			await _services.GetRequiredService<CommandHandlerService>().ConfigureAsync();
-			#endregion
-
-			var token = _services.GetRequiredService<Configuration>().Token;
+			service.GetRequiredService<TimerService>().Configure();
+			service.GetRequiredService<DiscordEventHandlerService>().Configure();
+			await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 
 
-			await Client.LoginAsync(TokenType.Bot, token);
-			await Client.StartAsync();
+			await shardedClient.LoginAsync(TokenType.Bot, config.Discord.BotToken);
+			await shardedClient.StartAsync();
+			await shardedClient.SetStatusAsync(UserStatus.Online);
 
-			await Client.SetStatusAsync(UserStatus.Online);
 			await Task.Delay(-1);
+		}
+
+
+
+		#region Program events
+		private static void SigTermEventHandler(AssemblyLoadContext obj)
+		{
+			Console.WriteLine("Unloading...");
+		}
+
+		private static void CancelHandler(object sender, ConsoleCancelEventArgs e)
+		{
+			Console.WriteLine("Exiting...");
+		}
+		#endregion
+
+		#region Functions
+		private static BotSettings GetBotSettings()
+		{
+			try
+			{
+				return Toml.ReadFile<BotSettings>(Path.Combine(Directory.GetCurrentDirectory(), userPath, fileName));
+			}
+			catch
+			{
+				var initializeConfig = new BotSettings();
+				Toml.WriteFile(initializeConfig, Path.Combine(userPath, fileName));
+				return Toml.ReadFile<BotSettings>(Path.Combine(Directory.GetCurrentDirectory(), userPath, fileName));
+			}
 		}
 
 		public ServiceProvider BuildServices()
 		{
-			var services = new ServiceCollection();
-
-			services.AddSingleton(_ => Toml.ReadFile<Configuration>(_config_path));
-			services.AddDbContext<FailsafeContext>();
-			services.AddSingleton<ConfigurationService>();
-			services.AddSingleton<CommandService>();
-			services.AddSingleton<CommandHandlerService>();
-			services.AddSingleton<DiscordEventHandlerService>();
-			services.AddSingleton<TimerService>();
-
-			return services.BuildServiceProvider();
+			return new ServiceCollection()
+				.AddSingleton(new DiscordShardedClient(config.Discord.Shards, new DiscordSocketConfig
+				{
+					AlwaysDownloadUsers = true,
+					LogLevel = LogSeverity.Verbose,
+					DefaultRetryMode = RetryMode.AlwaysRetry,
+					MessageCacheSize = 100,
+					TotalShards = config.Discord.Shards.Length
+				}))
+				.AddDbContext<FailsafeContext>()
+				.AddSingleton<CommandService>()
+				.AddSingleton<CommandHandlerService>()
+				.AddSingleton<DiscordEventHandlerService>()
+				.AddSingleton<TimerService>()
+				.AddSingleton<MilestoneService>()
+				.BuildServiceProvider();
 		}
+		#endregion
+
 
 	}
 }

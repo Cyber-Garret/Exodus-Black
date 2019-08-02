@@ -1,47 +1,47 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Discord;
+﻿using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 
-using Core;
-using DiscordBot.Helpers;
 using DiscordBot.Features.Raid;
+using DiscordBot.Helpers;
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DiscordBot.Services
 {
 	public class DiscordEventHandlerService
 	{
 		#region Private Fields
-		private readonly DiscordShardedClient _client = Program.Client;
-		private readonly CommandHandlerService _commandHandlingService;
+		readonly DiscordShardedClient Client;
+		private readonly CommandHandlerService CommandHandlingService;
 		#endregion
 
 
-		public DiscordEventHandlerService(CommandHandlerService command)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordShardedClient shardedClient)
 		{
-			_commandHandlingService = command;
+			Client = shardedClient;
+			CommandHandlingService = command;
 		}
 
 		public void Configure()
 		{
 			//_client.ShardConnected += _client_ShardConnected;
-			_client.ShardDisconnected += _client_ShardDisconnectedAsync;
-			_client.JoinedGuild += _client_JoinedGuildAsync;
-			_client.ChannelCreated += _client_ChannelCreatedAsync;
-			_client.ChannelDestroyed += _client_ChannelDestroyedAsync;
-			_client.GuildMemberUpdated += _client_GuildMemberUpdatedAsync;
-			_client.MessageDeleted += _client_MessageDeletedAsync;
-			_client.MessageReceived += _client_MessageReceived;
-			_client.MessageUpdated += _client_MessageUpdatedAsync;
-			_client.RoleCreated += _client_RoleCreatedAsync;
-			_client.RoleDeleted += _client_RoleDeletedAsync;
-			_client.UserJoined += _client_UserJoinedAsync;
-			_client.UserLeft += _client_UserLeftAsync;
-			_client.ReactionAdded += _client_ReactionAddedAsync;
-			_client.ReactionRemoved += _client_ReactionRemovedAsync;
+			Client.ShardDisconnected += _client_ShardDisconnectedAsync;
+			Client.JoinedGuild += _client_JoinedGuildAsync;
+			Client.ChannelCreated += _client_ChannelCreatedAsync;
+			Client.ChannelDestroyed += _client_ChannelDestroyedAsync;
+			Client.GuildMemberUpdated += _client_GuildMemberUpdatedAsync;
+			Client.MessageDeleted += _client_MessageDeletedAsync;
+			Client.MessageReceived += _client_MessageReceived;
+			Client.MessageUpdated += _client_MessageUpdatedAsync;
+			Client.RoleCreated += _client_RoleCreatedAsync;
+			Client.RoleDeleted += _client_RoleDeletedAsync;
+			Client.UserJoined += _client_UserJoinedAsync;
+			Client.UserLeft += _client_UserLeftAsync;
+			Client.ReactionAdded += _client_ReactionAddedAsync;
+			Client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
 
 		
@@ -58,7 +58,7 @@ namespace DiscordBot.Services
 		{
 			if (message.Author.IsBot)
 				return;
-			await _commandHandlingService.HandleCommandAsync(message);
+			await CommandHandlingService.HandleCommandAsync(message);
 			await MessageReceived(message);
 		}
 		private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
@@ -123,7 +123,7 @@ namespace DiscordBot.Services
 				var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
@@ -166,7 +166,7 @@ namespace DiscordBot.Services
 					var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIguildChannel.Guild.Id).Result;
 					if (guild.EnableLogging == true)
 					{
-						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -219,7 +219,7 @@ namespace DiscordBot.Services
 
 					if (guild.EnableLogging == true)
 					{
-						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -270,7 +270,7 @@ namespace DiscordBot.Services
 
 					if (guild.EnableLogging == true)
 					{
-						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -285,7 +285,7 @@ namespace DiscordBot.Services
 		}
 		private async Task MessageReceived(SocketMessage arg)
 		{
-			if (arg.Author.Id == _client.CurrentUser.Id)
+			if (arg.Author.Id == Client.CurrentUser.Id)
 				return;
 
 			await Task.CompletedTask;
@@ -372,7 +372,7 @@ namespace DiscordBot.Services
 					if (guild.EnableLogging == true)
 					{
 
-						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -438,7 +438,7 @@ namespace DiscordBot.Services
 					if (guild.EnableLogging == true)
 					{
 
-						await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embedDel.Build());
 					}
 
@@ -475,7 +475,7 @@ namespace DiscordBot.Services
 
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
@@ -512,7 +512,7 @@ namespace DiscordBot.Services
 
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
@@ -597,7 +597,7 @@ namespace DiscordBot.Services
 				var guild = (await FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id));
 				if (guild.EnableLogging == true)
 				{
-					await _client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
@@ -610,7 +610,6 @@ namespace DiscordBot.Services
 		{
 			if (!reaction.User.Value.IsBot)
 			{
-				//Проверяет, связана ли реакция с запущенной игрой от того же пользователя, который выполнил команду - если это так, обрабатывает ее
 				//await CatalystData.HandleReactionAdded(cache, reaction);
 				await RaidsHelpers.HandleReactionAdded(cache, reaction);
 			}

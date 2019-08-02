@@ -3,11 +3,10 @@ using Core.Models.Destiny2;
 
 using Discord;
 using Discord.Commands;
-
-using DiscordBot.Features.Raid;
+using Discord.WebSocket;
 using DiscordBot.Modules.Administration;
 using DiscordBot.Preconditions;
-
+using DiscordBot.Services;
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -30,6 +29,8 @@ namespace DiscordBot.Modules.Commands
 		DateTime tuesdayEndCheck = new DateTime();
 		readonly FailsafeContext db;
 		readonly CommandService commandService;
+		readonly DiscordShardedClient Client;
+		readonly MilestoneService Milestone;
 		#endregion
 		string Alias(string name)
 		{
@@ -47,10 +48,12 @@ namespace DiscordBot.Modules.Commands
 				return name;
 		}
 
-		public MainModule(FailsafeContext context, CommandService command)
+		public MainModule(FailsafeContext context, CommandService command, DiscordShardedClient shardedClient, MilestoneService milestoneService)
 		{
 			db = context;
 			commandService = command;
+			Client = shardedClient;
+			Milestone = milestoneService;
 		}
 
 		[Command("справка")]
@@ -61,7 +64,7 @@ namespace DiscordBot.Modules.Commands
 			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			EmbedBuilder embedBuilder = new EmbedBuilder();
-			var app = await Program.Client.GetApplicationInfoAsync();
+			var app = await Client.GetApplicationInfoAsync();
 			embedBuilder.WithColor(Color.Gold);
 			embedBuilder.WithTitle($"Доброго времени суток. Меня зовут Нейроматрица, я ИИ \"Черного исхода\" адаптированный для Discord. Успешно функционирую с {app.CreatedAt.ToString("dd.MM.yyyy")}");
 			embedBuilder.WithDescription(
@@ -105,7 +108,7 @@ namespace DiscordBot.Modules.Commands
 
 			var guild = await db.Guilds.AsNoTracking().FirstOrDefaultAsync(g => g.Id == Context.Guild.Id);
 
-			embed.WithAuthor(Program.Client.CurrentUser);
+			embed.WithAuthor(Client.CurrentUser);
 			embed.WithTitle($"Информация о команде: {command.Name}");
 			embed.WithColor(Color.Gold);
 			embed.WithDescription(command.Summary ?? "Команда без описания.");
@@ -256,7 +259,7 @@ namespace DiscordBot.Modules.Commands
 		[Remarks("Пример: !катализатор мида")]
 		public async Task GetCatalyst([Remainder]string Input = null)
 		{
-			var app = await Program.Client.GetApplicationInfoAsync();
+			var app = await Client.GetApplicationInfoAsync();
 			var Embed = new EmbedBuilder();
 			#region Checks
 			//check user input
@@ -318,7 +321,7 @@ namespace DiscordBot.Modules.Commands
 		public async Task Donate()
 		{
 			EmbedBuilder embed = new EmbedBuilder();
-			var app = await Program.Client.GetApplicationInfoAsync();
+			var app = await Client.GetApplicationInfoAsync();
 			embed.WithColor(Color.Green);
 			embed.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку на любую сумму. [Подписка](https://www.patreon.com/Cyber_Garret) придаст мне, как разработчику, больше мотивации развивать бота и придавать ему больше возможностей и функций. И, как минимум, покрыть расходы на ежемесячную аренду сервера. А в будущем от подписки у тебя будет больше возможностей. :smiley: ");
 			embed.WithFooter($"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}");
@@ -382,15 +385,14 @@ namespace DiscordBot.Modules.Commands
 				await ReplyAsync(embed: message.Build());
 				return;
 			}
-
-			var msg = await Context.Channel.SendMessageAsync(text: "@here", embed: RaidsCore.StartRaidEmbed(Context.User, raidInfo, dateTime, userMemo).Build());
-			await RaidsCore.RegisterRaidAsync(msg.Id, Context.Guild.Name, Context.User.Id, raidInfo.Id, dateTime, userMemo);
+			var msg = await Context.Channel.SendMessageAsync(text: "@here", embed: Milestone.StartEmbed(Context.User, raidInfo, dateTime, userMemo).Build());
+			await Milestone.RegisterMilestoneAsync(msg.Id, Context.Guild.Name, Context.User.Id, raidInfo.Id, dateTime, userMemo);
 			//Slots
-			await msg.AddReactionAsync(RaidsCore.ReactOptions["2"]);
-			await msg.AddReactionAsync(RaidsCore.ReactOptions["3"]);
-			await msg.AddReactionAsync(RaidsCore.ReactOptions["4"]);
-			await msg.AddReactionAsync(RaidsCore.ReactOptions["5"]);
-			await msg.AddReactionAsync(RaidsCore.ReactOptions["6"]);
+			await msg.AddReactionAsync(Global.ReactPlaceNumber["2"]);
+			await msg.AddReactionAsync(Global.ReactPlaceNumber["3"]);
+			await msg.AddReactionAsync(Global.ReactPlaceNumber["4"]);
+			await msg.AddReactionAsync(Global.ReactPlaceNumber["5"]);
+			await msg.AddReactionAsync(Global.ReactPlaceNumber["6"]);
 
 		}
 

@@ -16,12 +16,17 @@ namespace DiscordBot.Services
 	public class TimerService
 	{
 		#region Private fields
-		private readonly DiscordShardedClient _client = Program.Client;
+		readonly DiscordShardedClient Client;
 		private Timer MainTimer;
 		private Timer GameStatusTimer;
 		private Timer ClanTimer;
 		private Timer MemberTimer;
 		#endregion
+
+		public TimerService(DiscordShardedClient shardedClient)
+		{
+			Client = shardedClient;
+		}
 
 		public void Configure()
 		{
@@ -94,7 +99,7 @@ namespace DiscordBot.Services
 			string text = commands[randomIndex];
 			try
 			{
-				await _client.SetGameAsync(text, null, ActivityType.Playing);
+				await Client.SetGameAsync(text, null, ActivityType.Playing);
 			}
 			catch (Exception ex)
 			{
@@ -136,7 +141,7 @@ namespace DiscordBot.Services
 				{
 					try
 					{
-						await _client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
 					   .SendMessageAsync(null, false, embed.Build());
 					}
 					catch (Exception ex)
@@ -166,7 +171,7 @@ namespace DiscordBot.Services
 				{
 					try
 					{
-						await _client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
 					   .SendMessageAsync(null, false, embed.Build());
 					}
 					catch (Exception ex)
@@ -210,7 +215,7 @@ namespace DiscordBot.Services
 				{
 					try
 					{
-						SocketUser User = Program.Client.GetUser(item);
+						SocketUser User = Client.GetUser(item);
 						IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
 
 						#region Message
