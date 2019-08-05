@@ -78,50 +78,50 @@ namespace DiscordBot.Services
 
 		internal async Task HandleReactionRemoved(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
-			var raid = await FailsafeDbOperations.GetActiveMilestone(cache.Id);
+			var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
 
-			if (raid != null)
+			if (milestone != null)
 			{
 				var msg = await cache.GetOrDownloadAsync();
 
 				if (reaction.Emote.Equals(Global.ReactPlaceNumber["2"]))
 				{
-					if (raid.User2 == reaction.User.Value.Id)
+					if (milestone.User2 == reaction.User.Value.Id)
 					{
-						raid.User2 = 0;
-						HandleReaction(msg, raid);
+						milestone.User2 = 0;
+						HandleReaction(msg, milestone);
 					}
 				}
 				else if (reaction.Emote.Equals(Global.ReactPlaceNumber["3"]))
 				{
-					if (raid.User3 == reaction.User.Value.Id)
+					if (milestone.User3 == reaction.User.Value.Id)
 					{
-						raid.User3 = 0;
-						HandleReaction(msg, raid);
+						milestone.User3 = 0;
+						HandleReaction(msg, milestone);
 					}
 				}
 				else if (reaction.Emote.Equals(Global.ReactPlaceNumber["4"]))
 				{
-					if (raid.User4 == reaction.User.Value.Id)
+					if (milestone.User4 == reaction.User.Value.Id)
 					{
-						raid.User4 = 0;
-						HandleReaction(msg, raid);
+						milestone.User4 = 0;
+						HandleReaction(msg, milestone);
 					}
 				}
 				else if (reaction.Emote.Equals(Global.ReactPlaceNumber["5"]))
 				{
-					if (raid.User5 == reaction.User.Value.Id)
+					if (milestone.User5 == reaction.User.Value.Id)
 					{
-						raid.User5 = 0;
-						HandleReaction(msg, raid);
+						milestone.User5 = 0;
+						HandleReaction(msg, milestone);
 					}
 				}
 				else if (reaction.Emote.Equals(Global.ReactPlaceNumber["6"]))
 				{
-					if (raid.User6 == reaction.User.Value.Id)
+					if (milestone.User6 == reaction.User.Value.Id)
 					{
-						raid.User6 = 0;
-						HandleReaction(msg, raid);
+						milestone.User6 = 0;
+						HandleReaction(msg, milestone);
 					}
 				}
 			}

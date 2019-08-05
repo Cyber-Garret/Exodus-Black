@@ -4,7 +4,7 @@
 	{
 		public string BotName { get; set; } = "Neuromatrix";
 
-		public DiscordSettings Discord { get; set; }
+		public DiscordSettings Discord { get; set; } = new DiscordSettings();
 	}
 
 	public class DiscordSettings

@@ -43,6 +43,11 @@ namespace DiscordBot
 			catch (Exception ex)
 			{
 				Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}, Source: Main] Message: {ex.Message}");
+				//Not need for Lunix Unit service, but useful for debug session =)
+#if DEBUG
+				Console.WriteLine("Press any key to exit...");
+				Console.ReadKey();
+#endif
 			}
 		}
 

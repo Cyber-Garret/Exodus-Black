@@ -2,7 +2,6 @@
 using Discord.Rest;
 using Discord.WebSocket;
 
-using DiscordBot.Features.Raid;
 using DiscordBot.Helpers;
 
 using System;
@@ -16,13 +15,15 @@ namespace DiscordBot.Services
 		#region Private Fields
 		readonly DiscordShardedClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
+		private readonly MilestoneService milestone;
 		#endregion
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordShardedClient shardedClient)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordShardedClient shardedClient, MilestoneService milestoneService)
 		{
 			Client = shardedClient;
 			CommandHandlingService = command;
+			milestone = milestoneService;
 		}
 
 		public void Configure()
@@ -611,7 +612,7 @@ namespace DiscordBot.Services
 			if (!reaction.User.Value.IsBot)
 			{
 				//await CatalystData.HandleReactionAdded(cache, reaction);
-				await RaidsHelpers.HandleReactionAdded(cache, reaction);
+				await milestone.HandleReactionAdded(cache, reaction);
 			}
 		}
 
@@ -619,7 +620,7 @@ namespace DiscordBot.Services
 		{
 			if (!reaction.User.Value.IsBot)
 			{
-				await RaidsHelpers.HandleReactionRemoved(cache, reaction);
+				await milestone.HandleReactionRemoved(cache, reaction);
 			}
 		}
 		#endregion
