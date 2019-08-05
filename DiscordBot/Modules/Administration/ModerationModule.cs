@@ -36,7 +36,7 @@ namespace DiscordBot.Modules.Administration
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
-			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			#region Data
 			var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
@@ -46,7 +46,7 @@ namespace DiscordBot.Modules.Administration
 			#endregion
 
 			#region Message
-			EmbedBuilder embed = new EmbedBuilder()
+			var embed = new EmbedBuilder()
 				.WithColor(Color.Orange)
 				.WithTitle($"Мои настройки на этом корабле.")
 				.WithThumbnailUrl(Context.Guild.IconUrl)
@@ -57,10 +57,11 @@ namespace DiscordBot.Modules.Administration
 				.AddField("Новостной канал", $"В данный момент используется **<#{guild.NotificationChannel}>** для сообщений о Зур-е.")
 				.AddField("Оповещения о Зур-е включены?", news)
 				.AddField("Технический канал", $"В данный момент используется **<#{guild.LoggingChannel}>** для сервисных сообщений клана.")
-				.AddField("Тех. сообщения включены?", logs);
+				.AddField("Тех. сообщения включены?", logs)
+				.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
 			#endregion
 
-			await Context.Channel.SendMessageAsync(null, false, embed.Build());
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("новости")]
@@ -84,10 +85,10 @@ namespace DiscordBot.Modules.Administration
 				embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **<#{guild.NotificationChannel}>**.";
 			}
 			embed.AddField("Оповещения о Зур-е включены?", ConvertBoolean(guild.EnableNotification));
-			embed.WithFooter($"Хотите я запишу этот канал как новостной? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
+			embed.WithFooter($"Хотите я запишу этот канал как новостной? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}. Это сообщение будет автоматически удалено через 1 минуту.");
 			#endregion
 
-			var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
+			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 
 			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
 
@@ -104,7 +105,7 @@ namespace DiscordBot.Modules.Administration
 		public async Task SetLogChannel()
 		{
 			// Get or create personal guild settings
-			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
@@ -119,10 +120,10 @@ namespace DiscordBot.Modules.Administration
 				embed.Description = $"В данный момент у меня записанно что все сервисные сообщения я должна отправлять в **<#{guild.LoggingChannel}>**.";
 			}
 			embed.AddField("Cервисные сообщения включены?", ConvertBoolean(guild.EnableLogging));
-			embed.WithFooter($"Хотите я запишу этот канал как технический? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}.");
+			embed.WithFooter($"Хотите я запишу этот канал как технический? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {X}. Это сообщение будет автоматически удалено через 1 минуту.");
 			#endregion
 
-			var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
+			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 
 			//Если true обновляем id лог канала.
 			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
@@ -139,7 +140,7 @@ namespace DiscordBot.Modules.Administration
 		public async Task ToggleLogging()
 		{
 			// Get or create personal guild settings
-			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
@@ -147,10 +148,10 @@ namespace DiscordBot.Modules.Administration
 			.WithTitle("Технические сообщения")
 			.WithDescription($"В данный момент все технические сообщения я отправляю в канал **<#{guild.LoggingChannel}>**")
 			.AddField("Оповещения включены?", ConvertBoolean(guild.EnableLogging))
-			.WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
+			.WithFooter($"Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай. Это сообщение будет автоматически удалено через 1 минуту.");
 			#endregion
 
-			var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
+			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 
 			//Если true или false обновляем включено или выключено логирование для гильдии, в противном случае ничего не делаем.
 			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
@@ -181,10 +182,10 @@ namespace DiscordBot.Modules.Administration
 				.WithTitle("Новостные сообщения")
 				.WithDescription($"В данный момент все новостные сообщения о Зур-е я отправляю в канал **<#{guild.NotificationChannel}>**")
 				.AddField("Оповещения включены?", ConvertBoolean(guild.EnableNotification))
-				.WithFooter($" Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай.");
+				.WithFooter($"Для включения - нажми {HeavyCheckMark}, для отключения - нажми {X}, или ничего не нажимай. Это сообщение будет автоматически удалено через 1 минуту.");
 			#endregion
 
-			var message = await Context.Channel.SendMessageAsync(embed: embed.Build());
+			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 
 			//Если true или false обновляем включено или выключено логирование для гильдии, в противном случае ничего не делаем.
 			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
@@ -210,11 +211,12 @@ namespace DiscordBot.Modules.Administration
 
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
 			{
-				await Context.Channel.SendMessageAsync($":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!сохранить приветствие <текст сообщения>**");
+				await ReplyAndDeleteAsync($":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!сохранить приветствие <текст сообщения>**");
 				return;
 			}
 
-			await Context.Channel.SendMessageAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.", embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build());
+			await ReplyAndDeleteAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord. *Это сообщение будет автоматически удалено через 2 минуты.*",
+							 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("сохранить приветствие")]
@@ -232,7 +234,7 @@ namespace DiscordBot.Modules.Administration
 
 			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
-			await Context.Channel.SendMessageAsync(":smiley: Приветственное сообщение сохранено.");
+			await ReplyAndDeleteAsync(":smiley: Приветственное сообщение сохранено.");
 		}
 
 		[Command("префикс")]
@@ -257,7 +259,7 @@ namespace DiscordBot.Modules.Administration
 				message = $"Для команд установлен префикс **{prefix}**";
 			}
 
-			await ReplyAsync(message);
+			await ReplyAndDeleteAsync(message);
 		}
 
 		[Command("автороль")]
@@ -273,9 +275,9 @@ namespace DiscordBot.Modules.Administration
 			var embed = new EmbedBuilder();
 			embed.WithDescription($"Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим.");
 			embed.WithColor(Color.Gold);
-			embed.WithFooter("Пожалуйста, убедись, что моя роль выше авто роли и у меня есть права на выдачу ролей. Тогда я без проблем буду выдавать роль всем прибывшим на корабль и сообщать об этом в сервисных сообщениях.");
+			embed.WithFooter("Пожалуйста, убедись, что моя роль выше авто роли и у меня есть права на выдачу ролей. Тогда я без проблем буду выдавать роль всем прибывшим на корабль и сообщать об этом в сервисных сообщениях. Это сообщение будет автоматически удалено через 2 минуты.");
 
-			await ReplyAsync(embed: embed.Build());
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("рассылка")]
@@ -284,7 +286,7 @@ namespace DiscordBot.Modules.Administration
 			var GuildOwner = Context.Guild.OwnerId;
 			if (Context.User.Id != GuildOwner)
 			{
-				await Context.Channel.SendMessageAsync(":x: | Прошу прощения страж, но эта команда доступна только капитану корабля!");
+				await ReplyAndDeleteAsync(":x: | Прошу прощения страж, но эта команда доступна только капитану корабля!");
 				return;
 			}
 

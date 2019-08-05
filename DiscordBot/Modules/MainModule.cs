@@ -22,11 +22,6 @@ namespace DiscordBot.Modules.Commands
 	public class MainModule : BotModuleBase
 	{
 		#region Global fields
-		readonly DateTime today = DateTime.Now;
-		static TimeSpan start = new TimeSpan(20, 0, 0);
-		static TimeSpan end = start; //setting the same value as your start and end time is same
-		DateTime fridayStartCheck = new DateTime();
-		DateTime tuesdayEndCheck = new DateTime();
 		readonly FailsafeContext db;
 		readonly CommandService commandService;
 		readonly DiscordShardedClient Client;
@@ -61,7 +56,7 @@ namespace DiscordBot.Modules.Commands
 		public async Task MainHelp()
 		{
 			List<CommandInfo> commands = commandService.Commands.ToList();
-			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.Guilds.AsNoTracking().FirstOrDefaultAsync(g => g.Id == Context.Guild.Id);
 
 			EmbedBuilder embedBuilder = new EmbedBuilder();
 			var app = await Client.GetApplicationInfoAsync();
@@ -84,8 +79,9 @@ namespace DiscordBot.Modules.Commands
 
 			embedBuilder.AddField("Основные команды", mainCommands.Substring(0, mainCommands.Length - 2));
 			embedBuilder.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2));
+			embedBuilder.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
 
-			await Context.Channel.SendMessageAsync(embed: embedBuilder.Build());
+			await ReplyAndDeleteAsync(null, embed: embedBuilder.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("инфо")]
@@ -95,13 +91,13 @@ namespace DiscordBot.Modules.Commands
 		{
 			if (searchCommand == null)
 			{
-				await ReplyAsync(":x: Пожалуйста, введите полноcтью или частично команду ок которой вы хотите получить справку.");
+				await ReplyAndDeleteAsync(":x: Пожалуйста, введите полноcтью или частично команду о которой вы хотите получить справку.");
 				return;
 			}
 			var command = commandService.Commands.Where(c => c.Name.IndexOf(searchCommand, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefault();
 			if (command == null)
 			{
-				await ReplyAsync(":x: Пожалуйста, введите полноcтью или частично команду ок которой вы хотите получить справку.");
+				await ReplyAndDeleteAsync($":x: Команда **{searchCommand}** не была найдена.");
 				return;
 			}
 			var embed = new EmbedBuilder();
@@ -126,7 +122,9 @@ namespace DiscordBot.Modules.Commands
 			if (command.Remarks != null)
 				embed.AddField("Заметка:", command.Remarks);
 
-			await ReplyAsync(embed: embed.Build());
+			embed.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("зур")]
@@ -134,8 +132,13 @@ namespace DiscordBot.Modules.Commands
 		[Remarks("Пример: !зур, префикс команды может отличаться от стандартного.")]
 		public async Task XurCommand()
 		{
-
 			#region Check DayOfWeek
+			DateTime today = DateTime.Now;
+			TimeSpan start = new TimeSpan(20, 0, 0);
+			TimeSpan end = start; //setting the same value as your start and end time is same
+			DateTime fridayStartCheck = new DateTime();
+			DateTime tuesdayEndCheck = new DateTime();
+
 			if (today.DayOfWeek == DayOfWeek.Friday)
 			{
 				fridayStartCheck = DateTime.Parse(today.ToShortDateString());
@@ -185,7 +188,7 @@ namespace DiscordBot.Modules.Commands
 					"так как мои алгоритмы глобального позиционирования пока еще в разработке, определить его точное местоположение я не могу.\n" +
 					"[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)\n" +
 					"[Или тут](https://ftw.in/game/destiny-2/find-xur)")
-					.WithFooter("Напоминаю! Зур покинет пределы солнечной системы во вторник 20:00 по МСК.");
+					.WithFooter("Напоминаю! Зур покинет пределы солнечной системы во вторник 20:00 по МСК. Это сообщение будет автоматически удалено через 2 минуты. ");
 
 			}
 			else
@@ -193,9 +196,9 @@ namespace DiscordBot.Modules.Commands
 				Embed.WithColor(Color.Red)
 					.WithTitle($"Уважаемый пользователь {Context.User}")
 					.WithDescription("По моим данным Зур не в пределах солнечной системы.")
-					.WithFooter("Зур прибудет в пятницу 20:00 по МСК. Я сообщу.");
+					.WithFooter("Зур прибудет в пятницу 20:00 по МСК. Я сообщу. Это сообщение будет автоматически удалено через 2 минуты.");
 			}
-			await ReplyAsync(embed: Embed.Build());
+			await ReplyAndDeleteAsync(null, embed: Embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("экзот")]
@@ -206,7 +209,7 @@ namespace DiscordBot.Modules.Commands
 			#region Checks
 			if (Input == null)
 			{
-				await ReplyAsync(":x: Пожалуйста, введите полное или частичное название экзотического снаряжения.");
+				await ReplyAndDeleteAsync(":x: Пожалуйста, введите полное или частичное название экзотического снаряжения.");
 				return;
 			}
 
@@ -226,7 +229,7 @@ namespace DiscordBot.Modules.Commands
 			//If not found gear by user input
 			if (gear == null)
 			{
-				await ReplyAsync(":x: Этой информации в моей базе данных нет. :frowning:");
+				await ReplyAndDeleteAsync(":x: Этой информации в моей базе данных нет. :frowning:");
 				return;
 			}
 			#endregion
@@ -248,10 +251,11 @@ namespace DiscordBot.Modules.Commands
 			embed.WithImageUrl(gear.ImageUrl);//Exotic screenshot
 
 			var app = await Context.Client.GetApplicationInfoAsync();//Get some bot info from discord api
-			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", "https://www.bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png");
+			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}. Это сообщение будет автоматически удалено через 2 минуты.",
+				"https://www.bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png");
 
 
-			await Context.Channel.SendMessageAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", false, embed.Build());
+			await ReplyAndDeleteAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("катализатор")]
@@ -271,9 +275,10 @@ namespace DiscordBot.Modules.Commands
 					"А еще ты можешь написать `!катализатор любой` и я выдам тебе случайный катализатор.");
 				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://vk.com/topic-184785875_40234113).");
 				Embed.WithColor(Color.Blue);
-				Embed.WithFooter($"Если нашли какие либо неточности или у вас есть предложения, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
+				Embed.WithFooter($"Это сообщение будет автоматически удалено через 2 минуты.",
+					@"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
-				await ReplyAsync(embed: Embed.Build());
+				await ReplyAndDeleteAsync(null, embed: Embed.Build(), timeout: TimeSpan.FromMinutes(2));
 				return;
 			}
 			Catalyst catalyst = null;
@@ -294,7 +299,8 @@ namespace DiscordBot.Modules.Commands
 				Embed.WithDescription(":x: Этой информации в моей базе данных нет. :frowning:");
 				Embed.WithColor(Color.Red);
 				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://vk.com/topic-184785875_40234113).");
-				await Context.Channel.SendMessageAsync(null, false, Embed.Build());
+				Embed.WithFooter("Это сообщение будет автоматически удалено через 1 минуту.");
+				await ReplyAndDeleteAsync(null, embed: Embed.Build(), timeout: TimeSpan.FromMinutes(1));
 				return;
 			}
 			#endregion
@@ -311,9 +317,10 @@ namespace DiscordBot.Modules.Commands
 				Embed.AddField("Задание катализатора", catalyst.Masterwork);
 			if (!string.IsNullOrWhiteSpace(catalyst.Bonus))
 				Embed.AddField("Бонус катализатор", catalyst.Bonus);
-			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}", @"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
+			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}. Это сообщение будет автоматически удалено через 2 минуты.",
+				@"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
-			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", false, Embed.Build());
+			await ReplyAndDeleteAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", embed: Embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("респект"), Alias("помощь", "донат")]
@@ -324,9 +331,9 @@ namespace DiscordBot.Modules.Commands
 			var app = await Client.GetApplicationInfoAsync();
 			embed.WithColor(Color.Green);
 			embed.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку на любую сумму. [Подписка](https://www.patreon.com/Cyber_Garret) придаст мне, как разработчику, больше мотивации развивать бота и придавать ему больше возможностей и функций. И, как минимум, покрыть расходы на ежемесячную аренду сервера. А в будущем от подписки у тебя будет больше возможностей. :smiley: ");
-			embed.WithFooter($"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}");
+			embed.WithFooter($"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}. Это сообщение будет автоматически удалено через 2 минуты.");
 
-			await ReplyAsync(embed: embed.Build());
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("сбор")]
@@ -334,14 +341,16 @@ namespace DiscordBot.Modules.Commands
 		[Remarks("Пример: !сбор <Название> <Дата и время начала активности> <Заметка лидера(Не обязательно)>, например !сбор пн 17.07.2019-20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
 		[Cooldown(10)]
-		public async Task RaidCollection(string raidName, string raidTime, [Remainder]string userMemo = null)
+		public async Task RaidCollection(string milestoneName, string raidTime, [Remainder]string userMemo = null)
 		{
-			var raidInfo = await FailsafeDbOperations.GetMilestone(raidName);
+			var milestone = await db.Milestones.AsNoTracking().Where(r =>
+				r.Name.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
+				r.Alias.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
 
-			if (raidInfo == null)
+			if (milestone == null)
 			{
 				var AvailableRaids = "Доступные для регистрации активности:\n\n";
-				var info = await FailsafeDbOperations.GetAllMilestones();
+				var info = await db.Milestones.AsNoTracking().ToListAsync();
 
 				foreach (var item in info)
 				{
@@ -352,8 +361,8 @@ namespace DiscordBot.Modules.Commands
 					.WithTitle("Страж, я не разобрала в какую активность ты хочешь пойти")
 					.WithColor(Color.Red)
 					.WithDescription(AvailableRaids += "\nПример: !сбор пж 17.07.2019-20:00")
-					.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному.");
-				await ReplyAsync(embed: message.Build());
+					.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному. Это сообщение будет автоматически удалено через 2 минуты.");
+				await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
 				return;
 			}
 
@@ -371,10 +380,10 @@ namespace DiscordBot.Modules.Commands
 					"**Год:** Например: 2019\n" +
 					"**Час:** от 00 до 23\n" +
 					"**Минута:** от 00 до 59\n" +
-					"В итоге у тебя должно получиться: **05.07.2019-20:05**")
+					"В итоге у тебя должно получиться: **05.07.2019-20:05** Пример: !сбор пж 21.05.2018-20:00")
 					.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
-					.WithFooter("Пример: !сбор пж 21.05.2018-20:00");
-				await ReplyAsync(embed: message.Build());
+					.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+				await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
 				return;
 			}
 			if (dateTime < DateTime.Now)
@@ -382,11 +391,11 @@ namespace DiscordBot.Modules.Commands
 				var message = new EmbedBuilder()
 					.WithColor(Color.Red)
 					.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи в {DateTime.Now.Year - 1000} г. и передай привет моему капитану.");
-				await ReplyAsync(embed: message.Build());
+				await ReplyAndDeleteAsync(null, embed: message.Build());
 				return;
 			}
-			var msg = await Context.Channel.SendMessageAsync(text: "@here", embed: Milestone.StartEmbed(Context.User, raidInfo, dateTime, userMemo).Build());
-			await Milestone.RegisterMilestoneAsync(msg.Id, Context.Guild.Name, Context.User.Id, raidInfo.Id, dateTime, userMemo);
+			var msg = await ReplyAsync(message: "@here", embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
+			await Milestone.RegisterMilestoneAsync(msg.Id, Context.Guild.Name, Context.User.Id, milestone.Id, dateTime, userMemo);
 			//Slots
 			await msg.AddReactionAsync(Global.ReactPlaceNumber["2"]);
 			await msg.AddReactionAsync(Global.ReactPlaceNumber["3"]);
@@ -417,9 +426,9 @@ namespace DiscordBot.Modules.Commands
 						"Если ты желаешь, чтобы я начала обновлять и отображать актуальные данные о твоем клане,\n" +
 						$"напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
 						"Только так я могу оперативно отображать данные о твоих стражах.\n");
-					embed.WithFooter("Ты можешь посетить Черный исход по ссылке в описании и получать любую оперативную помощь и информацию от моего создателя.");
+					embed.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
 
-					await ReplyAsync(embed: embed.Build());
+					await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 					return;
 				}
 				#endregion
@@ -437,7 +446,7 @@ namespace DiscordBot.Modules.Commands
 					}
 
 
-					EmbedBuilder embed = new EmbedBuilder();
+					var embed = new EmbedBuilder();
 					embed.WithTitle($"Онлайн статус стражей клана {destiny2Clan.Name}");
 					embed.WithColor(Color.Orange);
 					////Bungie Clan link
@@ -508,9 +517,9 @@ namespace DiscordBot.Modules.Commands
 					if (!string.IsNullOrEmpty(NoData))
 						embed.AddField("Нет данных", NoData);
 					//Simple footer with clan name
-					embed.WithFooter($"Данные об онлайне стражей обновляються раз в час. Информация о клане и его составе раз в 15 минут.");
+					embed.WithFooter($"Данные об онлайне стражей обновляються раз в час. Информация о клане и его составе раз в 15 минут. Это сообщение будет автоматически удалено через 2 минуты.");
 					//Mention user with ready statistic
-					await ReplyAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", false, embed.Build());
+					await ReplyAndDeleteAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 
 					//Delete message from start this command
 					await Context.Channel.DeleteMessageAsync(message);

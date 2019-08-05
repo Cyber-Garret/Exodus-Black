@@ -13,20 +13,24 @@ using Core.Models.Destiny2;
 using API.Bungie;
 using API.Bungie.Models;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscordBot.Modules.Administration
 {
 	public class OwnerModule : BotModuleBase
 	{
+		private readonly FailsafeContext Db;
+		public OwnerModule(FailsafeContext failsafeContext)
+		{
+			Db = failsafeContext;
+		}
+
 		#region Functions
 		private static string GetUptime() => (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString(@"dd\.hh\:mm\:ss");
 		private static string GetHeapSize() => Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2).ToString();
 		private bool Destiny2ClanExists(long id)
 		{
-			using (FailsafeContext context = new FailsafeContext())
-			{
-				return context.Clans.Any(c => c.Id == id);
-			}
+			return Db.Clans.AsNoTracking().Any(c => c.Id == id);
 		}
 		private bool ProfileExists(string destinyMembershipId)
 		{
@@ -45,37 +49,36 @@ namespace DiscordBot.Modules.Administration
 			{
 				if (Destiny2ClanExists(ClanId))
 				{
-					await Context.Channel.SendMessageAsync("Клан с таким ID уже зарегистрирован.");
+					await ReplyAndDeleteAsync("Клан с таким ID уже зарегистрирован.");
 					return;
 				}
 				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-				using (FailsafeContext failsafe = new FailsafeContext())
+
+				BungieApi bungie = new BungieApi();
+				var claninfo = bungie.GetGroupResult(ClanId);
+				if (claninfo.Response != null)
 				{
-					BungieApi bungie = new BungieApi();
-					var claninfo = bungie.GetGroupResult(ClanId);
-					if (claninfo.Response != null)
+					Clan clan = new Clan
 					{
-						Clan clan = new Clan
-						{
 
-							Id = claninfo.Response.Detail.GroupId,
-							Name = claninfo.Response.Detail.Name,
-							CreateDate = claninfo.Response.Detail.CreationDate,
-							Motto = claninfo.Response.Detail.Motto,
-							About = claninfo.Response.Detail.About,
-							MemberCount = claninfo.Response.Detail.MemberCount
-						};
+						Id = claninfo.Response.Detail.GroupId,
+						Name = claninfo.Response.Detail.Name,
+						CreateDate = claninfo.Response.Detail.CreationDate,
+						Motto = claninfo.Response.Detail.Motto,
+						About = claninfo.Response.Detail.About,
+						MemberCount = claninfo.Response.Detail.MemberCount
+					};
 
 
-						failsafe.Add(clan);
-						await failsafe.SaveChangesAsync();
-					}
-					await message.ModifyAsync(m => m.Content = "Готово");
+					Db.Clans.Add(clan);
+					await Db.SaveChangesAsync();
 				}
+				await message.ModifyAsync(m => m.Content = "Готово");
+
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "AddClan", ex.Message, ex));
 				Console.WriteLine(ex.ToString());
 				await Context.Channel.SendMessageAsync("Ошибка добавления клана. Подробности в консоли.");
 			}
@@ -87,34 +90,31 @@ namespace DiscordBot.Modules.Administration
 		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 		public async Task ReloadMembers()
 		{
-			try
+			var message = await Context.Channel.SendMessageAsync("Начинаю работать");
+
+			var members = await Db.Clan_Members.ToListAsync();
+			BungieApi bungieApi = new BungieApi();
+			foreach (var item in members)
 			{
-
-				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-				using (FailsafeContext failsafeContext = new FailsafeContext())
+				try
 				{
-					var members = failsafeContext.Clan_Members.ToList();
-					BungieApi bungieApi = new BungieApi();
-					foreach (var item in members)
-					{
-						var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
+					var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
 
-						var member = failsafeContext.Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
+					var member = Db.Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
 
-						member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
+					member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
 
-						failsafeContext.Update(member);
-						await failsafeContext.SaveChangesAsync();
-					}
+					Db.Clan_Members.Update(member);
+					await Db.SaveChangesAsync();
+				}
+
+				catch (Exception ex)
+				{
+					await Logger.Log(new LogMessage(LogSeverity.Error, "ReloadMembers", ex.Message, ex));
+					Console.WriteLine(ex.ToString());
 				}
 				await message.ModifyAsync(m => m.Content = "Готово");
 			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
-				Console.WriteLine(ex.ToString());
-			}
-
 		}
 
 		[Command("stat")]
@@ -124,7 +124,7 @@ namespace DiscordBot.Modules.Administration
 		{
 			var app = await Context.Client.GetApplicationInfoAsync();
 
-			EmbedBuilder embed = new EmbedBuilder();
+			var embed = new EmbedBuilder();
 			embed.WithColor(Color.Green);
 			embed.WithTitle("Моя техническая информация");
 			embed.AddField("Инфо",
@@ -140,7 +140,7 @@ namespace DiscordBot.Modules.Administration
 				$"- Пользователей: {Context.Client.Guilds.Sum(g => g.Users.Count)}\n" +
 				$"- Текущее время сервера: {DateTime.Now}", true);
 
-			await Context.Channel.SendMessageAsync(null, false, embed.Build());
+			await ReplyAsync(null, false, embed.Build());
 		}
 
 		[Command("clean")]
@@ -169,9 +169,9 @@ namespace DiscordBot.Modules.Administration
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "PurgeChat", ex.Message, ex));
 				Console.WriteLine(ex.ToString());
-				await Context.Channel.SendMessageAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
+				await ReplyAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
 			}
 		}
 	}

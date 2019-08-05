@@ -15,6 +15,7 @@ using System;
 using System.IO;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
+using Discord.Addons.Interactive;
 
 namespace DiscordBot
 {
@@ -114,6 +115,7 @@ namespace DiscordBot
 				.AddSingleton<CommandService>()
 				.AddSingleton<CommandHandlerService>()
 				.AddSingleton<DiscordEventHandlerService>()
+				.AddSingleton<InteractiveService>()
 				.AddSingleton<TimerService>()
 				.AddSingleton<MilestoneService>()
 				.BuildServiceProvider();

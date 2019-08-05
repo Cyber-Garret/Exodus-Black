@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Discord.Addons.Interactive\Discord.Addons.Interactive\Discord.Addons.Interactive.csproj" />
     <ProjectReference Include="..\API\API.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
