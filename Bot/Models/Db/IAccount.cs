@@ -1,4 +1,4 @@
-﻿namespace Core.Models
+﻿namespace Bot.Models.Db
 {
 	public interface IAccount
 	{

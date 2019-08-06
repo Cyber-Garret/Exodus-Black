@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bot.Models.Db.Destiny2;
+using Bot.Models.Db.Discord;
 
-using Core.Models.Discord;
-using Core.Models.Destiny2;
+using Microsoft.EntityFrameworkCore;
 
-namespace Core
+using System.IO;
+
+namespace Bot
 {
 	public class FailsafeContext : DbContext
 	{
@@ -11,9 +13,8 @@ namespace Core
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlite("Data Source=Failsafe.db");
-			//optionsBuilder.UseSqlServer("Server=159.69.21.188;Database=Neiralink;Trusted_Connection=False;User=Failsafe;Password=gfkAD8EPc4~YLVpV;" +
-			//	"MultipleActiveResultSets=True");
+			var sqlitepath = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "NeiraLink.db");
+			optionsBuilder.UseSqlite($"Data Source={sqlitepath}");
 		}
 
 		//Discord

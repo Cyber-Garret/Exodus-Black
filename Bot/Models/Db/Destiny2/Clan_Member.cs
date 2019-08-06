@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.Models.Destiny2
+namespace Bot.Models.Db.Destiny2
 {
 	public class Clan_Member
 	{
@@ -21,4 +21,3 @@ namespace Core.Models.Destiny2
 		public Clan Clan { get; set; }
 	}
 }
-

@@ -1,12 +1,12 @@
-﻿using Core;
-using Core.Models.Destiny2;
+﻿using Bot.Models.Db.Destiny2;
+
 using Discord;
 using Discord.WebSocket;
+
 using Microsoft.EntityFrameworkCore;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bot.Services

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Collections.Generic;
-using System.Text;
+﻿using API.Bungie;
+using API.Bungie.Models;
 
 using Discord;
 
-using Core;
-using API.Bungie;
-using API.Bungie.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Bot.Services.Bungie
 {

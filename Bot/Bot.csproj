@@ -8,19 +8,21 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Nett" Version="0.13.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\API\API.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Discord.Addons.Interactive\Discord.Addons.Interactive.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Failsafe.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="UserData\config.toml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

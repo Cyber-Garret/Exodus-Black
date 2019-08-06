@@ -1,12 +1,12 @@
-﻿using Core;
-using Core.Models.Destiny2;
+﻿using Bot.Models.Db.Destiny2;
+using Bot.Modules.Administration;
+using Bot.Preconditions;
+using Bot.Services;
 
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Bot.Modules.Administration;
-using Bot.Preconditions;
-using Bot.Services;
+
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -57,14 +57,7 @@ namespace Bot.Modules.Commands
 		{
 			List<CommandInfo> commands = commandService.Commands.ToList();
 			var guild = await db.Guilds.AsNoTracking().FirstOrDefaultAsync(g => g.Id == Context.Guild.Id);
-
-			EmbedBuilder embedBuilder = new EmbedBuilder();
 			var app = await Client.GetApplicationInfoAsync();
-			embedBuilder.WithColor(Color.Gold);
-			embedBuilder.WithTitle($"Доброго времени суток. Меня зовут Нейроматрица, я ИИ \"Черного исхода\" адаптированный для Discord. Успешно функционирую с {app.CreatedAt.ToString("dd.MM.yyyy")}");
-			embedBuilder.WithDescription(
-				"Моя основная цель - своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
-				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n");
 
 			string mainCommands = string.Empty;
 			string adminCommands = string.Empty;
@@ -77,11 +70,17 @@ namespace Bot.Modules.Commands
 
 			}
 
-			embedBuilder.AddField("Основные команды", mainCommands.Substring(0, mainCommands.Length - 2));
-			embedBuilder.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2));
-			embedBuilder.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+			var embed = new EmbedBuilder()
+				.WithColor(Color.Gold)
+				.WithTitle($"Доброго времени суток. Меня зовут Нейроматрица, я ИИ \"Черного исхода\" адаптированный для Discord. Успешно функционирую с {app.CreatedAt.ToString("dd.MM.yyyy")}")
+				.WithDescription(
+				"Моя основная цель - своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
+				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n" +
+				"Больше информации ты можешь найти в моей [группе ВК](https://vk.com/failsafe_bot)")
+				.AddField("Основные команды", mainCommands.Substring(0, mainCommands.Length - 2))
+				.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2));
 
-			await ReplyAndDeleteAsync(null, embed: embedBuilder.Build(), timeout: TimeSpan.FromMinutes(2));
+			await ReplyAsync(embed: embed.Build());
 		}
 
 		[Command("инфо")]
@@ -112,7 +111,7 @@ namespace Bot.Modules.Commands
 			if (command.Aliases.Count > 1)
 			{
 				string alias = string.Empty;
-				//Skip command atribute
+				//Skip command attribute
 				foreach (var item in command.Aliases.Skip(1))
 				{
 					alias += $"{guild.CommandPrefix ?? "!"}{item}, ";
@@ -122,9 +121,7 @@ namespace Bot.Modules.Commands
 			if (command.Remarks != null)
 				embed.AddField("Заметка:", command.Remarks);
 
-			embed.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
-
-			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
+			await ReplyAsync(embed: embed.Build());
 		}
 
 		[Command("зур")]
@@ -251,11 +248,11 @@ namespace Bot.Modules.Commands
 			embed.WithImageUrl(gear.ImageUrl);//Exotic screenshot
 
 			var app = await Context.Client.GetApplicationInfoAsync();//Get some bot info from discord api
-			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}. Это сообщение будет автоматически удалено через 2 минуты.",
+			embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}.",
 				"https://www.bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png");
 
 
-			await ReplyAndDeleteAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
+			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", embed: embed.Build());
 		}
 
 		[Command("катализатор")]
@@ -317,23 +314,25 @@ namespace Bot.Modules.Commands
 				Embed.AddField("Задание катализатора", catalyst.Masterwork);
 			if (!string.IsNullOrWhiteSpace(catalyst.Bonus))
 				Embed.AddField("Бонус катализатор", catalyst.Bonus);
-			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}. Это сообщение будет автоматически удалено через 2 минуты.",
+			Embed.WithFooter($"Если нашли какие либо неточности, сообщите моему создателю: {app.Owner.Username}#{app.Owner.Discriminator}.",
 				@"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
-			await ReplyAndDeleteAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", embed: Embed.Build(), timeout: TimeSpan.FromMinutes(2));
+			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", embed: Embed.Build());
 		}
 
 		[Command("респект"), Alias("помощь", "донат")]
 		[Summary("Информация о том как помочь развитию бота")]
 		public async Task Donate()
 		{
-			EmbedBuilder embed = new EmbedBuilder();
 			var app = await Client.GetApplicationInfoAsync();
-			embed.WithColor(Color.Green);
-			embed.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку на любую сумму. [Подписка](https://www.patreon.com/Cyber_Garret) придаст мне, как разработчику, больше мотивации развивать бота и придавать ему больше возможностей и функций. И, как минимум, покрыть расходы на ежемесячную аренду сервера. А в будущем от подписки у тебя будет больше возможностей. :smiley: ");
-			embed.WithFooter($"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}. Это сообщение будет автоматически удалено через 2 минуты.");
 
-			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
+			var embed = new EmbedBuilder()
+				.WithColor(Color.Green)
+				.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку или единоразово купить мне кофе на любую сумму.\n[Я на Patreon](https://www.patreon.com/Cyber_Garret)\nКофе от вас или подписка придаст мне, как разработчику, больше мотивации развивать бота и придавать ему больше возможностей и функций. И, как минимум, покрыть расходы на ежемесячную аренду сервера.")
+				.WithImageUrl("https://cs6.pikabu.ru/images/previews_comm/2017-08_3/1502729121126769504.png")
+				.WithFooter($"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}#{app.Owner.Discriminator}.");
+
+			await ReplyAsync(embed: embed.Build());
 		}
 
 		[Command("сбор")]
@@ -406,7 +405,7 @@ namespace Bot.Modules.Commands
 		}
 
 		[Command("клан статус")]
-		[Summary("Отображает отсортированный онлайн Destiny 2 клана, зарегистрированного в базе данных моим создателем.")]
+		[Summary("Отображает отсортированный онлайн Destiny 2 клана, зарегистрированного в базе данных моим создателем.\n**Клан должен быть зарегистрирован моим создателем.**")]
 		[Remarks("Пример: !клан статус <ID клана>, например !клан статус 3772661 или введите !клан статус без ID для отображения как добавить клан.")]
 		public async Task GetGuildInfo(int GuildId = 0)
 		{
@@ -416,114 +415,114 @@ namespace Bot.Modules.Commands
 				if (GuildId == 0)
 				{
 					var app = await Context.Client.GetApplicationInfoAsync();
-					EmbedBuilder embed = new EmbedBuilder();
-					embed.WithColor(Color.Gold);
-					embed.WithTitle("Капитан, ты не указал ID гильдии.");
-					embed.WithDescription(
+					var NotFoundMessage = new EmbedBuilder();
+					NotFoundMessage.WithColor(Color.Gold);
+					NotFoundMessage.WithTitle("Капитан, ты не указал ID гильдии.");
+					NotFoundMessage.WithDescription(
 						$"Чтобы узнать ID, достаточно открыть любой клан на сайте Bungie.\nНапример: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n" +
 						$"Синтаксис команды простой: **!клан статус 3526561**\n");
-					embed.AddField("Кэш данных о клане Destiny 2",
+					NotFoundMessage.AddField("Кэш данных о клане Destiny 2",
 						"Если ты желаешь, чтобы я начала обновлять и отображать актуальные данные о твоем клане,\n" +
 						$"напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
 						"Только так я могу оперативно отображать данные о твоих стражах.\n");
-					embed.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+					NotFoundMessage.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
 
-					await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
+					await ReplyAndDeleteAsync(null, embed: NotFoundMessage.Build(), timeout: TimeSpan.FromMinutes(2));
 					return;
 				}
 				#endregion
 				//Send calculating message because stastic forming near 30-50 sec.
 				var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
 
-				using (var failsafe = new FailsafeContext())
+				var destiny2Clan = db.Clans.AsNoTracking().Include(m => m.Members).FirstOrDefault(c => c.Id == GuildId);
+
+				if (destiny2Clan == null)
 				{
-					var destiny2Clan = failsafe.Clans.AsNoTracking().Include(m => m.Members).ToList().FirstOrDefault(c => c.Id == GuildId);
-
-					if (destiny2Clan == null)
-					{
-						await ReplyAsync(":x: Этой информации в моей базе данных нет. :frowning:");
-						return;
-					}
-
-
-					var embed = new EmbedBuilder();
-					embed.WithTitle($"Онлайн статус стражей клана {destiny2Clan.Name}");
-					embed.WithColor(Color.Orange);
-					////Bungie Clan link
-					embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={GuildId}");
-					////Some clan main info
-					embed.WithDescription(
-						$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
-						$"Сортировка происходит от времени, когда вызвали данную команду.");
-
-					#region list for member sorted for some days
-					List<string> _ThisDay = new List<string>();
-					List<string> _Yesterday = new List<string>();
-					List<string> _ThisWeek = new List<string>();
-					List<string> _MoreOneWeek = new List<string>();
-					List<string> _NoData = new List<string>();
-					#endregion
-
-					//Main Sorting logic
-					foreach (var member in destiny2Clan.Members)
-					{
-						int LastOnlineTime = 1000;
-						//Property for calculate how long days user did not enter the Destiny
-						if (member.DateLastPlayed != null)
-							LastOnlineTime = (DateTime.Today.Date - member.DateLastPlayed.Value.Date).Days;
-
-						//Sorting user to right list
-						if (LastOnlineTime < 1)
-						{
-							_ThisDay.Add(member.Name);
-						}
-						else if (LastOnlineTime >= 1 && LastOnlineTime < 2)
-						{
-							_Yesterday.Add(member.Name);
-						}
-						else if (LastOnlineTime >= 2 && LastOnlineTime <= 7)
-						{
-							_ThisWeek.Add(member.Name);
-						}
-						else if (LastOnlineTime >= 7 && LastOnlineTime < 500)
-						{
-							_MoreOneWeek.Add(member.Name);
-						}
-						else if (LastOnlineTime > 500)
-						{
-							_NoData.Add(member.Name);
-						}
-					}
-
-					//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
-					//and if string ThisDay not empty add to embed message special field.
-					string ThisDay = string.Join(',', _ThisDay);
-					if (!string.IsNullOrEmpty(ThisDay))
-						embed.AddField("Был(a) сегодня", ThisDay);
-					//Same as above, but who enter to the game yesterday
-					string Yesterday = string.Join(',', _Yesterday);
-					if (!string.IsNullOrEmpty(Yesterday))
-						embed.AddField("Был(a) вчера", Yesterday);
-					//Same as above, but who enter to the game more 5 days but fewer 7 days ago
-					string ThisWeek = string.Join(',', _ThisWeek);
-					if (!string.IsNullOrEmpty(ThisWeek))
-						embed.AddField("Был(a) на этой неделе", ThisWeek);
-					//Same as above, but who enter to the game more 7 days ago
-					string MoreOneWeek = string.Join(',', _MoreOneWeek);
-					if (!string.IsNullOrEmpty(MoreOneWeek))
-						embed.AddField("Был(a) больше недели тому назад", MoreOneWeek);
-					//For user who not have any data.
-					string NoData = string.Join(',', _NoData);
-					if (!string.IsNullOrEmpty(NoData))
-						embed.AddField("Нет данных", NoData);
-					//Simple footer with clan name
-					embed.WithFooter($"Данные об онлайне стражей обновляються раз в час. Информация о клане и его составе раз в 15 минут. Это сообщение будет автоматически удалено через 2 минуты.");
-					//Mention user with ready statistic
-					await ReplyAndDeleteAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
-
-					//Delete message from start this command
-					await Context.Channel.DeleteMessageAsync(message);
+					await message.ModifyAsync(m => m.Content = ":x: Этой информации в моей базе данных нет. :frowning:\n" +
+					"Если это ошибка сообщите моему создателю.\n" +
+					"Если вы впервые воспользовались этой командой, напишите моему создателю, чтобы он добавил ваш клан в мою базу данных.");
+					return;
 				}
+
+
+				var embed = new EmbedBuilder();
+				embed.WithTitle($"Онлайн статус стражей клана `{destiny2Clan.Name}`");
+				embed.WithColor(Color.Orange);
+				////Bungie Clan link
+				embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={GuildId}");
+				////Some clan main info
+				embed.WithDescription(
+					$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
+					$"Сортировка происходит от времени, когда вызвали данную команду.");
+
+				#region list for member sorted for some days
+				List<string> _ThisDay = new List<string>();
+				List<string> _Yesterday = new List<string>();
+				List<string> _ThisWeek = new List<string>();
+				List<string> _MoreOneWeek = new List<string>();
+				List<string> _NoData = new List<string>();
+				#endregion
+
+				//Main Sorting logic
+				foreach (var member in destiny2Clan.Members)
+				{
+					int LastOnlineTime = 1000;
+					//Property for calculate how long days user did not enter the Destiny
+					if (member.DateLastPlayed != null)
+						LastOnlineTime = (DateTime.Today.Date - member.DateLastPlayed.Value.Date).Days;
+
+					//Sorting user to right list
+					if (LastOnlineTime < 1)
+					{
+						_ThisDay.Add(member.Name);
+					}
+					else if (LastOnlineTime >= 1 && LastOnlineTime < 2)
+					{
+						_Yesterday.Add(member.Name);
+					}
+					else if (LastOnlineTime >= 2 && LastOnlineTime <= 7)
+					{
+						_ThisWeek.Add(member.Name);
+					}
+					else if (LastOnlineTime >= 7 && LastOnlineTime < 500)
+					{
+						_MoreOneWeek.Add(member.Name);
+					}
+					else if (LastOnlineTime > 500)
+					{
+						_NoData.Add(member.Name);
+					}
+				}
+
+				//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
+				//and if string ThisDay not empty add to embed message special field.
+				string ThisDay = string.Join(',', _ThisDay);
+				if (!string.IsNullOrEmpty(ThisDay))
+					embed.AddField("Был(a) сегодня", ThisDay);
+				//Same as above, but who enter to the game yesterday
+				string Yesterday = string.Join(',', _Yesterday);
+				if (!string.IsNullOrEmpty(Yesterday))
+					embed.AddField("Был(a) вчера", Yesterday);
+				//Same as above, but who enter to the game more 5 days but fewer 7 days ago
+				string ThisWeek = string.Join(',', _ThisWeek);
+				if (!string.IsNullOrEmpty(ThisWeek))
+					embed.AddField("Был(a) на этой неделе", ThisWeek);
+				//Same as above, but who enter to the game more 7 days ago
+				string MoreOneWeek = string.Join(',', _MoreOneWeek);
+				if (!string.IsNullOrEmpty(MoreOneWeek))
+					embed.AddField("Был(a) больше недели тому назад", MoreOneWeek);
+				//For user who not have any data.
+				string NoData = string.Join(',', _NoData);
+				if (!string.IsNullOrEmpty(NoData))
+					embed.AddField("Нет данных", NoData);
+				//Simple footer with clan name
+				embed.WithFooter($"Данные об онлайне стражей обновляються раз в час. Информация о клане и его составе раз в 15 минут.");
+				//Mention user with ready statistic
+				await ReplyAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", embed: embed.Build());
+
+				//Delete message from start this command
+				await Context.Channel.DeleteMessageAsync(message);
+
 			}
 			catch (Exception ex)
 			{

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Timers;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Bot.Models.Db.Destiny2;
+using Bot.Services.Bungie;
 
 using Discord;
 using Discord.WebSocket;
 
-using Core;
-using Core.Models.Destiny2;
-using Bot.Services.Bungie;
+using Microsoft.EntityFrameworkCore;
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace Bot.Services
 {

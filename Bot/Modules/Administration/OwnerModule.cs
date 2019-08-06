@@ -1,19 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-
+﻿using API.Bungie;
+using API.Bungie.Models;
+using Bot.Models.Db.Destiny2;
 using Discord;
 using Discord.Commands;
 
-using Core;
-using Core.Models.Destiny2;
-
-using API.Bungie;
-using API.Bungie.Models;
-using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Bot.Modules.Administration
 {

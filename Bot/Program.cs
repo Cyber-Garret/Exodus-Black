@@ -1,11 +1,10 @@
-﻿using Core;
+﻿using Bot.Models;
+using Bot.Services;
 
 using Discord;
+using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
-
-using Bot.Models;
-using Bot.Services;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +14,6 @@ using System;
 using System.IO;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
-using Discord.Addons.Interactive;
 
 namespace Bot
 {

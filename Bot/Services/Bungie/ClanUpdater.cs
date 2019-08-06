@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using API.Bungie;
+
+using Bot.Models.Db.Destiny2;
 
 using Discord;
 
-using Core;
-using Core.Models.Destiny2;
-using API.Bungie;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Bot.Services.Bungie
 {
 	internal class ClanUpdater

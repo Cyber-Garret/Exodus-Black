@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using Discord;
 using Discord.Commands;
 
-using Core;
-using Core.Models.Discord;
-
 using Bot.Helpers;
 using Bot.Extensions;
 using Bot.Preconditions;
-
-using API.Bungie;
-using API.Bungie.Models;
-using Microsoft.EntityFrameworkCore;
-using Discord.WebSocket;
+using Bot.Models.Db.Discord;
 
 namespace Bot.Modules.Administration
 {
@@ -61,7 +53,7 @@ namespace Bot.Modules.Administration
 				.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
 			#endregion
 
-			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
+			await ReplyAsync(embed: embed.Build());
 		}
 
 		[Command("новости")]
@@ -215,8 +207,8 @@ namespace Bot.Modules.Administration
 				return;
 			}
 
-			await ReplyAndDeleteAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord. *Это сообщение будет автоматически удалено через 2 минуты.*",
-							 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build(), timeout: TimeSpan.FromMinutes(2));
+			await ReplyAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord. *Это сообщение будет автоматически удалено через 2 минуты.*",
+							 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build());
 		}
 
 		[Command("сохранить приветствие")]
@@ -259,7 +251,7 @@ namespace Bot.Modules.Administration
 				message = $"Для команд установлен префикс **{prefix}**";
 			}
 
-			await ReplyAndDeleteAsync(message);
+			await ReplyAsync(message);
 		}
 
 		[Command("автороль")]
@@ -281,6 +273,8 @@ namespace Bot.Modules.Administration
 		}
 
 		[Command("рассылка")]
+		[Summary("Рассылает личные сообщения стражам указанной роли. По окончании работы я предоставлю небольшую статистику кому я смогла отправить, а кому нет.")]
+		[Remarks("Пример: **!рассылка <Роль> <Текст сообщения>**\n!рассылка @Тест Привет, завтра у нас клановый сбор в дискорде.")]
 		public async Task SendMessage(IRole _role, [Remainder] string message)
 		{
 			var GuildOwner = Context.Guild.OwnerId;
@@ -325,6 +319,21 @@ namespace Bot.Modules.Administration
 			$"- Всего получателей: {SucessCount + FailCount}\n" +
 			$"- Успешно доставлено: {SucessCount}\n" +
 			$"- Не удалось отправить: {FailCount}");
+		}
+
+		[Command("опрос")]
+		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
+		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
+		public async Task StartPoll([Remainder] string input)
+		{
+			var embed = new EmbedBuilder()
+				.WithAuthor($"Голосование от {Context.User.Username}", Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl())
+				.WithColor(Color.Green)
+				.AddField($"Тема голосования", input);
+
+			var msg = await ReplyAsync(embed: embed.Build());
+
+			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
 		}
 
 	}

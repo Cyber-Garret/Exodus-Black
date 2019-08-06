@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.Models.Destiny2
+namespace Bot.Models.Db.Destiny2
 {
 	public class Milestone
 	{
