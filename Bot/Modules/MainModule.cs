@@ -24,7 +24,7 @@ namespace Bot.Modules.Commands
 		#region Global fields
 		readonly FailsafeContext db;
 		readonly CommandService commandService;
-		readonly DiscordShardedClient Client;
+		readonly DiscordSocketClient Client;
 		readonly MilestoneService Milestone;
 		#endregion
 		string Alias(string name)
@@ -43,11 +43,11 @@ namespace Bot.Modules.Commands
 				return name;
 		}
 
-		public MainModule(FailsafeContext context, CommandService command, DiscordShardedClient shardedClient, MilestoneService milestoneService)
+		public MainModule(FailsafeContext context, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
 			db = context;
 			commandService = command;
-			Client = shardedClient;
+			Client = socketClient;
 			Milestone = milestoneService;
 		}
 

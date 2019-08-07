@@ -16,16 +16,16 @@ namespace Bot.Services
 	public class TimerService
 	{
 		#region Private fields
-		readonly DiscordShardedClient Client;
+		readonly DiscordSocketClient Client;
 		private Timer MainTimer;
 		private Timer GameStatusTimer;
 		private Timer ClanTimer;
 		private Timer MemberTimer;
 		#endregion
 
-		public TimerService(DiscordShardedClient shardedClient)
+		public TimerService(DiscordSocketClient socketClient)
 		{
-			Client = shardedClient;
+			Client = socketClient;
 		}
 
 		public void Configure()

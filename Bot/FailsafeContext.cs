@@ -9,7 +9,10 @@ namespace Bot
 {
 	public class FailsafeContext : DbContext
 	{
-		public FailsafeContext() { }
+		public FailsafeContext()
+		{
+			Database.EnsureCreated();
+		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{

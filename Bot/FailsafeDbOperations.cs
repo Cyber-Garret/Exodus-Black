@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 using Discord;
 using Bot.Models.Db.Discord;
-using Bot.Models.Db;
 using Bot.Models.Db.Destiny2;
 
 namespace Bot

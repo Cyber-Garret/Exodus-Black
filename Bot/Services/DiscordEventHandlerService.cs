@@ -13,23 +13,21 @@ namespace Bot.Services
 	public class DiscordEventHandlerService
 	{
 		#region Private Fields
-		readonly DiscordShardedClient Client;
+		readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
 		private readonly MilestoneService milestone;
 		#endregion
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordShardedClient shardedClient, MilestoneService milestoneService)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
-			Client = shardedClient;
+			Client = socketClient;
 			CommandHandlingService = command;
 			milestone = milestoneService;
 		}
 
 		public void Configure()
 		{
-			//_client.ShardConnected += _client_ShardConnected;
-			Client.ShardDisconnected += _client_ShardDisconnectedAsync;
 			Client.JoinedGuild += _client_JoinedGuildAsync;
 			Client.ChannelCreated += _client_ChannelCreatedAsync;
 			Client.ChannelDestroyed += _client_ChannelDestroyedAsync;
@@ -47,10 +45,6 @@ namespace Bot.Services
 
 		
 		#region Events
-		private async Task _client_ShardDisconnectedAsync(Exception ex, DiscordSocketClient client)
-		{
-			await Logger.Log(new LogMessage(LogSeverity.Warning, $"Shard {client.ShardId} Disconnected", ex.Message, ex));
-		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
 		private async Task _client_ChannelDestroyedAsync(SocketChannel arg) => await ChannelDestroyed(arg);
