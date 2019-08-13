@@ -7,6 +7,7 @@ using Bot.Helpers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Bot.Services
 {
@@ -43,7 +44,7 @@ namespace Bot.Services
 			Client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
 
-		
+
 		#region Events
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
@@ -77,6 +78,7 @@ namespace Bot.Services
 		private async Task _client_UserJoinedAsync(SocketGuildUser arg)
 		{
 			await UserJoined(arg);
+			//await UserWelcome(arg);
 			await MiscHelpers.Autorole(arg);
 		}
 
@@ -538,6 +540,30 @@ namespace Bot.Services
 			}
 
 		}
+		private async Task UserWelcome(SocketGuildUser user)
+		{
+			//try
+			//{
+			//	var guild = await FailsafeDbOperations.GetGuildAccountAsync(user.Guild.Id);
+			//	if (guild.WelcomeChannel == 0) return;
+			//	if (!(Client.GetChannel(guild.WelcomeChannel) is SocketTextChannel channel)) return;
+			//	string[] randomWelcome = { "Опять Кабал? ©Ашер", "Бип. ©Нейра" };
+			//	string welcome = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
+
+			//	string css = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", "Welcome.html");
+			//	string html = string.Format("<h1>Hello {0}!</h1>", user.Nickname ?? user.Username);
+			//	var converter = new HtmlConverter();
+
+			//	var jpgBytes = converter.FromHtmlString(css + html, 270, CoreHtmlToImage.ImageFormat.Jpg, 100);
+
+			//	await channel.SendFileAsync(new MemoryStream(jpgBytes), "hello.jpg", null);
+			//}
+			//catch (Exception ex)
+			//{
+			//	await Logger.Log(new LogMessage(LogSeverity.Error, "UserWelcome", ex.Message, ex));
+			//}
+
+		}
 		private async Task UserLeft(SocketGuildUser arg)
 		{
 			try
@@ -610,7 +636,7 @@ namespace Bot.Services
 			}
 		}
 
-		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache,ISocketMessageChannel channel,SocketReaction reaction)
+		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
 		{
 			if (!reaction.User.Value.IsBot)
 			{

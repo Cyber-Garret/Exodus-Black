@@ -3,11 +3,12 @@ using API.Bungie.Models;
 using Bot.Models.Db.Destiny2;
 using Discord;
 using Discord.Commands;
-
+using ImageMagick;
 using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -169,6 +170,43 @@ namespace Bot.Modules.Administration
 				await Logger.Log(new LogMessage(LogSeverity.Error, "PurgeChat", ex.Message, ex));
 				Console.WriteLine(ex.ToString());
 				await ReplyAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
+			}
+		}
+
+		[Command("hi")]
+		public async Task Test()
+		{
+			try
+			{
+				var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+				if (guild.WelcomeChannel == 0) return;
+				string[] randomWelcome = { "Опять Кабал? ©Ашер", "Бип. ©Нейра" };
+				string welcomeMessage = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
+
+				var path = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", "Welcome.html");
+				var html = File.ReadAllText(path);
+				//var text = string.Format(html, welcomeMessage, Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl(), Context.User.Username);
+				var text = html.Replace("{0}", "bg1.jpg").Replace("{1}", welcomeMessage).Replace("{2}", Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl()).Replace("{3}", Context.User.Username);
+
+				using (var image = new MagickImageCollection(Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", "bg1.jpg")))
+				{
+					new Drawables()
+						.FontPointSize(18)
+						.Text(230, 100, welcomeMessage)
+						.Text(230, 15, $"Добро пожаловать {Context.User.Username}")
+						.Draw(image.First());
+
+					image.Add(Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl());
+
+					using (var result = image.AppendHorizontally())
+					{
+						await Context.Channel.SendFileAsync(new MemoryStream(result.ToByteArray()), "hello.jpg");
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
 			}
 		}
 	}
