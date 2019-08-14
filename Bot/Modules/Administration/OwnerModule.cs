@@ -183,24 +183,38 @@ namespace Bot.Modules.Administration
 				string[] randomWelcome = { "Опять Кабал? ©Ашер", "Бип. ©Нейра" };
 				string welcomeMessage = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
 
-				var path = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", "Welcome.html");
-				var html = File.ReadAllText(path);
-				//var text = string.Format(html, welcomeMessage, Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl(), Context.User.Username);
-				var text = html.Replace("{0}", "bg1.jpg").Replace("{1}", welcomeMessage).Replace("{2}", Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl()).Replace("{3}", Context.User.Username);
+				string text = $"{welcomeMessage}\nСтраж {Context.User.Username} приземлился.";
+				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{Global.GetRandom.Next(1, 31)}.jpg");
 
-				using (var image = new MagickImageCollection(Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", "bg1.jpg")))
+				using (var image = new MagickImage(background, 512, 200))
 				{
-					new Drawables()
-						.FontPointSize(18)
-						.Text(230, 100, welcomeMessage)
-						.Text(230, 15, $"Добро пожаловать {Context.User.Username}")
-						.Draw(image.First());
-
-					image.Add(Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl());
-
-					using (var result = image.AppendHorizontally())
+					var readSettings = new MagickReadSettings
 					{
-						await Context.Channel.SendFileAsync(new MemoryStream(result.ToByteArray()), "hello.jpg");
+						FillColor = MagickColors.Silver,
+						BackgroundColor = MagickColor.FromRgba(69, 69, 69, 150),
+						FontWeight = FontWeight.Bold,
+						BorderColor = MagickColors.Black,
+
+						TextGravity = Gravity.Center,
+						TextAntiAlias = false,
+						// This determines the size of the area where the text will be drawn in
+						Width = 246,
+						Height = 190
+					};
+
+					using (var label = new MagickImage($"caption:{text}", readSettings))
+					{
+						using (var avatar = new MagickImage(Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl()))
+						{
+							avatar.AdaptiveResize(128, 128);
+							avatar.Border(2);
+							avatar.BorderColor = MagickColors.Black;
+
+							image.Composite(avatar, 40, 33, CompositeOperator.Over);
+
+							image.Composite(label, 261, 5, CompositeOperator.Over);
+							await Context.Channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "hello.jpg");
+						}
 					}
 				}
 			}
