@@ -82,7 +82,7 @@ namespace Bot
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "SaveGuildAccountAsync", ex.Message, ex));
 			}
 
 		}

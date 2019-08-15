@@ -30,13 +30,13 @@ namespace Bot.Modules.Administration
 		{
 			return Db.Clans.AsNoTracking().Any(c => c.Id == id);
 		}
-		private bool ProfileExists(string destinyMembershipId)
-		{
-			using (FailsafeContext failsafeContext = new FailsafeContext())
-			{
-				return failsafeContext.Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
-			}
-		}
+		//private bool ProfileExists(string destinyMembershipId)
+		//{
+		//	using (FailsafeContext failsafeContext = new FailsafeContext())
+		//	{
+		//		return failsafeContext.Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
+		//	}
+		//}
 		#endregion
 
 		[Command("add clan")]
@@ -170,57 +170,6 @@ namespace Bot.Modules.Administration
 				await Logger.Log(new LogMessage(LogSeverity.Error, "PurgeChat", ex.Message, ex));
 				Console.WriteLine(ex.ToString());
 				await ReplyAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
-			}
-		}
-
-		[Command("hi")]
-		public async Task Test()
-		{
-			try
-			{
-				var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
-				if (guild.WelcomeChannel == 0) return;
-				string[] randomWelcome = { "Опять Кабал? ©Ашер", "Бип. ©Нейра" };
-				string welcomeMessage = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
-
-				string text = $"{welcomeMessage}\nСтраж {Context.User.Username} приземлился.";
-				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{Global.GetRandom.Next(1, 31)}.jpg");
-
-				using (var image = new MagickImage(background, 512, 200))
-				{
-					var readSettings = new MagickReadSettings
-					{
-						FillColor = MagickColors.Silver,
-						BackgroundColor = MagickColor.FromRgba(69, 69, 69, 150),
-						FontWeight = FontWeight.Bold,
-						BorderColor = MagickColors.Black,
-
-						TextGravity = Gravity.Center,
-						TextAntiAlias = false,
-						// This determines the size of the area where the text will be drawn in
-						Width = 246,
-						Height = 190
-					};
-
-					using (var label = new MagickImage($"caption:{text}", readSettings))
-					{
-						using (var avatar = new MagickImage(Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl()))
-						{
-							avatar.AdaptiveResize(128, 128);
-							avatar.Border(2);
-							avatar.BorderColor = MagickColors.Black;
-
-							image.Composite(avatar, 40, 33, CompositeOperator.Over);
-
-							image.Composite(label, 261, 5, CompositeOperator.Over);
-							await Context.Channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "hello.jpg");
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
 			}
 		}
 	}

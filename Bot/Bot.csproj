@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CoreHtmlToImage" Version="1.0.5" />
     <PackageReference Include="Discord.Net" Version="2.1.1" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />

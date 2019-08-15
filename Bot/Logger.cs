@@ -8,6 +8,11 @@ namespace Bot
 {
 	internal class Logger
 	{
+		/// <summary>
+		/// LogSeverity colors in console - Critical = Red; Error = Yellow; Warning = Magenta; Info = Cyan; Verbose = Green; Debug = Blue;
+		/// </summary>
+		/// <param name="logMessage"></param>
+		/// <returns></returns>
 		internal static Task Log(LogMessage logMessage)
 		{
 			Console.ForegroundColor = SeverityToConsoleColor(logMessage.Severity);
@@ -17,31 +22,27 @@ namespace Bot
 			return Task.CompletedTask;
 		}
 
-		internal static string GetExecutingMethodName(Exception exception)
-		{
-			var trace = new StackTrace(exception);
-			var frame = trace.GetFrame(0);
-			var method = frame.GetMethod();
-
-			return string.Concat(method.DeclaringType.FullName, ".", method.Name);
-		}
-
+		/// <summary>
+		/// Change console color by log severity value
+		/// </summary>
+		/// <param name="severity">Log severity type</param>
+		/// <returns>Console color</returns>
 		private static ConsoleColor SeverityToConsoleColor(LogSeverity severity)
 		{
 			switch (severity)
 			{
 				case LogSeverity.Critical:
 					return ConsoleColor.Red;
-				case LogSeverity.Debug:
-					return ConsoleColor.Blue;
 				case LogSeverity.Error:
 					return ConsoleColor.Yellow;
-				case LogSeverity.Info:
-					return ConsoleColor.Blue;
-				case LogSeverity.Verbose:
-					return ConsoleColor.Green;
 				case LogSeverity.Warning:
 					return ConsoleColor.Magenta;
+				case LogSeverity.Info:
+					return ConsoleColor.Cyan;
+				case LogSeverity.Verbose:
+					return ConsoleColor.Green;
+				case LogSeverity.Debug:
+					return ConsoleColor.Blue;
 				default:
 					return ConsoleColor.White;
 			}

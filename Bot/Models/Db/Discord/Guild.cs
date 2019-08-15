@@ -8,9 +8,7 @@ namespace Bot.Models.Db.Discord
         [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public ulong Id { get; set; }
         public ulong NotificationChannel { get; set; } = 0;
-        public bool EnableNotification { get; set; } = false;
         public ulong LoggingChannel { get; set; } = 0;
-        public bool EnableLogging { get; set; } = false;
         public ulong WelcomeChannel { get; set; } = 0;
         public string WelcomeMessage { get; set; }
         public string LeaveMessage { get; set; }
