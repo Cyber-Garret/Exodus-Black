@@ -52,7 +52,8 @@ namespace Bot.Modules.Administration
 		}
 
 		[Command("новости")]
-		[Summary("Эту команду нужно писать в том канале, где ты хочешь чтобы я отправляла информационные сообщения, например о Зуре.")]
+		[Summary("Команда позволяет включать или выключать оповещения о Зуре в определенный текстовый канал.")]
+		[Remarks("Для выключения оповещений напиши **!новости**. Для включения **!новости #новостной-канал**. ")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		public async Task SetNotificationChannel(ITextChannel channel = null)
 		{
@@ -81,7 +82,8 @@ namespace Bot.Modules.Administration
 		}
 
 		[Command("логи")]
-		[Summary("Эту команду нужно писать в том канале, где ты хочешь, чтобы я отправляла туда сервисные сообщения, например о том, что кто-то покинул сервер.")]
+		[Summary("Команда позволяет включать или выключать оповещения об изменениях на сервер, например, когда кто-то покинул сервер.")]
+		[Remarks("Для выключения оповещений напиши **!логи**. Для включения **!логи #нейра-логи**. ")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
 		public async Task SetLogChannel(ITextChannel channel = null)
 		{
@@ -110,7 +112,8 @@ namespace Bot.Modules.Administration
 		}
 
 		[Command("приветствие")]
-		[Summary("")]
+		[Summary("Команда позволяет включать или выключать оповещения о новых участниках сервера в стиле мира Destiny.")]
+		[Remarks("Для выключения оповещений напиши **!приветствие**. Для включения **!логи #флудилка**. ")]
 		public async Task SetWelcomeChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -142,7 +145,7 @@ namespace Bot.Modules.Administration
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
-			var guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
 			{

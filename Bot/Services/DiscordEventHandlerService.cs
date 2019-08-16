@@ -551,40 +551,60 @@ namespace Bot.Services
 				string[] randomWelcome =
 					{
 					"Опять Кабал? ©Ашер",
-					"Бип. ©Нейра"};
-				string welcomeMessage = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
+					"Бип. ©Нейра",
+					"Я использовала часть своего кода, программируя эту броню! Но если умрешь, во всем виноват будешь ты, а не я ©Нейра",
+					"Капитан, вы знали, что я подслушивала за Гоулом, Хм... Я думала он вас на атомы распылит ©Нейра",
+					"Раз уж вы здесь, не хотите ненадолго остаться?.. Несколько тысяч лет меня устроит ©Нейра",
+					"\"Мотиватор дня\" Не сдавайся детка! \"Конец записи\"©Нейра",
+					"Значит им танков сколько захочешь, а мне ни одного? ©Кейд-6",
+					"Свет живет во всем вокруг и во всех нас. Можешь заслонить его, можешь даже попытаться запереть его. Но он всегда найдет выход. - ©Глашатай Странника.",
+					"Окей, значит так... Эм... Вы - сборище неудачников. Но раз других поубивали, то и вы сойдёте. ©Кейд-6",
+					"Короче, всё пропало. Мой шмот, ваш шмот... Важнее, конечно, мой шмот. ©Кейд-6",
+					"Пришло время новых легенд.",
+					"Это - конец вашего пути. ©Гоул",
+					"Все любят плохую идею, если она сработала. ©Кейд-6",
+					"Эй, как насчет того, чтобы ты встал здесь и делал мою работу? А я пойду и буду делать твою. Которая заключается в том, чтобы тут околачиваться. ©Кейд-6",
+					"Тут не библиотека. Проходи, не задерживайся. ©Кейд-6",
+					"Да, ты клёвый и всё такое, но проваливай. ©Кейд-6",
+					"Так, стоп, погоди... отойди назад... ещё... вот так нормально. ©Кейд-6",
+					"Убери свой камень с моей карты. ©Кейд-6",
+					"(Смешно пародируя голос Кабалов) Отдайте нам Праймуса, или мы взорвем корабль. ©Кейд-6",
+					"Если ты увидишь их... просто пристрели. ©Кейд-6",
+					"Расслабься, он работает нормально. Приготовься для воскрешения, Призрак. ©Кейд-6",
+					"(Шепотом) Ты мой любимчик. Тссс, никому не говори. ©Кейд-6",
+					"Я бы хотел постоять тут с тобой весь день, но... Я соврал, я бы совсем не хотел стоять тут с тобой весь день. ©Кейд-6",
+					"Они убили Кейда! Сволочи!",
+					"Так я прав... или я прав? ©Кейд-6",
+					"Сколько раз стиралась моя система? 41,42,43? ©Банши-44" };
 
-				string text = $"{welcomeMessage}\nСтраж {user.Username} приземлился.";
+				string welcomeMessage = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
 				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{Global.GetRandom.Next(1, 31)}.jpg");
 
 				using (var image = new MagickImage(background, 512, 200))
 				{
 					var readSettings = new MagickReadSettings
 					{
-						FillColor = MagickColors.Silver,
-						BackgroundColor = MagickColor.FromRgba(69, 69, 69, 150),
+						FillColor = MagickColors.GhostWhite,
+						BackgroundColor = MagickColor.FromRgba(69, 69, 69, 200),
 						FontWeight = FontWeight.Bold,
-						BorderColor = MagickColors.Black,
 
 						TextGravity = Gravity.Center,
-						TextAntiAlias = false,
 						// This determines the size of the area where the text will be drawn in
-						Width = 246,
+						Width = 256,
 						Height = 190
 					};
 
-					using (var label = new MagickImage($"caption:{text}", readSettings))
+					using (var label = new MagickImage($"caption:{welcomeMessage}", readSettings))
 					{
 						using (var avatar = new MagickImage(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()))
 						{
 							avatar.AdaptiveResize(128, 128);
 							avatar.Border(2);
-							avatar.BorderColor = MagickColors.Black;
 
 							image.Composite(avatar, 40, 33, CompositeOperator.Over);
 
-							image.Composite(label, 261, 5, CompositeOperator.Over);
-							await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "hello.jpg", user.Mention);
+							image.Composite(label, 251, 5, CompositeOperator.Over);
+							await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
 						}
 					}
 				}
