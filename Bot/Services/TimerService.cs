@@ -16,16 +16,16 @@ namespace Bot.Services
 	public class TimerService
 	{
 		#region Private fields
-		readonly DiscordShardedClient Client;
+		readonly DiscordSocketClient Client;
 		private Timer MainTimer;
 		private Timer GameStatusTimer;
 		private Timer ClanTimer;
 		private Timer MemberTimer;
 		#endregion
 
-		public TimerService(DiscordShardedClient shardedClient)
+		public TimerService(DiscordSocketClient socketClient)
 		{
-			Client = shardedClient;
+			Client = socketClient;
 		}
 
 		public void Configure()
@@ -103,7 +103,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "Change Bot Game Status", ex.Message, ex));
 			}
 		}
 		private void ClanTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -137,7 +137,7 @@ namespace Bot.Services
 
 			foreach (var guild in guilds)
 			{
-				if (guild.EnableNotification == true)
+				if (guild.NotificationChannel != 0)
 				{
 					try
 					{
@@ -167,7 +167,7 @@ namespace Bot.Services
 
 			foreach (var guild in guilds)
 			{
-				if (guild.EnableNotification == true)
+				if (guild.NotificationChannel != 0)
 				{
 					try
 					{

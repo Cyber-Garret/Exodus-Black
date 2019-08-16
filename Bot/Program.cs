@@ -54,17 +54,17 @@ namespace Bot
 		{
 			service = BuildServices();
 
-			var shardedClient = service.GetRequiredService<DiscordShardedClient>();
-			shardedClient.Log += Logger.Log;
+			var Discord = service.GetRequiredService<DiscordSocketClient>();
+			Discord.Log += Logger.Log;
 
 			service.GetRequiredService<TimerService>().Configure();
 			service.GetRequiredService<DiscordEventHandlerService>().Configure();
 			await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 
 
-			await shardedClient.LoginAsync(TokenType.Bot, config.Discord.BotToken);
-			await shardedClient.StartAsync();
-			await shardedClient.SetStatusAsync(UserStatus.Online);
+			await Discord.LoginAsync(TokenType.Bot, config.Discord.BotToken);
+			await Discord.StartAsync();
+			await Discord.SetStatusAsync(UserStatus.Online);
 
 			await Task.Delay(-1);
 		}
@@ -101,13 +101,12 @@ namespace Bot
 		public ServiceProvider BuildServices()
 		{
 			return new ServiceCollection()
-				.AddSingleton(new DiscordShardedClient(config.Discord.Shards, new DiscordSocketConfig
+				.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 				{
 					AlwaysDownloadUsers = true,
 					LogLevel = LogSeverity.Verbose,
 					DefaultRetryMode = RetryMode.AlwaysRetry,
-					MessageCacheSize = 100,
-					TotalShards = config.Discord.Shards.Length
+					MessageCacheSize = 100
 				}))
 				.AddDbContext<FailsafeContext>()
 				.AddSingleton<CommandService>()

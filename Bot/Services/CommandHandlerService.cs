@@ -11,15 +11,15 @@ namespace Bot.Services
 	public class CommandHandlerService
 	{
 		#region Private fields
-		private readonly DiscordShardedClient Client;
+		private readonly DiscordSocketClient Client;
 		private CommandService Commands;
 		private readonly IServiceProvider Services;
 		#endregion
 
-		public CommandHandlerService(IServiceProvider serviceProvider, DiscordShardedClient shardedClient, CommandService commandService)
+		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService)
 		{
 			Services = serviceProvider;
-			Client = shardedClient;
+			Client = socketClient;
 			Commands = commandService;
 		}
 
@@ -39,7 +39,7 @@ namespace Bot.Services
 			// Ignore if not SocketUserMessage 
 			if (!(arg is SocketUserMessage msg)) return;
 
-			var context = new ShardedCommandContext(Client, msg);
+			var context = new SocketCommandContext(Client, msg);
 
 			string prefix;
 			if (!context.IsPrivate)

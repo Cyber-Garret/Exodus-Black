@@ -7,29 +7,29 @@ using Bot.Helpers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using ImageMagick;
 
 namespace Bot.Services
 {
 	public class DiscordEventHandlerService
 	{
 		#region Private Fields
-		readonly DiscordShardedClient Client;
+		readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
 		private readonly MilestoneService milestone;
 		#endregion
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordShardedClient shardedClient, MilestoneService milestoneService)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
-			Client = shardedClient;
+			Client = socketClient;
 			CommandHandlingService = command;
 			milestone = milestoneService;
 		}
 
 		public void Configure()
 		{
-			//_client.ShardConnected += _client_ShardConnected;
-			Client.ShardDisconnected += _client_ShardDisconnectedAsync;
 			Client.JoinedGuild += _client_JoinedGuildAsync;
 			Client.ChannelCreated += _client_ChannelCreatedAsync;
 			Client.ChannelDestroyed += _client_ChannelDestroyedAsync;
@@ -45,12 +45,8 @@ namespace Bot.Services
 			Client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
 
-		
+
 		#region Events
-		private async Task _client_ShardDisconnectedAsync(Exception ex, DiscordSocketClient client)
-		{
-			await Logger.Log(new LogMessage(LogSeverity.Warning, $"Shard {client.ShardId} Disconnected", ex.Message, ex));
-		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
 		private async Task _client_ChannelDestroyedAsync(SocketChannel arg) => await ChannelDestroyed(arg);
@@ -83,6 +79,7 @@ namespace Bot.Services
 		private async Task _client_UserJoinedAsync(SocketGuildUser arg)
 		{
 			await UserJoined(arg);
+			await UserWelcome(arg);
 			await MiscHelpers.Autorole(arg);
 		}
 
@@ -122,7 +119,7 @@ namespace Bot.Services
 
 				var currentIGuildChannel = (IGuildChannel)arg;
 				var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
-				if (guild.EnableLogging == true)
+				if (guild.LoggingChannel != 0)
 				{
 					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
@@ -130,7 +127,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "ChannelCreated", ex.Message, ex));
 			}
 
 		}
@@ -165,7 +162,7 @@ namespace Bot.Services
 				if (arg is IGuildChannel currentIguildChannel)
 				{
 					var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIguildChannel.Guild.Id).Result;
-					if (guild.EnableLogging == true)
+					if (guild.LoggingChannel != 0)
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
@@ -175,7 +172,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "ChannelDestroyed", ex.Message, ex));
 			}
 		}
 		private async Task GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
@@ -218,7 +215,7 @@ namespace Bot.Services
 					}
 					#endregion
 
-					if (guild.EnableLogging == true)
+					if (guild.LoggingChannel != 0)
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
@@ -269,7 +266,7 @@ namespace Bot.Services
 					}
 					#endregion
 
-					if (guild.EnableLogging == true)
+					if (guild.LoggingChannel != 0)
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
@@ -280,7 +277,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "GuildMemberUpdated", ex.Message, ex));
 			}
 
 		}
@@ -370,7 +367,7 @@ namespace Bot.Services
 					}
 
 
-					if (guild.EnableLogging == true)
+					if (guild.LoggingChannel != 0)
 					{
 
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
@@ -380,7 +377,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "MessageUpdated", ex.Message, ex));
 			}
 
 		}
@@ -436,7 +433,7 @@ namespace Bot.Services
 						embedDel.AddField("Текст сообщения", $"{messageBefore.Value.Content}");
 					}
 
-					if (guild.EnableLogging == true)
+					if (guild.LoggingChannel != 0)
 					{
 
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
@@ -447,7 +444,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "MessageDeleted", ex.Message, ex));
 			}
 
 		}
@@ -474,7 +471,7 @@ namespace Bot.Services
 
 				var guild = FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id).Result;
 
-				if (guild.EnableLogging == true)
+				if (guild.LoggingChannel != 0)
 				{
 					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
@@ -482,7 +479,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "RoleCreated", ex.Message, ex));
 			}
 
 		}
@@ -511,7 +508,7 @@ namespace Bot.Services
 
 				var guild = FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id).Result;
 
-				if (guild.EnableLogging == true)
+				if (guild.LoggingChannel != 0)
 				{
 					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
@@ -519,7 +516,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "RoleDeleted", ex.Message, ex));
 			}
 
 		}
@@ -540,7 +537,81 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "UserJoined", ex.Message, ex));
+			}
+
+		}
+		private async Task UserWelcome(SocketGuildUser user)
+		{
+			try
+			{
+				var guild = await FailsafeDbOperations.GetGuildAccountAsync(user.Guild.Id);
+				if (guild.WelcomeChannel == 0) return;
+				if (!(Client.GetChannel(guild.WelcomeChannel) is SocketTextChannel channel)) return;
+				string[] randomWelcome =
+					{
+					"Опять Кабал? ©Ашер",
+					"Бип. ©Нейра",
+					"Я использовала часть своего кода, программируя эту броню! Но если умрешь, во всем виноват будешь ты, а не я ©Нейра",
+					"Капитан, вы знали, что я подслушивала за Гоулом, Хм... Я думала он вас на атомы распылит ©Нейра",
+					"Раз уж вы здесь, не хотите ненадолго остаться?.. Несколько тысяч лет меня устроит ©Нейра",
+					"\"Мотиватор дня\" Не сдавайся детка! \"Конец записи\"©Нейра",
+					"Значит им танков сколько захочешь, а мне ни одного? ©Кейд-6",
+					"Свет живет во всем вокруг и во всех нас. Можешь заслонить его, можешь даже попытаться запереть его. Но он всегда найдет выход. - ©Глашатай Странника.",
+					"Окей, значит так... Эм... Вы - сборище неудачников. Но раз других поубивали, то и вы сойдёте. ©Кейд-6",
+					"Короче, всё пропало. Мой шмот, ваш шмот... Важнее, конечно, мой шмот. ©Кейд-6",
+					"Пришло время новых легенд.",
+					"Это - конец вашего пути. ©Гоул",
+					"Все любят плохую идею, если она сработала. ©Кейд-6",
+					"Эй, как насчет того, чтобы ты встал здесь и делал мою работу? А я пойду и буду делать твою. Которая заключается в том, чтобы тут околачиваться. ©Кейд-6",
+					"Тут не библиотека. Проходи, не задерживайся. ©Кейд-6",
+					"Да, ты клёвый и всё такое, но проваливай. ©Кейд-6",
+					"Так, стоп, погоди... отойди назад... ещё... вот так нормально. ©Кейд-6",
+					"Убери свой камень с моей карты. ©Кейд-6",
+					"(Смешно пародируя голос Кабалов) Отдайте нам Праймуса, или мы взорвем корабль. ©Кейд-6",
+					"Если ты увидишь их... просто пристрели. ©Кейд-6",
+					"Расслабься, он работает нормально. Приготовься для воскрешения, Призрак. ©Кейд-6",
+					"(Шепотом) Ты мой любимчик. Тссс, никому не говори. ©Кейд-6",
+					"Я бы хотел постоять тут с тобой весь день, но... Я соврал, я бы совсем не хотел стоять тут с тобой весь день. ©Кейд-6",
+					"Они убили Кейда! Сволочи!",
+					"Так я прав... или я прав? ©Кейд-6",
+					"Сколько раз стиралась моя система? 41,42,43? ©Банши-44" };
+
+				string welcomeMessage = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
+				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{Global.GetRandom.Next(1, 31)}.jpg");
+
+				using (var image = new MagickImage(background, 512, 200))
+				{
+					var readSettings = new MagickReadSettings
+					{
+						FillColor = MagickColors.GhostWhite,
+						BackgroundColor = MagickColor.FromRgba(69, 69, 69, 200),
+						FontWeight = FontWeight.Bold,
+
+						TextGravity = Gravity.Center,
+						// This determines the size of the area where the text will be drawn in
+						Width = 256,
+						Height = 190
+					};
+
+					using (var label = new MagickImage($"caption:{welcomeMessage}", readSettings))
+					{
+						using (var avatar = new MagickImage(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()))
+						{
+							avatar.AdaptiveResize(128, 128);
+							avatar.Border(2);
+
+							image.Composite(avatar, 40, 33, CompositeOperator.Over);
+
+							image.Composite(label, 251, 5, CompositeOperator.Over);
+							await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
 			}
 
 		}
@@ -562,8 +633,8 @@ namespace Bot.Services
 				#region Message
 				embed.WithColor(Color.Red);
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
-				embed.WithTitle("💢 Страж покинул клан");
-				embed.WithThumbnailUrl($"{arg.GetAvatarUrl()}");
+				embed.WithTitle("💢 Страж покинул сервер");
+				embed.WithThumbnailUrl($"{arg.GetAvatarUrl() ?? arg.GetDefaultAvatarUrl()}");
 				embed.AddField(Global.InvisibleString,
 					$"На корабле был известен как:\n**{arg.Nickname ?? arg.Username}**\n" +
 					$"Discord имя стража\n**{arg.Username}#{arg.Discriminator}**");
@@ -596,7 +667,7 @@ namespace Bot.Services
 				#endregion
 
 				var guild = (await FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id));
-				if (guild.EnableLogging == true)
+				if (guild.LoggingChannel != 0)
 				{
 					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
@@ -604,7 +675,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "UserLeft", ex.Message, ex));
 			}
 		}
 		private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
@@ -616,7 +687,7 @@ namespace Bot.Services
 			}
 		}
 
-		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache,ISocketMessageChannel channel,SocketReaction reaction)
+		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
 		{
 			if (!reaction.User.Value.IsBot)
 			{

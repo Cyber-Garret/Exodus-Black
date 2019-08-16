@@ -3,11 +3,12 @@ using API.Bungie.Models;
 using Bot.Models.Db.Destiny2;
 using Discord;
 using Discord.Commands;
-
+using ImageMagick;
 using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -29,13 +30,13 @@ namespace Bot.Modules.Administration
 		{
 			return Db.Clans.AsNoTracking().Any(c => c.Id == id);
 		}
-		private bool ProfileExists(string destinyMembershipId)
-		{
-			using (FailsafeContext failsafeContext = new FailsafeContext())
-			{
-				return failsafeContext.Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
-			}
-		}
+		//private bool ProfileExists(string destinyMembershipId)
+		//{
+		//	using (FailsafeContext failsafeContext = new FailsafeContext())
+		//	{
+		//		return failsafeContext.Clan_Members.Any(m => m.DestinyMembershipId == destinyMembershipId);
+		//	}
+		//}
 		#endregion
 
 		[Command("add clan")]

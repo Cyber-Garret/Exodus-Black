@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 using Discord;
 using Bot.Models.Db.Discord;
-using Bot.Models.Db;
 using Bot.Models.Db.Destiny2;
 
 namespace Bot
@@ -83,7 +82,7 @@ namespace Bot
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, Logger.GetExecutingMethodName(ex), ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "SaveGuildAccountAsync", ex.Message, ex));
 			}
 
 		}

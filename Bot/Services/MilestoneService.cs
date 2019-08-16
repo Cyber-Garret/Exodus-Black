@@ -13,11 +13,11 @@ namespace Bot.Services
 {
 	public class MilestoneService
 	{
-		readonly DiscordShardedClient Client;
+		readonly DiscordSocketClient Client;
 		readonly FailsafeContext Db;
-		public MilestoneService(DiscordShardedClient shardedClient, FailsafeContext context)
+		public MilestoneService(DiscordSocketClient socketClient, FailsafeContext context)
 		{
-			Client = shardedClient;
+			Client = socketClient;
 			Db = context;
 		}
 

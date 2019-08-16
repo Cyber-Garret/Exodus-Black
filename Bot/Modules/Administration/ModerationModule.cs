@@ -9,6 +9,7 @@ using Bot.Helpers;
 using Bot.Extensions;
 using Bot.Preconditions;
 using Bot.Models.Db.Discord;
+using Discord.WebSocket;
 
 namespace Bot.Modules.Administration
 {
@@ -18,180 +19,125 @@ namespace Bot.Modules.Administration
 	[Cooldown(5)]
 	public class ModerationModule : BotModuleBase
 	{
-		public static string ConvertBoolean(bool? boolean)
+		private readonly DiscordSocketClient client;
+		public ModerationModule(DiscordSocketClient socketClient)
 		{
-			return boolean == true ? "**Да**" : "**Нет**";
+			client = socketClient;
 		}
 
 		[Command("настройки")]
-		[Summary("Эта команда выводит мои настройки для текущего корабля, так же содержит некоторую полезную и не очень информацию.")]
+		[Summary("Эта команда выводит мои настройки, так же содержит некоторую полезную и не очень информацию.")]
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
 			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
-			#region Data
 			var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
 			string FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
-			string logs = ConvertBoolean(guild.EnableLogging);
-			string news = ConvertBoolean(guild.EnableNotification);
-			#endregion
 
-			#region Message
 			var embed = new EmbedBuilder()
 				.WithColor(Color.Orange)
-				.WithTitle($"Мои настройки на этом корабле.")
+				.WithAuthor($"Мои настройки на этом сервере.", client.CurrentUser.GetAvatarUrl() ?? client.CurrentUser.GetDefaultAvatarUrl())
 				.WithThumbnailUrl(Context.Guild.IconUrl)
-				.WithDescription($"Клан **{Context.Guild.Name}** имеет свой корабль с **{FormattedCreatedAt}**, капитаном корабля в данный момент является **{OwnerName}**")
-				.AddField("Сейчас на корабле:",
-				$"Всего каналов: **{Context.Guild.Channels.Count}**\n" +
-				$"Стражей на корабле: **{Context.Guild.Users.Count}**")
-				.AddField("Новостной канал", $"В данный момент используется **<#{guild.NotificationChannel}>** для сообщений о Зур-е.")
-				.AddField("Оповещения о Зур-е включены?", news)
-				.AddField("Технический канал", $"В данный момент используется **<#{guild.LoggingChannel}>** для сервисных сообщений клана.")
-				.AddField("Тех. сообщения включены?", logs)
+				.WithDescription($"Сервер **{Context.Guild.Name}** зарегистрирован **{FormattedCreatedAt}**, владельцем сервера является **{OwnerName}**")
+				.AddField("Основная информация:",
+				$"- Всего каналов: **{Context.Guild.Channels.Count}**\n" +
+				$"- Стражей на корабле: **{Context.Guild.Users.Count}**\n" +
+				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
+				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
+				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**")
 				.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
-			#endregion
 
-			await ReplyAsync(embed: embed.Build());
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("новости")]
-		[Summary("Эту команду нужно писать в том канале, где ты хочешь чтобы я отправляла информационные сообщения, например о Зуре.")]
+		[Summary("Команда позволяет включать или выключать оповещения о Зуре в определенный текстовый канал.")]
+		[Remarks("Для выключения оповещений напиши **!новости**. Для включения **!новости #новостной-канал**. ")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
-		public async Task SetNotificationChannel()
+		public async Task SetNotificationChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
-			Guild guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
-			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
-				.WithColor(Color.Orange)
 				.WithTitle("Новостной канал");
-			if (guild.NotificationChannel == 0)
+			if (channel == null)
 			{
-				embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять новости о Зур-е. :frowning: ";
+				embed.WithColor(Color.Red)
+					.WithDescription("Я выключила оповещения о Зуре.")
+					.WithFooter($"Это сообщение будет автоматически удалено через 1 минуту.");
+				guild.NotificationChannel = 0;
 			}
 			else
 			{
-				embed.Description = $"В данный момент у меня записанно что все новости о Зур-е я должна отправлять в **<#{guild.NotificationChannel}>**.";
+				embed.WithColor(Color.Gold)
+					.WithDescription($"Теперь новости о Зуре я буду присылать в канал {channel.Mention}")
+					.WithFooter($"Капитан, убедись пожалуйста, что в канале {channel.Name} у меня есть право [Отправлять сообщения]. Это сообщение будет автоматически удалено через 1 минуту.");
+				guild.NotificationChannel = channel.Id;
 			}
-			embed.AddField("Оповещения о Зур-е включены?", ConvertBoolean(guild.EnableNotification));
-			embed.WithFooter($"Хотите я запишу этот канал как новостной? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {RedX}. Это сообщение будет автоматически удалено через 1 минуту.");
-			#endregion
 
-			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-
-			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
-
-			if (choice == true)
-			{
-				guild.NotificationChannel = Context.Channel.Id;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
-			}
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
+			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 		}
 
 		[Command("логи")]
-		[Summary("Эту команду нужно писать в том канале, где ты хочешь, чтобы я отправляла туда сервисные сообщения, например о том, что кто-то покинул сервер.")]
+		[Summary("Команда позволяет включать или выключать оповещения об изменениях на сервер, например, когда кто-то покинул сервер.")]
+		[Remarks("Для выключения оповещений напиши **!логи**. Для включения **!логи #нейра-логи**. ")]
 		[RequireBotPermission(ChannelPermission.SendMessages)]
-		public async Task SetLogChannel()
+		public async Task SetLogChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
 			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
-			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
-				.WithColor(Color.Orange)
 				.WithTitle("Технический канал");
-			if (guild.LoggingChannel == 0)
+			if (channel == null)
 			{
-				embed.Description = $"Я заглянула в свою базу данных и оказывается у меня не записанно куда мне отправлять сервисные сообщения. :frowning: ";
+				embed.WithColor(Color.Red)
+					.WithDescription("Я выключила оповещения об изменениях на сервере.")
+					.WithFooter($"Это сообщение будет автоматически удалено через 1 минуту.");
+				guild.LoggingChannel = 0;
 			}
 			else
 			{
-				embed.Description = $"В данный момент у меня записанно что все сервисные сообщения я должна отправлять в **<#{guild.LoggingChannel}>**.";
+				embed.WithColor(Color.Gold)
+					.WithDescription($"Теперь большинство изменений на сервере, если у меня конечно есть права, я буду оповещать в канал {channel.Mention}")
+					.WithFooter($"Капитан, убедись пожалуйста, что в канале {channel.Name} у меня есть право [Отправлять сообщения]. Это сообщение будет автоматически удалено через 1 минуту.");
+				guild.LoggingChannel = channel.Id;
 			}
-			embed.AddField("Cервисные сообщения включены?", ConvertBoolean(guild.EnableLogging));
-			embed.WithFooter($"Хотите я запишу этот канал как технический? Если да - нажмите {HeavyCheckMark}, если нет - нажмите {RedX}. Это сообщение будет автоматически удалено через 1 минуту.");
-			#endregion
 
-			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-
-			//Если true обновляем id лог канала.
-			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
-
-			if (choice == true)
-			{
-				guild.LoggingChannel = Context.Channel.Id;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
-			}
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
+			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 		}
 
-		[Command("статус логов")]
-		[Summary("Эта команда позволяет включить или выключить Тех. сообщения.")]
-		public async Task ToggleLogging()
+		[Command("приветствие")]
+		[Summary("Команда позволяет включать или выключать оповещения о новых участниках сервера в стиле мира Destiny.")]
+		[Remarks("Для выключения оповещений напиши **!приветствие**. Для включения **!логи #флудилка**. ")]
+		public async Task SetWelcomeChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
 			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
-			#region Message
 			EmbedBuilder embed = new EmbedBuilder()
-			.WithColor(Color.Orange)
-			.WithTitle("Технические сообщения")
-			.WithDescription($"В данный момент все технические сообщения я отправляю в канал **<#{guild.LoggingChannel}>**")
-			.AddField("Оповещения включены?", ConvertBoolean(guild.EnableLogging))
-			.WithFooter($"Для включения - нажми {HeavyCheckMark}, для отключения - нажми {RedX}, или ничего не нажимай. Это сообщение будет автоматически удалено через 1 минуту.");
-			#endregion
-
-			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-
-			//Если true или false обновляем включено или выключено логирование для гильдии, в противном случае ничего не делаем.
-			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
-
-			if (choice == true)
+				.WithTitle("Приветственный канал");
+			if (channel == null)
 			{
-				guild.EnableLogging = true;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+				embed.WithColor(Color.Red)
+					.WithDescription("Я выключила оповещения о новых участниках на сервере.")
+					.WithFooter($"Это сообщение будет автоматически удалено через 1 минуту.");
+				guild.WelcomeChannel = 0;
 			}
-			else if (choice == false)
+			else
 			{
-				guild.EnableLogging = false;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+				embed.WithColor(Color.Gold)
+					.WithDescription($"Теперь я буду оповещать о новых участниках в канал {channel.Mention}")
+					.WithFooter($"Капитан, убедись пожалуйста, что в канале {channel.Name} у меня есть право [Прикреплять файлы]. Это сообщение будет автоматически удалено через 1 минуту.");
+				guild.WelcomeChannel = channel.Id;
 			}
 
-		}
-
-		[Command("статус новостей")]
-		[Summary("Эта команда позволяет включить или выключить оповещения о Зур-е.")]
-		public async Task ToggleNews()
-		{
-			// Get or create personal guild settings
-			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
-
-			#region Message
-			EmbedBuilder embed = new EmbedBuilder()
-				.WithColor(Color.Orange)
-				.WithTitle("Новостные сообщения")
-				.WithDescription($"В данный момент все новостные сообщения о Зур-е я отправляю в канал **<#{guild.NotificationChannel}>**")
-				.AddField("Оповещения включены?", ConvertBoolean(guild.EnableNotification))
-				.WithFooter($"Для включения - нажми {HeavyCheckMark}, для отключения - нажми {RedX}, или ничего не нажимай. Это сообщение будет автоматически удалено через 1 минуту.");
-			#endregion
-
-			var message = await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-
-			//Если true или false обновляем включено или выключено логирование для гильдии, в противном случае ничего не делаем.
-			bool? choice = await CommandContextExtensions.GetUserConfirmationAsync(Context, message.Content);
-
-			if (choice == true)
-			{
-				guild.EnableNotification = true;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
-			}
-			else if (choice == false)
-			{
-				guild.EnableNotification = false;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
-			}
+			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
+			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 		}
 
 		[Command("посмотреть приветствие")]
@@ -199,7 +145,7 @@ namespace Bot.Modules.Administration
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
-			var guild = FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id).Result;
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
 			{
