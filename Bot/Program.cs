@@ -15,6 +15,8 @@ using System.IO;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
 
+using Victoria;
+
 namespace Bot
 {
 	class Program
@@ -23,7 +25,7 @@ namespace Bot
 		private const string fileName = "config.toml";
 
 		private IServiceProvider service;
-		private static BotSettings config;
+		internal static BotSettings config;
 
 
 		private static void Main()
@@ -42,11 +44,6 @@ namespace Bot
 			catch (Exception ex)
 			{
 				Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}, Source: Main] Message: {ex.Message}");
-				//Not need for Lunix Unit service, but useful for debug session =)
-#if DEBUG
-				Console.WriteLine("Press any key to exit...");
-				Console.ReadKey();
-#endif
 			}
 		}
 
@@ -115,6 +112,9 @@ namespace Bot
 				.AddSingleton<InteractiveService>()
 				.AddSingleton<TimerService>()
 				.AddSingleton<MilestoneService>()
+				.AddSingleton<MusicService>()
+				.AddSingleton<LavaRestClient>()
+				.AddSingleton<LavaSocketClient>()
 				.BuildServiceProvider();
 		}
 		#endregion
