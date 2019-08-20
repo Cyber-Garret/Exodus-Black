@@ -54,7 +54,7 @@ namespace Bot.Services
 		{
 			await Task.Delay(500);
 			await lavaSocket.StartAsync(Client);
-			lavaSocket.Log += music.LogAsync;
+			lavaSocket.Log += Logger.Log;
 			lavaSocket.OnTrackFinished += music.OnTrackFinished;
 		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);

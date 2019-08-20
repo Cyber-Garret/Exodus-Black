@@ -59,14 +59,17 @@ namespace Bot.Modules.Commands
 			var guild = await db.Guilds.AsNoTracking().FirstOrDefaultAsync(g => g.Id == Context.Guild.Id);
 			var app = await Client.GetApplicationInfoAsync();
 
-			string mainCommands = string.Empty;
-			string adminCommands = string.Empty;
+			var mainCommands = string.Empty;
+			var adminCommands = string.Empty;
+			var musicCommands = string.Empty;
 			foreach (CommandInfo command in commands)
 			{
 				if (command.Module.Name == typeof(MainModule).Name)
 					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
 					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
+				else if (command.Module.Name == typeof(MusicModule).Name)
+					musicCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 
 			}
 
@@ -78,7 +81,8 @@ namespace Bot.Modules.Commands
 				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n" +
 				"Больше информации ты можешь найти в моей [группе ВК](https://vk.com/failsafe_bot)")
 				.AddField("Основные команды", mainCommands.Substring(0, mainCommands.Length - 2))
-				.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2));
+				.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2))
+				.AddField(Program.config.RadioModuleName, musicCommands.Substring(0, musicCommands.Length - 2));
 
 			await ReplyAsync(embed: embed.Build());
 		}

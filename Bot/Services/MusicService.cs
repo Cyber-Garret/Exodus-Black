@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using Victoria;
 using Victoria.Entities;
+using Victoria.Helpers;
 
 namespace Bot.Services
 {
@@ -20,31 +21,47 @@ namespace Bot.Services
 		private readonly LavaSocketClient lavaSocket;
 		private readonly LavaRestClient lavaRest;
 		private LavaPlayer lavaPlayer;
+		private readonly string MusicModuleName;
 
 		public MusicService(LavaRestClient lavaRestClient, LavaSocketClient lavaSocketClient)
 		{
 			lavaSocket = lavaSocketClient;
 			lavaRest = lavaRestClient;
+			MusicModuleName = Program.config.RadioModuleName;
 		}
 
 		private readonly Lazy<ConcurrentDictionary<ulong, AudioOptions>> LazyOptions = new Lazy<ConcurrentDictionary<ulong, AudioOptions>>();
 
 		private ConcurrentDictionary<ulong, AudioOptions> Options => LazyOptions.Value;
 
-		public async Task<Embed> JoinOrPlayAsync(SocketGuildUser user, IMessageChannel textChannel, ulong guildId, string query = null)
+		public async Task<Embed> JoinOrPlayAsync(SocketGuildUser user, ITextChannel textChannel, ulong guildId, string query = null)
 		{
 			if (user.VoiceChannel == null)
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName}, Войти/Играть", "Страж, для начала зайди в аудиоканал доступный мне! Бип... ");
+				return await MusicEmbedHelper.CreateErrorEmbed(MusicModuleName, "Страж, для начала зайди в аудиоканал доступный мне! Бип... ");
 
-			if (Options.TryGetValue(user.Guild.Id, out var options) && options.Master.Id != user.Id)
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName}, Войти/Играть", $"Я не могу сменить канал, пока {options.Master} не отключит меня. ");
+			//if (Options.TryGetValue(user.Guild.Id, out var options) && options.Master.Id != user.Id)
+			//	return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName}, Войти/Играть", $"Я не могу сменить канал, пока {options.Master} не отключит меня. ");
+
+			if (query == null)
+			{
+				lavaPlayer = lavaSocket.GetPlayer(guildId);
+				if (lavaPlayer == null)
+				{
+					await lavaSocket.ConnectAsync(user.VoiceChannel, textChannel);
+					Options.TryAdd(user.Guild.Id, new AudioOptions
+					{
+						Master = user
+					});
+					await Logger.Log(new LogMessage(LogSeverity.Info, MusicModuleName, $"Модуль поключен к {user.VoiceChannel.Name} и привязан к {textChannel.Name}."));
+					return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"Модуль поключен к {user.VoiceChannel.Name} и привязан к {textChannel.Name}. Форсирующая частота подключена...");
+				}
+			}
 			try
 			{
 				lavaPlayer = lavaSocket.GetPlayer(guildId);
 				if (lavaPlayer == null)
 				{
-
-					await lavaSocket.ConnectAsync(user.VoiceChannel);
+					await lavaSocket.ConnectAsync(user.VoiceChannel, textChannel);
 					Options.TryAdd(user.Guild.Id, new AudioOptions
 					{
 						Master = user
@@ -52,30 +69,31 @@ namespace Bot.Services
 					lavaPlayer = lavaSocket.GetPlayer(guildId);
 				}
 
-				if (query == null)
-					return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Поиск", "Пожалуйста, укажи название трека или ссылку на него, чтобы я могла добавить его в плейлист.");
-
-				LavaTrack track;
 				var search = await lavaRest.SearchYouTubeAsync(query);
 
-				if (search.LoadType == LoadType.NoMatches && query != null)
-					return await MusicEmbedHelper.CreateErrorEmbed(Program.config.RadioModuleName, $"Извини, но по запросу {query}, я ничего не нашла.");
-				if (search.LoadType == LoadType.LoadFailed && query != null)
-					return await MusicEmbedHelper.CreateErrorEmbed(Program.config.RadioModuleName, $"Мне не удалось загрузить {query}.");
+				//If we couldn't find anything, tell the user.
+				if (search.LoadType == LoadType.NoMatches)
+					return await MusicEmbedHelper.CreateErrorEmbed(MusicModuleName, $"Извини, но по запросу {query}, я ничего не нашла.");
+				//If we can't load by user query, tell the user.
+				if (search.LoadType == LoadType.LoadFailed)
+					return await MusicEmbedHelper.CreateErrorEmbed(MusicModuleName, $"Мне не удалось загрузить {query}.");
 
-				track = search.Tracks.FirstOrDefault();
+				//TODO: Add a 1-5 list for the user to pick from. (Like Fredboat)
+				var track = search.Tracks.FirstOrDefault();
+
 
 				if (lavaPlayer.CurrentTrack != null && lavaPlayer.IsPlaying || lavaPlayer.IsPaused)
 				{
 					lavaPlayer.Queue.Enqueue(track);
-					return await MusicEmbedHelper.CreateBasicEmbed(Program.config.RadioModuleName, $"{track.Title} успешно добавлен в очередь.");
+					return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"{track?.Title} успешно добавлен в очередь.");
 				}
+
 				await lavaPlayer.PlayAsync(track);
-				return await MusicEmbedHelper.CreateMusicEmbed(Program.config.RadioModuleName, $"Сейчас играет: [{track.Title}]({track.Uri})");
+				return await MusicEmbedHelper.CreateMusicEmbed(MusicModuleName, $"Начинаю воспроизведение - [{track?.Title}]({track?.Uri})");
 			}
 			catch (Exception e)
 			{
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName}, Войти/Играть", e.Message);
+				return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName}, неизвестная ошибка во время действия Войти/Добавить", e.Message);
 			}
 		}
 
@@ -89,27 +107,30 @@ namespace Bot.Services
 					await player.StopAsync();
 
 				var channelName = player.VoiceChannel.Name;
+
 				await lavaSocket.DisconnectAsync(user.VoiceChannel);
-				return await MusicEmbedHelper.CreateBasicEmbed(Program.config.RadioModuleName, $"Отключаюсь от {channelName}.");
+				Options.TryRemove(user.Guild.Id, out var options);
+				await Logger.Log(new LogMessage(LogSeverity.Info, MusicModuleName, $"Отключение от {channelName}"));
+				return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"Отключаю форсирующую частоту от {channelName}.");
 			}
 
 			catch (InvalidOperationException e)
 			{
-				return await MusicEmbedHelper.CreateErrorEmbed("Покидаю аудио канал", e.Message);
+				return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName}, отключение", e.Message);
 			}
 		}
 
 		public async Task<Embed> ListAsync(ulong guildId)
 		{
-			//var config = FailsafeDbOperations.GetGuildAccountAsync(guildId);
-			//var cmdPrefix = config.CommandPrefix;
+			var config = await FailsafeDbOperations.GetGuildAccountAsync(guildId);
+			var cmdPrefix = config.CommandPrefix ?? "!";
 			try
 			{
 				var descriptionBuilder = new StringBuilder();
 
 				var player = lavaSocket.GetPlayer(guildId);
 				if (player == null)
-					return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Плей-лист", $"Не удалось подключить аудио модуль.\nСтраж, ты уверен, что используешь аудио модуль правильно? Если не уверен, советую посмотреть [справку](http://neira.link/Command) во вкладке **Аудио**. ");
+					return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Плей-лист", $"Не удалось подключить аудио модуль.\nСтраж, ты уверен, что используешь аудио модуль правильно? Если не уверен, советую посмотреть справку выполнив команду {cmdPrefix}справка во вкладке **{MusicModuleName}**. ");
 
 				if (player.IsPlaying)
 				{
@@ -123,60 +144,59 @@ namespace Bot.Services
 						var trackNum = 2;
 						foreach (LavaTrack track in player.Queue.Items)
 						{
-							if (trackNum == 2) { descriptionBuilder.Append($"Следующий: [{track.Title}]({track.Uri})\n"); trackNum++; }
-							else { descriptionBuilder.Append($"#{trackNum}: [{track.Title}]({track.Uri})\n"); trackNum++; }
+							descriptionBuilder.Append($"#{trackNum}: [{track.Title}]({track.Uri}) - {track.Id}\n");
+							trackNum++;
+							//if (trackNum == 2) { descriptionBuilder.Append($"Следующий: [{track.Title}]({track.Uri})\n"); trackNum++; }
+							//else { descriptionBuilder.Append($"#{trackNum}: [{track.Title}]({track.Uri})\n"); trackNum++; }
 						}
-						return await MusicEmbedHelper.CreateBasicEmbed($"{Program.config.RadioModuleName} - Плей-лист", $"Сейчас играет: [{player.CurrentTrack.Title}]({player.CurrentTrack.Uri})\n{descriptionBuilder.ToString()}");
+						return await MusicEmbedHelper.CreateBasicEmbed($"{MusicModuleName} - Плей-лист", $"Сейчас играет: [{player.CurrentTrack.Title}]({player.CurrentTrack.Uri})\n{descriptionBuilder.ToString()}");
 					}
 				}
 				else
 				{
-					return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Плей-лист", "Похоже, что аудио модуль сейчас ничего не проигрывает. Если это ошибка, пожалуйста, сообщите моему создателю.");
+					return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Плей-лист", "Похоже, что аудио модуль сейчас ничего не проигрывает. Если это ошибка, пожалуйста, сообщите моему создателю.");
 				}
 			}
 			catch (Exception ex)
 			{
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Плей-лист", ex.Message);
+				return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Плей-лист", ex.Message);
 			}
 
 		}
 
 		public async Task<Embed> SkipTrackAsync(ulong guildId)
 		{
-			//var config = await FailsafeDbOperations.GetGuildAccountAsync(guildId);
-			//var cmdPrefix = config.CommandPrefix;
+			var config = await FailsafeDbOperations.GetGuildAccountAsync(guildId);
+			var cmdPrefix = config.CommandPrefix;
 
 			try
 			{
 				var player = lavaSocket.GetPlayer(guildId);
 				if (player == null)
-					return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Плей-лист", $"Не удалось подключить аудио модуль.\nСтраж, ты уверен, что используешь аудио модуль правильно? Если не уверен, советую посмотреть [справку](http://neira.link/Command) во вкладке **Аудио**.");
-				//if (player.Queue.Count == 1)
-				//{
-				//	await player.StopAsync();
-				//	return await MusicEmbedHelper.CreateMusicEmbed($"{Program.config.RadioModuleName} - Пропуск трека", "Это был последний трек в очереди и потому я остановлю воспроизведение.");
-				//}
+					return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Плей-лист", $"Не удалось подключить аудио модуль.\nСтраж, ты уверен, что используешь аудио модуль правильно? Если не уверен, советую посмотреть справку выполнив команду {cmdPrefix}справка во вкладке **{MusicModuleName}**. ");
 
-				if (player.Queue.Count == 0)
-					return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Пропуск трека", "В плейлисте пусто, чтобы что-то пропускать!");
+				if (player.Queue.Count < 1)
+					return await MusicEmbedHelper.CreateBasicEmbed($"{MusicModuleName} - Пропуск трека", "Невозможно пропустить, так как в данный момент воспроизводится последний трек или в плейлисте пусто." +
+						$"\n\nВозможно ты имел ввиду **{cmdPrefix}выключить**?");
 				else
 				{
 					try
 					{
+						//save current track for embed message
 						var currentTrack = player.CurrentTrack;
 						await player.SkipAsync();
-						return await MusicEmbedHelper.CreateBasicEmbed($"{Program.config.RadioModuleName} - Пропуск трека", $"Пропускаю {currentTrack.Title}");
+						return await MusicEmbedHelper.CreateBasicEmbed($"{MusicModuleName} - Пропуск трека", $"Пропускаю {currentTrack.Title}");
 					}
 					catch (Exception ex)
 					{
-						return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Ошибка пропуска трека", ex.ToString());
+						return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Ошибка пропуска трека", ex.ToString());
 					}
 
 				}
 			}
 			catch (Exception ex)
 			{
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Пропуск трека", ex.ToString());
+				return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Ошибка пропуска трека", ex.ToString());
 			}
 		}
 
@@ -184,17 +204,17 @@ namespace Bot.Services
 		{
 			if (volume >= 150 || volume <= 0)
 			{
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Громкость", "Громкость должна быть в пределе от 1 до 149.");
+				return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - 🔊Громкость", "Громкость должна быть в пределе от 1 до 149.");
 			}
 			try
 			{
 				var player = lavaSocket.GetPlayer(guildId);
 				await player.SetVolumeAsync(volume);
-				return await MusicEmbedHelper.CreateBasicEmbed($"{Program.config.RadioModuleName} - 🔊Громкость", $"Громкость установлена на уровень {volume}.");
+				return await MusicEmbedHelper.CreateBasicEmbed($"{MusicModuleName} - 🔊Громкость", $"Громкость установлена на уровень {volume}.");
 			}
 			catch (InvalidOperationException ex)
 			{
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} - Громкость", $"{ex.Message}", "Пожалуйста, сообщите моему создателю если эта ошибка часто повторяется. ");
+				return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Громкость", $"{ex.Message}", "Пожалуйста, сообщите моему создателю если эта ошибка часто повторяется. ");
 			}
 		}
 
@@ -206,17 +226,17 @@ namespace Bot.Services
 				if (player.IsPaused)
 				{
 					await player.ResumeAsync();
-					return await MusicEmbedHelper.CreateMusicEmbed($"{Program.config.RadioModuleName} - ▶️", $"**Воспроизведение возобновлено:** Сейчас играет {player.CurrentTrack.Title}");
+					return await MusicEmbedHelper.CreateMusicEmbed($"{MusicModuleName} - ▶️", $"**Воспроизведение возобновлено:** Сейчас играет {player.CurrentTrack.Title}");
 				}
 				else
 				{
 					await player.PauseAsync();
-					return await MusicEmbedHelper.CreateMusicEmbed($"{Program.config.RadioModuleName} - ⏸️", $"**Воспроизведение приостановлено:** {player.CurrentTrack.Title}");
+					return await MusicEmbedHelper.CreateMusicEmbed($"{MusicModuleName} - ⏸️", $"**Воспроизведение приостановлено:** {player.CurrentTrack.Title}");
 				}
 			}
 			catch (InvalidOperationException e)
 			{
-				return await MusicEmbedHelper.CreateErrorEmbed($"{Program.config.RadioModuleName} Воспроизведение/Пауза", e.Message);
+				return await MusicEmbedHelper.CreateErrorEmbed($"{MusicModuleName} - Ошибка Возобновления/Паузы", e.Message);
 			}
 		}
 
@@ -233,17 +253,16 @@ namespace Bot.Services
 
 			await player.PlayAsync(nextTrack);
 
-			EmbedBuilder embed = new EmbedBuilder();
-			embed.WithDescription($"**Финальный трек: `{track.Title}`\nСейчас играет: `{nextTrack.Title}`**");
-			//embed.WithColor();
-			await player.TextChannel.SendMessageAsync(null, false, embed.Build());
-			await player.TextChannel.SendMessageAsync(player.ToString());
+			await player.TextChannel.SendMessageAsync(embed: await MusicEmbedHelper.CreateMusicEmbed(MusicModuleName, $"**Предыдущий трек: `{track.Title}`\nСейчас играет: `{nextTrack.Title}`**"));
 		}
 
-		public Task LogAsync(LogMessage logMessage)
+		public async Task<string> GetLyricsAsync(ulong guildId)
 		{
-			Console.WriteLine(logMessage.Message);
-			return Task.CompletedTask;
+			var player = lavaSocket.GetPlayer(guildId);
+			var track = player.CurrentTrack;
+			if (track == null)
+				return "Error, Unable to find current track, is the bot playing anything?";
+			return await LyricsHelper.SearchAsync(track.Title);
 		}
 	}
 }
