@@ -9,6 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bot", "Bot\Bot.csproj", "{9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Addons.Interactive", "Discord.Addons.Interactive\Discord.Addons.Interactive.csproj", "{FFEB5F19-5139-47E9-ADBC-172F58E072BE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lavalink", "Lavalink", "{3A8DAF91-8450-4111-AB87-8143245EFFF6}"
+	ProjectSection(SolutionItems) = preProject
+		Lavalink\application.yml = Lavalink\application.yml
+		Lavalink\Lavalink.jar = Lavalink\Lavalink.jar
+		Lavalink\Run.bat = Lavalink\Run.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

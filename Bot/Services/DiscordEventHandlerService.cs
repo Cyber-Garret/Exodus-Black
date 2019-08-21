@@ -9,27 +9,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using ImageMagick;
+using Victoria;
 
 namespace Bot.Services
 {
 	public class DiscordEventHandlerService
 	{
-		#region Private Fields
-		readonly DiscordSocketClient Client;
+		private readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
+		private readonly LavaSocketClient lavaSocket;
 		private readonly MilestoneService milestone;
-		#endregion
+		private readonly MusicService music;
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService, LavaSocketClient lavaSocketClient, MusicService musicService)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
+			lavaSocket = lavaSocketClient;
 			milestone = milestoneService;
+			music = musicService;
 		}
 
 		public void Configure()
 		{
+			Client.Ready += Client_Ready;
 			Client.JoinedGuild += _client_JoinedGuildAsync;
 			Client.ChannelCreated += _client_ChannelCreatedAsync;
 			Client.ChannelDestroyed += _client_ChannelDestroyedAsync;
@@ -45,8 +49,14 @@ namespace Bot.Services
 			Client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
 
-
 		#region Events
+		private async Task Client_Ready()
+		{
+			await Task.Delay(500);
+			await lavaSocket.StartAsync(Client);
+			lavaSocket.Log += Logger.Log;
+			lavaSocket.OnTrackFinished += music.OnTrackFinished;
+		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
 		private async Task _client_ChannelDestroyedAsync(SocketChannel arg) => await ChannelDestroyed(arg);
