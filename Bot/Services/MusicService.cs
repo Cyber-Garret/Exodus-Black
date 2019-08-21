@@ -52,8 +52,8 @@ namespace Bot.Services
 					{
 						Master = user
 					});
-					await Logger.Log(new LogMessage(LogSeverity.Info, MusicModuleName, $"Модуль поключен к {user.VoiceChannel.Name} и привязан к {textChannel.Name}."));
-					return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"Модуль поключен к {user.VoiceChannel.Name} и привязан к {textChannel.Name}. Форсирующая частота подключена...");
+					await Logger.Log(new LogMessage(LogSeverity.Info, MusicModuleName, $"Модуль поключен к **{user.VoiceChannel.Name}** и привязан к **{textChannel.Name}**."));
+					return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"Модуль поключен к **{user.VoiceChannel.Name}** и привязан к **{textChannel.Name}**. Форсирующая частота подключена...");
 				}
 			}
 			try
@@ -144,7 +144,7 @@ namespace Bot.Services
 						var trackNum = 2;
 						foreach (LavaTrack track in player.Queue.Items)
 						{
-							descriptionBuilder.Append($"#{trackNum}: [{track.Title}]({track.Uri}) - {track.Id}\n");
+							descriptionBuilder.Append($"#{trackNum}: [{track.Title}]({track.Uri})\n");
 							trackNum++;
 							//if (trackNum == 2) { descriptionBuilder.Append($"Следующий: [{track.Title}]({track.Uri})\n"); trackNum++; }
 							//else { descriptionBuilder.Append($"#{trackNum}: [{track.Title}]({track.Uri})\n"); trackNum++; }
@@ -247,22 +247,13 @@ namespace Bot.Services
 
 			if (!player.Queue.TryDequeue(out var item) || !(item is LavaTrack nextTrack))
 			{
-				await player.TextChannel?.SendMessageAsync($"В плей-листе больше нет треков.");
+				await player.TextChannel?.SendMessageAsync($":frowning: В плей-листе больше нет треков.");
 				return;
 			}
 
 			await player.PlayAsync(nextTrack);
 
 			await player.TextChannel.SendMessageAsync(embed: await MusicEmbedHelper.CreateMusicEmbed(MusicModuleName, $"**Предыдущий трек: `{track.Title}`\nСейчас играет: `{nextTrack.Title}`**"));
-		}
-
-		public async Task<string> GetLyricsAsync(ulong guildId)
-		{
-			var player = lavaSocket.GetPlayer(guildId);
-			var track = player.CurrentTrack;
-			if (track == null)
-				return "Error, Unable to find current track, is the bot playing anything?";
-			return await LyricsHelper.SearchAsync(track.Title);
 		}
 	}
 }
