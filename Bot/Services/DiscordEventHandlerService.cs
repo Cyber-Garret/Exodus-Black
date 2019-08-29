@@ -52,8 +52,14 @@ namespace Bot.Services
 		#region Events
 		private async Task Client_Ready()
 		{
-			await Task.Delay(500);
-			await lavaSocket.StartAsync(Client);
+			await Task.Delay(1000);
+			await lavaSocket.StartAsync(Client, new Configuration
+			{
+				LogSeverity = LogSeverity.Verbose,
+				AutoDisconnect = true,
+				PreservePlayers = false
+			});
+
 			lavaSocket.Log += Logger.Log;
 			lavaSocket.OnTrackFinished += music.OnTrackFinished;
 		}

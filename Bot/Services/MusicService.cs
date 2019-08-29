@@ -30,9 +30,9 @@ namespace Bot.Services
 			MusicModuleName = Program.config.RadioModuleName;
 		}
 
-		private readonly Lazy<ConcurrentDictionary<ulong, AudioOptions>> LazyOptions = new Lazy<ConcurrentDictionary<ulong, AudioOptions>>();
+		//private readonly Lazy<ConcurrentDictionary<ulong, AudioOptions>> LazyOptions = new Lazy<ConcurrentDictionary<ulong, AudioOptions>>();
 
-		private ConcurrentDictionary<ulong, AudioOptions> Options => LazyOptions.Value;
+		//private ConcurrentDictionary<ulong, AudioOptions> Options => LazyOptions.Value;
 
 		public async Task<Embed> JoinOrPlayAsync(SocketGuildUser user, ITextChannel textChannel, ulong guildId, string query = null)
 		{
@@ -48,10 +48,10 @@ namespace Bot.Services
 				if (lavaPlayer == null)
 				{
 					await lavaSocket.ConnectAsync(user.VoiceChannel, textChannel);
-					Options.TryAdd(user.Guild.Id, new AudioOptions
-					{
-						Master = user
-					});
+					//Options.TryAdd(user.Guild.Id, new AudioOptions
+					//{
+					//	Master = user
+					//});
 					await Logger.Log(new LogMessage(LogSeverity.Info, MusicModuleName, $"Модуль поключен к **{user.VoiceChannel.Name}** и привязан к **{textChannel.Name}**."));
 					return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"Модуль поключен к **{user.VoiceChannel.Name}** и привязан к **{textChannel.Name}**. Форсирующая частота подключена...");
 				}
@@ -62,10 +62,10 @@ namespace Bot.Services
 				if (lavaPlayer == null)
 				{
 					await lavaSocket.ConnectAsync(user.VoiceChannel, textChannel);
-					Options.TryAdd(user.Guild.Id, new AudioOptions
-					{
-						Master = user
-					});
+					//Options.TryAdd(user.Guild.Id, new AudioOptions
+					//{
+					//	Master = user
+					//});
 					lavaPlayer = lavaSocket.GetPlayer(guildId);
 				}
 
@@ -109,7 +109,7 @@ namespace Bot.Services
 				var channelName = player.VoiceChannel.Name;
 
 				await lavaSocket.DisconnectAsync(user.VoiceChannel);
-				Options.TryRemove(user.Guild.Id, out var options);
+				//Options.TryRemove(user.Guild.Id, out var options);
 				await Logger.Log(new LogMessage(LogSeverity.Info, MusicModuleName, $"Отключение от {channelName}"));
 				return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"Отключаю форсирующую частоту от {channelName}.");
 			}
