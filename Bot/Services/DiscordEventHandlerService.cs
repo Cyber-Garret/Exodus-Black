@@ -34,6 +34,7 @@ namespace Bot.Services
 		public void Configure()
 		{
 			Client.Ready += Client_Ready;
+			Client.Disconnected += Client_Disconnected;
 			Client.JoinedGuild += _client_JoinedGuildAsync;
 			Client.ChannelCreated += _client_ChannelCreatedAsync;
 			Client.ChannelDestroyed += _client_ChannelDestroyedAsync;
@@ -52,16 +53,21 @@ namespace Bot.Services
 		#region Events
 		private async Task Client_Ready()
 		{
-			await Task.Delay(1000);
 			await lavaSocket.StartAsync(Client, new Configuration
 			{
 				LogSeverity = LogSeverity.Verbose,
 				AutoDisconnect = true,
+				InactivityTimeout = TimeSpan.FromMinutes(1),
 				PreservePlayers = false
 			});
 
 			lavaSocket.Log += Logger.Log;
 			lavaSocket.OnTrackFinished += music.OnTrackFinished;
+		}
+		private async Task Client_Disconnected(Exception arg)
+		{
+			await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
+			await lavaSocket.DisposeAsync();
 		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
