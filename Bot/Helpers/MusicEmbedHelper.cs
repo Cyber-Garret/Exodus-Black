@@ -55,13 +55,14 @@ namespace Bot.Helpers
 			return embed;
 		}
 
-		public static async Task<Embed> CreateMusicEmbed(string title, string description, string footer = null)
+		public static async Task<Embed> CreateMusicEmbed(string title, string description, string footer = null, string thumbnailUrl = "")
 		{
 			var embed = await Task.Run(() => (new EmbedBuilder()
 				.WithTitle(title)
+				.WithColor(Color.Blue)
+				.WithThumbnailUrl(thumbnailUrl)
 				.WithDescription(description)
 				.WithFooter(footer)
-				.WithColor(Color.Blue)
 				.WithCurrentTimestamp().Build()));
 			return embed;
 		}
