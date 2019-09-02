@@ -30,9 +30,9 @@ namespace Bot.Services
 			MusicModuleName = Program.config.RadioModuleName;
 		}
 
-		//private readonly Lazy<ConcurrentDictionary<ulong, AudioOptions>> LazyOptions = new Lazy<ConcurrentDictionary<ulong, AudioOptions>>();
+		private readonly Lazy<ConcurrentDictionary<ulong, AudioOptions>> LazyOptions = new Lazy<ConcurrentDictionary<ulong, AudioOptions>>();
 
-		//private ConcurrentDictionary<ulong, AudioOptions> Options => LazyOptions.Value;
+		private ConcurrentDictionary<ulong, AudioOptions> Options => LazyOptions.Value;
 
 		public async Task<Embed> PlayAsync(SocketGuildUser user, ITextChannel textChannel, ulong guildId, string query = null)
 		{
@@ -48,10 +48,7 @@ namespace Bot.Services
 				if (lavaPlayer == null)
 				{
 					await lavaSocket.ConnectAsync(user.VoiceChannel, textChannel);
-					//Options.TryAdd(user.Guild.Id, new AudioOptions
-					//{
-					//	Master = user
-					//});
+					Options.TryAdd(user.Guild.Id, new AudioOptions());
 					await Logger.Log(new LogMessage(LogSeverity.Info, MusicModuleName, $"Модуль поключен к **{user.VoiceChannel.Name}** и привязан к **{textChannel.Name}**."));
 					return await MusicEmbedHelper.CreateBasicEmbed(MusicModuleName, $"Модуль поключен к **{user.VoiceChannel.Name}** и привязан к **{textChannel.Name}**. Форсирующая частота подключена...");
 				}
@@ -262,7 +259,6 @@ namespace Bot.Services
 			}
 		}
 
-		public async Task<Embed> ToggleRepeatAsync
 		public async Task<Embed> SkipTrackAsync(ulong guildId)
 		{
 			var config = await FailsafeDbOperations.GetGuildAccountAsync(guildId);

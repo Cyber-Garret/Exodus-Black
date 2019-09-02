@@ -64,6 +64,7 @@ namespace Bot.Services
 			lavaSocket.Log += Logger.Log;
 			lavaSocket.OnTrackFinished += music.OnTrackFinished;
 		}
+
 		private async Task Client_Disconnected(Exception arg)
 		{
 			await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
