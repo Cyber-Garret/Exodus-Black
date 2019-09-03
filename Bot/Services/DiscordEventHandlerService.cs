@@ -79,7 +79,6 @@ namespace Bot.Services
 			if (message.Author.IsBot)
 				return;
 			await CommandHandlingService.HandleCommandAsync(message);
-			await MessageReceived(message);
 		}
 		private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{
@@ -303,13 +302,6 @@ namespace Bot.Services
 				await Logger.Log(new LogMessage(LogSeverity.Error, "GuildMemberUpdated", ex.Message, ex));
 			}
 
-		}
-		private async Task MessageReceived(SocketMessage arg)
-		{
-			if (arg.Author.Id == Client.CurrentUser.Id)
-				return;
-
-			await Task.CompletedTask;
 		}
 		private async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore, SocketMessage messageAfter, ISocketMessageChannel arg3)
 		{

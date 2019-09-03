@@ -397,6 +397,7 @@ namespace Bot.Modules.Commands
 				await ReplyAndDeleteAsync(null, embed: message.Build());
 				return;
 			}
+
 			var msg = await ReplyAsync(message: "@here", embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
 			await Milestone.RegisterMilestoneAsync(msg.Id, Context.Guild.Name, Context.User.Id, milestone.Id, dateTime, userMemo);
 			//Slots

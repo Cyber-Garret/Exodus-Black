@@ -45,7 +45,8 @@ namespace Bot.Modules.Administration
 				$"- Стражей на корабле: **{Context.Guild.Users.Count}**\n" +
 				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
 				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
-				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**");
+				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**\n" +
+				$"- Глобальное упоминание в некоторых сообщениях: {guild.GlobalMention}");
 
 			await ReplyAsync(null, embed: embed.Build());
 		}
@@ -215,6 +216,28 @@ namespace Bot.Modules.Administration
 			embed.WithFooter("Пожалуйста, убедись, что моя роль выше авто роли и у меня есть права на выдачу ролей. Тогда я без проблем буду выдавать роль всем прибывшим на корабль и сообщать об этом в сервисных сообщениях. Это сообщение будет автоматически удалено через 2 минуты.");
 
 			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
+		}
+
+		[Command("упоминание")]
+		[Summary("")]
+		public async Task SetGuildMention()
+		{
+			try
+			{
+				var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+				if (guild.GlobalMention == "@here")
+					guild.GlobalMention = "@everyone";
+				else if (guild.GlobalMention == "@everyone")
+					guild.GlobalMention = "@here";
+				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+
+				await ReplyAsync($"Капитан, теперь в некоторых сообщениях я буду использовать {guild.GlobalMention}");
+			}
+			catch (Exception ex)
+			{
+				await ReplyAndDeleteAsync($"Капитан, произошла непредвиденная ошибка. В сообщении: {ex.Message}. Бип...");
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "SetGuildMention command", ex.Message, ex));
+			}
 		}
 
 		[Command("рассылка")]
