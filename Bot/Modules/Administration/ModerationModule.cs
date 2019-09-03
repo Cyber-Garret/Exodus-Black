@@ -45,10 +45,9 @@ namespace Bot.Modules.Administration
 				$"- Стражей на корабле: **{Context.Guild.Users.Count}**\n" +
 				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
 				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
-				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**")
-				.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**");
 
-			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(2));
+			await ReplyAsync(null, embed: embed.Build());
 		}
 
 		[Command("новости")]
@@ -172,7 +171,7 @@ namespace Bot.Modules.Administration
 
 			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
-			await ReplyAndDeleteAsync(":smiley: Приветственное сообщение сохранено.");
+			await ReplyAsync(":smiley: Приветственное сообщение сохранено.");
 		}
 
 		[Command("префикс")]
@@ -280,6 +279,56 @@ namespace Bot.Modules.Administration
 			var msg = await ReplyAsync(embed: embed.Build());
 
 			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
+		}
+
+		[Command("рандом")]
+		[Alias("ранд")]
+		[Summary("Случайным образом выбирает от 1 до 10 Стражей из указаной роли. Если не указано количество, по умолчанию выбирает одного.")]
+		[Remarks("Синтаксис: !ранд @Роль <1-10> Пример: !рандом ")]
+		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
+		{
+			if (mentionedRole == null || (count >= 10 && count <= 1))
+			{
+				await ReplyAndDeleteAsync("Вы не указали Роль или указали меньше 1 или больше 10 рандомов.");
+				return;
+			}
+			try
+			{
+				//Get list of SocketGuildUser's from current context
+				var users = Context.Guild.Users.ToList();
+				//Get mentioned SocketRole
+				var role = Context.Guild.Roles.First(r => r.Id == mentionedRole.Id);
+
+				//Predicate for filtering users with mentioned role
+				bool isHaveRole(SocketGuildUser x) { return x.Roles.Contains(mentionedRole); }
+				//Filter users from context who have mentioned role and not a Bot
+				var filteredusers = users.FindAll(isHaveRole).Where(u => u.IsBot == false);
+
+				var embed = new EmbedBuilder()
+					.WithColor(Color.Gold);
+				var field = new EmbedFieldBuilder();
+				//Chose right field name by count
+				if (count == 1)
+					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этого стража:";
+				else
+					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этих стражей:";
+				for (int i = 0; i < count; i++)
+				{
+					var num = Global.GetRandom.Next(0, filteredusers.Count());
+					//Pick random user
+					var user = filteredusers.ElementAt(num);
+
+					field.Value += $"#{i + 1} {user.Mention} - {user.Nickname ?? user.Username}\n";
+				}
+				embed.AddField(field);
+
+				await ReplyAsync(embed: embed.Build());
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "GetRandomUser command", ex.Message, ex));
+				await ReplyAndDeleteAsync($"Ошибка генератора псевдослучайных чисел Вексов: {ex.Message}");
+			}
 		}
 
 	}

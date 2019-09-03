@@ -521,64 +521,18 @@ namespace Bot.Modules.Commands
 					embed.AddField("Нет данных", NoData);
 				//Simple footer with clan name
 				embed.WithFooter($"Данные об онлайне стражей обновляються раз в час. Информация о клане и его составе раз в 15 минут.");
-				//Mention user with ready statistic
-				await ReplyAsync($"Бип! {Context.User.Mention}. Статистика подсчитана.", embed: embed.Build());
 
-				//Delete message from start this command
-				await Context.Channel.DeleteMessageAsync(message);
+				//Modify old message and mention user with ready statistic
+				await message.ModifyAsync(m =>
+				{
+					m.Content = $"Бип! {Context.User.Mention}. Статистика подсчитана.";
+					m.Embed = embed.Build();
+				});
 
 			}
 			catch (Exception ex)
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message, ex));
-			}
-		}
-
-		[Command("рандом")]
-		[Alias("ранд")]
-		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
-		{
-			if (mentionedRole == null || (count >= 10 && count <= 1))
-			{
-				await ReplyAndDeleteAsync("Вы не указали Роль или указали меньше 1 или больше 10 рандомов.");
-				return;
-			}
-			try
-			{
-				//Get list of SocketGuildUser's from current context
-				var users = Context.Guild.Users.ToList();
-				//Get mentioned SocketRole
-				var role = Context.Guild.Roles.First(r => r.Id == mentionedRole.Id);
-
-				//Predicate for filtering users with mentioned role
-				bool isHaveRole(SocketGuildUser x) { return x.Roles.Contains(mentionedRole); }
-				//Filter users from context who have mentioned role and not a Bot
-				var filteredusers = users.FindAll(isHaveRole).Where(u => u.IsBot == false);
-
-				var embed = new EmbedBuilder()
-					.WithColor(Color.Gold);
-				var field = new EmbedFieldBuilder();
-				//Chose right field name by count
-				if (count == 1)
-					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этого стража:";
-				else
-					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этих стражей:";
-				for (int i = 0; i < count; i++)
-				{
-					var num = Global.GetRandom.Next(0, filteredusers.Count());
-					//Pick random user
-					var user = filteredusers.ElementAt(num);
-
-					field.Value += $"#{i + 1} {user.Nickname ?? user.Username}\n";
-				}
-				embed.AddField(field);
-
-				await ReplyAsync(embed: embed.Build());
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Critical, "GetRandomUser command", ex.Message, ex));
-				await ReplyAndDeleteAsync($"Ошибка генератора псевдослучайных чисел Вексов: {ex.Message}");
 			}
 		}
 	}
