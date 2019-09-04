@@ -195,10 +195,17 @@ namespace Bot.Services
 					{
 						if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
 						{
-							ulong[] users = { item.User1, item.User2, item.User3, item.User4, item.User5, item.User6 };
+							ulong[] users = new ulong[6];
+							//TODO: LoadMessage Get first User of specific free places
+							var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
+							var secondUser = message.GetReactionUsersAsync(Global.ReactPlaceNumber["2"], 1);
+							users.Append(item.Leader);
+							for (int i = 0; i < item.Places; i++)
+							{
+								var user = message.GetReactionUsersAsync(Global.ReactPlaceNumber[$"{i + 2}"], 2);
+							}
 
 							await RaidNotificationAsync(users, item);
-
 							//Remove expired Milestone
 							Db.ActiveMilestones.Remove(item);
 							await Db.SaveChangesAsync();
