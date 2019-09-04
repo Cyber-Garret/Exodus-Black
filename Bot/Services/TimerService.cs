@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -15,17 +16,17 @@ namespace Bot.Services
 {
 	public class TimerService
 	{
-		#region Private fields
-		readonly DiscordSocketClient Client;
+		private readonly DiscordSocketClient Client;
+		private readonly MilestoneService Milestone;
 		private Timer MainTimer;
 		private Timer GameStatusTimer;
 		private Timer ClanTimer;
 		private Timer MemberTimer;
-		#endregion
 
-		public TimerService(DiscordSocketClient socketClient)
+		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
 			Client = socketClient;
+			Milestone = milestoneService;
 		}
 
 		public void Configure()
@@ -184,7 +185,8 @@ namespace Bot.Services
 		}
 		private async Task RaidRemainder()
 		{
-			var timer = DateTime.Now.AddMinutes(15);
+
+			var timer = DateTime.Now.AddMinutes(1);
 
 			using (FailsafeContext Db = new FailsafeContext())
 			{
@@ -195,16 +197,21 @@ namespace Bot.Services
 					{
 						if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
 						{
-							ulong[] users = new ulong[6];
+							List<ulong> users = new List<ulong>();
 							//TODO: LoadMessage Get first User of specific free places
 							var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
-							var secondUser = message.GetReactionUsersAsync(Global.ReactPlaceNumber["2"], 1);
-							users.Append(item.Leader);
+							users.Add(item.Leader);
 							for (int i = 0; i < item.Places; i++)
 							{
-								var user = message.GetReactionUsersAsync(Global.ReactPlaceNumber[$"{i + 2}"], 2);
+								var user = await message.GetReactionUsersAsync(Global.ReactPlaceNumber[$"{i + 2}"], 1).FlattenAsync();
+								users.Add(user.FirstOrDefault().Id);
 							}
-
+							//TODO: modify message
+							await message.ModifyAsync(m =>
+							{
+								m.Content = FailsafeDbOperations.GetGuildAccountAsync(item.GuildId).Result.GlobalMention;
+								m.Embed = await Milestone.
+								});
 							await RaidNotificationAsync(users, item);
 							//Remove expired Milestone
 							Db.ActiveMilestones.Remove(item);
@@ -214,15 +221,16 @@ namespace Bot.Services
 				}
 			}
 		}
-		private async Task RaidNotificationAsync(ulong[] userId, ActiveMilestone milestone)
+		private async Task RaidNotificationAsync(List<ulong> userIds, ActiveMilestone milestone)
 		{
-			foreach (var item in userId)
+			foreach (var item in userIds)
 			{
-				if (item != 0)
+				if (item != 0 || item != Client.CurrentUser.Id)
 				{
 					try
 					{
-						SocketUser User = Client.GetUser(item);
+						var User = Client.GetUser(item);
+						var Guild = Client.GetGuild(milestone.GuildId);
 						IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
 
 						#region Message
@@ -235,7 +243,7 @@ namespace Bot.Services
 						embed.WithThumbnailUrl(milestone.Milestone.Icon);
 						if (milestone.Memo != null)
 							embed.AddField("Заметка от лидера:", milestone.Memo);
-						embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {milestone.GuildName}");
+						embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {Guild.Name}");
 						#endregion
 
 						await Dm.SendMessageAsync(embed: embed.Build());

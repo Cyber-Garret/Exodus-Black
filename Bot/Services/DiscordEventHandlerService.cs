@@ -700,7 +700,7 @@ namespace Bot.Services
 			if (!reaction.User.Value.IsBot)
 			{
 				//await CatalystData.HandleReactionAdded(cache, reaction);
-				await milestone.HandleReactionAdded(cache, reaction);
+				//await milestone.HandleReactionAdded(cache, reaction);
 			}
 		}
 
@@ -708,7 +708,7 @@ namespace Bot.Services
 		{
 			if (!reaction.User.Value.IsBot)
 			{
-				await milestone.HandleReactionRemoved(cache, reaction);
+				//await milestone.HandleReactionRemoved(cache, reaction);
 			}
 		}
 		#endregion

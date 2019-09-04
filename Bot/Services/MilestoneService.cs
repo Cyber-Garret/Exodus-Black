@@ -1,6 +1,7 @@
 ﻿using Bot.Models.Db.Destiny2;
 
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore;
@@ -38,19 +39,36 @@ namespace Bot.Services
 			return embed;
 		}
 
-		internal async Task RegisterMilestoneAsync(ulong msgId, string GuildName, ulong raidLeader, int raidInfoId, DateTime date, string userMemo)
+		public EmbedBuilder RebuildEmbed(ActiveMilestone activeMilestone)
+		{
+			var embed = new EmbedBuilder()
+				.WithTitle($"{activeMilestone.DateExpire.ToShortDateString()}, {Global.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}")
+				.WithColor(Color.DarkMagenta)
+				.WithThumbnailUrl(activeMilestone.Milestone.Icon);
+			if (activeMilestone.Milestone.PreviewDesc != null)
+				embed.WithDescription(activeMilestone.Milestone.PreviewDesc);
+			if(activeMilestone.Memo != null)
+				embed.AddField("Заметка от лидера", activeMilestone.Memo);
+			var milestoneLeader = Client.GetUser(activeMilestone.Leader);
+			embed.AddField("Лидер боевой группы", $"{milestoneLeader.Mention} - {milestoneLeader.Username}");
+		}
+
+		internal async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, int numPlaces, int raidInfoId, DateTime date, string userMemo)
 		{
 			try
 			{
 				ActiveMilestone newMilestone = new ActiveMilestone
 				{
 					MessageId = msgId,
-					GuildName = GuildName,
+					TextChannelId = context.Channel.Id,
+					GuildId = context.Guild.Id,
+					Places = numPlaces,
 					MilestoneId = raidInfoId,
 					Memo = userMemo,
 					DateExpire = date,
-					Leader = raidLeader
+					Leader = context.User.Id
 				};
+
 				Db.ActiveMilestones.Add(newMilestone);
 				await Db.SaveChangesAsync();
 			}

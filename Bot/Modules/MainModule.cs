@@ -406,7 +406,7 @@ namespace Bot.Modules.Commands
 			}
 
 			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
-			await Milestone.RegisterMilestoneAsync(msg.Id, Context.Guild.Name, Context.User.Id, milestone.Id, dateTime, userMemo);
+			await Milestone.RegisterMilestoneAsync(msg.Id, Context, numPlaces, milestone.Id, dateTime, userMemo);
 
 			for (int i = 0; i < numPlaces; i++)
 			{
