@@ -79,7 +79,6 @@ namespace Bot.Services
 			if (message.Author.IsBot)
 				return;
 			await CommandHandlingService.HandleCommandAsync(message);
-			await MessageReceived(message);
 		}
 		private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{
@@ -304,13 +303,6 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task MessageReceived(SocketMessage arg)
-		{
-			if (arg.Author.Id == Client.CurrentUser.Id)
-				return;
-
-			await Task.CompletedTask;
-		}
 		private async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore, SocketMessage messageAfter, ISocketMessageChannel arg3)
 		{
 			try
@@ -420,8 +412,10 @@ namespace Bot.Services
 					var name = $"{messageBefore.Value.Author.Mention}";
 					var check = audit[0].Data as MessageDeleteAuditLogData;
 
-					if (check?.ChannelId == messageBefore.Value.Channel.Id &&
-						audit[0].Action == ActionType.MessageDeleted)
+					//if message deleted by Bot return.
+					if (audit[0].User.IsBot) return;
+
+					if (check?.ChannelId == messageBefore.Value.Channel.Id && audit[0].Action == ActionType.MessageDeleted)
 						name = $"{audit[0].User.Mention}";
 
 					var embedDel = new EmbedBuilder();

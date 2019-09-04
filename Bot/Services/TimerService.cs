@@ -142,7 +142,7 @@ namespace Bot.Services
 					try
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-					   .SendMessageAsync(null, false, embed.Build());
+					   .SendMessageAsync(text: guild.GlobalMention, embed: embed.Build());
 					}
 					catch (Exception ex)
 					{
@@ -172,7 +172,7 @@ namespace Bot.Services
 					try
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-					   .SendMessageAsync(null, false, embed.Build());
+					   .SendMessageAsync(text: guild.GlobalMention, embed: embed.Build());
 					}
 					catch (Exception ex)
 					{
