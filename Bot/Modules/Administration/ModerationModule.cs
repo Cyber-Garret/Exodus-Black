@@ -46,7 +46,7 @@ namespace Bot.Modules.Administration
 				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
 				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
 				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**\n" +
-				$"- Глобальное упоминание в некоторых сообщениях: {guild.GlobalMention}");
+				$"- Глобальное упоминание в некоторых сообщениях: **{guild.GlobalMention}**");
 
 			await ReplyAsync(null, embed: embed.Build());
 		}
@@ -219,7 +219,7 @@ namespace Bot.Modules.Administration
 		}
 
 		[Command("упоминание")]
-		[Summary("")]
+		[Summary("Изменяет упоминания в сборах и уведомлениях о Зуре here на everyone и наоборот.")]
 		public async Task SetGuildMention()
 		{
 			try

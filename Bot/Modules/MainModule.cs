@@ -346,6 +346,8 @@ namespace Bot.Modules.Commands
 		[Cooldown(10)]
 		public async Task RaidCollection(string milestoneName, string raidTime, [Remainder]string userMemo = null)
 		{
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+
 			var milestone = await db.Milestones.AsNoTracking().Where(r =>
 				r.Name.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
 				r.Alias.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
@@ -398,7 +400,7 @@ namespace Bot.Modules.Commands
 				return;
 			}
 
-			var msg = await ReplyAsync(message: "@here", embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
+			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
 			await Milestone.RegisterMilestoneAsync(msg.Id, Context.Guild.Name, Context.User.Id, milestone.Id, dateTime, userMemo);
 			//Slots
 			await msg.AddReactionAsync(Global.ReactPlaceNumber["2"]);

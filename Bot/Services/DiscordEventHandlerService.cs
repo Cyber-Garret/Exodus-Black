@@ -412,8 +412,10 @@ namespace Bot.Services
 					var name = $"{messageBefore.Value.Author.Mention}";
 					var check = audit[0].Data as MessageDeleteAuditLogData;
 
-					if (check?.ChannelId == messageBefore.Value.Channel.Id &&
-						audit[0].Action == ActionType.MessageDeleted)
+					//if message deleted by Bot return.
+					if (audit[0].User.IsBot) return;
+
+					if (check?.ChannelId == messageBefore.Value.Channel.Id && audit[0].Action == ActionType.MessageDeleted)
 						name = $"{audit[0].User.Mention}";
 
 					var embedDel = new EmbedBuilder();
