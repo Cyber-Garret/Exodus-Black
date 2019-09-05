@@ -21,10 +21,18 @@ namespace Bot
 		/// <returns>IEnumerable<Guild></returns>
 		internal static async Task<IEnumerable<Guild>> GetAllGuildsAsync()
 		{
-			using (var Context = new FailsafeContext())
+			try
 			{
-				IEnumerable<Guild> guilds = await Context.Guilds.ToListAsync();
-				return guilds;
+				using (var Context = new FailsafeContext())
+				{
+					IEnumerable<Guild> guilds = await Context.Guilds.ToListAsync();
+					return guilds;
+				}
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "GetAllGuilds", ex.Message, ex));
+				return null;
 			}
 		}
 
@@ -35,24 +43,32 @@ namespace Bot
 		/// <returns>Guild class</returns>
 		internal static async Task<Guild> GetGuildAccountAsync(ulong guildId)
 		{
-			using (var Context = new FailsafeContext())
+			try
 			{
-				if (Context.Guilds.Where(G => G.Id == guildId).Count() < 1)
+				using (var Context = new FailsafeContext())
 				{
-					var newGuild = new Guild
+					if (Context.Guilds.Where(G => G.Id == guildId).Count() < 1)
 					{
-						Id = guildId
-					};
+						var newGuild = new Guild
+						{
+							Id = guildId
+						};
 
-					Context.Guilds.Add(newGuild);
-					await Context.SaveChangesAsync();
+						Context.Guilds.Add(newGuild);
+						await Context.SaveChangesAsync();
 
-					return newGuild;
+						return newGuild;
+					}
+					else
+					{
+						return Context.Guilds.SingleOrDefault(G => G.Id == guildId);
+					}
 				}
-				else
-				{
-					return Context.Guilds.SingleOrDefault(G => G.Id == guildId);
-				}
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "GetGuildAccount", ex.Message, ex));
+				return null;
 			}
 		}
 
@@ -82,22 +98,28 @@ namespace Bot
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, "SaveGuildAccountAsync", ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "SaveGuildAccount", ex.Message, ex));
 			}
 
 		}
 
-		internal static Task SaveWelcomeMessage(ulong GuildId, string value)
+		internal static async void SaveWelcomeMessage(ulong GuildId, string value)
 		{
-
-			using (var Context = new FailsafeContext())
+			try
 			{
-				var GuildData = Context.Guilds.First(g => g.Id == GuildId);
-				GuildData.WelcomeMessage = value;
-				Context.Guilds.Update(GuildData);
-				Context.SaveChanges();
-				return Task.CompletedTask;
+				using (var Context = new FailsafeContext())
+				{
+					var GuildData = Context.Guilds.First(g => g.Id == GuildId);
+					GuildData.WelcomeMessage = value;
+					Context.Guilds.Update(GuildData);
+					Context.SaveChanges();
+				}
 			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "SaveWelcomeMessage", ex.Message, ex));
+			}
+			
 		}
 		#endregion
 
