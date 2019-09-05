@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace Bot.Services
 			Db = context;
 		}
 
-		public EmbedBuilder StartEmbed(SocketUser user, Milestone milestone, DateTime date, string userMemo)
+		public EmbedBuilder StartEmbed(SocketUser user, Milestone milestone, int places, DateTime date, string userMemo)
 		{
 			var embed = new EmbedBuilder();
 
@@ -31,15 +32,25 @@ namespace Bot.Services
 			embed.WithThumbnailUrl(milestone.Icon);
 			if (milestone.PreviewDesc != null)
 				embed.WithDescription(milestone.PreviewDesc);
+
+			var embedfield = new EmbedFieldBuilder
+			{
+				Name = "Информация",
+				Value =
+				$"- Лидер боевой группы: **{user.Mention} - {user.Username}**\n" +
+				$"- Доступных мест: **{places}**\n"
+			};
+
 			if (userMemo != null)
-				embed.AddField("Заметка от лидера", userMemo);
-			embed.AddField("Лидер боевой группы", $"{user.Mention} - {user.Username}");
-			embed.WithFooter("Чтобы за вами закрепили место нажмите на реакцию, соответствующую месту.");
+				embedfield.Value += $"- Заметка: **{userMemo}**";
+
+			embed.AddField(embedfield);
+			embed.WithFooter("Чтобы за вами закрепилось место нажмите на реакцию, соответствующую месту.");
 
 			return embed;
 		}
 
-		public EmbedBuilder RebuildEmbed(ActiveMilestone activeMilestone)
+		public EmbedBuilder RebuildEmbed(ActiveMilestone activeMilestone, List<ulong> users)
 		{
 			var embed = new EmbedBuilder()
 				.WithTitle($"{activeMilestone.DateExpire.ToShortDateString()}, {Global.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}")
@@ -47,10 +58,35 @@ namespace Bot.Services
 				.WithThumbnailUrl(activeMilestone.Milestone.Icon);
 			if (activeMilestone.Milestone.PreviewDesc != null)
 				embed.WithDescription(activeMilestone.Milestone.PreviewDesc);
-			if(activeMilestone.Memo != null)
-				embed.AddField("Заметка от лидера", activeMilestone.Memo);
+
 			var milestoneLeader = Client.GetUser(activeMilestone.Leader);
-			embed.AddField("Лидер боевой группы", $"{milestoneLeader.Mention} - {milestoneLeader.Username}");
+			var embedfield = new EmbedFieldBuilder
+			{
+				Name = "Информация",
+				Value = $"- Лидер боевой группы: **{milestoneLeader.Mention} - {milestoneLeader.Username}**\n"
+			};
+			if (activeMilestone.Places - users.Count > 0)
+				embedfield.Value += $"- Осталось мест: **{activeMilestone.Places - users.Count}**\n";
+
+			if (activeMilestone.Memo != null)
+				embedfield.Value += $"- Заметка: **{activeMilestone.Memo}**";
+
+			embed.AddField(embedfield);
+
+			var embedField = new EmbedFieldBuilder
+			{
+				Name = $"В боевую группу записались"
+			};
+
+			foreach (var user in users)
+			{
+				var discordUser = Client.GetUser(user);
+				embedField.Value += $"{discordUser.Mention} - {discordUser.Username}\n";
+
+			}
+			embed.AddField(embedField);
+
+			return embed;
 		}
 
 		internal async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, int numPlaces, int raidInfoId, DateTime date, string userMemo)

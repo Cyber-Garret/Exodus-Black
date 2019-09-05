@@ -371,9 +371,9 @@ namespace Bot.Modules.Commands
 				return;
 			}
 
-			if (numPlaces < 1 || numPlaces > 6)
+			if (numPlaces < 1 || numPlaces > 5)
 			{
-				await ReplyAndDeleteAsync("Количество мест должно быть в диапазоне от 1 до 6");
+				await ReplyAndDeleteAsync("Количество мест должно быть в диапазоне от 1 до 5");
 				return;
 			}
 
@@ -405,7 +405,7 @@ namespace Bot.Modules.Commands
 				return;
 			}
 
-			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
+			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, numPlaces, dateTime, userMemo).Build());
 			await Milestone.RegisterMilestoneAsync(msg.Id, Context, numPlaces, milestone.Id, dateTime, userMemo);
 
 			for (int i = 0; i < numPlaces; i++)

@@ -9,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace Bot.Services
 {
@@ -197,22 +199,32 @@ namespace Bot.Services
 					{
 						if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
 						{
+							//List with milestone leader and users who first click reaction
 							List<ulong> users = new List<ulong>();
-							//TODO: LoadMessage Get first User of specific free places
+
+							//Get message by id from guild, in specific text channel, for read who clicked the represented reactions
 							var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
-							users.Add(item.Leader);
+
 							for (int i = 0; i < item.Places; i++)
 							{
+								//Load who click represented reaction
 								var user = await message.GetReactionUsersAsync(Global.ReactPlaceNumber[$"{i + 2}"], 1).FlattenAsync();
-								users.Add(user.FirstOrDefault().Id);
+								//Take first user
+								var takedUser = user.FirstOrDefault();
+								//If anyone not click on free place first user by default this bot or maybe any other =)
+								if (!takedUser.IsBot)
+									users.Add(takedUser.Id);
 							}
-							//TODO: modify message
-							await message.ModifyAsync(m =>
-							{
-								m.Content = FailsafeDbOperations.GetGuildAccountAsync(item.GuildId).Result.GlobalMention;
-								m.Embed = await Milestone.
-								});
+
+							//Once rebuild message with new embed
+							await message.ModifyAsync(m => m.Embed = Milestone.RebuildEmbed(item, users).Build());
+							//Clean all reactions
+							await message.RemoveAllReactionsAsync();
+
+							//Add leader in list for friendly remainder in direct messaging
+							users.Add(item.Leader);
 							await RaidNotificationAsync(users, item);
+
 							//Remove expired Milestone
 							Db.ActiveMilestones.Remove(item);
 							await Db.SaveChangesAsync();
@@ -225,7 +237,7 @@ namespace Bot.Services
 		{
 			foreach (var item in userIds)
 			{
-				if (item != 0 || item != Client.CurrentUser.Id)
+				if (item != 0)
 				{
 					try
 					{
@@ -247,6 +259,7 @@ namespace Bot.Services
 						#endregion
 
 						await Dm.SendMessageAsync(embed: embed.Build());
+						Thread.Sleep(1000);
 					}
 					catch (Exception ex)
 					{
@@ -259,16 +272,5 @@ namespace Bot.Services
 
 		}
 		#endregion
-
-
-
-
-
-
-
-
-
-
-
 	}
 }

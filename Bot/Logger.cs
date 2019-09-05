@@ -16,7 +16,10 @@ namespace Bot
 		internal static Task Log(LogMessage logMessage)
 		{
 			Console.ForegroundColor = SeverityToConsoleColor(logMessage.Severity);
-			string message = string.Concat("[", DateTime.Now.ToLongTimeString(), " Source: ", logMessage.Source, "] ", logMessage.Message);
+			string message = $"[{DateTime.Now.ToLongTimeString()}, Source: {logMessage.Source}] {logMessage.Message}";
+			if (logMessage.Exception != null)
+				message += logMessage.Exception;
+
 			Console.WriteLine(message);
 			Console.ResetColor();
 			return Task.CompletedTask;

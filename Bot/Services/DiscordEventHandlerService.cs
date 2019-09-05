@@ -69,6 +69,7 @@ namespace Bot.Services
 		{
 			await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
 			await lavaSocket.DisposeAsync();
+
 		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
