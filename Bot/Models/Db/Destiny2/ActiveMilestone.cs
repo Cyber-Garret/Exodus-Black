@@ -9,7 +9,11 @@ namespace Bot.Models.Db.Destiny2
 		[Key, Required, DatabaseGenerated(DatabaseGeneratedOption.None)]
 		public ulong MessageId { get; set; }
 		[Required]
-		public string GuildName { get; set; }
+		public ulong TextChannelId { get; set; }
+		[Required]
+		public ulong GuildId { get; set; }
+		[Required]
+		public int Places { get; set; }
 
 		[Required]
 		public int MilestoneId { get; set; }
@@ -20,11 +24,6 @@ namespace Bot.Models.Db.Destiny2
 		[Required]
 		public DateTime DateExpire { get; set; }
 		[Required]
-		public ulong User1 { get; set; }
-		public ulong User2 { get; set; } = 0;
-		public ulong User3 { get; set; } = 0;
-		public ulong User4 { get; set; } = 0;
-		public ulong User5 { get; set; } = 0;
-		public ulong User6 { get; set; } = 0;
+		public ulong Leader { get; set; }
 	}
 }

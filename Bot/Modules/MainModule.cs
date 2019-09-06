@@ -341,11 +341,13 @@ namespace Bot.Modules.Commands
 
 		[Command("сбор")]
 		[Summary("Команда для анонса активностей.")]
-		[Remarks("Пример: !сбор <Название> <Дата и время начала активности> <Заметка лидера(Не обязательно)>, например !сбор пн 17.07.2019-20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
+		[Remarks("Пример: !сбор <Название> <количество мест> <Дата и время начала активности> <Заметка лидера(Не обязательно)>, например !сбор пн 2 17.07-20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
 		[Cooldown(10)]
-		public async Task RaidCollection(string milestoneName, string raidTime, [Remainder]string userMemo = null)
+		public async Task RaidCollection(string milestoneName, int numPlaces, string raidTime, [Remainder]string userMemo = null)
 		{
+			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+
 			var milestone = await db.Milestones.AsNoTracking().Where(r =>
 				r.Name.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
 				r.Alias.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
@@ -363,13 +365,19 @@ namespace Bot.Modules.Commands
 				var message = new EmbedBuilder()
 					.WithTitle("Страж, я не разобрала в какую активность ты хочешь пойти")
 					.WithColor(Color.Red)
-					.WithDescription(AvailableRaids += "\nПример: !сбор пж 17.07.2019-20:00")
+					.WithDescription(AvailableRaids += "\nПример: !сбор пж 2 17.07-20:00")
 					.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному. Это сообщение будет автоматически удалено через 2 минуты.");
 				await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
 				return;
 			}
 
-			DateTime.TryParseExact(raidTime, "dd.MM.yyyy-HH:mm", CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
+			if (numPlaces < 1 || numPlaces > 5)
+			{
+				await ReplyAndDeleteAsync("Количество мест должно быть в диапазоне от 1 до 5");
+				return;
+			}
+
+			DateTime.TryParseExact(raidTime, "dd.MM-HH:mm", CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
 
 			if (dateTime == new DateTime())
 			{
@@ -377,13 +385,12 @@ namespace Bot.Modules.Commands
 					.WithTitle("Страж, ты указал неизвестный мне формат времени")
 					.WithColor(Color.Gold)
 					.AddField("Я понимаю время начала рейда в таком формате",
-					"Формат времени: **<день>.<месяц>.<год>-<час>:<минута>**\n" +
+					"Формат времени: **<день>.<месяц>-<час>:<минута>**\n" +
 					"**День:** от 01 до 31\n" +
 					"**Месяц:** от 01 до 12\n" +
-					"**Год:** Например: 2019\n" +
 					"**Час:** от 00 до 23\n" +
 					"**Минута:** от 00 до 59\n" +
-					"В итоге у тебя должно получиться: **05.07.2019-20:05** Пример: !сбор пж 21.05.2018-20:00")
+					"В итоге у тебя должно получиться: **05.07-20:05** Пример: !сбор пж 2 21.05-20:00")
 					.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
 					.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
 				await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
@@ -397,14 +404,20 @@ namespace Bot.Modules.Commands
 				await ReplyAndDeleteAsync(null, embed: message.Build());
 				return;
 			}
-			var msg = await ReplyAsync(message: "@here", embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
-			await Milestone.RegisterMilestoneAsync(msg.Id, Context.Guild.Name, Context.User.Id, milestone.Id, dateTime, userMemo);
+
+			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, numPlaces, dateTime, userMemo).Build());
+			await Milestone.RegisterMilestoneAsync(msg.Id, Context, numPlaces, milestone.Id, dateTime, userMemo);
+
+			for (int i = 0; i < numPlaces; i++)
+			{
+				await msg.AddReactionAsync(Global.ReactPlaceNumber[$"{i + 2}"]);
+			}
 			//Slots
-			await msg.AddReactionAsync(Global.ReactPlaceNumber["2"]);
-			await msg.AddReactionAsync(Global.ReactPlaceNumber["3"]);
-			await msg.AddReactionAsync(Global.ReactPlaceNumber["4"]);
-			await msg.AddReactionAsync(Global.ReactPlaceNumber["5"]);
-			await msg.AddReactionAsync(Global.ReactPlaceNumber["6"]);
+			//await msg.AddReactionAsync(Global.ReactPlaceNumber["2"]);
+			//await msg.AddReactionAsync(Global.ReactPlaceNumber["3"]);
+			//await msg.AddReactionAsync(Global.ReactPlaceNumber["4"]);
+			//await msg.AddReactionAsync(Global.ReactPlaceNumber["5"]);
+			//await msg.AddReactionAsync(Global.ReactPlaceNumber["6"]);
 
 		}
 

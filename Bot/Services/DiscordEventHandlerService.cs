@@ -46,8 +46,6 @@ namespace Bot.Services
 			Client.RoleDeleted += _client_RoleDeletedAsync;
 			Client.UserJoined += _client_UserJoinedAsync;
 			Client.UserLeft += _client_UserLeftAsync;
-			Client.ReactionAdded += _client_ReactionAddedAsync;
-			Client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
 
 		#region Events
@@ -69,6 +67,7 @@ namespace Bot.Services
 		{
 			await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
 			await lavaSocket.DisposeAsync();
+
 		}
 		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
@@ -79,7 +78,6 @@ namespace Bot.Services
 			if (message.Author.IsBot)
 				return;
 			await CommandHandlingService.HandleCommandAsync(message);
-			await MessageReceived(message);
 		}
 		private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{
@@ -107,8 +105,6 @@ namespace Bot.Services
 		}
 
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
-		private async Task _client_ReactionAddedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionAdded(cache, channel, reaction);
-		private async Task _client_ReactionRemovedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionRemoved(cache, channel, reaction);
 		#endregion
 
 		#region Methods
@@ -304,13 +300,6 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task MessageReceived(SocketMessage arg)
-		{
-			if (arg.Author.Id == Client.CurrentUser.Id)
-				return;
-
-			await Task.CompletedTask;
-		}
 		private async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore, SocketMessage messageAfter, ISocketMessageChannel arg3)
 		{
 			try
@@ -420,8 +409,10 @@ namespace Bot.Services
 					var name = $"{messageBefore.Value.Author.Mention}";
 					var check = audit[0].Data as MessageDeleteAuditLogData;
 
-					if (check?.ChannelId == messageBefore.Value.Channel.Id &&
-						audit[0].Action == ActionType.MessageDeleted)
+					//if message deleted by Bot return.
+					if (audit[0].User.IsBot) return;
+
+					if (check?.ChannelId == messageBefore.Value.Channel.Id && audit[0].Action == ActionType.MessageDeleted)
 						name = $"{audit[0].User.Mention}";
 
 					var embedDel = new EmbedBuilder();
@@ -699,22 +690,6 @@ namespace Bot.Services
 			catch (Exception ex)
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Error, "UserLeft", ex.Message, ex));
-			}
-		}
-		private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
-		{
-			if (!reaction.User.Value.IsBot)
-			{
-				//await CatalystData.HandleReactionAdded(cache, reaction);
-				await milestone.HandleReactionAdded(cache, reaction);
-			}
-		}
-
-		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
-		{
-			if (!reaction.User.Value.IsBot)
-			{
-				await milestone.HandleReactionRemoved(cache, reaction);
 			}
 		}
 		#endregion

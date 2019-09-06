@@ -7,25 +7,28 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace Bot.Services
 {
 	public class TimerService
 	{
-		#region Private fields
-		readonly DiscordSocketClient Client;
+		private readonly DiscordSocketClient Client;
+		private readonly MilestoneService Milestone;
 		private Timer MainTimer;
 		private Timer GameStatusTimer;
 		private Timer ClanTimer;
 		private Timer MemberTimer;
-		#endregion
 
-		public TimerService(DiscordSocketClient socketClient)
+		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
 			Client = socketClient;
+			Milestone = milestoneService;
 		}
 
 		public void Configure()
@@ -142,7 +145,7 @@ namespace Bot.Services
 					try
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-					   .SendMessageAsync(null, false, embed.Build());
+					   .SendMessageAsync(text: guild.GlobalMention, embed: embed.Build());
 					}
 					catch (Exception ex)
 					{
@@ -172,7 +175,7 @@ namespace Bot.Services
 					try
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-					   .SendMessageAsync(null, false, embed.Build());
+					   .SendMessageAsync(text: guild.GlobalMention, embed: embed.Build());
 					}
 					catch (Exception ex)
 					{
@@ -184,6 +187,7 @@ namespace Bot.Services
 		}
 		private async Task RaidRemainder()
 		{
+
 			var timer = DateTime.Now.AddMinutes(15);
 
 			using (FailsafeContext Db = new FailsafeContext())
@@ -195,8 +199,30 @@ namespace Bot.Services
 					{
 						if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
 						{
-							ulong[] users = { item.User1, item.User2, item.User3, item.User4, item.User5, item.User6 };
+							//List with milestone leader and users who first click reaction
+							List<ulong> users = new List<ulong>();
 
+							//Get message by id from guild, in specific text channel, for read who clicked the represented reactions
+							var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
+
+							for (int i = 0; i < item.Places; i++)
+							{
+								//Load who click represented reaction
+								var user = await message.GetReactionUsersAsync(Global.ReactPlaceNumber[$"{i + 2}"], 1).FlattenAsync();
+								//Take first user
+								var takedUser = user.FirstOrDefault();
+								//If anyone not click on free place first user by default this bot or maybe any other =)
+								if (!takedUser.IsBot)
+									users.Add(takedUser.Id);
+							}
+
+							//Once rebuild message with new embed
+							await message.ModifyAsync(m => m.Embed = Milestone.RebuildEmbed(item, users).Build());
+							//Clean all reactions
+							await message.RemoveAllReactionsAsync();
+
+							//Add leader in list for friendly remainder in direct messaging
+							users.Add(item.Leader);
 							await RaidNotificationAsync(users, item);
 
 							//Remove expired Milestone
@@ -207,15 +233,16 @@ namespace Bot.Services
 				}
 			}
 		}
-		private async Task RaidNotificationAsync(ulong[] userId, ActiveMilestone milestone)
+		private async Task RaidNotificationAsync(List<ulong> userIds, ActiveMilestone milestone)
 		{
-			foreach (var item in userId)
+			foreach (var item in userIds)
 			{
 				if (item != 0)
 				{
 					try
 					{
-						SocketUser User = Client.GetUser(item);
+						var User = Client.GetUser(item);
+						var Guild = Client.GetGuild(milestone.GuildId);
 						IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
 
 						#region Message
@@ -228,10 +255,11 @@ namespace Bot.Services
 						embed.WithThumbnailUrl(milestone.Milestone.Icon);
 						if (milestone.Memo != null)
 							embed.AddField("Заметка от лидера:", milestone.Memo);
-						embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {milestone.GuildName}");
+						embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {Guild.Name}");
 						#endregion
 
 						await Dm.SendMessageAsync(embed: embed.Build());
+						Thread.Sleep(1000);
 					}
 					catch (Exception ex)
 					{
@@ -244,16 +272,5 @@ namespace Bot.Services
 
 		}
 		#endregion
-
-
-
-
-
-
-
-
-
-
-
 	}
 }
