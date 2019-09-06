@@ -46,8 +46,6 @@ namespace Bot.Services
 			Client.RoleDeleted += _client_RoleDeletedAsync;
 			Client.UserJoined += _client_UserJoinedAsync;
 			Client.UserLeft += _client_UserLeftAsync;
-			Client.ReactionAdded += _client_ReactionAddedAsync;
-			Client.ReactionRemoved += _client_ReactionRemovedAsync;
 		}
 
 		#region Events
@@ -107,8 +105,6 @@ namespace Bot.Services
 		}
 
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
-		private async Task _client_ReactionAddedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionAdded(cache, channel, reaction);
-		private async Task _client_ReactionRemovedAsync(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction) => await OnReactionRemoved(cache, channel, reaction);
 		#endregion
 
 		#region Methods
@@ -694,22 +690,6 @@ namespace Bot.Services
 			catch (Exception ex)
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Error, "UserLeft", ex.Message, ex));
-			}
-		}
-		private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
-		{
-			if (!reaction.User.Value.IsBot)
-			{
-				//await CatalystData.HandleReactionAdded(cache, reaction);
-				//await milestone.HandleReactionAdded(cache, reaction);
-			}
-		}
-
-		private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
-		{
-			if (!reaction.User.Value.IsBot)
-			{
-				//await milestone.HandleReactionRemoved(cache, reaction);
 			}
 		}
 		#endregion
