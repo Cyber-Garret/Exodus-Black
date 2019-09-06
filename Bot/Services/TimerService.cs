@@ -188,7 +188,7 @@ namespace Bot.Services
 		private async Task RaidRemainder()
 		{
 
-			var timer = DateTime.Now.AddMinutes(1);
+			var timer = DateTime.Now.AddMinutes(15);
 
 			using (FailsafeContext Db = new FailsafeContext())
 			{

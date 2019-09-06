@@ -53,7 +53,7 @@ namespace Bot.Services
 		public EmbedBuilder RebuildEmbed(ActiveMilestone activeMilestone, List<ulong> users)
 		{
 			var embed = new EmbedBuilder()
-				.WithTitle($"{activeMilestone.DateExpire.ToShortDateString()}, {Global.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}")
+				.WithTitle($"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}")
 				.WithColor(Color.DarkMagenta)
 				.WithThumbnailUrl(activeMilestone.Milestone.Icon);
 			if (activeMilestone.Milestone.PreviewDesc != null)
