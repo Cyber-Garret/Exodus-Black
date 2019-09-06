@@ -75,9 +75,11 @@ namespace Bot.Services
 		private async Task _client_GuildMemberUpdatedAsync(SocketGuildUser userBefore, SocketGuildUser userAfter) => await GuildMemberUpdated(userBefore, userAfter);
 		private async Task _client_MessageReceived(SocketMessage message)
 		{
-			if (message.Author.IsBot)
-				return;
-			await CommandHandlingService.HandleCommandAsync(message);
+			if (message.Author.IsBot) return;
+			await Task.Run(async () =>
+			   {
+				   await CommandHandlingService.HandleCommandAsync(message);
+			   });
 		}
 		private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{

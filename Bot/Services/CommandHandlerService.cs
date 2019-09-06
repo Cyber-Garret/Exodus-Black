@@ -36,19 +36,15 @@ namespace Bot.Services
 
 		public async Task HandleCommandAsync(SocketMessage arg)
 		{
-			// Ignore if not SocketUserMessage 
+			// Ignore if not SocketUserMessage or its Direct Message
 			if (!(arg is SocketUserMessage msg)) return;
+			if (msg.Channel is SocketDMChannel) return;
 
 			var context = new SocketCommandContext(Client, msg);
+			if (context.User.IsBot) return;
 
-			string prefix;
-			if (!context.IsPrivate)
-			{
-				var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
-				prefix = config.CommandPrefix ?? "!";
-			}
-			else
-				prefix = "!";
+			var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
+			var prefix = config.CommandPrefix ?? "!";
 
 
 			var argPos = 0;
@@ -57,11 +53,7 @@ namespace Bot.Services
 			{
 
 				var cmdSearchResult = Commands.Search(context, argPos);
-				if (cmdSearchResult.Commands == null)
-				{
-					await Logger.Log(new LogMessage(LogSeverity.Warning, "HandleCommand", $"Command {msg.Content} return {cmdSearchResult.Error}"));
-					return;
-				}
+				if (cmdSearchResult.Commands == null) return;
 
 				var executionTask = Commands.ExecuteAsync(context, argPos, Services);
 
