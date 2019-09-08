@@ -6,9 +6,8 @@ using Discord;
 using Discord.Commands;
 
 using Bot.Helpers;
-using Bot.Extensions;
 using Bot.Preconditions;
-using Bot.Models.Db.Discord;
+using Bot.Models.Db;
 using Discord.WebSocket;
 
 namespace Bot.Modules.Administration

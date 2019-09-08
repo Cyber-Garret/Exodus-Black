@@ -36,33 +36,34 @@ namespace Bot.Services
 
 		public async Task HandleCommandAsync(SocketMessage arg)
 		{
-			// Ignore if not SocketUserMessage or its Direct Message
+			// Ignore if not SocketUserMessage or its direct message or private groups
 			if (!(arg is SocketUserMessage msg)) return;
-			if (msg.Channel is SocketDMChannel) return;
+			if (msg.Channel is SocketDMChannel || msg.Channel is SocketGroupChannel) return;
 
 			var context = new SocketCommandContext(Client, msg);
-			if (context.User.IsBot) return;
 
+			//Get guild for load custom command Prefix.
 			var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
 			var prefix = config.CommandPrefix ?? "!";
 
 
 			var argPos = 0;
-			// Ignore if not mention this bot or command not start from char !
+			// Ignore if not mention this bot or command not start from prefix
 			if (!(msg.HasMentionPrefix(Client.CurrentUser, ref argPos) || msg.HasStringPrefix(prefix, ref argPos))) return;
 			{
-
+				//search command
 				var cmdSearchResult = Commands.Search(context, argPos);
+				//If command not found just finish Task
 				if (cmdSearchResult.Commands == null) return;
-
+				//Execute commant in current discord context
 				var executionTask = Commands.ExecuteAsync(context, argPos, Services);
 
 				await executionTask.ContinueWith(task =>
 				 {
+					 // If Success or command unknown just finish Task
 					 if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
-					 const string errTemplate = "{0}, {1}.";
-					 var errMessage = string.Format(errTemplate, context.User.Mention, task.Result.ErrorReason);
-					 context.Channel.SendMessageAsync(errMessage);
+
+					 context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
 				 });
 			}
 		}

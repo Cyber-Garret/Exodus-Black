@@ -1,4 +1,4 @@
-﻿using Bot.Models.Db.Destiny2;
+﻿using Bot.Models.Db;
 using Bot.Modules.Administration;
 using Bot.Preconditions;
 using Bot.Services;
@@ -344,7 +344,7 @@ namespace Bot.Modules.Commands
 		[Remarks("Пример: !сбор <Название> <количество мест> <Дата и время начала активности> <Заметка лидера(Не обязательно)>, например !сбор пн 2 17.07-20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
 		[Cooldown(10)]
-		public async Task RaidCollection(string milestoneName, int numPlaces, string raidTime, [Remainder]string userMemo = null)
+		public async Task RaidCollection(string milestoneName, string raidTime, [Remainder]string userMemo = null)
 		{
 			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
@@ -368,12 +368,6 @@ namespace Bot.Modules.Commands
 					.WithDescription(AvailableRaids += "\nПример: !сбор пж 2 17.07-20:00")
 					.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному. Это сообщение будет автоматически удалено через 2 минуты.");
 				await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
-				return;
-			}
-
-			if (numPlaces < 1 || numPlaces > 5)
-			{
-				await ReplyAndDeleteAsync("Количество мест должно быть в диапазоне от 1 до 5");
 				return;
 			}
 
@@ -405,19 +399,16 @@ namespace Bot.Modules.Commands
 				return;
 			}
 
-			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, numPlaces, dateTime, userMemo).Build());
-			await Milestone.RegisterMilestoneAsync(msg.Id, Context, numPlaces, milestone.Id, dateTime, userMemo);
+			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
+			await Milestone.RegisterMilestoneAsync(msg.Id, Context, milestone.Id, dateTime, userMemo);
 
-			for (int i = 0; i < numPlaces; i++)
-			{
-				await msg.AddReactionAsync(Global.ReactPlaceNumber[$"{i + 2}"]);
-			}
+			//Get my Guild for load custom emoji
+			SocketGuild NeiraHome = Client.GetGuild(521689023962415104);
+			IEmote raidEmote = NeiraHome.Emotes.First(e => e.Name == "Neira_Raid");
+			IEmote newEmote = NeiraHome.Emotes.First(e => e.Name == "Neira_New");
 			//Slots
-			//await msg.AddReactionAsync(Global.ReactPlaceNumber["2"]);
-			//await msg.AddReactionAsync(Global.ReactPlaceNumber["3"]);
-			//await msg.AddReactionAsync(Global.ReactPlaceNumber["4"]);
-			//await msg.AddReactionAsync(Global.ReactPlaceNumber["5"]);
-			//await msg.AddReactionAsync(Global.ReactPlaceNumber["6"]);
+			await msg.AddReactionAsync(raidEmote);
+			await msg.AddReactionAsync(newEmote);
 
 		}
 

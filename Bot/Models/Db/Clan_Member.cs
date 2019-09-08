@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bot.Models.Db.Destiny2
+namespace Bot.Models.Db
 {
 	public class Clan_Member
 	{

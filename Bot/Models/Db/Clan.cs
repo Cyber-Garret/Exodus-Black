@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bot.Models.Db.Destiny2
+namespace Bot.Models.Db
 {
 	public class Clan
 	{

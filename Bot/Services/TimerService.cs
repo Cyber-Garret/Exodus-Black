@@ -1,4 +1,4 @@
-﻿using Bot.Models.Db.Destiny2;
+﻿using Bot.Models.Db;
 using Bot.Services.Bungie;
 
 using Discord;
@@ -205,7 +205,7 @@ namespace Bot.Services
 							//Get message by id from guild, in specific text channel, for read who clicked the represented reactions
 							var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
 
-							for (int i = 0; i < item.Places; i++)
+							for (int i = 0; i < item.MilestoneUsers.Count; i++)
 							{
 								//Load who click represented reaction
 								var user = await message.GetReactionUsersAsync(Global.ReactPlaceNumber[$"{i + 2}"], 1).FlattenAsync();
@@ -215,9 +215,6 @@ namespace Bot.Services
 								if (!takedUser.IsBot)
 									users.Add(takedUser.Id);
 							}
-
-							//Once rebuild message with new embed
-							await message.ModifyAsync(m => m.Embed = Milestone.RebuildEmbed(item, users).Build());
 							//Clean all reactions
 							await message.RemoveAllReactionsAsync();
 

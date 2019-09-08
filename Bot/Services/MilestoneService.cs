@@ -1,4 +1,4 @@
-﻿using Bot.Models.Db.Destiny2;
+﻿using Bot.Models.Db;
 
 using Discord;
 using Discord.Commands;
@@ -15,15 +15,109 @@ namespace Bot.Services
 {
 	public class MilestoneService
 	{
-		readonly DiscordSocketClient Client;
-		readonly FailsafeContext Db;
+		private readonly DiscordSocketClient Client;
+		private readonly FailsafeContext Db;
+		private SocketGuild NeiraHome;
+		private IEmote RaidEmote;
+		private IEmote RaidNewbie;
 		public MilestoneService(DiscordSocketClient socketClient, FailsafeContext context)
 		{
 			Client = socketClient;
 			Db = context;
 		}
 
-		public EmbedBuilder StartEmbed(SocketUser user, Milestone milestone, int places, DateTime date, string userMemo)
+		public void Initialize()
+		{
+			NeiraHome = Client.GetGuild(521689023962415104);
+			RaidEmote = NeiraHome.Emotes.First(e => e.Name == "Neira_Raid");
+			RaidNewbie = NeiraHome.Emotes.First(e => e.Name == "Neira_New");
+		}
+		public async Task HandleReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
+		{
+			try
+			{
+				var msg = await cache.GetOrDownloadAsync();
+
+				if (reaction.Emote.Equals(RaidEmote))
+				{
+					//get milestone
+					var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+					if (milestone == null) return;
+
+					//check reaction
+					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+
+					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 6)
+					{
+						Db.MilestoneUsers.Add(new MilestoneUser
+						{
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
+					}
+					else
+					{
+						var user = Client.GetUser(reaction.UserId);
+						await msg.RemoveReactionAsync(RaidEmote, user);
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
+			}
+		}
+
+		internal async Task HandleReactionRemoved(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
+		{
+			try
+			{
+				var msg = await cache.GetOrDownloadAsync();
+
+				if (reaction.Emote.Equals(RaidEmote))
+				{
+					//get milestone
+					var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+					if (milestone == null) return;
+
+					//check reaction
+					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+
+					if (reaction.UserId != milestone.Leader && UserExist && milestone.MilestoneUsers.Count < 6)
+					{
+						var milestoneUser = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+
+						Db.Remove(milestoneUser);
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
+					}
+					else
+					{
+						var user = Client.GetUser(reaction.UserId);
+						await msg.RemoveReactionAsync(RaidEmote, user);
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
+			}
+		}
+
+		internal async void HandleReaction(IUserMessage message, ActiveMilestone activeMilestone)
+		{
+			var newEmbed = RebuildEmbed(activeMilestone);
+			if (newEmbed.Length != 0)
+				await message.ModifyAsync(m => m.Embed = newEmbed.Build());
+		}
+
+		public EmbedBuilder StartEmbed(SocketUser user, Milestone milestone, DateTime date, string userMemo)
 		{
 			var embed = new EmbedBuilder();
 
@@ -38,19 +132,19 @@ namespace Bot.Services
 				Name = "Информация",
 				Value =
 				$"- Лидер боевой группы: **{user.Mention} - {user.Username}**\n" +
-				$"- Доступных мест: **{places}**\n"
+				$"- Чтобы за вами закрепилось место нажмите на реакцию {RaidEmote}\n" +
+				$"- Если вы новичок в данной активности нажмите на реакцию {RaidNewbie}"
 			};
 
 			if (userMemo != null)
 				embedfield.Value += $"- Заметка: **{userMemo}**";
 
 			embed.AddField(embedfield);
-			embed.WithFooter("Чтобы за вами закрепилось место нажмите на реакцию, соответствующую месту.");
 
 			return embed;
 		}
 
-		public EmbedBuilder RebuildEmbed(ActiveMilestone activeMilestone, List<ulong> users)
+		public EmbedBuilder RebuildEmbed(ActiveMilestone activeMilestone)
 		{
 			var embed = new EmbedBuilder()
 				.WithTitle($"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {Global.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}")
@@ -60,36 +154,38 @@ namespace Bot.Services
 				embed.WithDescription(activeMilestone.Milestone.PreviewDesc);
 
 			var milestoneLeader = Client.GetUser(activeMilestone.Leader);
-			var embedfield = new EmbedFieldBuilder
+			var embedfieldInfo = new EmbedFieldBuilder
 			{
 				Name = "Информация",
-				Value = $"- Лидер боевой группы: **{milestoneLeader.Mention} - {milestoneLeader.Username}**\n"
+				Value =
+				$"- Лидер боевой группы: **{milestoneLeader.Mention} - {milestoneLeader.Username}**\n" +
+				$"- Чтобы за вами закрепилось место нажмите на реакцию {RaidEmote}\n" +
+				$"- Если вы новичок в данной активности нажмите на реакцию {RaidNewbie}"
 			};
-			if (activeMilestone.Places - users.Count > 0)
-				embedfield.Value += $"- Осталось мест: **{activeMilestone.Places - users.Count}**\n";
 
 			if (activeMilestone.Memo != null)
-				embedfield.Value += $"- Заметка: **{activeMilestone.Memo}**";
+				embedfieldInfo.Value += $"- Заметка: **{activeMilestone.Memo}**";
 
-			embed.AddField(embedfield);
+			embed.AddField(embedfieldInfo);
 
-			var embedField = new EmbedFieldBuilder
+			var embedFieldUsers = new EmbedFieldBuilder
 			{
 				Name = $"В боевую группу записались"
 			};
 
-			foreach (var user in users)
+			foreach (var user in activeMilestone.MilestoneUsers)
 			{
-				var discordUser = Client.GetUser(user);
-				embedField.Value += $"{discordUser.Mention} - {discordUser.Username}\n";
+				var discordUser = Client.GetUser(user.UserId);
+				embedFieldUsers.Value += $"{discordUser.Mention} - {discordUser.Username}\n";
 
 			}
-			embed.AddField(embedField);
+			if (embedFieldUsers.Value != null)
+				embed.AddField(embedFieldUsers);
 
 			return embed;
 		}
 
-		internal async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, int numPlaces, int raidInfoId, DateTime date, string userMemo)
+		internal async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, int raidInfoId, DateTime date, string userMemo)
 		{
 			try
 			{
@@ -98,7 +194,6 @@ namespace Bot.Services
 					MessageId = msgId,
 					TextChannelId = context.Channel.Id,
 					GuildId = context.Guild.Id,
-					Places = numPlaces,
 					MilestoneId = raidInfoId,
 					Memo = userMemo,
 					DateExpire = date,

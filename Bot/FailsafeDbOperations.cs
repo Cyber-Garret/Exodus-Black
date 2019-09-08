@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 using Discord;
-using Bot.Models.Db.Discord;
-using Bot.Models.Db.Destiny2;
+using Bot.Models.Db;
 
 namespace Bot
 {
