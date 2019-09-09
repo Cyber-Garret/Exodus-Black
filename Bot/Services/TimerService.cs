@@ -20,15 +20,18 @@ namespace Bot.Services
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly MilestoneService Milestone;
+		private readonly FailsafeContext Db;
 		private Timer MainTimer;
 		private Timer GameStatusTimer;
 		private Timer ClanTimer;
 		private Timer MemberTimer;
+		private Timer MilestoneTimer;
 
-		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService)
+		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService, FailsafeContext failsafeContext)
 		{
 			Client = socketClient;
 			Milestone = milestoneService;
+			Db = failsafeContext;
 		}
 
 		public void Configure()
@@ -64,12 +67,19 @@ namespace Bot.Services
 				Interval = TimeSpan.FromHours(1).TotalMilliseconds
 			};
 			MemberTimer.Elapsed += MemberTimer_Elapsed;
+
+			MilestoneTimer = new Timer
+			{
+				Enabled = true,
+				AutoReset = true,
+				Interval = TimeSpan.FromSeconds(10).TotalMilliseconds
+			};
+			MilestoneTimer.Elapsed += MilestoneTimer_Elapsed;
 		}
 
 		#region Elapsed events
 		private async void MainTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			_ = RaidRemainder();
 			// If signal time equal Friday 20:00 we will send message Xur is arrived in game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
 				await XurArrived();
@@ -119,6 +129,11 @@ namespace Bot.Services
 		{
 			MemberUpdater updater = new MemberUpdater();
 			updater.UpdateMembersLastPlayedTime();
+		}
+
+		private void MilestoneTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			_ = RaidRemainder();
 		}
 		#endregion
 
@@ -187,87 +202,47 @@ namespace Bot.Services
 		}
 		private async Task RaidRemainder()
 		{
-
 			var timer = DateTime.Now.AddMinutes(15);
 
-			using (FailsafeContext Db = new FailsafeContext())
+			var query = await Db.ActiveMilestones
+				.Include(r => r.Milestone)
+				.Include(ac => ac.MilestoneUsers)
+				.OrderBy(o => o.DateExpire)
+				.ToListAsync();
+
+			if (query.Count > 0)
 			{
-				var query = await Db.ActiveMilestones.Include(r => r.Milestone).Where(d => d.DateExpire > DateTime.Now).OrderBy(o => o.DateExpire).ToListAsync();
-				if (query.Count > 0)
-				{
-					foreach (var item in query)
-					{
-						if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
-						{
-							//List with milestone leader and users who first click reaction
-							List<ulong> users = new List<ulong>();
+				Parallel.ForEach(query, new ParallelOptions { MaxDegreeOfParallelism = 2 }, async item =>
+				  {
+					  if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
+					  {
+						  //List with milestone leader and users who first click reaction
+						  List<ulong> users = new List<ulong>();
 
-							//Get message by id from guild, in specific text channel, for read who clicked the represented reactions
-							var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
+						  //Get message by id from guild, in specific text channel, for read who clicked the represented reactions
+						  var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
 
-							for (int i = 0; i < item.MilestoneUsers.Count; i++)
-							{
-								//Load who click represented reaction
-								var user = await message.GetReactionUsersAsync(Global.ReactPlaceNumber[$"{i + 2}"], 1).FlattenAsync();
-								//Take first user
-								var takedUser = user.FirstOrDefault();
-								//If anyone not click on free place first user by default this bot or maybe any other =)
-								if (!takedUser.IsBot)
-									users.Add(takedUser.Id);
-							}
-							//Clean all reactions
-							await message.RemoveAllReactionsAsync();
+						  if (item.MilestoneUsers.Count > 0)
+						  {
+							  foreach (var user in item.MilestoneUsers)
+								  users.Add(user.UserId);
 
-							//Add leader in list for friendly remainder in direct messaging
-							users.Add(item.Leader);
-							await RaidNotificationAsync(users, item);
+						  }
+						  //Clean all reactions
+						  await message.RemoveAllReactionsAsync();
 
-							//Remove expired Milestone
-							Db.ActiveMilestones.Remove(item);
-							await Db.SaveChangesAsync();
-						}
-					}
-				}
+						  //Add leader in list for friendly remainder in direct messaging
+						  users.Add(item.Leader);
+						  await Milestone.RaidNotificationAsync(users, item);
+
+						  //Remove expired Milestone
+						  Db.ActiveMilestones.Remove(item);
+						  await Db.SaveChangesAsync();
+					  }
+				  });
 			}
 		}
-		private async Task RaidNotificationAsync(List<ulong> userIds, ActiveMilestone milestone)
-		{
-			foreach (var item in userIds)
-			{
-				if (item != 0)
-				{
-					try
-					{
-						var User = Client.GetUser(item);
-						var Guild = Client.GetGuild(milestone.GuildId);
-						IDMChannel Dm = await User.GetOrCreateDMChannelAsync();
 
-						#region Message
-						EmbedBuilder embed = new EmbedBuilder();
-						embed.WithAuthor($"Доброго времени суток, {User.Username}");
-						embed.WithTitle($"Хочу вам напомнить, что у вас через 15 минут начнется {milestone.Milestone.Type.ToLower()}.");
-						embed.WithColor(Color.DarkMagenta);
-						if (milestone.Milestone.PreviewDesc != null)
-							embed.WithDescription(milestone.Milestone.PreviewDesc);
-						embed.WithThumbnailUrl(milestone.Milestone.Icon);
-						if (milestone.Memo != null)
-							embed.AddField("Заметка от лидера:", milestone.Memo);
-						embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {Guild.Name}");
-						#endregion
-
-						await Dm.SendMessageAsync(embed: embed.Build());
-						Thread.Sleep(1000);
-					}
-					catch (Exception ex)
-					{
-						await Logger.Log(new LogMessage(LogSeverity.Error, "RaidNotification", ex.Message, ex));
-					}
-
-				}
-			}
-
-
-		}
 		#endregion
 	}
 }

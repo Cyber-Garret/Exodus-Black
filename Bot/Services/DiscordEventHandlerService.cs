@@ -50,58 +50,47 @@ namespace Bot.Services
 			Client.ReactionRemoved += Client_ReactionRemoved;
 		}
 
-		private Task Client_ReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
-		{
-			if (!reaction.User.Value.IsBot)
-			{
-				Task.Run(async () =>
-				{
-					await milestone.HandleReactionRemoved(cache, reaction);
-				});
-
-				return Task.CompletedTask;
-			}
-			return Task.CompletedTask;
-		}
-
-		private Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
-		{
-			if (!reaction.User.Value.IsBot)
-			{
-				Task.Run(async () =>
-				{
-					await milestone.HandleReactionAdded(cache, reaction);
-				});
-
-				return Task.CompletedTask;
-			}
-			return Task.CompletedTask;
-		}
-
 		#region Events
-		private async Task Client_Ready()
+		private Task Client_Ready()
 		{
-			await lavaSocket.StartAsync(Client, new Configuration
+			Task.Run(async () =>
 			{
-				LogSeverity = LogSeverity.Verbose,
-				AutoDisconnect = true,
-				InactivityTimeout = TimeSpan.FromMinutes(1),
-				PreservePlayers = false
+				await lavaSocket.StartAsync(Client, new Configuration
+				{
+					LogSeverity = LogSeverity.Verbose,
+					AutoDisconnect = true,
+					InactivityTimeout = TimeSpan.FromMinutes(1),
+					PreservePlayers = false
+				});
+
+				lavaSocket.Log += Logger.Log;
+				lavaSocket.OnTrackFinished += music.OnTrackFinished;
+
+				milestone.Initialize();
 			});
 
-			lavaSocket.Log += Logger.Log;
-			lavaSocket.OnTrackFinished += music.OnTrackFinished;
-
-			milestone.Initialize();
+			return Task.CompletedTask;
 		}
 
-		private async Task Client_Disconnected(Exception arg)
+		private Task Client_Disconnected(Exception arg)
 		{
-			await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
-			await lavaSocket.DisposeAsync();
+			Task.Run(async () =>
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
+				await lavaSocket.DisposeAsync();
+			});
 
+			return Task.CompletedTask;
 		}
-		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
+		private Task _client_JoinedGuildAsync(SocketGuild guild)
+		{
+			Task.Run(async () =>
+			{
+				await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
+			});
+			return Task.CompletedTask;
+		}
+
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
 		private async Task _client_ChannelDestroyedAsync(SocketChannel arg) => await ChannelDestroyed(arg);
 		private async Task _client_GuildMemberUpdatedAsync(SocketGuildUser userBefore, SocketGuildUser userAfter) => await GuildMemberUpdated(userBefore, userAfter);
@@ -135,14 +124,28 @@ namespace Bot.Services
 		}
 		private async Task _client_RoleCreatedAsync(SocketRole arg) => await RoleCreated(arg);
 		private async Task _client_RoleDeletedAsync(SocketRole arg) => await RoleDeleted(arg);
-		private async Task _client_UserJoinedAsync(SocketGuildUser arg)
+		private Task _client_UserJoinedAsync(SocketGuildUser arg)
 		{
-			await UserJoined(arg);
-			await UserWelcome(arg);
-			await MiscHelpers.Autorole(arg);
+			Task.Run(async () =>
+			{
+				await UserJoined(arg);
+				await UserWelcome(arg);
+				await MiscHelpers.Autorole(arg);
+			});
+			return Task.CompletedTask;
 		}
 
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
+		private async Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
+		{
+			if (!reaction.User.Value.IsBot)
+				await milestone.HandleReactionAdded(cache, reaction);
+		}
+		private async Task Client_ReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
+		{
+			if (!reaction.User.Value.IsBot)
+				await milestone.HandleReactionRemoved(cache, reaction);
+		}
 		#endregion
 
 		#region Methods
