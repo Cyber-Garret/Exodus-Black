@@ -18,7 +18,7 @@ namespace Bot
 			Console.ForegroundColor = SeverityToConsoleColor(logMessage.Severity);
 			string message = $"[{DateTime.Now.ToLongTimeString()}, Source: {logMessage.Source}] {logMessage.Message}";
 			if (logMessage.Exception != null)
-				message += logMessage.Exception;
+				message += $"\n{logMessage.Exception}\n";
 
 			Console.WriteLine(message);
 			Console.ResetColor();

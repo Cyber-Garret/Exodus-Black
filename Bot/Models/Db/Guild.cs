@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bot.Models.Db.Discord
+namespace Bot.Models.Db
 {
 	public class Guild : IAccount
 	{

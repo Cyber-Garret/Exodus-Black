@@ -40,44 +40,71 @@ namespace Bot.Services
 			Client.ChannelDestroyed += _client_ChannelDestroyedAsync;
 			Client.GuildMemberUpdated += _client_GuildMemberUpdatedAsync;
 			Client.MessageDeleted += _client_MessageDeletedAsync;
-			Client.MessageReceived += _client_MessageReceived;
+			Client.MessageReceived += Client_MessageReceived;
 			Client.MessageUpdated += _client_MessageUpdatedAsync;
 			Client.RoleCreated += _client_RoleCreatedAsync;
 			Client.RoleDeleted += _client_RoleDeletedAsync;
 			Client.UserJoined += _client_UserJoinedAsync;
 			Client.UserLeft += _client_UserLeftAsync;
+			Client.ReactionAdded += Client_ReactionAdded;
+			Client.ReactionRemoved += Client_ReactionRemoved;
 		}
 
 		#region Events
-		private async Task Client_Ready()
+		private Task Client_Ready()
 		{
-			await lavaSocket.StartAsync(Client, new Configuration
+			Task.Run(async () =>
 			{
-				LogSeverity = LogSeverity.Verbose,
-				AutoDisconnect = true,
-				InactivityTimeout = TimeSpan.FromMinutes(1),
-				PreservePlayers = false
+				await lavaSocket.StartAsync(Client, new Configuration
+				{
+					LogSeverity = LogSeverity.Verbose,
+					AutoDisconnect = true,
+					InactivityTimeout = TimeSpan.FromMinutes(1),
+					PreservePlayers = false
+				});
+
+				lavaSocket.Log += Logger.Log;
+				lavaSocket.OnTrackFinished += music.OnTrackFinished;
+
+				milestone.Initialize();
 			});
 
-			lavaSocket.Log += Logger.Log;
-			lavaSocket.OnTrackFinished += music.OnTrackFinished;
+			return Task.CompletedTask;
 		}
 
-		private async Task Client_Disconnected(Exception arg)
+		private Task Client_Disconnected(Exception arg)
 		{
-			await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
-			await lavaSocket.DisposeAsync();
+			Task.Run(async () =>
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
+				await lavaSocket.DisposeAsync();
+			});
 
+			return Task.CompletedTask;
 		}
-		private async Task _client_JoinedGuildAsync(SocketGuild guild) => _ = await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
+		private Task _client_JoinedGuildAsync(SocketGuild guild)
+		{
+			Task.Run(async () =>
+			{
+				await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
+			});
+			return Task.CompletedTask;
+		}
+
 		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
 		private async Task _client_ChannelDestroyedAsync(SocketChannel arg) => await ChannelDestroyed(arg);
 		private async Task _client_GuildMemberUpdatedAsync(SocketGuildUser userBefore, SocketGuildUser userAfter) => await GuildMemberUpdated(userBefore, userAfter);
-		private async Task _client_MessageReceived(SocketMessage message)
+		private Task Client_MessageReceived(SocketMessage message)
 		{
-			if (message.Author.IsBot)
-				return;
-			await CommandHandlingService.HandleCommandAsync(message);
+			//Ignore messages from bots
+			if (message.Author.IsBot) return Task.CompletedTask;
+
+			//New Task for fix disconeting from Discord WebSockets by 1001 if current Task not completed.
+			_ = Task.Run(async () =>
+				 {
+					 await CommandHandlingService.HandleCommandAsync(message);
+				 });
+			return Task.CompletedTask;
 		}
 		private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{
@@ -97,14 +124,28 @@ namespace Bot.Services
 		}
 		private async Task _client_RoleCreatedAsync(SocketRole arg) => await RoleCreated(arg);
 		private async Task _client_RoleDeletedAsync(SocketRole arg) => await RoleDeleted(arg);
-		private async Task _client_UserJoinedAsync(SocketGuildUser arg)
+		private Task _client_UserJoinedAsync(SocketGuildUser arg)
 		{
-			await UserJoined(arg);
-			await UserWelcome(arg);
-			await MiscHelpers.Autorole(arg);
+			Task.Run(async () =>
+			{
+				await UserJoined(arg);
+				await UserWelcome(arg);
+				await MiscHelpers.Autorole(arg);
+			});
+			return Task.CompletedTask;
 		}
 
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
+		private async Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
+		{
+			if (!reaction.User.Value.IsBot)
+				await milestone.HandleReactionAdded(cache, reaction);
+		}
+		private async Task Client_ReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
+		{
+			if (!reaction.User.Value.IsBot)
+				await milestone.HandleReactionRemoved(cache, reaction);
+		}
 		#endregion
 
 		#region Methods
@@ -409,7 +450,7 @@ namespace Bot.Services
 					var name = $"{messageBefore.Value.Author.Mention}";
 					var check = audit[0].Data as MessageDeleteAuditLogData;
 
-					//if message deleted by Bot return.
+					//if message deleted by bot finish Task.
 					if (audit[0].User.IsBot) return;
 
 					if (check?.ChannelId == messageBefore.Value.Channel.Id && audit[0].Action == ActionType.MessageDeleted)

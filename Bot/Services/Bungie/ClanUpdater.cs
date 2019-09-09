@@ -1,6 +1,6 @@
 ﻿using API.Bungie;
 
-using Bot.Models.Db.Destiny2;
+using Bot.Models.Db;
 
 using Discord;
 
