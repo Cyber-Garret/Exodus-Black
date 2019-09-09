@@ -1,5 +1,4 @@
-﻿using Bot.Models.Db.Destiny2;
-using Bot.Models.Db.Discord;
+﻿using Bot.Models.Db;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -30,5 +29,6 @@ namespace Bot
 		public DbSet<Clan_Member> Clan_Members { get; set; }
 		public DbSet<Milestone> Milestones { get; set; }
 		public DbSet<ActiveMilestone> ActiveMilestones { get; set; }
+		public DbSet<MilestoneUser> MilestoneUsers { get; set; }
 	}
 }

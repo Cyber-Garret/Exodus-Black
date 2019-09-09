@@ -1,6 +1,6 @@
 ﻿using API.Bungie;
 using API.Bungie.Models;
-using Bot.Models.Db.Destiny2;
+using Bot.Models.Db;
 using Discord;
 using Discord.Commands;
 using ImageMagick;
