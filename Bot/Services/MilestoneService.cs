@@ -127,7 +127,7 @@ namespace Bot.Services
 				embed.WithDescription(milestone.PreviewDesc);
 
 			embed.AddField("Информация",
-				$"- Лидер боевой группы: **{user.Mention} - {user.Username}**\n" +
+				$"- Лидер боевой группы: **#1 {user.Mention} - {user.Username}**\n" +
 				$"- Чтобы за вами закрепилось место нажмите на реакцию {RaidEmote}");
 
 			if (userMemo != null)
@@ -172,7 +172,7 @@ namespace Bot.Services
 
 			var milestoneLeader = Client.GetUser(activeMilestone.Leader);
 			embed.AddField("Информация",
-				$"- Лидер боевой группы: **{milestoneLeader.Mention} - {milestoneLeader.Username}**\n" +
+				$"- Лидер боевой группы: **#1 {milestoneLeader.Mention} - {milestoneLeader.Username}**\n" +
 				$"- Чтобы за вами закрепилось место нажмите на реакцию {RaidEmote}\n");
 
 			if (activeMilestone.Memo != null)
@@ -182,7 +182,7 @@ namespace Bot.Services
 			{
 				Name = $"В боевую группу записались"
 			};
-			int count = 1;
+			int count = 2;
 			foreach (var user in activeMilestone.MilestoneUsers)
 			{
 				var discordUser = Client.GetUser(user.UserId);
