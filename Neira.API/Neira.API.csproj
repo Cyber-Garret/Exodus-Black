@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>Neira.API</AssemblyName>
+    <RootNamespace>Neira.API</RootNamespace>
+    <Authors>Cyber Garret</Authors>
+    <Company>Cyber Garret</Company>
+    <Product>Failsafe API project</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
+  </ItemGroup>
+
+</Project>
