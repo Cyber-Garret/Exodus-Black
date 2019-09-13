@@ -1,4 +1,5 @@
 ﻿using Bot.Models.Db;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +16,13 @@ namespace Bot
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			var sqlitepath = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "NeiraLink.db");
-			optionsBuilder.UseSqlite($"Data Source={sqlitepath}");
+			//var sqlitepath = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "NeiraLink.db");
+			//optionsBuilder.UseSqlite($"Data Source={sqlitepath}");
+			optionsBuilder.UseMySql("Server=10.18.0.15;Database=NeiraLink;Uid=neira;Pwd=26256Garret;",
+				mysqlOptions =>
+				{
+					mysqlOptions.ServerVersion(new System.Version(5, 7, 27), ServerType.MySql);
+				});
 		}
 
 		//Discord
