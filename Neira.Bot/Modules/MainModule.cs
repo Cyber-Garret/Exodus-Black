@@ -1,4 +1,4 @@
-﻿using Neira.Bot.Models.Db;
+﻿using Neira.Db.Models;
 using Neira.Bot.Modules.Administration;
 using Neira.Bot.Preconditions;
 using Neira.Bot.Services;
@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Neira.Db;
 
 namespace Neira.Bot.Modules.Commands
 {
@@ -22,7 +23,7 @@ namespace Neira.Bot.Modules.Commands
 	public class MainModule : BotModuleBase
 	{
 		#region Global fields
-		readonly FailsafeContext db;
+		readonly NeiraContext db;
 		readonly CommandService commandService;
 		readonly DiscordSocketClient Client;
 		readonly MilestoneService Milestone;
@@ -43,7 +44,7 @@ namespace Neira.Bot.Modules.Commands
 				return name;
 		}
 
-		public MainModule(FailsafeContext context, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
+		public MainModule(NeiraContext context, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
 			db = context;
 			commandService = command;
@@ -126,6 +127,13 @@ namespace Neira.Bot.Modules.Commands
 				embed.AddField("Заметка:", command.Remarks);
 
 			await ReplyAsync(embed: embed.Build());
+		}
+
+		[Command("бип")]
+		[Summary("Простая команда проверки моей работоспособности.")]
+		public async Task Bip()
+		{
+			await ReplyAsync("Бип");
 		}
 
 		[Command("зур")]

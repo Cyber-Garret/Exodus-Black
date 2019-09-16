@@ -1,4 +1,4 @@
-﻿using Neira.Bot.Models.Db;
+﻿using Neira.Db.Models;
 
 using Discord;
 using Discord.Commands;
@@ -11,16 +11,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Neira.Db;
 
 namespace Neira.Bot.Services
 {
 	public class MilestoneService
 	{
 		private readonly DiscordSocketClient Client;
-		private readonly FailsafeContext Db;
+		private readonly NeiraContext Db;
 		private SocketGuild NeiraHome;
 		public IEmote RaidEmote;
-		public MilestoneService(DiscordSocketClient socketClient, FailsafeContext context)
+		public MilestoneService(DiscordSocketClient socketClient, NeiraContext context)
 		{
 			Client = socketClient;
 			Db = context;

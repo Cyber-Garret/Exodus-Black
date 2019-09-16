@@ -1,6 +1,7 @@
 ﻿using Neira.API.Bungie;
 using Neira.API.Bungie.Models;
-using Neira.Bot.Models.Db;
+using Neira.Db.Models;
+using Neira.Db;
 using Discord;
 using Discord.Commands;
 using ImageMagick;
@@ -17,10 +18,10 @@ namespace Neira.Bot.Modules.Administration
 {
 	public class OwnerModule : BotModuleBase
 	{
-		private readonly FailsafeContext Db;
-		public OwnerModule(FailsafeContext failsafeContext)
+		private readonly NeiraContext Db;
+		public OwnerModule(NeiraContext neiraContext)
 		{
-			Db = failsafeContext;
+			Db = neiraContext;
 		}
 
 		#region Functions

@@ -17,9 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.Bot", "Neira.Bot\Neir
 		{955B700A-E4CB-490E-BECF-0E18FBD30932} = {955B700A-E4CB-490E-BECF-0E18FBD30932}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neira.BungieWorker", "Neira.BungieWorker\Neira.BungieWorker.csproj", "{2362A8E1-D6A9-4EF6-B484-3F97D1812B54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.BungieWorker", "Neira.BungieWorker\Neira.BungieWorker.csproj", "{2362A8E1-D6A9-4EF6-B484-3F97D1812B54}"
+	ProjectSection(ProjectDependencies) = postProject
+		{955B700A-E4CB-490E-BECF-0E18FBD30932} = {955B700A-E4CB-490E-BECF-0E18FBD30932}
+		{1311CF34-A648-40BE-A884-FC49281CBBE0} = {1311CF34-A648-40BE-A884-FC49281CBBE0}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neira.Db", "Neira.Db\Neira.Db.csproj", "{1311CF34-A648-40BE-A884-FC49281CBBE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.Db", "Neira.Db\Neira.Db.csproj", "{1311CF34-A648-40BE-A884-FC49281CBBE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,12 +1,13 @@
-﻿using Neira.Bot.Models;
-using Neira.Bot.Services;
-
-using Discord;
+﻿using Discord;
 using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
+
+using Neira.Bot.Models;
+using Neira.Bot.Services;
+using Neira.Db;
 
 using Nett;
 
@@ -105,7 +106,7 @@ namespace Neira.Bot
 					DefaultRetryMode = RetryMode.AlwaysRetry,
 					MessageCacheSize = 100
 				}))
-				.AddDbContext<FailsafeContext>()
+				.AddDbContext<NeiraContext>()
 				.AddSingleton<CommandService>()
 				.AddSingleton<CommandHandlerService>()
 				.AddSingleton<DiscordEventHandlerService>()

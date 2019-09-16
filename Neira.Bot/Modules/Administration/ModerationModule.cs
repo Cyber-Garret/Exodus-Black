@@ -7,7 +7,7 @@ using Discord.Commands;
 
 using Neira.Bot.Helpers;
 using Neira.Bot.Preconditions;
-using Neira.Bot.Models.Db;
+using Neira.Db.Models;
 using Discord.WebSocket;
 
 namespace Neira.Bot.Modules.Administration

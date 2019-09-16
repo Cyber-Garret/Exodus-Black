@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 using Discord;
-using Neira.Bot.Models.Db;
+using Neira.Db.Models;
+using Neira.Db;
 
 namespace Neira.Bot
 {
@@ -22,7 +23,7 @@ namespace Neira.Bot
 		{
 			try
 			{
-				using (var Context = new FailsafeContext())
+				using (var Context = new NeiraContext())
 				{
 					IEnumerable<Guild> guilds = await Context.Guilds.ToListAsync();
 					return guilds;
@@ -44,7 +45,7 @@ namespace Neira.Bot
 		{
 			try
 			{
-				using (var Context = new FailsafeContext())
+				using (var Context = new NeiraContext())
 				{
 					if (Context.Guilds.Where(G => G.Id == guildId).Count() < 1)
 					{
@@ -76,7 +77,7 @@ namespace Neira.Bot
 		{
 			try
 			{
-				using (var Context = new FailsafeContext())
+				using (var Context = new NeiraContext())
 				{
 					if (Context.Guilds.Where(G => G.Id == GuildId).Count() < 1)
 					{
@@ -106,7 +107,7 @@ namespace Neira.Bot
 		{
 			try
 			{
-				using (var Context = new FailsafeContext())
+				using (var Context = new NeiraContext())
 				{
 					var GuildData = Context.Guilds.First(g => g.Id == GuildId);
 					GuildData.WelcomeMessage = value;
@@ -125,7 +126,7 @@ namespace Neira.Bot
 		#region Milestones
 		internal static async Task<Milestone> GetMilestone(string milestoneName)
 		{
-			using (var Db = new FailsafeContext())
+			using (var Db = new NeiraContext())
 			{
 				var milestone = await Db.Milestones.Where(r =>
 				r.Name.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
@@ -136,7 +137,7 @@ namespace Neira.Bot
 
 		internal static async Task<IEnumerable<Milestone>> GetAllMilestones()
 		{
-			using (var Context = new FailsafeContext())
+			using (var Context = new NeiraContext())
 			{
 				IEnumerable<Milestone> milestones = await Context.Milestones.ToListAsync();
 				return milestones;
@@ -145,7 +146,7 @@ namespace Neira.Bot
 
 		internal static async Task<ActiveMilestone> GetActiveMilestone(ulong msgId)
 		{
-			using (var Db = new FailsafeContext())
+			using (var Db = new NeiraContext())
 			{
 				ActiveMilestone activeMilestone = await Db.ActiveMilestones.Include(r => r.Milestone).Where(r => r.MessageId == msgId).FirstOrDefaultAsync();
 				return activeMilestone;
@@ -154,7 +155,7 @@ namespace Neira.Bot
 
 		internal static async Task SaveActiveMilestone(ActiveMilestone activeMilestone)
 		{
-			using (var Db = new FailsafeContext())
+			using (var Db = new NeiraContext())
 			{
 				try
 				{

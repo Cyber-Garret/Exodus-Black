@@ -1,7 +1,4 @@
-﻿using Neira.Bot.Models.Db;
-using Neira.Bot.Services.Bungie;
-
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
+using Neira.Db;
 
 namespace Neira.Bot.Services
 {
@@ -20,18 +18,16 @@ namespace Neira.Bot.Services
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly MilestoneService Milestone;
-		private readonly FailsafeContext Db;
+		private readonly NeiraContext Db;
 		private Timer MainTimer;
 		private Timer GameStatusTimer;
-		private Timer ClanTimer;
-		private Timer MemberTimer;
 		private Timer MilestoneTimer;
 
-		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService, FailsafeContext failsafeContext)
+		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService, NeiraContext neiraContext)
 		{
 			Client = socketClient;
 			Milestone = milestoneService;
-			Db = failsafeContext;
+			Db = neiraContext;
 		}
 
 		public void Configure()
@@ -51,22 +47,6 @@ namespace Neira.Bot.Services
 				Interval = TimeSpan.FromSeconds(30).TotalMilliseconds
 			};
 			GameStatusTimer.Elapsed += GameStatus_Elapsed;
-
-			ClanTimer = new Timer
-			{
-				Enabled = true,
-				AutoReset = true,
-				Interval = TimeSpan.FromMinutes(15).TotalMilliseconds
-			};
-			ClanTimer.Elapsed += ClanTimer_Elapsed;
-
-			MemberTimer = new Timer
-			{
-				Enabled = true,
-				AutoReset = true,
-				Interval = TimeSpan.FromHours(1).TotalMilliseconds
-			};
-			MemberTimer.Elapsed += MemberTimer_Elapsed;
 
 			MilestoneTimer = new Timer
 			{
@@ -118,17 +98,6 @@ namespace Neira.Bot.Services
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Error, "Change Bot Game Status", ex.Message, ex));
 			}
-		}
-		private void ClanTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			ClanUpdater updater = new ClanUpdater();
-			updater.UpdateAllClans();
-			updater.ClanMemberCheck();
-		}
-		private void MemberTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			MemberUpdater updater = new MemberUpdater();
-			updater.UpdateMembersLastPlayedTime();
 		}
 
 		private void MilestoneTimer_Elapsed(object sender, ElapsedEventArgs e)

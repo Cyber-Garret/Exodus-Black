@@ -8,20 +8,25 @@ using Neira.API.Bungie.Models.Results.GroupV2.GetGroup;
 using Neira.API.Bungie.Models.Results.Destiny2.GetProfile;
 using System;
 using Neira.API.Bungie.Models;
+using System.IO;
 
 namespace Neira.API.Bungie
 {
 	public class BungieApi
 	{
-		const string BaseUrl = "https://www.bungie.net/Platform";
-		const string ApiKeyName = "X-API-Key";
-		const string ApiKey = "6fdc49f28e454eb380e02931b5ed61d4";
+		private readonly Config config;
+
+		public BungieApi()
+		{
+			var json = File.ReadAllText("config.json");
+			config = JsonConvert.DeserializeObject<Config>(json);
+		}
 
 		public GetMembersOfGroup GetMembersOfGroupResponse(long groupId)
 		{
-			var client = new RestClient(BaseUrl + $"/GroupV2/{groupId}/Members/");
+			var client = new RestClient(config.BungieConfig.BaseUrl + $"/GroupV2/{groupId}/Members/");
 			var request = new RestRequest(Method.GET);
-			request.AddHeader(ApiKeyName, ApiKey);
+			request.AddHeader(config.BungieConfig.KeyName, config.BungieConfig.ApiKey);
 			var response = client.Execute(request);
 
 			return JsonConvert.DeserializeObject<GetMembersOfGroup>(response.Content);
@@ -29,9 +34,9 @@ namespace Neira.API.Bungie
 
 		public GetGroup GetGroupResult(long groupId)
 		{
-			var client = new RestClient(BaseUrl + $"/GroupV2/{groupId}/");
+			var client = new RestClient(config.BungieConfig.BaseUrl + $"/GroupV2/{groupId}/");
 			var request = new RestRequest(Method.GET);
-			request.AddHeader(ApiKeyName, ApiKey);
+			request.AddHeader(config.BungieConfig.KeyName, config.BungieConfig.ApiKey);
 			var response = client.Execute(request);
 
 			return JsonConvert.DeserializeObject<GetGroup>(response.Content);
@@ -39,9 +44,9 @@ namespace Neira.API.Bungie
 
 		public GetProfile GetProfileResult(string destinyMembershipId, BungieMembershipType membershipType, DestinyComponentType components)
 		{
-			var client = new RestClient(BaseUrl + $"/Destiny2/{membershipType}/Profile/{destinyMembershipId}/?components={(int)components}");
+			var client = new RestClient(config.BungieConfig.BaseUrl + $"/Destiny2/{membershipType}/Profile/{destinyMembershipId}/?components={(int)components}");
 			var request = new RestRequest(Method.GET);
-			request.AddHeader(ApiKeyName, ApiKey);
+			request.AddHeader(config.BungieConfig.KeyName, config.BungieConfig.ApiKey);
 			var response = client.Execute(request);
 
 			return JsonConvert.DeserializeObject<GetProfile>(response.Content);
