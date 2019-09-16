@@ -25,13 +25,18 @@ namespace Neira.BungieWorker.Bungie
 				   {
 					   try
 					   {
-						   var profile = bungieApi.GetProfileResult(ProfileId.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
+						   using (var context = new NeiraContext())
+						   {
+							   BungieMembershipType type = (BungieMembershipType)Enum.ToObject(typeof(BungieMembershipType), ProfileId.DestinyMembershipType);
 
-						   var member = Db.Clan_Members.Single(m => m.DestinyMembershipId == ProfileId.DestinyMembershipId);
+							   var profile = bungieApi.GetProfileResult(ProfileId.DestinyMembershipId, type, DestinyComponentType.Profiles);
 
-						   member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
+							   var member = context.Clan_Members.Single(m => m.DestinyMembershipId == ProfileId.DestinyMembershipId);
 
-						   Db.Update(member);
+							   member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
+
+							   context.Update(member);
+						   }
 					   }
 					   catch (Exception ex)
 					   {

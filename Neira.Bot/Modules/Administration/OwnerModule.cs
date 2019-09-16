@@ -97,7 +97,7 @@ namespace Neira.Bot.Modules.Administration
 			{
 				try
 				{
-					var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.TigerBlizzard, DestinyComponentType.Profiles);
+					var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.All, DestinyComponentType.Profiles);
 
 					var member = Db.Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
 

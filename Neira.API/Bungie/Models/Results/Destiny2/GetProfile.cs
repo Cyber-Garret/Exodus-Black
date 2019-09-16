@@ -50,6 +50,15 @@ namespace Neira.API.Bungie.Models.Results.Destiny2.GetProfile
 
 	public class UserInfo
 	{
+		[JsonProperty("crossSaveOverride")]
+		public long CrossSaveOverride { get; set; }
+
+		[JsonProperty("applicableMembershipTypes")]
+		public long[] ApplicableMembershipTypes { get; set; }
+
+		[JsonProperty("isPublic")]
+		public bool IsPublic { get; set; }
+
 		[JsonProperty("membershipType")]
 		public long MembershipType { get; set; }
 

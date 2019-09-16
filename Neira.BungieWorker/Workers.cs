@@ -16,7 +16,7 @@ namespace Neira.BungieWorker
 			{
 				Enabled = true,
 				AutoReset = true,
-				Interval = TimeSpan.FromMinutes(15).TotalMilliseconds
+				Interval = TimeSpan.FromMinutes(1).TotalMilliseconds
 			};
 			ClanTimer.Elapsed += ClanTimer_Elapsed;
 
@@ -26,7 +26,7 @@ namespace Neira.BungieWorker
 			{
 				Enabled = true,
 				AutoReset = true,
-				Interval = TimeSpan.FromMinutes(15).TotalMilliseconds
+				Interval = TimeSpan.FromMinutes(1).TotalMilliseconds
 			};
 			MemberTimer.Elapsed += MemberTimer_Elapsed;
 
