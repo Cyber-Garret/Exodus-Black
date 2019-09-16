@@ -20,10 +20,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.BungieWorker", "Neira.BungieWorker\Neira.BungieWorker.csproj", "{2362A8E1-D6A9-4EF6-B484-3F97D1812B54}"
 	ProjectSection(ProjectDependencies) = postProject
 		{955B700A-E4CB-490E-BECF-0E18FBD30932} = {955B700A-E4CB-490E-BECF-0E18FBD30932}
-		{1311CF34-A648-40BE-A884-FC49281CBBE0} = {1311CF34-A648-40BE-A884-FC49281CBBE0}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.Db", "Neira.Db\Neira.Db.csproj", "{1311CF34-A648-40BE-A884-FC49281CBBE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.Db", "Neira.Db\Neira.Db.csproj", "{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +42,10 @@ Global
 		{2362A8E1-D6A9-4EF6-B484-3F97D1812B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2362A8E1-D6A9-4EF6-B484-3F97D1812B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2362A8E1-D6A9-4EF6-B484-3F97D1812B54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1311CF34-A648-40BE-A884-FC49281CBBE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1311CF34-A648-40BE-A884-FC49281CBBE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1311CF34-A648-40BE-A884-FC49281CBBE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1311CF34-A648-40BE-A884-FC49281CBBE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

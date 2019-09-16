@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Neira.API\Neira.API.csproj" />
-    <ProjectReference Include="..\Neira.Db\Neira.Db.csproj" />
   </ItemGroup>
 
   <ItemGroup>
