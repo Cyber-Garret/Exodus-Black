@@ -44,12 +44,22 @@ namespace Neira.API.Bungie
 
 		public GetProfile GetProfileResult(string destinyMembershipId, BungieMembershipType membershipType, DestinyComponentType components)
 		{
-			var client = new RestClient(config.BungieConfig.BaseUrl + $"/Destiny2/{membershipType}/Profile/{destinyMembershipId}/?components={(int)components}");
-			var request = new RestRequest(Method.GET);
-			request.AddHeader(config.BungieConfig.KeyName, config.BungieConfig.ApiKey);
-			var response = client.Execute(request);
+			try
+			{
+				var client = new RestClient(config.BungieConfig.BaseUrl + $"/Destiny2/{(int)membershipType}/Profile/{destinyMembershipId}/?components={(int)components}");
+				var request = new RestRequest(Method.GET);
+				request.AddHeader(config.BungieConfig.KeyName, config.BungieConfig.ApiKey);
+				var response = client.Execute(request);
 
-			return JsonConvert.DeserializeObject<GetProfile>(response.Content);
+				return JsonConvert.DeserializeObject<GetProfile>(response.Content);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"destinyMembershipId [{destinyMembershipId}] membershipType [{membershipType}] components [{components}]");
+				Console.WriteLine(ex);
+				return null;
+			}
+			
 		}
 	}
 }

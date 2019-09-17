@@ -26,7 +26,7 @@ namespace Neira.BungieWorker
 			{
 				Enabled = true,
 				AutoReset = true,
-				Interval = TimeSpan.FromMinutes(1).TotalMilliseconds
+				Interval = TimeSpan.FromMinutes(5).TotalMilliseconds
 			};
 			MemberTimer.Elapsed += MemberTimer_Elapsed;
 
@@ -35,13 +35,13 @@ namespace Neira.BungieWorker
 
 		private void ClanTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			var updater = new ClanUpdater();
+			var updater = ClanUpdater.GetInstance();
 			updater.UpdateAllClans();
 			updater.ClanMemberCheck();
 		}
 		private void MemberTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			var updater = new MemberUpdater();
+			var updater = MemberUpdater.GetInstance();
 			updater.UpdateMembersLastPlayedTime();
 		}
 	}

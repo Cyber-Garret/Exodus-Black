@@ -11,17 +11,33 @@ namespace Neira.BungieWorker.Bungie
 {
 	internal class MemberUpdater
 	{
+		private bool UpdatememberBusy { get; set; }
+		private static readonly MemberUpdater instance = new MemberUpdater();
+
+		private MemberUpdater()
+		{
+			UpdatememberBusy = false;
+		}
+
+		public static MemberUpdater GetInstance()
+		{
+			return instance;
+		}
+
 		public void UpdateMembersLastPlayedTime()
 		{
+			if (UpdatememberBusy) return;
+
 			const string MethodName = "[Update Members Last Played]";
 
 			Logger.Log.Information($"{MethodName} Start the work");
+			UpdatememberBusy = true;
 			var bungieApi = new BungieApi();
 
 			using (var Db = new NeiraContext())
 			{
 
-				Parallel.ForEach(Db.Clan_Members.OrderBy(M => M.DateLastPlayed), new ParallelOptions { MaxDegreeOfParallelism = 3 }, ProfileId =>
+				Parallel.ForEach(Db.Clan_Members.OrderBy(M => M.DateLastPlayed), new ParallelOptions { MaxDegreeOfParallelism = 2 }, ProfileId =>
 				   {
 					   try
 					   {
@@ -30,12 +46,16 @@ namespace Neira.BungieWorker.Bungie
 							   BungieMembershipType type = (BungieMembershipType)Enum.ToObject(typeof(BungieMembershipType), ProfileId.DestinyMembershipType);
 
 							   var profile = bungieApi.GetProfileResult(ProfileId.DestinyMembershipId, type, DestinyComponentType.Profiles);
+							   if (profile != null)
+							   {
+								   var member = context.Clan_Members.SingleOrDefault(m => m.DestinyMembershipId == ProfileId.DestinyMembershipId);
+								   if (member != null)
+								   {
+									   member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
 
-							   var member = context.Clan_Members.Single(m => m.DestinyMembershipId == ProfileId.DestinyMembershipId);
-
-							   member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
-
-							   context.Update(member);
+									   context.Update(member);
+								   }
+							   }
 						   }
 					   }
 					   catch (Exception ex)
@@ -46,6 +66,7 @@ namespace Neira.BungieWorker.Bungie
 				Db.SaveChanges();
 			}
 			Logger.Log.Information($"{MethodName} Done the work");
+			UpdatememberBusy = false;
 		}
 	}
 }

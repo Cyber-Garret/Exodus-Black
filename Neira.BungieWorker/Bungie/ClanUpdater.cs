@@ -12,12 +12,25 @@ namespace Neira.BungieWorker.Bungie
 {
 	internal class ClanUpdater
 	{
+		private bool UpdateClanBusy { get; set; }
+		private bool MemberCheckBusy { get; set; }
+		private static readonly ClanUpdater instance = new ClanUpdater();
+		private ClanUpdater()
+		{
+			UpdateClanBusy = false;
+			MemberCheckBusy = false;
+		}
+		public static ClanUpdater GetInstance()
+		{
+			return instance;
+		}
 		internal void UpdateAllClans()
 		{
+			if (UpdateClanBusy) return;
 			const string MethodName = "[Update All Clans]";
 
 			Logger.Log.Information($"{MethodName} Start the wotk");
-
+			UpdateClanBusy = true;
 			var bungieApi = new BungieApi();
 
 			using (var db = new NeiraContext())
@@ -51,13 +64,16 @@ namespace Neira.BungieWorker.Bungie
 				});
 			}
 			Logger.Log.Information($"{MethodName} Done the work");
+			UpdateClanBusy = false;
 		}
 
 		internal void ClanMemberCheck()
 		{
+			if (MemberCheckBusy) return;
+
 			const string MethodName = "[Clan Member Check]";
 			Logger.Log.Information($"{MethodName} Start the work");
-
+			MemberCheckBusy = true;
 			var bungieApi = new BungieApi();
 
 			using (var Db = new NeiraContext())
@@ -137,6 +153,7 @@ namespace Neira.BungieWorker.Bungie
 				});
 			}
 			Logger.Log.Information($"{MethodName} Done the work");
+			MemberCheckBusy = false;
 		}
 	}
 }
