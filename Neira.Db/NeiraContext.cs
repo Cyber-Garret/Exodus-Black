@@ -2,7 +2,6 @@
 
 using Neira.Db.Models;
 using Newtonsoft.Json;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 using System;
 using System.IO;
@@ -26,16 +25,13 @@ namespace Neira.Db
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			// Load Db credentials
+			//Load Db credentials
 			var json = File.ReadAllText("credential.json");
 			credential = JsonConvert.DeserializeObject<Credential>(json);
 
-			var connection = $"Server={credential.Server};Database={credential.Database};Uid={credential.User};Pwd={credential.Password};";
-			optionsBuilder.UseMySql(connection,
-				mysqlOptions =>
-				{
-					mysqlOptions.ServerVersion(new Version(5, 7, 27), ServerType.MySql);
-				});
+			var connection = $"Server={credential.Server};Database={credential.Database};User Id={credential.User};Password={credential.Password};MultipleActiveResultSets=true;";
+			//var connection = "Server=10.18.0.15;Database=datab;User Id=login;Password=pass;";
+			optionsBuilder.UseSqlServer(connection);
 		}
 
 		//Discord

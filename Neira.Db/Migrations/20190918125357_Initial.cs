@@ -13,7 +13,7 @@ namespace Neira.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     WeaponName = table.Column<string>(maxLength: 100, nullable: false),
                     Icon = table.Column<string>(maxLength: 1000, nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: false),
@@ -47,7 +47,7 @@ namespace Neira.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 100, nullable: true),
                     Type = table.Column<string>(maxLength: 100, nullable: true),
                     IconUrl = table.Column<string>(maxLength: 1000, nullable: true),
@@ -70,13 +70,13 @@ namespace Neira.Db.Migrations
                 name: "Guilds",
                 columns: table => new
                 {
-                    Id = table.Column<ulong>(nullable: false),
-                    NotificationChannel = table.Column<ulong>(nullable: false),
-                    LoggingChannel = table.Column<ulong>(nullable: false),
-                    WelcomeChannel = table.Column<ulong>(nullable: false),
+                    Id = table.Column<decimal>(nullable: false),
+                    NotificationChannel = table.Column<decimal>(nullable: false),
+                    LoggingChannel = table.Column<decimal>(nullable: false),
+                    WelcomeChannel = table.Column<decimal>(nullable: false),
                     WelcomeMessage = table.Column<string>(nullable: true),
                     LeaveMessage = table.Column<string>(nullable: true),
-                    AutoroleID = table.Column<ulong>(nullable: false),
+                    AutoroleID = table.Column<decimal>(nullable: false),
                     CommandPrefix = table.Column<string>(nullable: true),
                     GlobalMention = table.Column<string>(nullable: true)
                 },
@@ -90,7 +90,7 @@ namespace Neira.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 100, nullable: true),
                     Alias = table.Column<string>(maxLength: 50, nullable: true),
                     PreviewDesc = table.Column<string>(maxLength: 1024, nullable: true),
@@ -107,7 +107,7 @@ namespace Neira.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     DestinyMembershipType = table.Column<long>(nullable: false),
                     DestinyMembershipId = table.Column<string>(nullable: true),
@@ -133,13 +133,13 @@ namespace Neira.Db.Migrations
                 name: "ActiveMilestones",
                 columns: table => new
                 {
-                    MessageId = table.Column<ulong>(nullable: false),
-                    TextChannelId = table.Column<ulong>(nullable: false),
-                    GuildId = table.Column<ulong>(nullable: false),
+                    MessageId = table.Column<decimal>(nullable: false),
+                    TextChannelId = table.Column<decimal>(nullable: false),
+                    GuildId = table.Column<decimal>(nullable: false),
                     MilestoneId = table.Column<int>(nullable: false),
                     Memo = table.Column<string>(maxLength: 1000, nullable: true),
                     DateExpire = table.Column<DateTime>(nullable: false),
-                    Leader = table.Column<ulong>(nullable: false)
+                    Leader = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,9 +157,9 @@ namespace Neira.Db.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    MessageId = table.Column<ulong>(nullable: false),
-                    UserId = table.Column<ulong>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    MessageId = table.Column<decimal>(nullable: false),
+                    UserId = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {

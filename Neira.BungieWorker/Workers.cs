@@ -1,6 +1,7 @@
 ﻿using Neira.BungieWorker.Bungie;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Text;
 using System.Timers;
 
@@ -8,41 +9,27 @@ namespace Neira.BungieWorker
 {
 	internal class Workers
 	{
-		private readonly Timer ClanTimer;
-		private readonly Timer MemberTimer;
+		private readonly Timer BungieTimer;
 		public Workers()
 		{
-			ClanTimer = new Timer
+			BungieTimer = new Timer
 			{
 				Enabled = true,
 				AutoReset = true,
 				Interval = TimeSpan.FromMinutes(1).TotalMilliseconds
 			};
-			ClanTimer.Elapsed += ClanTimer_Elapsed;
-
-			Logger.Log.Information("Initialize Clan Timer");
-
-			MemberTimer = new Timer
-			{
-				Enabled = true,
-				AutoReset = true,
-				Interval = TimeSpan.FromMinutes(5).TotalMilliseconds
-			};
-			MemberTimer.Elapsed += MemberTimer_Elapsed;
-
-			Logger.Log.Information("Initialize Member Timer");
+			BungieTimer.Elapsed += ClanTimer_ElapsedAsync;
 		}
 
-		private void ClanTimer_Elapsed(object sender, ElapsedEventArgs e)
+		private async void ClanTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
 		{
 			var updater = ClanUpdater.GetInstance();
-			updater.UpdateAllClans();
-			updater.ClanMemberCheck();
-		}
-		private void MemberTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			var updater = MemberUpdater.GetInstance();
-			updater.UpdateMembersLastPlayedTime();
+			if (!updater.UpdateClanBusy)
+				updater.UpdateClans();
+			if (!updater.MemberCheckBusy)
+				await updater.ClanMemberCheckAsync();
+			if (!updater.UpdateMemberBusy)
+				await updater.UpdateMembersLastPlayedTime();
 		}
 	}
 }
