@@ -5,8 +5,6 @@ using Neira.Db.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Neira.BungieWorker.Bungie
 {
@@ -31,12 +29,11 @@ namespace Neira.BungieWorker.Bungie
 			Logger.Log.Information("Update Destiny clans start working");
 			UpdateClanBusy = true;
 
-
 			var bungieApi = new BungieApi();
 
 			using (var db = new NeiraContext())
 			{
-				var queue = new Queue<Clan>(db.Clans.AsNoTracking());
+				var queue = new Queue<Clan>(db.Clans);
 				while (queue.Count > 0)
 				{
 					var clan = queue.Dequeue();
@@ -45,15 +42,14 @@ namespace Neira.BungieWorker.Bungie
 						var ClanResponse = bungieApi.GetGroupResult(clan.Id);
 						if (ClanResponse.ErrorCode == 1)
 						{
-							var localData = db.Clans.Single(c => c.Id == clan.Id);
+							//var localData = db.Clans.First(c => c.Id == clan.Id);
 
-							localData.Name = ClanResponse.Response.Detail.Name;
-							localData.Motto = ClanResponse.Response.Detail.Motto;
-							localData.About = ClanResponse.Response.Detail.About;
-							localData.MemberCount = ClanResponse.Response.Detail.MemberCount;
+							clan.Name = ClanResponse.Response.Detail.Name;
+							clan.Motto = ClanResponse.Response.Detail.Motto;
+							clan.About = ClanResponse.Response.Detail.About;
+							clan.MemberCount = ClanResponse.Response.Detail.MemberCount;
 
 							db.Clans.Update(clan);
-							db.SaveChanges();
 						}
 					}
 					catch (Exception ex)
@@ -61,12 +57,13 @@ namespace Neira.BungieWorker.Bungie
 						Logger.Log.Error(ex, $"Error in UpdateClansAsync method");
 					}
 				}
+				db.SaveChanges();
 			}
-			Logger.Log.Information($"Update Destiny clans complete working");
+			Logger.Log.Debug($"Update Destiny clans complete working");
 			UpdateClanBusy = false;
 		}
 
-		internal async Task ClanMemberCheckAsync()
+		internal void ClanMemberCheck()
 		{
 			if (MemberCheckBusy) return;
 			Logger.Log.Information($"Clan member check start working");
@@ -76,69 +73,73 @@ namespace Neira.BungieWorker.Bungie
 
 			using (var Db = new NeiraContext())
 			{
-				foreach (var clan in Db.Clans.Include(m => m.Members))
+				var queue = new Queue<Clan>(Db.Clans.Include(m => m.Members));
+
+				while (queue.Count > 0)
 				{
+					var clan = queue.Dequeue();
 					try
 					{
-						//Get member list from bungie
-						var MemberResponse = bungieApi.GetMembersOfGroupResponse(clan.Id).Response.Results.ToList();
+						//Get list of guardians in current guild
+						var bungieResponse = bungieApi.GetMembersOfGroupResponse(clan.Id);
 
-						foreach (var member in MemberResponse)
+						//ErrorCode = 1 mean Success
+						if (bungieResponse.ErrorCode != 1)
+							continue;
+						foreach (var result in bungieResponse.Response.Results)
 						{
-							var BungieData = clan.Members.SingleOrDefault(u => u.DestinyMembershipId == member.DestinyUserInfo.MembershipId);
-							//If not found Member add him
-							if (BungieData == null)
+							var guardian = clan.Members.SingleOrDefault(g => g.DestinyMembershipId == result.DestinyUserInfo.MembershipId);
+
+							if (guardian == null)
 							{
-								var Member = new Clan_Member
+								var clan_Member = new Clan_Member
 								{
-									Name = member.DestinyUserInfo.DisplayName,
-									DestinyMembershipType = member.DestinyUserInfo.MembershipType,
-									DestinyMembershipId = member.DestinyUserInfo.MembershipId,
-									ClanJoinDate = member.JoinDate,
-									ClanId = member.GroupId
+									Name = result.DestinyUserInfo.DisplayName,
+									DestinyMembershipType = result.DestinyUserInfo.MembershipType,
+									DestinyMembershipId = result.DestinyUserInfo.MembershipId,
+									ClanJoinDate = result.JoinDate,
+									ClanId = result.GroupId
 								};
-								if (member.BungieNetUserInfo != null)
+								if (result.BungieNetUserInfo != null)
 								{
-									Member.BungieMembershipType = member.BungieNetUserInfo.MembershipType;
-									Member.BungieMembershipId = member.BungieNetUserInfo.MembershipId;
-									Member.IconPath = member.BungieNetUserInfo.IconPath;
+									clan_Member.BungieMembershipType = result.BungieNetUserInfo.MembershipType;
+									clan_Member.BungieMembershipId = result.BungieNetUserInfo.MembershipId;
+									clan_Member.IconPath = result.BungieNetUserInfo.IconPath;
 								}
-								Db.Add(Member);
+								Db.Add(clan_Member);
 							}
-							//Anyway update member if earlier member profile closed or opened
-							else if (BungieData != null)
+							else
 							{
 								//If member have public profile
-								if (member.BungieNetUserInfo != null)
+								if (result.BungieNetUserInfo != null)
 								{
-									BungieData.BungieMembershipType = member.BungieNetUserInfo.MembershipType;
-									BungieData.BungieMembershipId = member.BungieNetUserInfo.MembershipId;
-									BungieData.IconPath = member.BungieNetUserInfo.IconPath;
+									guardian.BungieMembershipType = result.BungieNetUserInfo.MembershipType;
+									guardian.BungieMembershipId = result.BungieNetUserInfo.MembershipId;
+									guardian.IconPath = result.BungieNetUserInfo.IconPath;
 								}
 								//If member profile hidden
-								else if (member.BungieNetUserInfo == null)
+								else if (result.BungieNetUserInfo == null)
 								{
-									BungieData.BungieMembershipType = null;
-									BungieData.BungieMembershipId = null;
-									BungieData.IconPath = null;
+									guardian.BungieMembershipType = null;
+									guardian.BungieMembershipId = null;
+									guardian.IconPath = null;
 								}
 								//Anyway just update profile Name
-								BungieData.Name = member.DestinyUserInfo.DisplayName;
+								guardian.Name = result.DestinyUserInfo.DisplayName;
 
-								Db.Update(BungieData);
+								Db.Update(guardian);
 							}
-							//Check and delete member from local DB who not in current guild
-							foreach (var guardian in clan.Members)
-							{
-								var Deleted = MemberResponse.Any(M => M.DestinyUserInfo.MembershipId == guardian.DestinyMembershipId && M.GroupId == guardian.ClanId);
-								if (!Deleted)
-								{
-									Db.Remove(guardian);
-								}
-							}
-
 						}
-						await Db.SaveChangesAsync();
+						//Check and delete member from local DB who not in current guild
+						foreach (var guardian in clan.Members)
+						{
+							var IsInClan = bungieResponse.Response.Results.Any(M => M.DestinyUserInfo.MembershipId == guardian.DestinyMembershipId && M.GroupId == guardian.ClanId);
+							if (!IsInClan)
+							{
+								Db.Remove(guardian);
+							}
+						}
+						Db.SaveChanges();
 					}
 					catch (Exception ex)
 					{
@@ -147,53 +148,50 @@ namespace Neira.BungieWorker.Bungie
 				}
 			}
 
-			Logger.Log.Information("Clan member check complete working");
+			Logger.Log.Debug("Clan member check complete working");
 			MemberCheckBusy = false;
 		}
 
-		public Task UpdateMembersLastPlayedTime()
+		public void UpdateMembersLastPlayedTime()
 		{
-			if (UpdateMemberBusy) return Task.CompletedTask;
+			if (UpdateMemberBusy) return;
 
 			Logger.Log.Information($"Update Guardian last online time start working");
 			UpdateMemberBusy = true;
 
 			using (var Db = new NeiraContext())
 			{
+				var queue = new Queue<Clan_Member>(Db.Clan_Members.AsNoTracking().OrderBy(g => g.DateLastPlayed));
+				var bungieApi = new BungieApi();
 
-				Parallel.ForEach(Db.Clan_Members.OrderBy(M => M.DateLastPlayed), new ParallelOptions { MaxDegreeOfParallelism = 3 }, async ProfileId =>
+				while (queue.Count > 0)
 				{
+					var guardian = queue.Dequeue();
+
 					try
 					{
-						using (var context = new NeiraContext())
+						var profile = bungieApi.GetProfileResult(guardian.DestinyMembershipId, (int)guardian.DestinyMembershipType, DestinyComponentType.Profiles);
+
+						if (profile.ErrorCode == 1 && profile != null)
 						{
-							BungieMembershipType type = (BungieMembershipType)Enum.ToObject(typeof(BungieMembershipType), ProfileId.DestinyMembershipType);
+							var member = Db.Clan_Members.Single(m => m.DestinyMembershipId == guardian.DestinyMembershipId);
 
-							var bungieApi = new BungieApi();
-							var profile = bungieApi.GetProfileResult(ProfileId.DestinyMembershipId, type, DestinyComponentType.Profiles);
+							member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
 
-							if (profile.ErrorCode == 1)
-							{
-								var member = context.Clan_Members.SingleOrDefault(m => m.DestinyMembershipId == ProfileId.DestinyMembershipId);
-								if (member != null)
-								{
-									member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
-
-									context.Update(member);
-									await context.SaveChangesAsync();
-								}
-							}
+							Db.Update(member);
+							Db.SaveChanges();
 						}
+						else
+							Logger.Log.Debug($"Bungie error on {guardian.Name} Response:\n ErrorCode: {profile.ErrorCode}\n{profile.ErrorStatus} - {profile.Message}");
 					}
 					catch (Exception ex)
 					{
-						Logger.Log.Fatal(ex, $"Error in update last online time on Guardian {ProfileId.Name}.");
+						Logger.Log.Fatal(ex, $"Error in update last online time on Guardian {guardian.Name}.");
 					}
-				});
+				}
 			}
-			Logger.Log.Information($"Update Guardian last online time complete working");
+			Logger.Log.Debug($"Update Guardian last online time complete working");
 			UpdateMemberBusy = false;
-			return Task.CompletedTask;
 		}
 	}
 }

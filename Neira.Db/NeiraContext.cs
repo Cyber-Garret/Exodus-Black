@@ -29,7 +29,13 @@ namespace Neira.Db
 			var json = File.ReadAllText("credential.json");
 			credential = JsonConvert.DeserializeObject<Credential>(json);
 
-			var connection = $"Server={credential.Server};Database={credential.Database};User Id={credential.User};Password={credential.Password};MultipleActiveResultSets=true;";
+			//Choose right connection string
+			string connection;
+			if (credential.TrustedConnection)
+				connection = $"Server=localhost;Database={credential.Database};Trusted_Connection=True;MultipleActiveResultSets=true;";
+			else
+				connection = $"Server={credential.Server};Database={credential.Database};User Id={credential.User};Password={credential.Password};MultipleActiveResultSets=true;";
+			//This need only for EF migrations
 			//var connection = "Server=10.18.0.15;Database=datab;User Id=login;Password=pass;";
 			optionsBuilder.UseSqlServer(connection);
 		}

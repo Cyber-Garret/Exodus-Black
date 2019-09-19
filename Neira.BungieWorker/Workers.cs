@@ -1,8 +1,5 @@
 ﻿using Neira.BungieWorker.Bungie;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text;
 using System.Timers;
 
 namespace Neira.BungieWorker
@@ -16,20 +13,30 @@ namespace Neira.BungieWorker
 			{
 				Enabled = true,
 				AutoReset = true,
-				Interval = TimeSpan.FromMinutes(1).TotalMilliseconds
+				Interval = Program.BungieTimer.TotalMilliseconds
 			};
-			BungieTimer.Elapsed += ClanTimer_ElapsedAsync;
+			BungieTimer.Elapsed += BungieTimer_Elapsed;
 		}
 
-		private async void ClanTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
+		private void BungieTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			var updater = ClanUpdater.GetInstance();
-			if (!updater.UpdateClanBusy)
-				updater.UpdateClans();
-			if (!updater.MemberCheckBusy)
-				await updater.ClanMemberCheckAsync();
-			if (!updater.UpdateMemberBusy)
-				await updater.UpdateMembersLastPlayedTime();
+			try
+			{
+				var updater = ClanUpdater.GetInstance();
+				if (!(updater.UpdateClanBusy || updater.MemberCheckBusy || updater.UpdateMemberBusy))
+				{
+					if (!updater.UpdateClanBusy)
+						updater.UpdateClans();
+					if (!updater.MemberCheckBusy)
+						updater.ClanMemberCheck();
+					if (!updater.UpdateMemberBusy)
+						updater.UpdateMembersLastPlayedTime();
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Log.Fatal(ex, "Fatal Exception in BungieTimer event");
+			}
 		}
 	}
 }

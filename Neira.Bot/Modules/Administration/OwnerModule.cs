@@ -84,38 +84,6 @@ namespace Neira.Bot.Modules.Administration
 
 		}
 
-
-		[Command("reload")]
-		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
-		public async Task ReloadMembers()
-		{
-			var message = await Context.Channel.SendMessageAsync("Начинаю работать");
-
-			var members = await Db.Clan_Members.ToListAsync();
-			BungieApi bungieApi = new BungieApi();
-			foreach (var item in members)
-			{
-				try
-				{
-					var profile = bungieApi.GetProfileResult(item.DestinyMembershipId, BungieMembershipType.All, DestinyComponentType.Profiles);
-
-					var member = Db.Clan_Members.Single(m => m.DestinyMembershipId == item.DestinyMembershipId);
-
-					member.DateLastPlayed = profile.Response.Profile.Data.DateLastPlayed;
-
-					Db.Clan_Members.Update(member);
-					await Db.SaveChangesAsync();
-				}
-
-				catch (Exception ex)
-				{
-					await Logger.Log(new LogMessage(LogSeverity.Error, "ReloadMembers", ex.Message, ex));
-					Console.WriteLine(ex.ToString());
-				}
-				await message.ModifyAsync(m => m.Content = "Готово");
-			}
-		}
-
 		[Command("stat")]
 		[Summary("Выводит техническую информацию о боте.")]
 		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]

@@ -42,13 +42,14 @@ namespace Neira.API.Bungie
 			return JsonConvert.DeserializeObject<GetGroup>(response.Content);
 		}
 
-		public GetProfile GetProfileResult(string destinyMembershipId, BungieMembershipType membershipType, DestinyComponentType components)
+		public GetProfile GetProfileResult(string destinyMembershipId, int membershipType, DestinyComponentType components)
 		{
 			try
 			{
-				var client = new RestClient(config.BungieConfig.BaseUrl + $"/Destiny2/{(int)membershipType}/Profile/{destinyMembershipId}/?components={(int)components}");
+				var client = new RestClient(config.BungieConfig.BaseUrl + $"/Destiny2/{membershipType}/Profile/{destinyMembershipId}/?components={(int)components}");
 				var request = new RestRequest(Method.GET);
 				request.AddHeader(config.BungieConfig.KeyName, config.BungieConfig.ApiKey);
+
 				var response = client.Execute(request);
 
 				return JsonConvert.DeserializeObject<GetProfile>(response.Content);
@@ -59,7 +60,7 @@ namespace Neira.API.Bungie
 				Console.WriteLine(ex);
 				return null;
 			}
-			
+
 		}
 	}
 }
