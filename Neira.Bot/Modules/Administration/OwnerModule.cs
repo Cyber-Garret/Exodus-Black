@@ -1,15 +1,11 @@
-﻿using Neira.API.Bungie;
-using Neira.API.Bungie.Models;
-using Neira.Db.Models;
-using Neira.Db;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
-using ImageMagick;
 using Microsoft.EntityFrameworkCore;
-
+using Neira.API.Bungie;
+using Neira.Db;
+using Neira.Db.Models;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -53,9 +49,9 @@ namespace Neira.Bot.Modules.Administration
 				}
 				var message = await Context.Channel.SendMessageAsync("Начинаю работать");
 
-				BungieApi bungie = new BungieApi();
+				var bungie = new BungieApi();
 				var claninfo = bungie.GetGroupResult(ClanId);
-				if (claninfo.Response != null)
+				if (claninfo.ErrorCode == 1)
 				{
 					Clan clan = new Clan
 					{
@@ -71,15 +67,19 @@ namespace Neira.Bot.Modules.Administration
 
 					Db.Clans.Add(clan);
 					await Db.SaveChangesAsync();
+					await message.ModifyAsync(m => m.Content = "Готово");
 				}
-				await message.ModifyAsync(m => m.Content = "Готово");
+				else
+				{
+					await message.ModifyAsync(m => m.Content = $"Ошибка регистрации клана {claninfo.ErrorStatus} - {claninfo.Message}");
+				}
 
 			}
 			catch (Exception ex)
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Error, "AddClan", ex.Message, ex));
 				Console.WriteLine(ex.ToString());
-				await Context.Channel.SendMessageAsync("Ошибка добавления клана. Подробности в консоли.");
+				await ReplyAsync($"Ошибка добавления клана. Подробности в консоли.\nСообщение: {ex.Message}");
 			}
 
 		}
@@ -108,38 +108,6 @@ namespace Neira.Bot.Modules.Administration
 				$"- Текущее время сервера: {DateTime.Now}", true);
 
 			await ReplyAsync(null, false, embed.Build());
-		}
-
-		[Command("clean")]
-		[Summary("Удаляет заданное количество сообщений где была вызвана команда.")]
-		[RequireOwner]
-		[RequireBotPermission(ChannelPermission.ManageMessages)]
-		public async Task PurgeChat(int amount)
-		{
-			try
-			{
-				await ReplyAsync("Начинаю очистку канала.");
-				var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
-				if (messages.Count() < 1)
-					return;
-				foreach (var item in messages)
-				{
-					await Task.Delay(500);
-					await (Context.Channel as ITextChannel).DeleteMessageAsync(item.Id);
-				}
-				//await (Context.Channel as ITextChannel).DeleteMessagesAsync(messages);
-
-				const int delay = 5000;
-				var m = await Context.Channel.SendMessageAsync($"Задание успешно выполнено. _Это сообщение будет удалено через {delay / 1000} сек._");
-				await Task.Delay(delay);
-				await m.DeleteAsync();
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, "PurgeChat", ex.Message, ex));
-				Console.WriteLine(ex.ToString());
-				await ReplyAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
-			}
 		}
 	}
 }

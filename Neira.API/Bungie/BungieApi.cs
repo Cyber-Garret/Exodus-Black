@@ -1,13 +1,10 @@
-﻿using System.Threading.Tasks;
-
-using RestSharp;
-using Newtonsoft.Json;
-
-using Neira.API.Bungie.Models.Results.GroupV2.GetMembersOfGroup;
-using Neira.API.Bungie.Models.Results.GroupV2.GetGroup;
+﻿
 using Neira.API.Bungie.Models.Results.Destiny2.GetProfile;
+using Neira.API.Bungie.Models.Results.GroupV2.GetGroup;
+using Neira.API.Bungie.Models.Results.GroupV2.GetMembersOfGroup;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
-using Neira.API.Bungie.Models;
 using System.IO;
 
 namespace Neira.API.Bungie

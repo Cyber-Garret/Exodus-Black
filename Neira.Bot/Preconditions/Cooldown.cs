@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Discord.Commands;
+using System;
 using System.Collections.Concurrent;
-
-using Discord.Commands;
+using System.Threading.Tasks;
 
 namespace Neira.Bot.Preconditions
 {

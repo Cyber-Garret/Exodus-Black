@@ -1,6 +1,4 @@
-﻿using Discord;
-
-namespace Neira.Bot.Models
+﻿namespace Neira.Bot.Models
 {
 	public class AudioOptions
 	{

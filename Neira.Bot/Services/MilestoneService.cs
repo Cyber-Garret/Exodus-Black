@@ -1,17 +1,14 @@
-﻿using Neira.Db.Models;
-
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-
 using Microsoft.EntityFrameworkCore;
-
+using Neira.Db;
+using Neira.Db.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Neira.Db;
 
 namespace Neira.Bot.Services
 {

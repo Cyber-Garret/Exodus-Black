@@ -1,16 +1,13 @@
 ﻿using Discord;
 using Discord.WebSocket;
-
 using Microsoft.EntityFrameworkCore;
-
+using Neira.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
-using Neira.Db;
 
 namespace Neira.Bot.Services
 {

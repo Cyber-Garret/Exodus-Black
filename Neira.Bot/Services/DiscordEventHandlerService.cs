@@ -1,14 +1,12 @@
 ﻿using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
-
+using ImageMagick;
 using Neira.Bot.Helpers;
-
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
-using ImageMagick;
 using Victoria;
 
 namespace Neira.Bot.Services

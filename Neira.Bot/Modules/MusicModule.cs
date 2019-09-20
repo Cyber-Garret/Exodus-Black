@@ -1,8 +1,6 @@
-﻿using Neira.Bot.Services;
-
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
-
+using Neira.Bot.Services;
 using System.Threading.Tasks;
 
 namespace Neira.Bot.Modules

@@ -1,18 +1,14 @@
-﻿using Neira.Bot.Helpers;
-using Neira.Bot.Models;
-
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
-
+using Neira.Bot.Helpers;
+using Neira.Bot.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Victoria;
 using Victoria.Entities;
-using Victoria.Helpers;
 
 namespace Neira.Bot.Services
 {

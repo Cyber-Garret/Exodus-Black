@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Discord;
+﻿using Discord;
 using Discord.Commands;
-
+using Discord.WebSocket;
 using Neira.Bot.Helpers;
 using Neira.Bot.Preconditions;
 using Neira.Db.Models;
-using Discord.WebSocket;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Neira.Bot.Modules.Administration
 {
@@ -286,6 +284,51 @@ namespace Neira.Bot.Modules.Administration
 			$"- Всего получателей: {SucessCount + FailCount}\n" +
 			$"- Успешно доставлено: {SucessCount}\n" +
 			$"- Не удалось отправить: {FailCount}");
+		}
+
+		[Command("чистка")]
+		[Summary("Удаляет заданное количество сообщений где была вызвана команда.")]
+		[Remarks("Синтаксис: !чистка <число> Пример: !чистка 10")]
+		[RequireBotPermission(ChannelPermission.ManageMessages)]
+		public async Task PurgeChat(int amount = 1)
+		{
+			var GuildOwner = Context.Guild.OwnerId;
+			if (Context.User.Id != GuildOwner)
+			{
+				await ReplyAndDeleteAsync(":x: | Прошу прощения страж, но эта команда доступна только капитану корабля!");
+				return;
+			}
+
+			try
+			{
+				await ReplyAsync("Начинаю очистку канала.");
+				var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
+				if (messages.Count() < 1)
+					return;
+
+				var TooOlds = messages.Any(m => m.CreatedAt < DateTime.UtcNow.AddDays(-14));
+				if (TooOlds)
+				{
+					foreach (var message in messages)
+					{
+						await Task.Delay(500);
+						await (Context.Channel as ITextChannel).DeleteMessageAsync(message.Id);
+					}
+				}
+				else
+				{
+					//Clean amount of messages in current channel
+					await (Context.Channel as ITextChannel).DeleteMessagesAsync(messages);
+
+					await ReplyAndDeleteAsync($"Задание успешно выполнено. Удалено {messages.Count()} сообщений. _Это сообщение будет автоматически удалено._");
+				}
+
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, "PurgeChat", ex.Message, ex));
+				await ReplyAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
+			}
 		}
 
 		[Command("опрос")]

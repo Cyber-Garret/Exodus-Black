@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Discord;
+using Microsoft.EntityFrameworkCore;
+using Neira.Db;
+using Neira.Db.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-
-using Discord;
-using Neira.Db.Models;
-using Neira.Db;
 
 namespace Neira.Bot
 {
@@ -119,7 +118,7 @@ namespace Neira.Bot
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Critical, "SaveWelcomeMessage", ex.Message, ex));
 			}
-			
+
 		}
 		#endregion
 
