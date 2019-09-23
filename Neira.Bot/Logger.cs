@@ -15,6 +15,21 @@ namespace Neira.Bot
 		{
 			Console.ForegroundColor = SeverityToConsoleColor(logMessage.Severity);
 			string message = $"[{DateTime.Now.ToLongTimeString()}, Source: {logMessage.Source}] {logMessage.Message}";
+
+			Console.WriteLine(message);
+			Console.ResetColor();
+			return Task.CompletedTask;
+		}
+
+		/// <summary>
+		/// LogSeverity colors in console - Critical = Red; Error = Yellow; Warning = Magenta; Info = Cyan; Verbose = Green; Debug = Blue;
+		/// </summary>
+		/// <param name="logMessage"></param>
+		/// <returns></returns>
+		internal static Task LogFullException(LogMessage logMessage)
+		{
+			Console.ForegroundColor = SeverityToConsoleColor(logMessage.Severity);
+			string message = $"[{DateTime.Now.ToLongTimeString()}, Source: {logMessage.Source}] {logMessage.Message}";
 			if (logMessage.Exception != null)
 				message += $"\n{logMessage.Exception}\n";
 

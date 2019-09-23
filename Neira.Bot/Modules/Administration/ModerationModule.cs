@@ -43,7 +43,7 @@ namespace Neira.Bot.Modules.Administration
 				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
 				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
 				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**\n" +
-				$"- Глобальное упоминание в некоторых сообщениях: **{guild.GlobalMention}**");
+				$"- Глобальное упоминание в некоторых сообщениях: **{guild.GlobalMention ?? "Без упоминания"}**");
 
 			await ReplyAsync(null, embed: embed.Build());
 		}
@@ -216,7 +216,7 @@ namespace Neira.Bot.Modules.Administration
 		}
 
 		[Command("упоминание")]
-		[Summary("Изменяет упоминания в сборах и уведомлениях о Зуре here на everyone и наоборот.")]
+		[Summary("Изменяет упоминания в сборах и уведомлениях о Зуре here->everyone->Без упоминания и наоборот.")]
 		public async Task SetGuildMention()
 		{
 			try
@@ -225,10 +225,13 @@ namespace Neira.Bot.Modules.Administration
 				if (guild.GlobalMention == "@here")
 					guild.GlobalMention = "@everyone";
 				else if (guild.GlobalMention == "@everyone")
+					guild.GlobalMention = null;
+				else if (guild.GlobalMention == null)
 					guild.GlobalMention = "@here";
+
 				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
-				await ReplyAsync($"Капитан, теперь в некоторых сообщениях я буду использовать {guild.GlobalMention}");
+				await ReplyAsync($"Капитан, теперь в некоторых сообщениях я буду использовать {guild.GlobalMention ?? "**Без упоминания**"}");
 			}
 			catch (Exception ex)
 			{

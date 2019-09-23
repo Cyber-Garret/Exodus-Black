@@ -524,7 +524,7 @@ namespace Neira.Bot.Modules.Commands
 				if (!string.IsNullOrEmpty(NoData))
 					embed.AddField("Нет данных", NoData);
 				//Simple footer with clan name
-				embed.WithFooter($"Данные об онлайне стражей обновляются раз в час. Информация о клане и его составе раз в 15 минут.");
+				embed.WithFooter($"Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.");
 
 				//Modify old message and mention user with ready statistic
 				await message.ModifyAsync(m =>

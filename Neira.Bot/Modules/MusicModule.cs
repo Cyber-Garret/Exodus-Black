@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace Neira.Bot.Modules
 {
 	[RequireContext(ContextType.Guild, ErrorMessage = "Прошу прощения страж, но музыка работает только на серверах Discord.")]
+	[RequireOwner(ErrorMessage = "Прошу прощения страж, но аудио-модуль временно отключён.")]
 	public class MusicModule : BotModuleBase
 	{
 		private readonly MusicService musicService;

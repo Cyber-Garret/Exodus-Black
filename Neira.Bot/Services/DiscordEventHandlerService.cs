@@ -134,15 +134,23 @@ namespace Neira.Bot.Services
 		}
 
 		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
-		private async Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
+		private Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
 		{
-			if (!reaction.User.Value.IsBot)
-				await milestone.HandleReactionAdded(cache, reaction);
+			Task.Run(async () =>
+			{
+				if (!reaction.User.Value.IsBot)
+					await milestone.HandleReactionAdded(cache, reaction);
+			});
+			return Task.CompletedTask;
 		}
-		private async Task Client_ReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
+		private Task Client_ReactionRemoved(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
 		{
-			if (!reaction.User.Value.IsBot)
-				await milestone.HandleReactionRemoved(cache, reaction);
+			Task.Run(async () =>
+			{
+				if (!reaction.User.Value.IsBot)
+					await milestone.HandleReactionRemoved(cache, reaction);
+			});
+			return Task.CompletedTask;
 		}
 		#endregion
 
