@@ -33,17 +33,17 @@ namespace Neira.Bot.Services
 		{
 			Client.Ready += Client_Ready;
 			Client.Disconnected += Client_Disconnected;
-			Client.JoinedGuild += _client_JoinedGuildAsync;
-			Client.ChannelCreated += _client_ChannelCreatedAsync;
-			Client.ChannelDestroyed += _client_ChannelDestroyedAsync;
-			Client.GuildMemberUpdated += _client_GuildMemberUpdatedAsync;
-			Client.MessageDeleted += _client_MessageDeletedAsync;
+			Client.JoinedGuild += Client_JoinedGuildAsync;
+			Client.ChannelCreated += Client_ChannelCreatedAsync;
+			Client.ChannelDestroyed += Client_ChannelDestroyedAsync;
+			Client.GuildMemberUpdated += Client_GuildMemberUpdatedAsync;
+			Client.MessageDeleted += Client_MessageDeletedAsync;
 			Client.MessageReceived += Client_MessageReceived;
-			Client.MessageUpdated += _client_MessageUpdatedAsync;
-			Client.RoleCreated += _client_RoleCreatedAsync;
-			Client.RoleDeleted += _client_RoleDeletedAsync;
-			Client.UserJoined += _client_UserJoinedAsync;
-			Client.UserLeft += _client_UserLeftAsync;
+			Client.MessageUpdated += Client_MessageUpdatedAsync;
+			Client.RoleCreated += Client_RoleCreatedAsync;
+			Client.RoleDeleted += Client_RoleDeletedAsync;
+			Client.UserJoined += Client_UserJoinedAsync;
+			Client.UserLeft += Client_UserLeftAsync;
 			Client.ReactionAdded += Client_ReactionAdded;
 			Client.ReactionRemoved += Client_ReactionRemoved;
 		}
@@ -80,7 +80,7 @@ namespace Neira.Bot.Services
 
 			return Task.CompletedTask;
 		}
-		private Task _client_JoinedGuildAsync(SocketGuild guild)
+		private Task Client_JoinedGuildAsync(SocketGuild guild)
 		{
 			Task.Run(async () =>
 			{
@@ -89,40 +89,88 @@ namespace Neira.Bot.Services
 			return Task.CompletedTask;
 		}
 
-		private async Task _client_ChannelCreatedAsync(SocketChannel arg) => await ChannelCreated(arg);
-		private async Task _client_ChannelDestroyedAsync(SocketChannel arg) => await ChannelDestroyed(arg);
-		private async Task _client_GuildMemberUpdatedAsync(SocketGuildUser userBefore, SocketGuildUser userAfter) => await GuildMemberUpdated(userBefore, userAfter);
+		private Task Client_ChannelCreatedAsync(SocketChannel arg)
+		{
+			Task.Run(async () =>
+			{
+				await ChannelCreated(arg);
+			});
+			return Task.CompletedTask;
+		}
+
+		private Task Client_ChannelDestroyedAsync(SocketChannel arg)
+		{
+			Task.Run(async () =>
+			{
+				await ChannelDestroyed(arg);
+			});
+			return Task.CompletedTask;
+		}
+
+		private Task Client_GuildMemberUpdatedAsync(SocketGuildUser userBefore, SocketGuildUser userAfter)
+		{
+			Task.Run(async () =>
+			{
+				await GuildMemberUpdated(userBefore, userAfter);
+			});
+			return Task.CompletedTask;
+		}
+
 		private Task Client_MessageReceived(SocketMessage message)
 		{
 			//Ignore messages from bots
 			if (message.Author.IsBot) return Task.CompletedTask;
 
 			//New Task for fix disconeting from Discord WebSockets by 1001 if current Task not completed.
-			_ = Task.Run(async () =>
-				 {
-					 await CommandHandlingService.HandleCommandAsync(message);
-				 });
+			Task.Run(async () =>
+			{
+				await CommandHandlingService.HandleCommandAsync(message);
+			});
 			return Task.CompletedTask;
 		}
-		private async Task _client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
+		private Task Client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{
 			if (!cacheMessageBefore.HasValue)
-				return;
+				return Task.CompletedTask;
 			if (cacheMessageBefore.Value.Author.IsBot)
-				return;
-			await MessageUpdated(cacheMessageBefore, messageAfter, channel);
+				return Task.CompletedTask;
+			Task.Run(async () =>
+			{
+				await MessageUpdated(cacheMessageBefore, messageAfter, channel);
+			});
+			return Task.CompletedTask;
 		}
-		private async Task _client_MessageDeletedAsync(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
+		private Task Client_MessageDeletedAsync(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
 		{
 			if (!cacheMessage.HasValue)
-				return;
+				return Task.CompletedTask;
 			if (cacheMessage.Value.Author.IsBot)
-				return;
-			await MessageDeleted(cacheMessage);
+				return Task.CompletedTask;
+			Task.Run(async () =>
+			{
+				await MessageDeleted(cacheMessage);
+			});
+			return Task.CompletedTask;
 		}
-		private async Task _client_RoleCreatedAsync(SocketRole arg) => await RoleCreated(arg);
-		private async Task _client_RoleDeletedAsync(SocketRole arg) => await RoleDeleted(arg);
-		private Task _client_UserJoinedAsync(SocketGuildUser arg)
+		private Task Client_RoleCreatedAsync(SocketRole arg)
+		{
+			Task.Run(async () =>
+			{
+				await RoleCreated(arg);
+			});
+			return Task.CompletedTask;
+		}
+
+		private Task Client_RoleDeletedAsync(SocketRole arg)
+		{
+			Task.Run(async () =>
+			{
+				await RoleDeleted(arg);
+			});
+			return Task.CompletedTask;
+		}
+
+		private Task Client_UserJoinedAsync(SocketGuildUser arg)
 		{
 			Task.Run(async () =>
 			{
@@ -133,7 +181,15 @@ namespace Neira.Bot.Services
 			return Task.CompletedTask;
 		}
 
-		private async Task _client_UserLeftAsync(SocketGuildUser arg) => await UserLeft(arg);
+		private Task Client_UserLeftAsync(SocketGuildUser arg)
+		{
+			Task.Run(async () =>
+			{
+				await UserLeft(arg);
+			});
+			return Task.CompletedTask;
+		}
+
 		private Task Client_ReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
 		{
 			Task.Run(async () =>

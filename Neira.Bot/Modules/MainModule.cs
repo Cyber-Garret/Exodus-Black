@@ -536,7 +536,7 @@ namespace Neira.Bot.Modules.Commands
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message));
 			}
 		}
 	}
