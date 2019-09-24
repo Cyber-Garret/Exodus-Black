@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Neira.API.Bungie;
 using Neira.Db;
@@ -12,11 +13,14 @@ using System.Threading.Tasks;
 
 namespace Neira.Bot.Modules.Administration
 {
+	[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 	public class OwnerModule : BotModuleBase
 	{
 		private readonly NeiraContext Db;
-		public OwnerModule(NeiraContext neiraContext)
+		DiscordSocketClient client { get; }
+		public OwnerModule(DiscordSocketClient discordSocketClient, NeiraContext neiraContext)
 		{
+			client = discordSocketClient;
 			Db = neiraContext;
 		}
 
@@ -37,7 +41,6 @@ namespace Neira.Bot.Modules.Administration
 		#endregion
 
 		[Command("add clan")]
-		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 		public async Task AddClan(long ClanId)
 		{
 			try
@@ -86,7 +89,6 @@ namespace Neira.Bot.Modules.Administration
 
 		[Command("stat")]
 		[Summary("Выводит техническую информацию о боте.")]
-		[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 		public async Task InfoAsync()
 		{
 			var app = await Context.Client.GetApplicationInfoAsync();
@@ -106,8 +108,19 @@ namespace Neira.Bot.Modules.Administration
 				$"- Всего каналов: {Context.Client.Guilds.Sum(g => g.Channels.Count)}\n" +
 				$"- Пользователей: {Context.Client.Guilds.Sum(g => g.Users.Count)}\n" +
 				$"- Текущее время сервера: {DateTime.Now}", true);
+			var field = new EmbedFieldBuilder
+			{
+				Name = "Сервера"
+			};
+			foreach (var guild in client.Guilds)
+			{
+				field.Value += $"ID: **{guild.Id}** Название: **{guild.Name}** Пользователей: {guild.Users.Count}";
+			}
 
-			await ReplyAsync(null, false, embed.Build());
+			if (field.Value.ToString().Length < 1024)
+				embed.AddField(field);
+
+			await ReplyAndDeleteAsync("Сообщение будет удалено через 1 мин.", embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 		}
 	}
 }

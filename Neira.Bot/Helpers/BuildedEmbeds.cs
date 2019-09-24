@@ -1,46 +1,25 @@
 ﻿using Discord;
-using Discord.WebSocket;
 using Neira.Db.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace Neira.Bot.Helpers
 {
-	class MiscHelpers
+	internal class BuildedEmbeds
 	{
-		public static EmbedBuilder WelcomeEmbed(SocketGuildUser guildUser)
+		internal static EmbedBuilder ClanStatus(Clan clan)
 		{
-			string text = FailsafeDbOperations.GetGuildAccountAsync(guildUser.Guild.Id).Result.WelcomeMessage;
 
-			var embed = new EmbedBuilder()
-			{
-				Color = Color.Orange,
-				Title = $"Добро пожаловать на сервер {guildUser.Guild.Name}",
-				Description = text
-			};
-			//if guild have picture add to message.
-			if (guildUser.Guild.IconUrl != string.Empty)
-				embed.ThumbnailUrl = guildUser.Guild.IconUrl;
-
-			return embed;
-		}
-
-		public static async Task Autorole(SocketGuildUser user)
-		{
-			var guild = await FailsafeDbOperations.GetGuildAccountAsync(user.Guild.Id);
-			if (guild.AutoroleID != 0)
-			{
-				var targetRole = user.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleID);
-				if (targetRole != null)
-					await user.AddRoleAsync(targetRole);
-			}
-		}
-
-		internal static string ClanStatus(Clan clan)
-		{
-			string message = $"В данный момент в `{clan.Name}` **{clan.MemberCount}**/100 стражей.\n";
+			var embed = new EmbedBuilder();
+			embed.WithTitle($"Онлайн статус стражей клана `{clan.Name}`");
+			embed.WithColor(Color.Orange);
+			////Bungie Clan link
+			embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={clan.Id}");
+			////Some clan main info
+			embed.WithDescription(
+				$"В данный момент в клане **{clan.MemberCount}**/100 стражей.\n" +
+				$"Сортировка происходит от времени, когда вызвали данную команду.");
 
 			#region list for member sorted for some days
 			List<string> _ThisDay = new List<string>();
@@ -83,27 +62,29 @@ namespace Neira.Bot.Helpers
 
 			//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
 			//and if string ThisDay not empty add to embed message special field.
-			string ThisDay = string.Join(", ", _ThisDay);
+			string ThisDay = string.Join(',', _ThisDay);
 			if (!string.IsNullOrEmpty(ThisDay))
-				message += "**Был(a) сегодня**\n" + ThisDay;
+				embed.AddField("Был(a) сегодня", ThisDay);
 			//Same as above, but who enter to the game yesterday
-			string Yesterday = string.Join(", ", _Yesterday);
+			string Yesterday = string.Join(',', _Yesterday);
 			if (!string.IsNullOrEmpty(Yesterday))
-				message += "\n**Был(a) вчера**\n" + Yesterday;
+				embed.AddField("Был(a) вчера", Yesterday);
 			//Same as above, but who enter to the game more 5 days but fewer 7 days ago
-			string ThisWeek = string.Join(", ", _ThisWeek);
+			string ThisWeek = string.Join(',', _ThisWeek);
 			if (!string.IsNullOrEmpty(ThisWeek))
-				message += "\n**Был(a) в течение 7 дней**\n" + ThisWeek;
+				embed.AddField("Был(a) в течение 7 дней", ThisWeek);
 			//Same as above, but who enter to the game more 7 days ago
-			string MoreOneWeek = string.Join(", ", _MoreOneWeek);
+			string MoreOneWeek = string.Join(',', _MoreOneWeek);
 			if (!string.IsNullOrEmpty(MoreOneWeek))
-				message += "\n**Был(a) больше 7 дней тому назад**\n" + MoreOneWeek;
+				embed.AddField("Был(a) больше 7 дней тому назад", MoreOneWeek);
 			//For user who not have any data.
-			string NoData = string.Join(", ", _NoData);
+			string NoData = string.Join(',', _NoData);
 			if (!string.IsNullOrEmpty(NoData))
-				message += "\n**Нет данных**\n" + NoData;
+				embed.AddField("Нет данных", NoData);
+			//Simple footer with clan name
+			embed.WithFooter($"Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.");
 
-			return message;
+			return embed;
 		}
 	}
 }

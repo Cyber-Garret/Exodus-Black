@@ -1,7 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Discord.Addons.Interactive;
 using Microsoft.EntityFrameworkCore;
+using Neira.Bot.Helpers;
 using Neira.Bot.Modules.Administration;
 using Neira.Bot.Preconditions;
 using Neira.Bot.Services;
@@ -537,6 +539,46 @@ namespace Neira.Bot.Modules.Commands
 			catch (Exception ex)
 			{
 				await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message));
+			}
+		}
+
+		[Command("клан")]
+		public async Task GetDestinyClanInfo()
+		{
+			try
+			{
+				var clans = await db.Clans.AsNoTracking().Include(C => C.Members).Where(G => G.GuildId == Context.Guild.Id).ToListAsync();
+				if (clans.Count() > 1)
+				{
+					var message = new PaginatedMessage
+					{
+						Title = "Онлайн статус кланов на сервере",
+						Color = Color.Gold,
+						Options = new PaginatedAppearanceOptions
+						{
+							InformationText = "Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.",
+							JumpDisplayOptions = JumpDisplayOptions.Never,
+							FooterFormat = "Страница {0}/{1}"
+						}
+					};
+					List<string> pages = new List<string>();
+					foreach (var clan in clans)
+					{
+						if (clan.Members.Count > 1)
+							pages.Add(MiscHelpers.ClanStatus(clan));
+					}
+					message.Pages = pages;
+
+					await PagedReplyAsync(message);
+				}
+				else
+				{
+					await ReplyAsync(embed: BuildedEmbeds.ClanStatus(clans.FirstOrDefault()).Build());
+				}
+			}
+			catch (Exception ex)
+			{
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "GetDestinyClanInfo", ex.Message, ex));
 			}
 		}
 	}
