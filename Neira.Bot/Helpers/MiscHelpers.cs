@@ -42,7 +42,7 @@ namespace Neira.Bot.Helpers
 		{
 			string message = $"В данный момент в `{clan.Name}` **{clan.MemberCount}**/100 стражей.\n";
 
-			#region list for member sorted for some days
+			#region lists for guardians sorted by specific last online date 
 			List<string> _ThisDay = new List<string>();
 			List<string> _Yesterday = new List<string>();
 			List<string> _ThisWeek = new List<string>();

@@ -132,7 +132,7 @@ namespace Neira.Bot.Modules.Commands
 		[Summary("Простая команда проверки моей работоспособности.")]
 		public async Task Bip()
 		{
-			await ReplyAsync("Бип");
+			await ReplyAsync("Бип...");
 		}
 
 		[Command("зур")]
@@ -414,171 +414,194 @@ namespace Neira.Bot.Modules.Commands
 
 		}
 
-		[Command("клан статус")]
-		[Summary("Отображает отсортированный онлайн Destiny 2 клана, зарегистрированного в базе данных моим создателем.\n**Клан должен быть зарегистрирован моим создателем.**")]
-		[Remarks("Пример: !клан статус <ID клана>, например !клан статус 3772661 или введите !клан статус без ID для отображения как добавить клан.")]
-		public async Task GetGuildInfo(int GuildId = 0)
-		{
-			try
-			{
-				#region Checks
-				if (GuildId == 0)
-				{
-					var app = await Context.Client.GetApplicationInfoAsync();
-					var NotFoundMessage = new EmbedBuilder();
-					NotFoundMessage.WithColor(Color.Gold);
-					NotFoundMessage.WithTitle("Капитан, ты не указал ID гильдии.");
-					NotFoundMessage.WithDescription(
-						$"Чтобы узнать ID, достаточно открыть любой клан на сайте Bungie.\nНапример: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n" +
-						$"Синтаксис команды простой: **!клан статус 3526561**\n");
-					NotFoundMessage.AddField("Кэш данных о клане Destiny 2",
-						"Если ты желаешь, чтобы я начала обновлять и отображать актуальные данные о твоем клане,\n" +
-						$"напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
-						"Только так я могу оперативно отображать данные о твоих стражах.\n");
-					NotFoundMessage.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+		//[Command("клан статус")]
+		//[Summary("Отображает отсортированный онлайн Destiny 2 клана, зарегистрированного в базе данных моим создателем.\n**Клан должен быть зарегистрирован моим создателем.**")]
+		//[Remarks("Пример: !клан статус <ID клана>, например !клан статус 3772661 или введите !клан статус без ID для отображения как добавить клан.")]
+		//public async Task GetGuildInfo(int GuildId = 0)
+		//{
+		//	try
+		//	{
+		//		#region Checks
+		//		if (GuildId == 0)
+		//		{
+		//			var app = await Context.Client.GetApplicationInfoAsync();
+		//			var NotFoundMessage = new EmbedBuilder();
+		//			NotFoundMessage.WithColor(Color.Gold);
+		//			NotFoundMessage.WithTitle("Капитан, ты не указал ID гильдии.");
+		//			NotFoundMessage.WithDescription(
+		//				$"Чтобы узнать ID, достаточно открыть любой клан на сайте Bungie.\nНапример: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n" +
+		//				$"Синтаксис команды простой: **!клан статус 3526561**\n");
+		//			NotFoundMessage.AddField("Кэш данных о клане Destiny 2",
+		//				"Если ты желаешь, чтобы я начала обновлять и отображать актуальные данные о твоем клане,\n" +
+		//				$"напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
+		//				"Только так я могу оперативно отображать данные о твоих стражах.\n");
+		//			NotFoundMessage.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
 
-					await ReplyAndDeleteAsync(null, embed: NotFoundMessage.Build(), timeout: TimeSpan.FromMinutes(2));
-					return;
-				}
-				#endregion
-				//Send calculating message because stastic forming near 30-50 sec.
-				var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
+		//			await ReplyAndDeleteAsync(null, embed: NotFoundMessage.Build(), timeout: TimeSpan.FromMinutes(2));
+		//			return;
+		//		}
+		//		#endregion
+		//		//Send calculating message because stastic forming near 30-50 sec.
+		//		var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
 
-				var destiny2Clan = db.Clans.AsNoTracking().Include(m => m.Members).FirstOrDefault(c => c.Id == GuildId);
+		//		var destiny2Clan = db.Clans.AsNoTracking().Include(m => m.Members).FirstOrDefault(c => c.Id == GuildId);
 
-				if (destiny2Clan == null)
-				{
-					await message.ModifyAsync(m => m.Content = ":x: Этой информации в моей базе данных нет. :frowning:\n" +
-					"Если это ошибка сообщите моему создателю.\n" +
-					"Если вы впервые воспользовались этой командой, напишите моему создателю, чтобы он добавил ваш клан в мою базу данных.");
-					return;
-				}
+		//		if (destiny2Clan == null)
+		//		{
+		//			await message.ModifyAsync(m => m.Content = ":x: Этой информации в моей базе данных нет. :frowning:\n" +
+		//			"Если это ошибка сообщите моему создателю.\n" +
+		//			"Если вы впервые воспользовались этой командой, напишите моему создателю, чтобы он добавил ваш клан в мою базу данных.");
+		//			return;
+		//		}
 
 
-				var embed = new EmbedBuilder();
-				embed.WithTitle($"Онлайн статус стражей клана `{destiny2Clan.Name}`");
-				embed.WithColor(Color.Orange);
-				////Bungie Clan link
-				embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={GuildId}");
-				////Some clan main info
-				embed.WithDescription(
-					$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
-					$"Сортировка происходит от времени, когда вызвали данную команду.");
+		//		var embed = new EmbedBuilder();
+		//		embed.WithTitle($"Онлайн статус стражей клана `{destiny2Clan.Name}`");
+		//		embed.WithColor(Color.Orange);
+		//		////Bungie Clan link
+		//		embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={GuildId}");
+		//		////Some clan main info
+		//		embed.WithDescription(
+		//			$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
+		//			$"Сортировка происходит от времени, когда вызвали данную команду.");
 
-				#region list for member sorted for some days
-				List<string> _ThisDay = new List<string>();
-				List<string> _Yesterday = new List<string>();
-				List<string> _ThisWeek = new List<string>();
-				List<string> _MoreOneWeek = new List<string>();
-				List<string> _NoData = new List<string>();
-				#endregion
+		//		#region list for member sorted for some days
+		//		List<string> _ThisDay = new List<string>();
+		//		List<string> _Yesterday = new List<string>();
+		//		List<string> _ThisWeek = new List<string>();
+		//		List<string> _MoreOneWeek = new List<string>();
+		//		List<string> _NoData = new List<string>();
+		//		#endregion
 
-				//Main Sorting logic
-				foreach (var member in destiny2Clan.Members)
-				{
-					int LastOnlineTime = 1000;
-					//Property for calculate how long days user did not enter the Destiny
-					if (member.DateLastPlayed != null)
-						LastOnlineTime = (DateTime.Today.Date - member.DateLastPlayed.Value.Date).Days;
+		//		//Main Sorting logic
+		//		foreach (var member in destiny2Clan.Members)
+		//		{
+		//			int LastOnlineTime = 1000;
+		//			//Property for calculate how long days user did not enter the Destiny
+		//			if (member.DateLastPlayed != null)
+		//				LastOnlineTime = (DateTime.Today.Date - member.DateLastPlayed.Value.Date).Days;
 
-					//Sorting user to right list
-					if (LastOnlineTime < 1)
-					{
-						_ThisDay.Add(member.Name);
-					}
-					else if (LastOnlineTime >= 1 && LastOnlineTime < 2)
-					{
-						_Yesterday.Add(member.Name);
-					}
-					else if (LastOnlineTime >= 2 && LastOnlineTime <= 7)
-					{
-						_ThisWeek.Add(member.Name);
-					}
-					else if (LastOnlineTime >= 7 && LastOnlineTime < 500)
-					{
-						_MoreOneWeek.Add(member.Name);
-					}
-					else if (LastOnlineTime > 500)
-					{
-						_NoData.Add(member.Name);
-					}
-				}
+		//			//Sorting user to right list
+		//			if (LastOnlineTime < 1)
+		//			{
+		//				_ThisDay.Add(member.Name);
+		//			}
+		//			else if (LastOnlineTime >= 1 && LastOnlineTime < 2)
+		//			{
+		//				_Yesterday.Add(member.Name);
+		//			}
+		//			else if (LastOnlineTime >= 2 && LastOnlineTime <= 7)
+		//			{
+		//				_ThisWeek.Add(member.Name);
+		//			}
+		//			else if (LastOnlineTime >= 7 && LastOnlineTime < 500)
+		//			{
+		//				_MoreOneWeek.Add(member.Name);
+		//			}
+		//			else if (LastOnlineTime > 500)
+		//			{
+		//				_NoData.Add(member.Name);
+		//			}
+		//		}
 
-				//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
-				//and if string ThisDay not empty add to embed message special field.
-				string ThisDay = string.Join(',', _ThisDay);
-				if (!string.IsNullOrEmpty(ThisDay))
-					embed.AddField("Был(a) сегодня", ThisDay);
-				//Same as above, but who enter to the game yesterday
-				string Yesterday = string.Join(',', _Yesterday);
-				if (!string.IsNullOrEmpty(Yesterday))
-					embed.AddField("Был(a) вчера", Yesterday);
-				//Same as above, but who enter to the game more 5 days but fewer 7 days ago
-				string ThisWeek = string.Join(',', _ThisWeek);
-				if (!string.IsNullOrEmpty(ThisWeek))
-					embed.AddField("Был(a) на этой неделе", ThisWeek);
-				//Same as above, but who enter to the game more 7 days ago
-				string MoreOneWeek = string.Join(',', _MoreOneWeek);
-				if (!string.IsNullOrEmpty(MoreOneWeek))
-					embed.AddField("Был(a) больше недели тому назад", MoreOneWeek);
-				//For user who not have any data.
-				string NoData = string.Join(',', _NoData);
-				if (!string.IsNullOrEmpty(NoData))
-					embed.AddField("Нет данных", NoData);
-				//Simple footer with clan name
-				embed.WithFooter($"Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.");
+		//		//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
+		//		//and if string ThisDay not empty add to embed message special field.
+		//		string ThisDay = string.Join(',', _ThisDay);
+		//		if (!string.IsNullOrEmpty(ThisDay))
+		//			embed.AddField("Был(a) сегодня", ThisDay);
+		//		//Same as above, but who enter to the game yesterday
+		//		string Yesterday = string.Join(',', _Yesterday);
+		//		if (!string.IsNullOrEmpty(Yesterday))
+		//			embed.AddField("Был(a) вчера", Yesterday);
+		//		//Same as above, but who enter to the game more 5 days but fewer 7 days ago
+		//		string ThisWeek = string.Join(',', _ThisWeek);
+		//		if (!string.IsNullOrEmpty(ThisWeek))
+		//			embed.AddField("Был(a) на этой неделе", ThisWeek);
+		//		//Same as above, but who enter to the game more 7 days ago
+		//		string MoreOneWeek = string.Join(',', _MoreOneWeek);
+		//		if (!string.IsNullOrEmpty(MoreOneWeek))
+		//			embed.AddField("Был(a) больше недели тому назад", MoreOneWeek);
+		//		//For user who not have any data.
+		//		string NoData = string.Join(',', _NoData);
+		//		if (!string.IsNullOrEmpty(NoData))
+		//			embed.AddField("Нет данных", NoData);
+		//		//Simple footer with clan name
+		//		embed.WithFooter($"Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.");
 
-				//Modify old message and mention user with ready statistic
-				await message.ModifyAsync(m =>
-				{
-					m.Content = $"Бип! {Context.User.Mention}. Статистика подсчитана.";
-					m.Embed = embed.Build();
-				});
+		//		//Modify old message and mention user with ready statistic
+		//		await message.ModifyAsync(m =>
+		//		{
+		//			m.Content = $"Бип! {Context.User.Mention}. Статистика подсчитана.";
+		//			m.Embed = embed.Build();
+		//		});
 
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message));
-			}
-		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message));
+		//	}
+		//}
 
 		[Command("клан")]
+		[Alias("клан статус")]
 		public async Task GetDestinyClanInfo()
 		{
 			try
 			{
+				//Find Destiny 2 Clan associated to Discord Guild
 				var clans = await db.Clans.AsNoTracking().Include(C => C.Members).Where(G => G.GuildId == Context.Guild.Id).ToListAsync();
-				if (clans.Count() > 1)
-				{
-					var message = new PaginatedMessage
-					{
-						Title = "Онлайн статус кланов на сервере",
-						Color = Color.Gold,
-						Options = new PaginatedAppearanceOptions
-						{
-							InformationText = "Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.",
-							JumpDisplayOptions = JumpDisplayOptions.Never,
-							FooterFormat = "Страница {0}/{1}"
-						}
-					};
-					List<string> pages = new List<string>();
-					foreach (var clan in clans)
-					{
-						if (clan.Members.Count > 1)
-							pages.Add(MiscHelpers.ClanStatus(clan));
-					}
-					message.Pages = pages;
 
-					await PagedReplyAsync(message);
+				//If not found any associated clan
+				if (clans.Count == 0)
+				{
+					var app = await Context.Client.GetApplicationInfoAsync();
+					var text = $"Для регистрации клана в моей системе напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator}\n<https://discordapp.com/invite/WcuNPM9>";
+					await ReplyAndDeleteAsync(text, timeout: TimeSpan.FromMinutes(2));
 				}
 				else
 				{
-					await ReplyAsync(embed: BuildedEmbeds.ClanStatus(clans.FirstOrDefault()).Build());
+					//If Discord guild associated to multiple Clans we create Paginated message
+					if (clans.Count > 1)
+					{
+						//create Paginated message
+						var message = new PaginatedMessage
+						{
+							Title = "Онлайн статус кланов на сервере",
+							Color = Color.Gold,
+							//Change some message options.
+							Options = new PaginatedAppearanceOptions
+							{
+								DisplayInformationIcon = false,
+								JumpDisplayOptions = JumpDisplayOptions.Never,
+								FooterFormat = "Страница {0}/{1}"
+							}
+						};
+						// List of clans
+						var pages = new List<string>();
+
+						foreach (var clan in clans)
+						{
+							//Check if Bungie worker have any data and stored to Db.
+							if (clan.Members.Count > 1)
+								//Sort Guardians by last play time.
+								pages.Add(MiscHelpers.ClanStatus(clan));
+						}
+						//Add list of clans in paginated message
+						message.Pages = pages;
+
+						//Reply to user
+						await PagedReplyAsync(message);
+					}
+					else
+					{
+						//Reply to user if Discord guild associated to one clan.
+						await ReplyAsync(embed: BuildedEmbeds.ClanStatus(clans.First()).Build());
+					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "GetDestinyClanInfo", ex.Message, ex));
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "GetDestinyClanInfo", ex.Message));
 			}
 		}
 	}

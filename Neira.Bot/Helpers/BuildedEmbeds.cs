@@ -13,13 +13,12 @@ namespace Neira.Bot.Helpers
 
 			var embed = new EmbedBuilder();
 			embed.WithTitle($"Онлайн статус стражей клана `{clan.Name}`");
-			embed.WithColor(Color.Orange);
+			embed.WithColor(Color.Gold);
 			////Bungie Clan link
 			embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={clan.Id}");
 			////Some clan main info
 			embed.WithDescription(
-				$"В данный момент в клане **{clan.MemberCount}**/100 стражей.\n" +
-				$"Сортировка происходит от времени, когда вызвали данную команду.");
+				$"В данный момент в клане **{clan.MemberCount}**/100 стражей.");
 
 			#region list for member sorted for some days
 			List<string> _ThisDay = new List<string>();
@@ -62,23 +61,23 @@ namespace Neira.Bot.Helpers
 
 			//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
 			//and if string ThisDay not empty add to embed message special field.
-			string ThisDay = string.Join(',', _ThisDay);
+			string ThisDay = string.Join(", ", _ThisDay);
 			if (!string.IsNullOrEmpty(ThisDay))
 				embed.AddField("Был(a) сегодня", ThisDay);
 			//Same as above, but who enter to the game yesterday
-			string Yesterday = string.Join(',', _Yesterday);
+			string Yesterday = string.Join(", ", _Yesterday);
 			if (!string.IsNullOrEmpty(Yesterday))
 				embed.AddField("Был(a) вчера", Yesterday);
 			//Same as above, but who enter to the game more 5 days but fewer 7 days ago
-			string ThisWeek = string.Join(',', _ThisWeek);
+			string ThisWeek = string.Join(", ", _ThisWeek);
 			if (!string.IsNullOrEmpty(ThisWeek))
 				embed.AddField("Был(a) в течение 7 дней", ThisWeek);
 			//Same as above, but who enter to the game more 7 days ago
-			string MoreOneWeek = string.Join(',', _MoreOneWeek);
+			string MoreOneWeek = string.Join(", ", _MoreOneWeek);
 			if (!string.IsNullOrEmpty(MoreOneWeek))
 				embed.AddField("Был(a) больше 7 дней тому назад", MoreOneWeek);
 			//For user who not have any data.
-			string NoData = string.Join(',', _NoData);
+			string NoData = string.Join(", ", _NoData);
 			if (!string.IsNullOrEmpty(NoData))
 				embed.AddField("Нет данных", NoData);
 			//Simple footer with clan name
