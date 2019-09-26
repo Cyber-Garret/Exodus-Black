@@ -35,8 +35,7 @@ namespace Neira.Db
 				connection = $"Server=localhost;Database={credential.Database};Trusted_Connection=True;MultipleActiveResultSets=true;";
 			else
 				connection = $"Server={credential.Server};Database={credential.Database};User Id={credential.User};Password={credential.Password};MultipleActiveResultSets=true;";
-			//This need only for EF migrations
-			//var connection = "Server=10.18.0.15;Database=datab;User Id=login;Password=pass;";
+
 			optionsBuilder.UseSqlServer(connection);
 		}
 
