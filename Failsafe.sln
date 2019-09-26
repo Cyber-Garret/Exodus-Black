@@ -24,6 +24,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.BungieWorker", "Neira
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.Db", "Neira.Db\Neira.Db.csproj", "{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neira.Web", "Neira.Web\Neira.Web.csproj", "{1D9E4BC5-CE65-469E-8C00-0A4801518563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neira.Bot.UI", "Neira.Bot.UI\Neira.Bot.UI.csproj", "{84BEA507-9140-4F52-99FE-EC7828B77AF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +50,14 @@ Global
 		{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5405345-AA68-4F3E-9AD9-3EEAD3B3C27A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D9E4BC5-CE65-469E-8C00-0A4801518563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D9E4BC5-CE65-469E-8C00-0A4801518563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D9E4BC5-CE65-469E-8C00-0A4801518563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D9E4BC5-CE65-469E-8C00-0A4801518563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84BEA507-9140-4F52-99FE-EC7828B77AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84BEA507-9140-4F52-99FE-EC7828B77AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84BEA507-9140-4F52-99FE-EC7828B77AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84BEA507-9140-4F52-99FE-EC7828B77AF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
