@@ -17,10 +17,8 @@ namespace Neira.Bot.Modules.Administration
 	public class OwnerModule : BotModuleBase
 	{
 		private readonly NeiraContext Db;
-		DiscordSocketClient client { get; }
-		public OwnerModule(DiscordSocketClient discordSocketClient, NeiraContext neiraContext)
+		public OwnerModule(NeiraContext neiraContext)
 		{
-			client = discordSocketClient;
 			Db = neiraContext;
 		}
 
@@ -87,6 +85,42 @@ namespace Neira.Bot.Modules.Administration
 
 		}
 
+		[Command("sync clan")]
+		public async Task AssociateClan(ulong DiscordGuildId, long DestinyClanId)
+		{
+			try
+			{
+				//Find Destiny 2 clan by ID
+				var clan = Db.Clans.FirstOrDefault(c => c.Id == DestinyClanId);
+				//If not found reply
+				if (clan == null)
+					await ReplyAndDeleteAsync($"Destiny clan with ID **{DestinyClanId}** not found in Database");
+				else
+				{
+					//Get discord guild by ID
+					var guild = Context.Client.GetGuild(DiscordGuildId);
+
+					//Check if Destiny 2 clan already associanet to discord guild
+					if (clan.GuildId != null)
+						await ReplyAndDeleteAsync($"Destiny clan **{clan.Name}** already associated with Discord guild **{guild.Name}**.");
+					else
+					{
+						//Store discord guild id in database
+						clan.GuildId = DiscordGuildId;
+						Db.Clans.Update(clan);
+						Db.SaveChanges();
+
+						await ReplyAsync($"Destiny clan **{clan.Name}** success associated with Discord guild **{guild.Name}**.");
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				await ReplyAndDeleteAsync(ex.Message);
+				await Logger.Log(new LogMessage(LogSeverity.Critical, "Sync clan command", ex.Message));
+			}
+		}
+
 		[Command("stat")]
 		[Summary("Выводит техническую информацию о боте.")]
 		public async Task InfoAsync()
@@ -108,19 +142,24 @@ namespace Neira.Bot.Modules.Administration
 				$"- Всего каналов: {Context.Client.Guilds.Sum(g => g.Channels.Count)}\n" +
 				$"- Пользователей: {Context.Client.Guilds.Sum(g => g.Users.Count)}\n" +
 				$"- Текущее время сервера: {DateTime.Now}", true);
-			var field = new EmbedFieldBuilder
-			{
-				Name = "Сервера"
-			};
-			foreach (var guild in client.Guilds)
-			{
-				field.Value += $"ID: **{guild.Id}** Название: **{guild.Name}** Пользователей: {guild.Users.Count}";
-			}
-
-			if (field.Value.ToString().Length < 1024)
-				embed.AddField(field);
 
 			await ReplyAndDeleteAsync("Сообщение будет удалено через 1 мин.", embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
+		}
+
+		[Command("search guild")]
+		[Alias("sg")]
+		public async Task SearchGuild([Remainder]string name)
+		{
+			if (string.IsNullOrWhiteSpace(name))
+				await ReplyAndDeleteAsync("Название Discord сервера не было представлено");
+			else
+			{
+				var guild = Context.Client.Guilds.FirstOrDefault(g => g.Name.IndexOf(name, StringComparison.InvariantCultureIgnoreCase) != -1);
+				if (guild == null)
+					await ReplyAndDeleteAsync($"Discord сервер с названием **{name}** не найден.");
+				else
+					await ReplyAsync($"Найден сервер **{guild.Name}** с ID **{guild.Id}**");
+			}
 		}
 	}
 }
