@@ -102,7 +102,7 @@ namespace Neira.Bot
 				.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 				{
 					AlwaysDownloadUsers = true,
-					LogLevel = LogSeverity.Verbose,
+					LogLevel = LogSeverity.Info,
 					DefaultRetryMode = RetryMode.AlwaysRetry,
 					MessageCacheSize = 100
 				}))
