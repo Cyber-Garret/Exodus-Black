@@ -46,6 +46,13 @@ namespace Neira.Bot.Services
 			Client.UserLeft += Client_UserLeftAsync;
 			Client.ReactionAdded += Client_ReactionAdded;
 			Client.ReactionRemoved += Client_ReactionRemoved;
+			Client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
+		}
+
+		private Task Client_UserVoiceStateUpdated(SocketUser user, SocketVoiceState before, SocketVoiceState after)
+		{
+			Task.Run(async () => await Logger.Log(new LogMessage(LogSeverity.Info, "User voice state updated", $"{user.Username} before {before.VoiceChannel.Name ?? "NULL"} after {after.VoiceChannel.Name ?? "NULL"}")));
+			return Task.CompletedTask;
 		}
 
 		#region Events

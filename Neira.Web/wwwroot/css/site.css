@@ -1,100 +1,221 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿@font-face {
+  font-family: "Fyodor-Bold";
+  src: url(../../fonts/Fyodor-Bold.woff); }
 
 @font-face {
-	font-family: "Fyodor-Bold";
-	src: url(../fonts/Fyodor-Bold.woff);
-}
+  font-family: "Fyodor-BoldCondensed";
+  src: url(../../fonts/Fyodor-BoldCondensed.woff); }
+
 @font-face {
-	font-family: "Fyodor-BoldCondensed";
-	src: url(../fonts/Fyodor-BoldCondensed.woff);
-}
+  font-family: "Fyodor-BoldCondensedOblique";
+  src: url(../../fonts/Fyodor-BoldCondensedOblique.woff); }
+
 @font-face {
-	font-family: "Fyodor-BoldCondensedOblique";
-	src: url(../fonts/Fyodor-BoldCondensedOblique.woff);
-}
+  font-family: "Fyodor-BoldExpanded";
+  src: url(../../fonts/Fyodor-BoldExpanded.woff); }
+
 @font-face {
-	font-family: "Fyodor-BoldExpanded";
-	src: url(../fonts/Fyodor-BoldExpanded.woff);
-}
+  font-family: "Fyodor-BoldExpandedOblique";
+  src: url(../../fonts/Fyodor-BoldExpandedOblique.woff); }
+
 @font-face {
-	font-family: "Fyodor-BoldExpandedOblique";
-	src: url(../fonts/Fyodor-BoldExpandedOblique.woff);
-}
-@font-face {
-	font-family: "Fyodor-BoldOblique";
-	src: url(../fonts/Fyodor-BoldOblique.woff);
-}
-a.navbar-brand {
-	font-size: 52pt;
-	white-space: normal;
-	text-align: center;
-	word-break: break-all;
-	font-family: Fyodor-Bold;
-}
-
-/* Provide sufficient contrast against white background */
-a {
-	color: #0366d6;
-}
-
-.btn-primary {
-	color: #fff;
-	background-color: #1b6ec2;
-	border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-	color: #fff;
-	background-color: #1b6ec2;
-	border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-	font-size: 14px;
-}
-
-@media (min-width: 768px) {
-	html {
-		font-size: 16px;
-	}
-}
-
-.border-top {
-	border-top: 1px solid #e5e5e5;
-}
-
-.border-bottom {
-	border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-	box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-	font-size: 1rem;
-	line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-	position: relative;
-	min-height: 100%;
-}
+  font-family: "Fyodor-BoldOblique";
+  src: url(../../fonts/Fyodor-BoldOblique.woff); }
 
 body {
-	/* Margin bottom by footer height */
-	margin-bottom: 60px;
-}
+  overflow-x: hidden;
+  font-family: Fyodor-Bold; }
+
+p {
+  line-height: 1.75; }
+
+a {
+  color: #2B9AB6; }
+  a:hover {
+    color: #21778d; }
+
+.text-primary {
+  color: #2B9AB6 !important; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  font-family: Fyodor-Bold; }
+
+.page-section {
+  padding: 100px 0; }
+  .page-section h2.section-heading {
+    font-size: 40px;
+    margin-top: 0;
+    margin-bottom: 15px; }
+  .page-section h3.section-subheading {
+    font-size: 16px;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 75px;
+    text-transform: none;
+    font-family: Fyodor-Bold; }
+
+@media (min-width: 768px) {
+  section {
+    padding: 150px 0; } }
+
+::-moz-selection {
+  background: #2B9AB6;
+  text-shadow: none; }
+
+::selection {
+  background: #2B9AB6;
+  text-shadow: none; }
+
+img::selection {
+  background: transparent; }
+
+img::-moz-selection {
+  background: transparent; }
+
+.btn {
+  font-family: Fyodor-Bold;
+  font-weight: 700; }
+
+.btn-xl {
+  font-size: 18px;
+  padding: 20px 40px; }
+
+.btn-primary {
+  background-color: #2B9AB6;
+  border-color: #2B9AB6; }
+  .btn-primary:active, .btn-primary:focus, .btn-primary:hover {
+    background-color: #248097 !important;
+    border-color: #248097 !important;
+    color: white; }
+  .btn-primary:active, .btn-primary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(254, 209, 55, 0.5) !important; }
+
+#mainNav {
+  background-color: #212529; }
+  #mainNav .navbar-toggler {
+    font-size: 12px;
+    right: 0;
+    padding: 13px;
+    text-transform: uppercase;
+    color: white;
+    border: 0;
+    background-color: #2B9AB6;
+    font-family: Fyodor-Bold; }
+  #mainNav .navbar-brand {
+    color: #2B9AB6;
+    font-family: Fyodor-Bold; }
+    #mainNav .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+      color: #21778d; }
+  #mainNav .navbar-nav .nav-item .nav-link {
+    font-size: 90%;
+    font-weight: 400;
+    padding: 0.75em 0;
+    letter-spacing: 1px;
+    color: white;
+    font-family: Fyodor-Bold; }
+    #mainNav .navbar-nav .nav-item .nav-link.active, #mainNav .navbar-nav .nav-item .nav-link:hover {
+      color: #2B9AB6; }
+
+@media (min-width: 992px) {
+  #mainNav {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    -webkit-transition: padding-top 0.3s, padding-bottom 0.3s;
+    -moz-transition: padding-top 0.3s, padding-bottom 0.3s;
+    transition: padding-top 0.3s, padding-bottom 0.3s;
+    border: none;
+    background-color: transparent; }
+    #mainNav .navbar-brand {
+      font-size: 1.75em;
+      -webkit-transition: all 0.3s;
+      -moz-transition: all 0.3s;
+      transition: all 0.3s; }
+    #mainNav .navbar-nav .nav-item .nav-link {
+      padding: 1.1em 1em !important; }
+    #mainNav.navbar-shrink {
+      padding-top: 0;
+      padding-bottom: 0;
+      background-color: #212529; }
+      #mainNav.navbar-shrink .navbar-brand {
+        font-size: 1.25em;
+        padding: 12px 0; } }
+
+header.masthead {
+  text-align: center;
+  color: white;
+  background-image: url("../../img/header-bg.jpg");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-size: cover; }
+  header.masthead .intro-text {
+    padding-top: 150px;
+    padding-bottom: 100px; }
+    header.masthead .intro-text .intro-lead-in {
+      font-size: 22px;
+      font-style: italic;
+      line-height: 22px;
+      margin-bottom: 25px;
+      font-family: Fyodor-Bold; }
+    header.masthead .intro-text .intro-heading {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 50px;
+      margin-bottom: 25px;
+      font-family: Fyodor-Bold; }
+
+@media (min-width: 768px) {
+  header.masthead .intro-text {
+    padding-top: 300px;
+    padding-bottom: 200px; }
+    header.masthead .intro-text .intro-lead-in {
+      font-size: 40px;
+      font-style: italic;
+      line-height: 40px;
+      margin-bottom: 25px;
+      font-family: Fyodor-Bold; }
+    header.masthead .intro-text .intro-heading {
+      font-size: 5rem;
+      font-weight: 700;
+      line-height: 75px;
+      margin-bottom: 50px;
+      font-family: Fyodor-Bold; } }
 
 .footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	white-space: nowrap;
-	line-height: 60px; /* Vertically center the text there */
-}
+  padding: 25px 0;
+  text-align: center; }
+  .footer span.copyright {
+    font-size: 90%;
+    line-height: 40px;
+    text-transform: none;
+    font-family: Fyodor-Bold; }
+  .footer ul.quicklinks {
+    font-size: 90%;
+    line-height: 40px;
+    margin-bottom: 0;
+    text-transform: none;
+    font-family: Fyodor-Bold; }
+
+ul.social-buttons {
+  margin-bottom: 0; }
+  ul.social-buttons li a {
+    font-size: 20px;
+    line-height: 50px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+    color: white;
+    border-radius: 100%;
+    outline: none;
+    background-color: #212529; }
+    ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons li a:hover {
+      background-color: #2B9AB6; }
