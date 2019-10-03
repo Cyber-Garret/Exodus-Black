@@ -124,14 +124,11 @@ namespace Neira.BungieWorker.Bungie
 									guardian.BungieMembershipId = null;
 									guardian.IconPath = null;
 								}
-								else
-								{
-									//Anyway just update profile Name
-									guardian.Name = result.DestinyUserInfo.DisplayName;
-									guardian.DestinyMembershipType = result.DestinyUserInfo.MembershipType;
-									guardian.DestinyMembershipId = result.DestinyUserInfo.MembershipId;
-								}
-								
+								//Anyway just update profile Name
+								guardian.Name = result.DestinyUserInfo.DisplayName;
+								guardian.DestinyMembershipType = result.DestinyUserInfo.MembershipType;
+								guardian.DestinyMembershipId = result.DestinyUserInfo.MembershipId;
+
 
 								Db.Update(guardian);
 							}
