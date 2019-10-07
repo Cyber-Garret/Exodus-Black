@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="Discord.Addons.Interactive" Version="1.0.1" />
     <PackageReference Include="Discord.Net" Version="2.1.1" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.14.4" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.13.1" />
     <PackageReference Include="Nett" Version="0.13.0" />
     <PackageReference Include="Victoria" Version="4.0.17" />
   </ItemGroup>

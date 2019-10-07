@@ -51,7 +51,6 @@ namespace Neira.Bot.Services
 
 		private Task Client_UserVoiceStateUpdated(SocketUser user, SocketVoiceState before, SocketVoiceState after)
 		{
-			Task.Run(async () => await Logger.Log(new LogMessage(LogSeverity.Info, "User voice state updated", $"{user.Username} before {before.VoiceChannel.Name ?? "NULL"} after {after.VoiceChannel.Name ?? "NULL"}")));
 			return Task.CompletedTask;
 		}
 
@@ -735,7 +734,7 @@ namespace Neira.Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
+				await Logger.LogFullException(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
 			}
 
 		}
