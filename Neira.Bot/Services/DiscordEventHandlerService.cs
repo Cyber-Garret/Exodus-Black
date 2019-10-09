@@ -6,6 +6,7 @@ using Neira.Bot.Helpers;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Victoria;
 
@@ -46,12 +47,6 @@ namespace Neira.Bot.Services
 			Client.UserLeft += Client_UserLeftAsync;
 			Client.ReactionAdded += Client_ReactionAdded;
 			Client.ReactionRemoved += Client_ReactionRemoved;
-			Client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
-		}
-
-		private Task Client_UserVoiceStateUpdated(SocketUser user, SocketVoiceState before, SocketVoiceState after)
-		{
-			return Task.CompletedTask;
 		}
 
 		#region Events
@@ -719,15 +714,23 @@ namespace Neira.Bot.Services
 
 					using (var label = new MagickImage($"caption:{welcomeMessage}", readSettings))
 					{
-						using (var avatar = new MagickImage(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()))
+						//Load user avatar
+						using (var client = new WebClient())
 						{
-							avatar.AdaptiveResize(128, 128);
-							avatar.Border(2);
+							var file = user.GetAvatarUrl(ImageFormat.Png, 128) ?? user.GetDefaultAvatarUrl();
+							using (var stream = client.OpenRead(file))
+							{
+								using (var avatar = new MagickImage(stream, MagickFormat.Png8))
+								{
+									avatar.AdaptiveResize(128, 128);
+									avatar.Border(2);
 
-							image.Composite(avatar, 40, 33, CompositeOperator.Over);
+									image.Composite(avatar, 40, 33, CompositeOperator.Over);
 
-							image.Composite(label, 251, 5, CompositeOperator.Over);
-							await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
+									image.Composite(label, 251, 5, CompositeOperator.Over);
+									await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
+								}
+							}
 						}
 					}
 				}

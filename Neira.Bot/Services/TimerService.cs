@@ -194,8 +194,15 @@ namespace Neira.Bot.Services
 								  users.Add(user.UserId);
 
 						  }
-						  //Clean all reactions
-						  await message.RemoveAllReactionsAsync();
+						  try
+						  {
+							  //Clean all reactions
+							  await message.RemoveAllReactionsAsync();
+						  }
+						  finally
+						  {
+							  await Logger.Log(new LogMessage(LogSeverity.Error, "RaidRemainder", "Cant remove all reactions"));
+						  }
 
 						  //Add leader in list for friendly remainder in direct messaging
 						  users.Add(item.Leader);
