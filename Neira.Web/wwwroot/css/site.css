@@ -30,12 +30,12 @@ p {
   line-height: 1.75; }
 
 a {
-  color: #2B9AB6; }
+  color: #E13B39; }
   a:hover {
-    color: #21778d; }
+    color: #c9201e; }
 
 .text-primary {
-  color: #2B9AB6 !important; }
+  color: #E13B39 !important; }
 
 h1,
 h2,
@@ -49,7 +49,7 @@ h6 {
 .page-section {
   padding: 100px 0; }
   .page-section h2.section-heading {
-    font-size: 40px;
+    font-size: 2rem;
     margin-top: 0;
     margin-bottom: 15px; }
   .page-section h3.section-subheading {
@@ -60,16 +60,20 @@ h6 {
     text-transform: none;
     font-family: 'Droid Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
 
+span.footer-links {
+  font-size: 2rem;
+  margin: 1rem; }
+
 @media (min-width: 768px) {
   section {
     padding: 150px 0; } }
 
 ::-moz-selection {
-  background: #2B9AB6;
+  background: #E13B39;
   text-shadow: none; }
 
 ::selection {
-  background: #2B9AB6;
+  background: #E13B39;
   text-shadow: none; }
 
 img::selection {
@@ -83,15 +87,16 @@ img::-moz-selection {
   font-weight: 700; }
 
 .btn-xl {
-  font-size: 18px;
-  padding: 20px 40px; }
+  font-size: 1.125rem;
+  padding: 1.25rem 2.5rem;
+  margin: 0.25rem; }
 
 .btn-primary {
-  background-color: #2B9AB6;
-  border-color: #2B9AB6; }
+  background-color: #E13B39;
+  border-color: #E13B39; }
   .btn-primary:active, .btn-primary:focus, .btn-primary:hover {
-    background-color: #248097 !important;
-    border-color: #248097 !important;
+    background-color: #d42220 !important;
+    border-color: #d42220 !important;
     color: white; }
   .btn-primary:active, .btn-primary:focus {
     box-shadow: 0 0 0 0.2rem rgba(254, 209, 55, 0.5) !important; }
@@ -105,13 +110,13 @@ img::-moz-selection {
     text-transform: uppercase;
     color: white;
     border: 0;
-    background-color: #2B9AB6;
+    background-color: #E13B39;
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
   #mainNav .navbar-brand {
-    color: #2B9AB6;
+    color: #E13B39;
     font-family: 'Kaushan Script', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
     #mainNav .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
-      color: #21778d; }
+      color: #c9201e; }
   #mainNav .navbar-nav .nav-item .nav-link {
     font-size: 90%;
     font-weight: 400;
@@ -120,7 +125,7 @@ img::-moz-selection {
     color: white;
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
     #mainNav .navbar-nav .nav-item .nav-link.active, #mainNav .navbar-nav .nav-item .nav-link:hover {
-      color: #2B9AB6; }
+      color: #E13B39; }
 
 @media (min-width: 992px) {
   #mainNav {
@@ -167,8 +172,9 @@ header.masthead {
       font-size: 2.5rem;
       font-weight: 700;
       line-height: 50px;
-      margin-bottom: 25px;
-      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
+      margin-bottom: 25px; }
+    header.masthead .intro-text .title-font {
+      font-family: Fyodor-BoldOblique; }
 
 @media (min-width: 768px) {
   header.masthead .intro-text {
@@ -184,8 +190,9 @@ header.masthead {
       font-size: 5rem;
       font-weight: 700;
       line-height: 75px;
-      margin-bottom: 50px;
-      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; } }
+      margin-bottom: 50px; }
+    header.masthead .intro-text .title-font {
+      font-family: Fyodor-BoldOblique; } }
 
 .stat-heading {
   margin: 15px 0;
@@ -240,7 +247,7 @@ header.masthead {
       color: white;
       border: 7px solid #e9ecef;
       border-radius: 100%;
-      background-color: #2B9AB6; }
+      background-color: #E13B39; }
       .timeline > li .timeline-image h4 {
         font-size: 10px;
         line-height: 14px;
@@ -356,4 +363,4 @@ ul.social-buttons {
     outline: none;
     background-color: #212529; }
     ul.social-buttons li a:active, ul.social-buttons li a:focus, ul.social-buttons li a:hover {
-      background-color: #2B9AB6; }
+      background-color: #E13B39; }
