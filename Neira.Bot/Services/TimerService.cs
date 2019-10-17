@@ -17,7 +17,6 @@ namespace Neira.Bot.Services
 		private readonly MilestoneService Milestone;
 		private readonly NeiraContext Db;
 		private Timer MainTimer;
-		private Timer GameStatusTimer;
 		private Timer MilestoneTimer;
 
 		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService, NeiraContext neiraContext)
@@ -37,14 +36,6 @@ namespace Neira.Bot.Services
 			};
 			MainTimer.Elapsed += MainTimer_Elapsed;
 
-			GameStatusTimer = new Timer
-			{
-				Enabled = true,
-				AutoReset = true,
-				Interval = TimeSpan.FromSeconds(30).TotalMilliseconds
-			};
-			GameStatusTimer.Elapsed += GameStatus_Elapsed;
-
 			MilestoneTimer = new Timer
 			{
 				Enabled = true,
@@ -63,38 +54,6 @@ namespace Neira.Bot.Services
 			// If signal time equal Tuesday 20:00 we will send message Xur is leave game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
 				await XurLeave();
-		}
-		private async void GameStatus_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			string[] commands = new string[]
-			{
-				"!справка",
-				"!зур",
-				"!клан статус",
-				"!респект",
-				"!помощь",
-				"!донат",
-				"!клан",
-				"!инфо дело",
-				"!инфо свет",
-				"!инфо морозники",
-				"!инфо бешеный",
-				"!катализатор свет",
-				"!катализатор мида",
-				"!катализатор бремя"
-			};
-
-			Random rand = new Random();
-			int randomIndex = rand.Next(commands.Length);
-			string text = commands[randomIndex];
-			try
-			{
-				await Client.SetGameAsync(text, null, ActivityType.Playing);
-			}
-			catch (Exception ex)
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, "Change Bot Game Status", ex.Message, ex));
-			}
 		}
 
 		private void MilestoneTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -128,7 +87,7 @@ namespace Neira.Bot.Services
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
 					   .SendMessageAsync(text: guild.GlobalMention, embed: embed.Build());
 					}
-					catch (Exception ex)
+					catch (ArgumentOutOfRangeException ex)
 					{
 						await Logger.Log(new LogMessage(LogSeverity.Error, "XurArrived", ex.Message, ex));
 					}
@@ -158,7 +117,7 @@ namespace Neira.Bot.Services
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
 					   .SendMessageAsync(text: guild.GlobalMention, embed: embed.Build());
 					}
-					catch (Exception ex)
+					catch (ArgumentOutOfRangeException ex)
 					{
 						await Logger.Log(new LogMessage(LogSeverity.Error, "XurLeave", ex.Message, ex));
 					}
@@ -183,10 +142,10 @@ namespace Neira.Bot.Services
 					  if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
 					  {
 						  //List with milestone leader and users who first click reaction
-						  List<ulong> users = new List<ulong>();
+						  var users = new List<ulong>();
 
 						  //Get message by id from guild, in specific text channel, for read who clicked the represented reactions
-						  var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
+						  //var message = await Client.GetGuild(item.GuildId).GetTextChannel(item.TextChannelId).GetMessageAsync(item.MessageId) as IUserMessage;
 
 						  if (item.MilestoneUsers.Count > 0)
 						  {
@@ -194,23 +153,19 @@ namespace Neira.Bot.Services
 								  users.Add(user.UserId);
 
 						  }
-						  try
-						  {
-							  //Clean all reactions
-							  await message.RemoveAllReactionsAsync();
-						  }
-						  finally
-						  {
-							  await Logger.Log(new LogMessage(LogSeverity.Error, "RaidRemainder", "Cant remove all reactions"));
-						  }
+						  //try
+						  //{
+						  // //Clean all reactions
+						  // //await message.RemoveAllReactionsAsync();
+						  //}
+						  //catch
+						  //{
+						  // await Logger.Log(new LogMessage(LogSeverity.Error, "RaidRemainder", "Cant remove all reactions"));
+						  //}
 
 						  //Add leader in list for friendly remainder in direct messaging
 						  users.Add(item.Leader);
 						  await Milestone.RaidNotificationAsync(users, item);
-
-						  //Remove expired Milestone
-						  Db.ActiveMilestones.Remove(item);
-						  await Db.SaveChangesAsync();
 					  }
 				  });
 			}

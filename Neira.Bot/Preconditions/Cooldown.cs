@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Neira.Bot.Preconditions
 {
-	public class Cooldown : PreconditionAttribute
+	public sealed class Cooldown : PreconditionAttribute
 	{
 		TimeSpan CooldownLength { get; set; }
 		readonly ConcurrentDictionary<CooldownInfo, DateTime> _cooldowns = new ConcurrentDictionary<CooldownInfo, DateTime>();

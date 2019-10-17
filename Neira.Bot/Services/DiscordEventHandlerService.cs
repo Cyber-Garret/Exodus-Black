@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Victoria;
 
 namespace Neira.Bot.Services
 {
@@ -16,18 +15,14 @@ namespace Neira.Bot.Services
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
-		private readonly LavaSocketClient lavaSocket;
 		private readonly MilestoneService milestone;
-		private readonly MusicService music;
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService, LavaSocketClient lavaSocketClient, MusicService musicService)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
-			lavaSocket = lavaSocketClient;
 			milestone = milestoneService;
-			music = musicService;
 		}
 
 		public void Configure()
@@ -52,33 +47,13 @@ namespace Neira.Bot.Services
 		#region Events
 		private Task Client_Ready()
 		{
-			Task.Run(async () =>
-			{
-				await lavaSocket.StartAsync(Client, new Configuration
-				{
-					LogSeverity = LogSeverity.Verbose,
-					AutoDisconnect = true,
-					InactivityTimeout = TimeSpan.FromMinutes(1),
-					PreservePlayers = false
-				});
-
-				lavaSocket.Log += Logger.Log;
-				lavaSocket.OnTrackFinished += music.OnTrackFinished;
-
-				milestone.Initialize();
-			});
-
+			Task.Run(() => milestone.Initialize());
 			return Task.CompletedTask;
 		}
 
 		private Task Client_Disconnected(Exception arg)
 		{
-			Task.Run(async () =>
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
-				await lavaSocket.DisposeAsync();
-			});
-
+			Task.Run(async () => await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg)));
 			return Task.CompletedTask;
 		}
 		private Task Client_JoinedGuildAsync(SocketGuild guild)
