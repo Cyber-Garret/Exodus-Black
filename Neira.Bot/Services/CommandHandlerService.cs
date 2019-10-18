@@ -37,14 +37,18 @@ namespace Neira.Bot.Services
 		{
 			// Ignore if not SocketUserMessage or its direct message or private groups
 			if (!(arg is SocketUserMessage msg)) return;
-			if (msg.Channel is SocketDMChannel || msg.Channel is SocketGroupChannel) return;
+			//if (msg.Channel is SocketDMChannel || msg.Channel is SocketGroupChannel) return;
 
 			var context = new SocketCommandContext(Client, msg);
+			var prefix = "!";
+			if(msg.Channel is SocketGuildChannel)
+			{
+				//Get guild for load custom command Prefix.
+				var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
 
-			//Get guild for load custom command Prefix.
-			var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
-			var prefix = config.CommandPrefix ?? "!";
-
+				if (!string.IsNullOrWhiteSpace(config.CommandPrefix))
+					prefix = config.CommandPrefix;
+			}
 
 			var argPos = 0;
 			// Ignore if not mention this bot or command not start from prefix

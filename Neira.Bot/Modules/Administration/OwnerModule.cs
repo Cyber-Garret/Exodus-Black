@@ -143,7 +143,7 @@ namespace Neira.Bot.Modules.Administration
 				$"- Пользователей: {Context.Client.Guilds.Sum(g => g.Users.Count)}\n" +
 				$"- Текущее время сервера: {DateTime.Now}", true);
 
-			await ReplyAndDeleteAsync("Сообщение будет удалено через 1 мин.", embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
+			await ReplyAsync(embed: embed.Build());
 		}
 
 		[Command("search guild")]

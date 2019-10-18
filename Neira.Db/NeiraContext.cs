@@ -38,7 +38,8 @@ namespace Neira.Db
 
 			optionsBuilder.UseSqlServer(connection);
 		}
-
+		//Web
+		public DbSet<BotInfo> BotInfos { get; set; }
 		//Discord
 		public DbSet<Guild> Guilds { get; set; }
 

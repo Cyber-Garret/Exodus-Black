@@ -6,8 +6,8 @@ using Neira.Bot.Helpers;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Victoria;
 
 namespace Neira.Bot.Services
 {
@@ -15,18 +15,14 @@ namespace Neira.Bot.Services
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
-		private readonly LavaSocketClient lavaSocket;
 		private readonly MilestoneService milestone;
-		private readonly MusicService music;
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService, LavaSocketClient lavaSocketClient, MusicService musicService)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
-			lavaSocket = lavaSocketClient;
 			milestone = milestoneService;
-			music = musicService;
 		}
 
 		public void Configure()
@@ -51,33 +47,13 @@ namespace Neira.Bot.Services
 		#region Events
 		private Task Client_Ready()
 		{
-			Task.Run(async () =>
-			{
-				await lavaSocket.StartAsync(Client, new Configuration
-				{
-					LogSeverity = LogSeverity.Verbose,
-					AutoDisconnect = true,
-					InactivityTimeout = TimeSpan.FromMinutes(1),
-					PreservePlayers = false
-				});
-
-				lavaSocket.Log += Logger.Log;
-				lavaSocket.OnTrackFinished += music.OnTrackFinished;
-
-				milestone.Initialize();
-			});
-
+			Task.Run(() => milestone.Initialize());
 			return Task.CompletedTask;
 		}
 
 		private Task Client_Disconnected(Exception arg)
 		{
-			Task.Run(async () =>
-			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg));
-				await lavaSocket.DisposeAsync();
-			});
-
+			Task.Run(async () => await Logger.Log(new LogMessage(LogSeverity.Error, "Neira Disconnected", arg.Message, arg)));
 			return Task.CompletedTask;
 		}
 		private Task Client_JoinedGuildAsync(SocketGuild guild)
@@ -713,22 +689,30 @@ namespace Neira.Bot.Services
 
 					using (var label = new MagickImage($"caption:{welcomeMessage}", readSettings))
 					{
-						using (var avatar = new MagickImage(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()))
+						//Load user avatar
+						using (var client = new WebClient())
 						{
-							avatar.AdaptiveResize(128, 128);
-							avatar.Border(2);
+							var file = user.GetAvatarUrl(ImageFormat.Png, 128) ?? user.GetDefaultAvatarUrl();
+							using (var stream = client.OpenRead(file))
+							{
+								using (var avatar = new MagickImage(stream, MagickFormat.Png8))
+								{
+									avatar.AdaptiveResize(128, 128);
+									avatar.Border(2);
 
-							image.Composite(avatar, 40, 33, CompositeOperator.Over);
+									image.Composite(avatar, 40, 33, CompositeOperator.Over);
 
-							image.Composite(label, 251, 5, CompositeOperator.Over);
-							await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
+									image.Composite(label, 251, 5, CompositeOperator.Over);
+									await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
+								}
+							}
 						}
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
+				await Logger.LogFullException(new LogMessage(LogSeverity.Error, ex.Source, ex.Message, ex));
 			}
 
 		}

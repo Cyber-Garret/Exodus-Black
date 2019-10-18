@@ -61,15 +61,12 @@ namespace Neira.Bot.Modules.Commands
 
 			var mainCommands = string.Empty;
 			var adminCommands = string.Empty;
-			var musicCommands = string.Empty;
 			foreach (CommandInfo command in commands)
 			{
 				if (command.Module.Name == typeof(MainModule).Name)
 					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
 					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
-				else if (command.Module.Name == typeof(MusicModule).Name)
-					musicCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 
 			}
 
@@ -81,8 +78,7 @@ namespace Neira.Bot.Modules.Commands
 				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n" +
 				"Больше информации ты можешь найти в моей [группе ВК](https://vk.com/failsafe_bot)")
 				.AddField("Основные команды", mainCommands.Substring(0, mainCommands.Length - 2))
-				.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2))
-				.AddField(Program.config.RadioModuleName, musicCommands.Substring(0, musicCommands.Length - 2));
+				.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2));
 
 			await ReplyAsync(embed: embed.Build());
 		}
@@ -353,197 +349,86 @@ namespace Neira.Bot.Modules.Commands
 		[Cooldown(10)]
 		public async Task RaidCollection(string milestoneName, string raidTime, [Remainder]string userMemo = null)
 		{
-			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
-
-			var milestone = await db.Milestones.AsNoTracking().Where(r =>
-				r.Name.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
-				r.Alias.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
-
-			if (milestone == null)
+			try
 			{
-				var AvailableRaids = "Доступные для регистрации активности:\n\n";
-				var info = await db.Milestones.AsNoTracking().ToListAsync();
+				var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
 
-				foreach (var item in info)
+				var milestone = await db.Milestones.AsNoTracking().Where(r =>
+					r.Name.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1 ||
+					r.Alias.IndexOf(milestoneName, StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
+
+				if (milestone == null)
 				{
-					AvailableRaids += $"**{item.Name}** или просто **{item.Alias}**\n";
+					var AvailableRaids = "Доступные для регистрации активности:\n\n";
+					var info = await db.Milestones.AsNoTracking().ToListAsync();
+
+					foreach (var item in info)
+					{
+						AvailableRaids += $"**{item.Name}** или просто **{item.Alias}**\n";
+					}
+
+					var message = new EmbedBuilder()
+						.WithTitle("Страж, я не разобрала в какую активность ты хочешь пойти")
+						.WithColor(Color.Red)
+						.WithDescription(AvailableRaids += "\nПример: !сбор пж 17.07-20:00")
+						.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному. Это сообщение будет автоматически удалено через 2 минуты.");
+					await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
+					return;
 				}
 
-				var message = new EmbedBuilder()
-					.WithTitle("Страж, я не разобрала в какую активность ты хочешь пойти")
-					.WithColor(Color.Red)
-					.WithDescription(AvailableRaids += "\nПример: !сбор пж 17.07-20:00")
-					.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному. Это сообщение будет автоматически удалено через 2 минуты.");
-				await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
-				return;
+				DateTime.TryParseExact(raidTime, "dd.MM-HH:mm", CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
+
+				if (dateTime == new DateTime())
+				{
+					var message = new EmbedBuilder()
+						.WithTitle("Страж, ты указал неизвестный мне формат времени")
+						.WithColor(Color.Gold)
+						.AddField("Я понимаю время начала рейда в таком формате",
+						"Формат времени: **<день>.<месяц>-<час>:<минута>**\n" +
+						"**День:** от 01 до 31\n" +
+						"**Месяц:** от 01 до 12\n" +
+						"**Час:** от 00 до 23\n" +
+						"**Минута:** от 00 до 59\n" +
+						"В итоге у тебя должно получиться: **05.07-20:05** Пример: !сбор пж 21.05-20:00")
+						.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
+						.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+					await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
+					return;
+				}
+				if (dateTime < DateTime.Now)
+				{
+					var message = new EmbedBuilder()
+						.WithColor(Color.Red)
+						.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи в {DateTime.Now.Year - 1000} г. и передай привет моему капитану.");
+					await ReplyAndDeleteAsync(null, embed: message.Build());
+					return;
+				}
+
+				var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
+				await Milestone.RegisterMilestoneAsync(msg.Id, Context, milestone.Id, dateTime, userMemo);
+
+				//Slots
+				await msg.AddReactionAsync(Milestone.RaidEmote);
 			}
-
-			DateTime.TryParseExact(raidTime, "dd.MM-HH:mm", CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
-
-			if (dateTime == new DateTime())
+			catch (Exception ex)
 			{
-				var message = new EmbedBuilder()
-					.WithTitle("Страж, ты указал неизвестный мне формат времени")
-					.WithColor(Color.Gold)
-					.AddField("Я понимаю время начала рейда в таком формате",
-					"Формат времени: **<день>.<месяц>-<час>:<минута>**\n" +
-					"**День:** от 01 до 31\n" +
-					"**Месяц:** от 01 до 12\n" +
-					"**Час:** от 00 до 23\n" +
-					"**Минута:** от 00 до 59\n" +
-					"В итоге у тебя должно получиться: **05.07-20:05** Пример: !сбор пж 21.05-20:00")
-					.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
-					.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
-				await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
-				return;
-			}
-			if (dateTime < DateTime.Now)
-			{
-				var message = new EmbedBuilder()
-					.WithColor(Color.Red)
-					.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи в {DateTime.Now.Year - 1000} г. и передай привет моему капитану.");
-				await ReplyAndDeleteAsync(null, embed: message.Build());
-				return;
+				//reply to user if any error
+				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nУже пишу моему создателю, он сейчас все поправит.");
+				//Get App info 
+				var app = await Client.GetApplicationInfoAsync();
+				//Get Owner for DM
+				var owner = await app.Owner.GetOrCreateDMChannelAsync();
+				//Send DM message with exception
+				await owner.SendMessageAsync($"Капитан, проблема с командой сбор! **{ex.Message}** больше подробностей в консоли.");
+				//Log full exception in console
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Milestone command", ex.Message, ex));
 			}
 
-			var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
-			await Milestone.RegisterMilestoneAsync(msg.Id, Context, milestone.Id, dateTime, userMemo);
-
-			//Slots
-			await msg.AddReactionAsync(Milestone.RaidEmote);
 
 		}
 
-		//[Command("клан статус")]
-		//[Summary("Отображает отсортированный онлайн Destiny 2 клана, зарегистрированного в базе данных моим создателем.\n**Клан должен быть зарегистрирован моим создателем.**")]
-		//[Remarks("Пример: !клан статус <ID клана>, например !клан статус 3772661 или введите !клан статус без ID для отображения как добавить клан.")]
-		//public async Task GetGuildInfo(int GuildId = 0)
-		//{
-		//	try
-		//	{
-		//		#region Checks
-		//		if (GuildId == 0)
-		//		{
-		//			var app = await Context.Client.GetApplicationInfoAsync();
-		//			var NotFoundMessage = new EmbedBuilder();
-		//			NotFoundMessage.WithColor(Color.Gold);
-		//			NotFoundMessage.WithTitle("Капитан, ты не указал ID гильдии.");
-		//			NotFoundMessage.WithDescription(
-		//				$"Чтобы узнать ID, достаточно открыть любой клан на сайте Bungie.\nНапример: <https://www.bungie.net/ru/ClanV2?groupid=3526561> и скопировать цифры после groupid=\n" +
-		//				$"Синтаксис команды простой: **!клан статус 3526561**\n");
-		//			NotFoundMessage.AddField("Кэш данных о клане Destiny 2",
-		//				"Если ты желаешь, чтобы я начала обновлять и отображать актуальные данные о твоем клане,\n" +
-		//				$"напиши моему создателю - {app.Owner.Username}#{app.Owner.Discriminator} или посети [Чёрный Исход](https://discordapp.com/invite/WcuNPM9)\n" +
-		//				"Только так я могу оперативно отображать данные о твоих стражах.\n");
-		//			NotFoundMessage.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
-
-		//			await ReplyAndDeleteAsync(null, embed: NotFoundMessage.Build(), timeout: TimeSpan.FromMinutes(2));
-		//			return;
-		//		}
-		//		#endregion
-		//		//Send calculating message because stastic forming near 30-50 sec.
-		//		var message = await Context.Channel.SendMessageAsync("Это займет некоторое время.\nНачинаю проводить подсчет.");
-
-		//		var destiny2Clan = db.Clans.AsNoTracking().Include(m => m.Members).FirstOrDefault(c => c.Id == GuildId);
-
-		//		if (destiny2Clan == null)
-		//		{
-		//			await message.ModifyAsync(m => m.Content = ":x: Этой информации в моей базе данных нет. :frowning:\n" +
-		//			"Если это ошибка сообщите моему создателю.\n" +
-		//			"Если вы впервые воспользовались этой командой, напишите моему создателю, чтобы он добавил ваш клан в мою базу данных.");
-		//			return;
-		//		}
-
-
-		//		var embed = new EmbedBuilder();
-		//		embed.WithTitle($"Онлайн статус стражей клана `{destiny2Clan.Name}`");
-		//		embed.WithColor(Color.Orange);
-		//		////Bungie Clan link
-		//		embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={GuildId}");
-		//		////Some clan main info
-		//		embed.WithDescription(
-		//			$"В данный момент в клане **{destiny2Clan.MemberCount}**/100 стражей.\n" +
-		//			$"Сортировка происходит от времени, когда вызвали данную команду.");
-
-		//		#region list for member sorted for some days
-		//		List<string> _ThisDay = new List<string>();
-		//		List<string> _Yesterday = new List<string>();
-		//		List<string> _ThisWeek = new List<string>();
-		//		List<string> _MoreOneWeek = new List<string>();
-		//		List<string> _NoData = new List<string>();
-		//		#endregion
-
-		//		//Main Sorting logic
-		//		foreach (var member in destiny2Clan.Members)
-		//		{
-		//			int LastOnlineTime = 1000;
-		//			//Property for calculate how long days user did not enter the Destiny
-		//			if (member.DateLastPlayed != null)
-		//				LastOnlineTime = (DateTime.Today.Date - member.DateLastPlayed.Value.Date).Days;
-
-		//			//Sorting user to right list
-		//			if (LastOnlineTime < 1)
-		//			{
-		//				_ThisDay.Add(member.Name);
-		//			}
-		//			else if (LastOnlineTime >= 1 && LastOnlineTime < 2)
-		//			{
-		//				_Yesterday.Add(member.Name);
-		//			}
-		//			else if (LastOnlineTime >= 2 && LastOnlineTime <= 7)
-		//			{
-		//				_ThisWeek.Add(member.Name);
-		//			}
-		//			else if (LastOnlineTime >= 7 && LastOnlineTime < 500)
-		//			{
-		//				_MoreOneWeek.Add(member.Name);
-		//			}
-		//			else if (LastOnlineTime > 500)
-		//			{
-		//				_NoData.Add(member.Name);
-		//			}
-		//		}
-
-		//		//Create one string who enter to the game today, like "Petya,Vasia,Grisha",
-		//		//and if string ThisDay not empty add to embed message special field.
-		//		string ThisDay = string.Join(',', _ThisDay);
-		//		if (!string.IsNullOrEmpty(ThisDay))
-		//			embed.AddField("Был(a) сегодня", ThisDay);
-		//		//Same as above, but who enter to the game yesterday
-		//		string Yesterday = string.Join(',', _Yesterday);
-		//		if (!string.IsNullOrEmpty(Yesterday))
-		//			embed.AddField("Был(a) вчера", Yesterday);
-		//		//Same as above, but who enter to the game more 5 days but fewer 7 days ago
-		//		string ThisWeek = string.Join(',', _ThisWeek);
-		//		if (!string.IsNullOrEmpty(ThisWeek))
-		//			embed.AddField("Был(a) на этой неделе", ThisWeek);
-		//		//Same as above, but who enter to the game more 7 days ago
-		//		string MoreOneWeek = string.Join(',', _MoreOneWeek);
-		//		if (!string.IsNullOrEmpty(MoreOneWeek))
-		//			embed.AddField("Был(a) больше недели тому назад", MoreOneWeek);
-		//		//For user who not have any data.
-		//		string NoData = string.Join(',', _NoData);
-		//		if (!string.IsNullOrEmpty(NoData))
-		//			embed.AddField("Нет данных", NoData);
-		//		//Simple footer with clan name
-		//		embed.WithFooter($"Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.");
-
-		//		//Modify old message and mention user with ready statistic
-		//		await message.ModifyAsync(m =>
-		//		{
-		//			m.Content = $"Бип! {Context.User.Mention}. Статистика подсчитана.";
-		//			m.Embed = embed.Build();
-		//		});
-
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		await Logger.Log(new LogMessage(LogSeverity.Error, "GetGuildInfo", ex.Message));
-		//	}
-		//}
-
 		[Command("клан")]
-		[Alias("клан статус")]
+		[Summary("Отображает отсортированный онлайн Destiny 2 клана, зарегистрированного в базе данных моим создателем.\n**Клан должен быть зарегистрирован моим создателем.**")]
 		public async Task GetDestinyClanInfo()
 		{
 			try
@@ -573,7 +458,8 @@ namespace Neira.Bot.Modules.Commands
 							{
 								DisplayInformationIcon = false,
 								JumpDisplayOptions = JumpDisplayOptions.Never,
-								FooterFormat = "Страница {0}/{1}"
+								FooterFormat = "Страница {0}/{1}",
+								Timeout = TimeSpan.FromMinutes(5)
 							}
 						};
 						// List of clans

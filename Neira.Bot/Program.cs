@@ -13,10 +13,7 @@ using Nett;
 
 using System;
 using System.IO;
-using System.Runtime.Loader;
 using System.Threading.Tasks;
-
-using Victoria;
 
 namespace Neira.Bot
 {
@@ -31,12 +28,9 @@ namespace Neira.Bot
 
 		private static void Main()
 		{
-			AssemblyLoadContext.Default.Unloading += SigTermEventHandler; //register sigterm event handler.
-			Console.CancelKeyPress += CancelHandler; //register sigint event handler
-
 			config = GetBotSettings();
 
-			Console.Title = $"{config.BotName} Discord Bot (Discord.NET v{DiscordConfig.Version})";
+			Console.Title = $"Neira Bot (Discord.NET v{DiscordConfig.Version})";
 
 			try
 			{
@@ -60,28 +54,13 @@ namespace Neira.Bot
 			await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 
 
-			await Discord.LoginAsync(TokenType.Bot, config.Discord.BotToken);
+			await Discord.LoginAsync(TokenType.Bot, config.BotToken);
 			await Discord.StartAsync();
 			await Discord.SetStatusAsync(UserStatus.Online);
+			await Discord.SetGameAsync(@"http://neira.su/");
 
 			await Task.Delay(-1);
 		}
-
-
-
-		#region Program events
-		private static void SigTermEventHandler(AssemblyLoadContext obj)
-		{
-			Console.WriteLine("Unloading...");
-		}
-
-		private static void CancelHandler(object sender, ConsoleCancelEventArgs e)
-		{
-			Console.WriteLine("Exiting...");
-		}
-		#endregion
-
-		#region Functions
 		private static BotSettings GetBotSettings()
 		{
 			try
@@ -101,10 +80,11 @@ namespace Neira.Bot
 			return new ServiceCollection()
 				.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 				{
+					ExclusiveBulkDelete = true,
 					AlwaysDownloadUsers = true,
-					LogLevel = LogSeverity.Verbose,
+					LogLevel = LogSeverity.Info,
 					DefaultRetryMode = RetryMode.AlwaysRetry,
-					MessageCacheSize = 100
+					MessageCacheSize = 300
 				}))
 				.AddDbContext<NeiraContext>()
 				.AddSingleton<CommandService>()
@@ -113,12 +93,8 @@ namespace Neira.Bot
 				.AddSingleton<InteractiveService>()
 				.AddSingleton<TimerService>()
 				.AddSingleton<MilestoneService>()
-				.AddSingleton<MusicService>()
-				.AddSingleton<LavaRestClient>()
-				.AddSingleton<LavaSocketClient>()
 				.BuildServiceProvider();
 		}
-		#endregion
 
 
 	}

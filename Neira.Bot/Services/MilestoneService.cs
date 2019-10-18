@@ -65,7 +65,7 @@ namespace Neira.Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace Neira.Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Reaction Removed in Milestone", ex.Message, ex));
 			}
 		}
 
@@ -151,6 +151,16 @@ namespace Neira.Bot.Services
 
 				Db.ActiveMilestones.Add(newMilestone);
 				await Db.SaveChangesAsync();
+
+				_ = Task.Run(() =>
+				{
+					var stats = Db.BotInfos.FirstOrDefault();
+					stats.Milestones++;
+					stats.Servers = Client.Guilds.Count;
+					stats.Users = Client.Guilds.Sum(u => u.Users.Count);
+					Db.BotInfos.Update(stats);
+					Db.SaveChanges();
+				});
 			}
 			catch (Exception ex)
 			{
