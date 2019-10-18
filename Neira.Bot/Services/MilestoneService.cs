@@ -65,7 +65,7 @@ namespace Neira.Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace Neira.Bot.Services
 			}
 			catch (Exception ex)
 			{
-				await Logger.Log(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Reaction Removed in Milestone", ex.Message, ex));
 			}
 		}
 
