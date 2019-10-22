@@ -11,7 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Neira.Bot.Modules.Administration
+namespace Neira.Bot.Modules
 {
 	[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 	public class OwnerModule : BotModuleBase

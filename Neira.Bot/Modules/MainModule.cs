@@ -4,7 +4,6 @@ using Discord.WebSocket;
 using Discord.Addons.Interactive;
 using Microsoft.EntityFrameworkCore;
 using Neira.Bot.Helpers;
-using Neira.Bot.Modules.Administration;
 using Neira.Bot.Preconditions;
 using Neira.Bot.Services;
 using Neira.Db;
@@ -15,7 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Bot.Modules.Commands
+namespace Neira.Bot.Modules
 {
 	[Cooldown(5)]
 	[RequireBotPermission(ChannelPermission.SendMessages)]

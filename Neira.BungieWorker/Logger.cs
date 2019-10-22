@@ -10,13 +10,9 @@ namespace Neira.BungieWorker
 
 		private Logger()
 		{
-			//re
-			var path = Path.Combine(Directory.GetCurrentDirectory(), "logs", "BungieWorker.txt");
-
 			Log = new LoggerConfiguration()
 				.MinimumLevel.Debug()
 				.WriteTo.Console()
-				.WriteTo.File(path, rollingInterval: RollingInterval.Day)
 				.CreateLogger();
 		}
 

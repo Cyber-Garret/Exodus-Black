@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Bot.Modules.Administration
+namespace Neira.Bot.Modules
 {
 	[RequireUserPermission(GuildPermission.Administrator,
 			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
@@ -245,48 +245,45 @@ namespace Neira.Bot.Modules.Administration
 		[Remarks("Пример: **!рассылка <Роль> <Текст сообщения>**\n!рассылка @Тест Привет, завтра у нас клановый сбор в дискорде.")]
 		public async Task SendMessage(IRole _role, [Remainder] string message)
 		{
-			var GuildOwner = Context.Guild.OwnerId;
-			if (Context.User.Id != GuildOwner)
-			{
-				await ReplyAndDeleteAsync(":x: | Прошу прощения страж, но эта команда доступна только капитану корабля!");
-				return;
-			}
 
-			var workMessage = await Context.Channel.SendMessageAsync("Приступаю к рассылке сообщений.");
-			var Users = Context.Guild.Users;
+			var workMessage = await Context.Channel.SendMessageAsync($"Приступаю к рассылке сообщений. Всем стражам с ролью **{_role.Name}**");
+
 			var role = Context.Guild.Roles.FirstOrDefault(r => r.Id == _role.Id);
+
 			int SucessCount = 0;
 			int FailCount = 0;
-			foreach (var user in Users)
+
+			foreach (var user in Context.Guild.Users)
 			{
-				if (user.Roles.Contains(role))
+				if (user.Roles.Contains(role) || role.Name == "everyone")
 				{
 					try
 					{
 						var DM = await user.GetOrCreateDMChannelAsync();
 
 						EmbedBuilder embed = new EmbedBuilder();
-						embed.WithAuthor($"Сообщение от {Context.User.Username}");
+						embed.WithTitle($"Сообщение от {Context.User.Username} с сервера **`{Context.Guild.Name}`**");
 						embed.WithColor(Color.Gold);
 						embed.WithDescription(message);
 						embed.WithThumbnailUrl(Context.Guild.IconUrl);
+						embed.WithFooter("Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su");
 						embed.WithCurrentTimestamp();
 
-						await DM.SendMessageAsync(null, false, embed.Build());
-						SucessCount += 1;
+						await DM.SendMessageAsync(embed: embed.Build());
+						SucessCount++;
 					}
 					catch (Exception ex)
 					{
-						FailCount += 1;
+						FailCount++;
 						await Logger.Log(new LogMessage(LogSeverity.Error, "SendMessage command", ex.Message, ex));
 					}
 				}
 			}
 			await workMessage.ModifyAsync(m => m.Content =
-			$"Готово. Я разослала сообщением всем у кого есть роль {role.Name}.\n" +
-			$"- Всего получателей: {SucessCount + FailCount}\n" +
-			$"- Успешно доставлено: {SucessCount}\n" +
-			$"- Не удалось отправить: {FailCount}");
+			$"Готово. Я разослала сообщением всем у кого есть роль **{role.Name}**.\n" +
+			$"- Всего получателей: **{SucessCount + FailCount}**\n" +
+			$"- Успешно доставлено: **{SucessCount}**\n" +
+			$"- Не удалось отправить: **{FailCount}**");
 		}
 
 		[Command("чистка")]

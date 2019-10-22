@@ -9,7 +9,7 @@ namespace Neira.BungieWorker
 		public static TimeSpan BungieTimer = TimeSpan.FromMinutes(15);
 		static void Main()
 		{
-			Console.Title = $"Neira Bungie Worker: {Assembly.GetEntryAssembly().GetName().Version}";
+			Console.Title = $"Neira Bungie Worker";
 			Logger.Log.Information($"Start the Bungie Worker. Shedule job every {BungieTimer.Minutes} min.");
 			try
 			{
