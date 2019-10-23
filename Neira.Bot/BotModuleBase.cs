@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Addons.Interactive;
-using System.Threading.Tasks;
 
 namespace Neira.Bot
 {

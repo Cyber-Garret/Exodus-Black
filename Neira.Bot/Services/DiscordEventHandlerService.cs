@@ -16,13 +16,15 @@ namespace Neira.Bot.Services
 		private readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
 		private readonly MilestoneService milestone;
+		EmoteService emoteService;
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
+		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService, EmoteService emote)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
 			milestone = milestoneService;
+			emoteService = emote;
 		}
 
 		public void Configure()
@@ -47,7 +49,11 @@ namespace Neira.Bot.Services
 		#region Events
 		private Task Client_Ready()
 		{
-			Task.Run(() => milestone.Initialize());
+			Task.Run(() =>
+			{
+				milestone.Initialize();
+				emoteService.Initialize();
+			});
 			return Task.CompletedTask;
 		}
 

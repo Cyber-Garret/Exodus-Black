@@ -82,7 +82,7 @@ namespace Neira.Bot
 				{
 					ExclusiveBulkDelete = true,
 					AlwaysDownloadUsers = true,
-					LogLevel = LogSeverity.Info,
+					LogLevel = LogSeverity.Verbose,
 					DefaultRetryMode = RetryMode.AlwaysRetry,
 					MessageCacheSize = 300
 				}))
@@ -93,6 +93,7 @@ namespace Neira.Bot
 				.AddSingleton<InteractiveService>()
 				.AddSingleton<TimerService>()
 				.AddSingleton<MilestoneService>()
+				.AddSingleton<EmoteService>()
 				.BuildServiceProvider();
 		}
 

@@ -20,12 +20,12 @@ namespace Neira.Bot.Modules
 	[RequireBotPermission(ChannelPermission.SendMessages)]
 	public class MainModule : BotModuleBase
 	{
-		#region Global fields
 		readonly NeiraContext db;
 		readonly CommandService commandService;
 		readonly DiscordSocketClient Client;
 		readonly MilestoneService Milestone;
-		#endregion
+		readonly EmoteService CustomEmote;
+
 		string Alias(string name)
 		{
 			if (name == "дарси")
@@ -42,12 +42,13 @@ namespace Neira.Bot.Modules
 				return name;
 		}
 
-		public MainModule(NeiraContext context, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
+		public MainModule(NeiraContext context, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService, EmoteService emote)
 		{
 			db = context;
 			commandService = command;
 			Client = socketClient;
 			Milestone = milestoneService;
+			CustomEmote = emote;
 		}
 
 		[Command("справка")]
@@ -261,9 +262,9 @@ namespace Neira.Bot.Modules
 			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", embed: embed.Build());
 		}
 
-		[Command("катализатор")]
+		[Command("каталик"), Alias("катализатор")]
 		[Summary("Отображает информацию о катализаторе для оружия.")]
-		[Remarks("Пример: !катализатор мида")]
+		[Remarks("Пример: !катализатор мида или !каталик туз")]
 		public async Task GetCatalyst([Remainder]string Input = null)
 		{
 			var app = await Client.GetApplicationInfoAsync();
@@ -324,6 +325,32 @@ namespace Neira.Bot.Modules
 				@"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
 
 			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", embed: Embed.Build());
+		}
+
+		[Command("моды")]
+		[Summary("Подсказка о новых модификаторах в броню.")]
+		public async Task ModsInfo()
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = "Модификаторы брони 2.0",
+				Color = Color.Gold,
+				Footer = new EmbedFooterBuilder { Text = "neira.su", IconUrl = "http://neira.su/img/neira.png" }
+			};
+			//Elemens
+			embed.AddField("Тип энергии к которому привязан тип оружия:", Global.InvisibleString);
+			embed.AddField($"{CustomEmote.Arc} Молния", "Импульсные винтовки, пулемёты, дробовики, мечи, луки.");
+			embed.AddField($"{CustomEmote.Solar} Солнце", "Ракетные установки, автоматы, пистолеты-пулеметы, плазменные винтовки, линейно-плазменные винтовки.");
+			embed.AddField($"{CustomEmote.Void} Пустота", "Револьверы, снайперские винтовки, гранатомёты, винтовки разведчиков, пистолеты");
+			embed.AddField("Тип модификатора в доспехах", Global.InvisibleString);
+			//Armor Type
+			embed.AddField("Шлем", "Прицельность, локаторы боеприпасов.");
+			embed.AddField("Рукавицы", "Скорость перезарядки, откат гранат и ближнего боя.");
+			embed.AddField("Нагрудник", "Резервный боезапас, стойкий прицел.");
+			embed.AddField("Броня для ног", "Сборщик боеприпасов, легкость оружия.");
+			embed.AddField("Классовый предмет", "Добивающий прием, восстановление способностей.");
+
+			await ReplyAsync(embed: embed.Build());
 		}
 
 		[Command("респект"), Alias("помощь", "донат")]
