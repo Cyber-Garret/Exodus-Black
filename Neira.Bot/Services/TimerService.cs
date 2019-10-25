@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using Neira.Db;
+using Neira.Bot.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +15,15 @@ namespace Neira.Bot.Services
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly MilestoneService Milestone;
-		private readonly NeiraContext Db;
+		private readonly DbService Db;
 		private Timer MainTimer;
 		private Timer MilestoneTimer;
 
-		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService, NeiraContext neiraContext)
+		public TimerService(DiscordSocketClient socketClient, MilestoneService milestoneService, DbService dbService)
 		{
 			Client = socketClient;
 			Milestone = milestoneService;
-			Db = neiraContext;
+			Db = dbService;
 		}
 
 		public void Configure()
@@ -76,7 +76,7 @@ namespace Neira.Bot.Services
 				.WithFooter("Напоминаю! Зур покинет солнечную систему во вторник в 20:00 по МСК.");
 			#endregion
 
-			var guilds = await FailsafeDbOperations.GetAllGuildsAsync();
+			var guilds = await Db.GetAllGuildsAsync();
 
 			foreach (var guild in guilds)
 			{
@@ -106,7 +106,7 @@ namespace Neira.Bot.Services
 			   .WithFooter("Напоминаю! В следующий раз Зур прибудет в пятницу в 20:00 по МСК.");
 			#endregion
 
-			var guilds = await FailsafeDbOperations.GetAllGuildsAsync();
+			var guilds = await Db.GetAllGuildsAsync();
 
 			foreach (var guild in guilds)
 			{
@@ -129,11 +129,7 @@ namespace Neira.Bot.Services
 		{
 			var timer = DateTime.Now.AddMinutes(15);
 
-			var query = await Db.ActiveMilestones
-				.Include(r => r.Milestone)
-				.Include(ac => ac.MilestoneUsers)
-				.OrderBy(o => o.DateExpire)
-				.ToListAsync();
+			var query = await Db.GetAllActiveMilestones();
 
 			if (query.Count > 0)
 			{

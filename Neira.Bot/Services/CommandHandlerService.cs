@@ -9,16 +9,16 @@ namespace Neira.Bot.Services
 {
 	public class CommandHandlerService
 	{
-		#region Private fields
-		private readonly DiscordSocketClient Client;
-		private CommandService Commands;
 		private readonly IServiceProvider Services;
-		#endregion
+		private readonly DiscordSocketClient Client;
+		private readonly DbService db;
+		private CommandService Commands;
 
-		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService)
+		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService, DbService dbService)
 		{
 			Services = serviceProvider;
 			Client = socketClient;
+			db = dbService;
 			Commands = commandService;
 		}
 
@@ -44,7 +44,7 @@ namespace Neira.Bot.Services
 			if(msg.Channel is SocketGuildChannel)
 			{
 				//Get guild for load custom command Prefix.
-				var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
+				var config = await db.GetGuildAccountAsync(context.Guild.Id);
 
 				if (!string.IsNullOrWhiteSpace(config.CommandPrefix))
 					prefix = config.CommandPrefix;

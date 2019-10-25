@@ -2,8 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using Neira.Db;
-using Neira.Db.Models;
+using Neira.Bot.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;

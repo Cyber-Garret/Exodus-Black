@@ -1,5 +1,5 @@
 ﻿using Discord;
-using Neira.Db.Models;
+using Neira.Bot.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -84,6 +84,22 @@ namespace Neira.Bot.Helpers
 			embed.WithFooter($"Данные об онлайн стражей, клане и его составе обновляются каждые 15 минут.");
 
 			return embed;
+		}
+
+		internal static Embed BaseGlimmerEmbed(Color color, string text, string title = null, EmbedFooterBuilder footerBuilder = null)
+		{
+			var embed = new EmbedBuilder
+			{
+				Color = color,
+				Description = text
+			};
+			if (!string.IsNullOrWhiteSpace(title))
+				embed.Title = title;
+
+			if (footerBuilder != null)
+				embed.Footer = footerBuilder;
+
+			return embed.Build();
 		}
 	}
 }

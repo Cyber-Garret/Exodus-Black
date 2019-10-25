@@ -7,7 +7,10 @@ namespace Neira.Bot
 {
 	internal static class Global
 	{
-		internal static readonly string InvisibleString = "\u200b";
+		internal const ulong DailyGlimmerGain = 100;
+		internal const string InvisibleString = "\u200b";
+		internal const string NotInGuildText = ":x: | Эта команда не доступна в личных сообщениях.";
+
 		internal static CultureInfo culture = new CultureInfo("ru-Ru");
 		internal static readonly Dictionary<string, IEmote> ReactPlaceNumber = new Dictionary<string, IEmote>
 		{

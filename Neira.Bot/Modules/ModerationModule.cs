@@ -3,7 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Neira.Bot.Helpers;
 using Neira.Bot.Preconditions;
-using Neira.Db.Models;
+using Neira.Bot.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,14 +12,16 @@ namespace Neira.Bot.Modules
 {
 	[RequireUserPermission(GuildPermission.Administrator,
 			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",
-			NotAGuildErrorMessage = ":x: | Эта команда не доступна в личных сообщениях.")]
+			NotAGuildErrorMessage = Global.NotInGuildText)]
 	[Cooldown(5)]
 	public class ModerationModule : BotModuleBase
 	{
 		private readonly DiscordSocketClient client;
-		public ModerationModule(DiscordSocketClient socketClient)
+		private readonly DbService db;
+		public ModerationModule(DiscordSocketClient socketClient, DbService dbService)
 		{
 			client = socketClient;
+			db = dbService;
 		}
 
 		[Command("настройки")]
@@ -27,7 +29,7 @@ namespace Neira.Bot.Modules
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
-			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 
 			var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
 			string FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
@@ -55,7 +57,7 @@ namespace Neira.Bot.Modules
 		public async Task SetNotificationChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
-			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 
 			EmbedBuilder embed = new EmbedBuilder()
 				.WithTitle("Новостной канал");
@@ -75,7 +77,7 @@ namespace Neira.Bot.Modules
 			}
 
 			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+			await db.SaveGuildAccountAsync(Context.Guild.Id, guild);
 		}
 
 		[Command("логи")]
@@ -85,7 +87,7 @@ namespace Neira.Bot.Modules
 		public async Task SetLogChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
-			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 
 			EmbedBuilder embed = new EmbedBuilder()
 				.WithTitle("Технический канал");
@@ -105,7 +107,7 @@ namespace Neira.Bot.Modules
 			}
 
 			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+			await db.SaveGuildAccountAsync(Context.Guild.Id, guild);
 		}
 
 		[Command("приветствие")]
@@ -114,7 +116,7 @@ namespace Neira.Bot.Modules
 		public async Task SetWelcomeChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
-			Guild guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 
 			EmbedBuilder embed = new EmbedBuilder()
 				.WithTitle("Приветственный канал");
@@ -134,7 +136,7 @@ namespace Neira.Bot.Modules
 			}
 
 			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+			await db.SaveGuildAccountAsync(Context.Guild.Id, guild);
 		}
 
 		[Command("посмотреть приветствие")]
@@ -142,7 +144,7 @@ namespace Neira.Bot.Modules
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
-			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
 			{
@@ -150,8 +152,8 @@ namespace Neira.Bot.Modules
 				return;
 			}
 
-			await ReplyAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord. *Это сообщение будет автоматически удалено через 2 минуты.*",
-							 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser).Build());
+			await ReplyAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.",
+							 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser, guild.WelcomeMessage).Build());
 		}
 
 		[Command("сохранить приветствие")]
@@ -160,14 +162,14 @@ namespace Neira.Bot.Modules
 		public async Task SaveWelcomeMessage([Remainder]string message)
 		{
 			// Get or create personal guild settings
-			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 
 			//Dont save empty welcome message.
 			if (string.IsNullOrWhiteSpace(message)) return;
 
 			guild.WelcomeMessage = message;
 
-			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+			await db.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
 			await ReplyAsync(":smiley: Приветственное сообщение сохранено.");
 		}
@@ -176,20 +178,20 @@ namespace Neira.Bot.Modules
 		[Summary("Позволяет администраторам изменить префикс команд для текущего сервера. ")]
 		public async Task GuildPrefix(string prefix = null)
 		{
-			var config = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var config = await db.GetGuildAccountAsync(Context.Guild.Id);
 
 			string message;
 			if (prefix == null)
 			{
 				config.CommandPrefix = null;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, config);
+				await db.SaveGuildAccountAsync(Context.Guild.Id, config);
 
 				message = $"Для команд установлен префикс по умолчанию **!**";
 			}
 			else
 			{
 				config.CommandPrefix = prefix;
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, config);
+				await db.SaveGuildAccountAsync(Context.Guild.Id, config);
 
 				message = $"Для команд установлен префикс **{prefix}**";
 			}
@@ -203,9 +205,9 @@ namespace Neira.Bot.Modules
 		[RequireBotPermission(GuildPermission.ManageRoles)]
 		public async Task AutoRoleRoleAdd(IRole _role)
 		{
-			var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 			guild.AutoroleID = _role.Id;
-			await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+			await db.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
 			var embed = new EmbedBuilder();
 			embed.WithDescription($"Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим.");
@@ -221,7 +223,7 @@ namespace Neira.Bot.Modules
 		{
 			try
 			{
-				var guild = await FailsafeDbOperations.GetGuildAccountAsync(Context.Guild.Id);
+				var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 				if (guild.GlobalMention == "@here")
 					guild.GlobalMention = "@everyone";
 				else if (guild.GlobalMention == "@everyone")
@@ -229,7 +231,7 @@ namespace Neira.Bot.Modules
 				else if (guild.GlobalMention == null)
 					guild.GlobalMention = "@here";
 
-				await FailsafeDbOperations.SaveGuildAccountAsync(Context.Guild.Id, guild);
+				await db.SaveGuildAccountAsync(Context.Guild.Id, guild);
 
 				await ReplyAsync($"Капитан, теперь в некоторых сообщениях я буду использовать {guild.GlobalMention ?? "**Без упоминания**"}");
 			}

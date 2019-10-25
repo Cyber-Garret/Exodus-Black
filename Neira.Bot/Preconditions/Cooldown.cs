@@ -27,11 +27,10 @@ namespace Neira.Bot.Preconditions
 			{
 				// Высчитывает разницу между текущим временме и временем когда откат закончится.
 				var difference = endsAt.Subtract(DateTime.UtcNow);
-				var timeSpanString = string.Format("{0:%s} сек.", difference);
 				// Сообщение если команда все еще в откате.
 				if (difference.Ticks > 0)
 				{
-					return Task.FromResult(PreconditionResult.FromError($"Ты сможешь использовать эту команду через {timeSpanString}"));
+					return Task.FromResult(PreconditionResult.FromError($"Ты сможешь использовать эту команду через {difference:%s} сек."));
 				}
 				// Обновляет время отката.
 				var time = DateTime.UtcNow.Add(CooldownLength);
@@ -44,7 +43,7 @@ namespace Neira.Bot.Preconditions
 
 			return Task.FromResult(PreconditionResult.FromSuccess());
 		}
-		public struct CooldownInfo
+		internal struct CooldownInfo
 		{
 			public ulong UserId { get; }
 			public int CommandHashCode { get; }

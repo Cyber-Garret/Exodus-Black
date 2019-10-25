@@ -3,8 +3,9 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Neira.API.Bungie;
-using Neira.Db;
-using Neira.Db.Models;
+using Neira.Bot.Helpers;
+using Neira.Bot.Models.Db;
+using Neira.Bot.Services;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace Neira.Bot.Modules
 	[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 	public class OwnerModule : BotModuleBase
 	{
-		private readonly NeiraContext Db;
-		public OwnerModule(NeiraContext neiraContext)
+		private readonly NeiraContext Dbcontext;
+		private readonly DbService dbService;
+		public OwnerModule(NeiraContext neiraContext, DbService db)
 		{
-			Db = neiraContext;
+			Dbcontext = neiraContext;
+			dbService = db;
 		}
 
 		#region Functions
@@ -27,7 +30,7 @@ namespace Neira.Bot.Modules
 		private static string GetHeapSize() => Math.Round(GC.GetTotalMemory(true) / (1024.0 * 1024.0), 2).ToString();
 		private bool Destiny2ClanExists(long id)
 		{
-			return Db.Clans.AsNoTracking().Any(c => c.Id == id);
+			return Dbcontext.Clans.AsNoTracking().Any(c => c.Id == id);
 		}
 		//private bool ProfileExists(string destinyMembershipId)
 		//{
@@ -66,8 +69,8 @@ namespace Neira.Bot.Modules
 					};
 
 
-					Db.Clans.Add(clan);
-					await Db.SaveChangesAsync();
+					Dbcontext.Clans.Add(clan);
+					await Dbcontext.SaveChangesAsync();
 					await message.ModifyAsync(m => m.Content = "Готово");
 				}
 				else
@@ -91,7 +94,7 @@ namespace Neira.Bot.Modules
 			try
 			{
 				//Find Destiny 2 clan by ID
-				var clan = Db.Clans.FirstOrDefault(c => c.Id == DestinyClanId);
+				var clan = Dbcontext.Clans.FirstOrDefault(c => c.Id == DestinyClanId);
 				//If not found reply
 				if (clan == null)
 					await ReplyAndDeleteAsync($"Destiny clan with ID **{DestinyClanId}** not found in Database");
@@ -107,8 +110,8 @@ namespace Neira.Bot.Modules
 					{
 						//Store discord guild id in database
 						clan.GuildId = DiscordGuildId;
-						Db.Clans.Update(clan);
-						Db.SaveChanges();
+						Dbcontext.Clans.Update(clan);
+						Dbcontext.SaveChanges();
 
 						await ReplyAsync($"Destiny clan **{clan.Name}** success associated with Discord guild **{guild.Name}**.");
 					}
@@ -146,8 +149,7 @@ namespace Neira.Bot.Modules
 			await ReplyAsync(embed: embed.Build());
 		}
 
-		[Command("search guild")]
-		[Alias("sg")]
+		[Command("search guild"), Alias("sg")]
 		public async Task SearchGuild([Remainder]string name)
 		{
 			if (string.IsNullOrWhiteSpace(name))
@@ -160,6 +162,20 @@ namespace Neira.Bot.Modules
 				else
 					await ReplyAsync($"Найден сервер **{guild.Name}** с ID **{guild.Id}**");
 			}
+		}
+
+		[Command("add glimmer"), Alias("addg")]
+		[Summary("Выдает некоторое количество блеска указанному аккаунту")]
+		public async Task AddPotatos(uint Ammount, IGuildUser user)
+		{
+			var userAccount = await dbService.GetUserAccountAsync(user);
+
+			userAccount.Glimmer += Ammount;
+			await dbService.SaveUserAccountAsync(userAccount);
+
+			var message = $":white_check_mark:  | **{Ammount}** блеска было добавлено, на аккаунт стража {user.Username}";
+
+			await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Green, message));
 		}
 	}
 }
