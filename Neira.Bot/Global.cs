@@ -7,7 +7,12 @@ namespace Neira.Bot
 {
 	internal static class Global
 	{
+		#region Economy
 		internal const ulong DailyGlimmerGain = 100;
+		public const int MessageRewardCooldown = 30;
+		public const int MessageXPCooldown = 6;
+		public const int MessageRewardMinLenght = 20;
+		#endregion
 		internal const string InvisibleString = "\u200b";
 		internal const string NotInGuildText = ":x: | Эта команда не доступна в личных сообщениях.";
 

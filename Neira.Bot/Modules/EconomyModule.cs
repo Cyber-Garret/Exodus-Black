@@ -52,9 +52,9 @@ namespace Neira.Bot.Modules
 			}
 		}
 
-		[Command("репутация")]
+		[Command("респект")]
 		[Summary("Увеличивает репутацию указанного стража. ")]
-		[Remarks("Пример: **!репутация @Cyber_Garret**")]
+		[Remarks("Пример: **!респект @Cyber_Garret**")]
 		[Cooldown(30), RequireContext(ContextType.Guild, ErrorMessage = Global.NotInGuildText)]
 		public async Task GetRep([NoSelf]SocketGuildUser recipient)
 		{
@@ -86,7 +86,7 @@ namespace Neira.Bot.Modules
 
 		}
 
-		[Command("подарить"), Alias("дать", "заплатить")]
+		[Command("подарить"), Alias("дать")]
 		[Summary("Дарит блеск указанному стражу (само собой сумма списывается с твоего счета). ")]
 		[Remarks("!дать <количество> <Страж которому ты хочешь сделать подарок> Пример: **!дать 500 @Cyber_Garret**")]
 		[Cooldown(30), RequireContext(ContextType.Guild, ErrorMessage = Global.NotInGuildText)]
@@ -135,7 +135,7 @@ namespace Neira.Bot.Modules
 			}
 		}
 
-		[Command("топ"), Alias("топ10", "RichBitch", "богачи")]
+		[Command("топ"), Alias("RichBitch", "богачи")]
 		[Summary("Отображает список стражей, отсортированных по количеству блеска. Есть возможность указывать страницу чтобы увидеть стражей с более низким количеством блеска. ")]
 		[Remarks("!топ <номер страницы (если оставить пустым, по умолчанию будет первая страница)> пример: **!топ**\\**!топ 2**")]
 		[Cooldown(10)]
@@ -179,8 +179,8 @@ namespace Neira.Bot.Modules
 			await ReplyAsync(embed: embed.Build());
 		}
 
-		[Command("баланс"), Alias("блеск")]
-		[Summary("Проверяет твой баланс или баланс указанного стража.")]
+		[Command("блеск")]
+		[Summary("Проверяет твой баланс блеска или указанного стража.")]
 		[Remarks("!баланс <страж которого ты хочешь проверить (Если никого не указать по умолчанию отобразит твой баланс)> Пример: !баланс @Cyber_Garret")]
 		[Cooldown(10)]
 		public async Task CheckGlimmerBalance(SocketUser mentionedUser = null)
@@ -190,6 +190,67 @@ namespace Neira.Bot.Modules
 			var account = await db.GetUserAccountAsync(target);
 			var message = $"Баланс: **{account.Glimmer} {emote.Glimmer}**\n{GetGlimmerCountReaction(account.Glimmer, target.Username)}";
 			await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Gold, message, $"Капитал стража {target.Username}"));
+		}
+
+		[Command("стата")]
+		[Summary("Отображение твоей статистике на сервере (Уровень, опыт, репутация)")]
+		[Remarks("!стата <страж которого ты хочешь проверить (Если никого не указать по умолчанию отобразит твою стату)> Пример: !стата @Cyber_Garret")]
+		[Cooldown(10)]
+		public async Task Stats(SocketUser mentionedUser = null)
+		{
+			var target = mentionedUser ?? Context.User;
+
+			var userAccount = await db.GetGuildUserAccountAsync((SocketGuildUser)target);
+			var requiredXp = (Math.Pow(userAccount.LevelNumber + 1, 2) * 50);
+
+			var auth = new EmbedAuthorBuilder()
+			{
+				Name = $"Статистика стража {target.Username} на сервере {Context.Guild.Name}",
+				IconUrl = target.GetAvatarUrl() ?? target.GetDefaultAvatarUrl(),
+			};
+
+			var embed = new EmbedBuilder()
+			{
+				Author = auth,
+				Color = Color.Blue
+			};
+
+			embed.AddField("Ур.", userAccount.LevelNumber, true);
+			embed.AddField("Опыт", $"{userAccount.XP}/{requiredXp} (Всего {userAccount.XP})", true);
+			embed.AddField("Репутация", userAccount.Reputation, true);
+			embed.AddField("Предупреждения", 0, true);
+
+			await ReplyAsync(embed: embed.Build());
+		}
+
+		[Command("баланс")]
+		[Summary("Отображение твоей глобальной статистики (Уровень, опыт)")]
+		[Remarks("!баланс <страж которого ты хочешь проверить (Если никого не указать по умолчанию отобразит твой аккаунт)> Пример: !баланс @Cyber_Garret")]
+		[Cooldown(10)]
+		public async Task WsashiStats(SocketUser mentionedUser = null)
+		{
+			var target = mentionedUser ?? Context.User;
+
+			var userAccount = await db.GetUserAccountAsync(target);
+			var requiredXp = (Math.Pow(userAccount.LevelNumber + 1, 2) * 50);
+
+			var auth = new EmbedAuthorBuilder()
+			{
+				Name = $"Глобальная статистика стража {target.Username}",
+				IconUrl = target.GetAvatarUrl() ?? target.GetDefaultAvatarUrl(),
+			};
+
+			var embed = new EmbedBuilder()
+			{
+				Author = auth,
+				Color = Color.Gold
+			};
+
+			embed.AddField("Ур.", userAccount.LevelNumber, true);
+			embed.AddField("Опыт", $"{userAccount.XP}/{requiredXp} (Всего {userAccount.XP})", true);
+			embed.AddField("Блеск", $"{userAccount.Glimmer}{emote.Glimmer}", true);
+
+			await ReplyAsync(embed: embed.Build());
 		}
 
 		private string GetGlimmerCountReaction(ulong ammount, string username)

@@ -18,36 +18,6 @@ namespace Neira.Bot.Services
 			Db = neiraContext;
 		}
 
-		internal async Task<Gear> GetExoticGear(string name)
-		{
-			//Get random Exotic gear
-			if (name.ToLower() == "любой")
-			{
-				var r = new Random();
-				int randomId = r.Next(1, Db.Gears.Count());
-				return await Db.Gears.AsNoTracking().Skip(randomId).Take(1).FirstOrDefaultAsync();
-			}
-			else
-			{
-				return await Db.Gears.AsNoTracking().Where(c => c.Name.IndexOf(Alias(name), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
-			}
-		}
-
-		internal async Task<Catalyst> GetWeaponCatalyst(string name)
-		{
-			//Get random weapon catalyst
-			if (name.ToLower() == "любой")
-			{
-				var r = new Random();
-				int randomId = r.Next(1, Db.Catalysts.Count());
-				return await Db.Catalysts.AsNoTracking().Skip(randomId).Take(1).FirstOrDefaultAsync();
-			}
-			else
-			{
-				return await Db.Catalysts.AsNoTracking().Where(c => c.WeaponName.IndexOf(Alias(name), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
-			}
-		}
-
 		internal async Task<List<Guild>> GetAllGuildsAsync()
 		{
 			var guilds = await Db.Guilds.ToListAsync();
@@ -292,29 +262,53 @@ namespace Neira.Bot.Services
 			}
 		}
 
+		internal async Task<GuildUserAccount> GetGuildUserAccountAsync(IGuildUser user)
+		{
+			//Check if user exist
+			if (Db.UserAccounts.Any(u => u.Id == user.Id))
+				return await Db.GuildUserAccounts.SingleAsync(u => u.UserId == user.Id && u.GuildId == user.Guild.Id);
+			else
+			{
+				var newUser = new GuildUserAccount
+				{
+					UserId = user.Id,
+					GuildId = user.Guild.Id
+				};
+				Db.GuildUserAccounts.Add(newUser);
+				await Db.SaveChangesAsync();
+
+				return newUser;
+			}
+		}
+
+		internal async Task SaveGuildUserAccountAsync(GuildUserAccount user)
+		{
+			try
+			{
+				if (Db.GuildUserAccounts.Any(u => u.UserId == user.UserId && u.GuildId == user.GuildId))
+				{
+					Db.GuildUserAccounts.Update(user);
+					await Db.SaveChangesAsync();
+				}
+				else
+				{
+					Db.GuildUserAccounts.Add(user);
+					await Db.SaveChangesAsync();
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+				throw;
+			}
+		}
+
 		internal struct DailyResult
 		{
 			public bool Success;
 			public TimeSpan RefreshTimeSpan;
 		}
 
-		private string Alias(string name)
-		{
-			switch (name)
-			{
-				case "дарси":
-					return "Д.А.Р.С.И.";
-				case "мида":
-					return "MIDA";
-				case "сурос":
-					return "SUROS";
-				case "морозники":
-					return "M0р03ники";
-				case "топотуны":
-					return "Т0п0тунЬI";
-				default:
-					return name;
-			}
-		}
+		
 	}
 }

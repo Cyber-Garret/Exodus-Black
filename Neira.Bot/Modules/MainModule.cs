@@ -19,14 +19,35 @@ namespace Neira.Bot.Modules
 	[RequireBotPermission(ChannelPermission.SendMessages)]
 	public class MainModule : BotModuleBase
 	{
+		private readonly NeiraContext neiraDb;
 		private readonly DbService db;
 		private readonly CommandService commandService;
 		private readonly DiscordSocketClient Client;
 		private readonly MilestoneService Milestone;
 		private readonly EmoteService CustomEmote;
 
-		public MainModule(DbService dbService, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService, EmoteService emote)
+		private string Alias(string name)
 		{
+			switch (name)
+			{
+				case "дарси":
+					return "Д.А.Р.С.И.";
+				case "мида":
+					return "MIDA";
+				case "сурос":
+					return "SUROS";
+				case "морозники":
+					return "M0р03ники";
+				case "топотуны":
+					return "Т0п0тунЬI";
+				default:
+					return name;
+			}
+		}
+
+		public MainModule(NeiraContext neiraContext, DbService dbService, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService, EmoteService emote)
+		{
+			neiraDb = neiraContext;
 			db = dbService;
 			commandService = command;
 			Client = socketClient;
@@ -44,12 +65,15 @@ namespace Neira.Bot.Modules
 
 			var mainCommands = string.Empty;
 			var adminCommands = string.Empty;
+			var economyCommands = string.Empty;
 			foreach (CommandInfo command in commands)
 			{
 				if (command.Module.Name == typeof(MainModule).Name)
 					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
 					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
+				else if (command.Module.Name == typeof(EconomyModule).Name)
+					economyCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 
 			}
 
@@ -63,6 +87,7 @@ namespace Neira.Bot.Modules
 				"и в [документации](https://docs.neira.su/)")
 				.AddField("Основные команды", mainCommands.Substring(0, mainCommands.Length - 2))
 				.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2))
+				.AddField("Команды экономики и репутации", economyCommands.Substring(0, economyCommands.Length - 2))
 				.WithFooter(NeiraWebsite);
 
 			await ReplyAsync(embed: embed.Build());
@@ -201,7 +226,17 @@ namespace Neira.Bot.Modules
 				return;
 			}
 
-			var gear = await db.GetExoticGear(Input);
+			//var gear = await db.GetExoticGear(Input);
+			Gear gear = null;
+			//Get random Exotic gear
+			if (Input.ToLower() == "любой")
+			{
+				var r = new Random();
+				int randomId = r.Next(1, neiraDb.Gears.Count());
+				gear = await neiraDb.Gears.AsNoTracking().Skip(randomId).Take(1).FirstOrDefaultAsync();
+			}
+			else
+				gear = await neiraDb.Gears.AsNoTracking().Where(c => c.Name.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
 			//If not found gear by user input
 			if (gear == null)
 			{
@@ -255,7 +290,18 @@ namespace Neira.Bot.Modules
 				await ReplyAndDeleteAsync(null, embed: Embed.Build(), timeout: TimeSpan.FromMinutes(2));
 				return;
 			}
-			var catalyst = await db.GetWeaponCatalyst(Input);
+
+			Catalyst catalyst = null;
+			//Get random weapon catalyst
+			if (Input.ToLower() == "любой")
+			{
+				var r = new Random();
+				int randomId = r.Next(1, neiraDb.Catalysts.Count());
+				catalyst = await neiraDb.Catalysts.AsNoTracking().Skip(randomId).Take(1).FirstOrDefaultAsync();
+			}
+			else
+				catalyst = await neiraDb.Catalysts.AsNoTracking().Where(c => c.WeaponName.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
+
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
 			if (catalyst == null)
 			{
@@ -311,7 +357,7 @@ namespace Neira.Bot.Modules
 			await ReplyAsync(embed: embed.Build());
 		}
 
-		[Command("респект"), Alias("помощь", "донат")]
+		[Command("помощь"), Alias("донат")]
 		[Summary("Информация о том как помочь развитию бота")]
 		public async Task Donate()
 		{

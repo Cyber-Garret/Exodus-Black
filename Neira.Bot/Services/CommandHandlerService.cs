@@ -12,13 +12,15 @@ namespace Neira.Bot.Services
 		private readonly IServiceProvider Services;
 		private readonly DiscordSocketClient Client;
 		private readonly DbService db;
+		private readonly LevelingService leveling;
 		private CommandService Commands;
 
-		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService, DbService dbService)
+		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService, DbService dbService, LevelingService levelingService)
 		{
 			Services = serviceProvider;
 			Client = socketClient;
 			db = dbService;
+			leveling = levelingService;
 			Commands = commandService;
 		}
 
@@ -33,15 +35,15 @@ namespace Neira.Bot.Services
 			await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), Services);
 		}
 
-		public async Task HandleCommandAsync(SocketMessage arg)
+		public async Task HandleCommandAsync(SocketMessage message)
 		{
 			// Ignore if not SocketUserMessage or its direct message or private groups
-			if (!(arg is SocketUserMessage msg)) return;
+			if (!(message is SocketUserMessage msg)) return;
 			//if (msg.Channel is SocketDMChannel || msg.Channel is SocketGroupChannel) return;
 
 			var context = new SocketCommandContext(Client, msg);
 			var prefix = "!";
-			if(msg.Channel is SocketGuildChannel)
+			if (msg.Channel is SocketGuildChannel)
 			{
 				//Get guild for load custom command Prefix.
 				var config = await db.GetGuildAccountAsync(context.Guild.Id);
@@ -69,6 +71,13 @@ namespace Neira.Bot.Services
 					 context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
 				 });
 			}
+
+			//_ = Task.Run(() =>
+			//	  {
+			//		  _ = leveling.Level((SocketGuildUser)context.User);
+			//		  _ = leveling.GlobalLevel((SocketGuildUser)context.User);
+			//		  _ = leveling.MessageRewards((SocketGuildUser)context.User, message);
+			//	  });
 		}
 
 	}
