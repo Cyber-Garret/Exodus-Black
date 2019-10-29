@@ -7,6 +7,7 @@ namespace Neira.Bot.Services
 {
 	public class EmoteService
 	{
+		public IEmote Raid;
 		public IEmote Arc;
 		public IEmote Solar;
 		public IEmote Void;
@@ -22,6 +23,7 @@ namespace Neira.Bot.Services
 		{
 			var NeiraHome = Client.GetGuild(Program.config.HomeDiscordServerId);
 
+			Raid = NeiraHome.Emotes.First(e => e.Name == "Neira_Raid");
 			Arc = NeiraHome.Emotes.First(e => e.Name == "arc");
 			Solar = NeiraHome.Emotes.First(e => e.Name == "solar");
 			Void = NeiraHome.Emotes.First(e => e.Name == "void");

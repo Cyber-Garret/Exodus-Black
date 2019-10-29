@@ -1,54 +1,34 @@
 ﻿using Discord;
+using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
-using Discord.Addons.Interactive;
+
 using Microsoft.EntityFrameworkCore;
+
+using Neira.Bot.Database;
 using Neira.Bot.Helpers;
 using Neira.Bot.Preconditions;
 using Neira.Bot.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Neira.Bot.Models.Db;
 
 namespace Neira.Bot.Modules
 {
 	[Cooldown(5)]
 	[RequireBotPermission(ChannelPermission.SendMessages)]
-	public class MainModule : BotModuleBase
+	public class MainModule : BaseModule
 	{
-		private readonly NeiraContext neiraDb;
-		private readonly DbService db;
 		private readonly CommandService commandService;
 		private readonly DiscordSocketClient Client;
 		private readonly MilestoneService Milestone;
 		private readonly EmoteService CustomEmote;
 
-		private string Alias(string name)
+		public MainModule(CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService, EmoteService emote)
 		{
-			switch (name)
-			{
-				case "дарси":
-					return "Д.А.Р.С.И.";
-				case "мида":
-					return "MIDA";
-				case "сурос":
-					return "SUROS";
-				case "морозники":
-					return "M0р03ники";
-				case "топотуны":
-					return "Т0п0тунЬI";
-				default:
-					return name;
-			}
-		}
-
-		public MainModule(NeiraContext neiraContext, DbService dbService, CommandService command, DiscordSocketClient socketClient, MilestoneService milestoneService, EmoteService emote)
-		{
-			neiraDb = neiraContext;
-			db = dbService;
 			commandService = command;
 			Client = socketClient;
 			Milestone = milestoneService;
@@ -59,14 +39,15 @@ namespace Neira.Bot.Modules
 		[Summary("Основная справочная команда.")]
 		public async Task MainHelp()
 		{
-			List<CommandInfo> commands = commandService.Commands.ToList();
-			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
 			var app = await Client.GetApplicationInfoAsync();
 
 			var mainCommands = string.Empty;
 			var adminCommands = string.Empty;
 			var economyCommands = string.Empty;
-			foreach (CommandInfo command in commands)
+
+			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
+
+			foreach (CommandInfo command in commandService.Commands.ToList())
 			{
 				if (command.Module.Name == typeof(MainModule).Name)
 					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
@@ -111,7 +92,7 @@ namespace Neira.Bot.Modules
 			}
 			var embed = new EmbedBuilder();
 
-			var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
+			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
 
 			embed.WithAuthor(Client.CurrentUser);
 			embed.WithTitle($"Информация о команде: {command.Name}");
@@ -226,17 +207,7 @@ namespace Neira.Bot.Modules
 				return;
 			}
 
-			//var gear = await db.GetExoticGear(Input);
-			Gear gear = null;
-			//Get random Exotic gear
-			if (Input.ToLower() == "любой")
-			{
-				var r = new Random();
-				int randomId = r.Next(1, neiraDb.Gears.Count());
-				gear = await neiraDb.Gears.AsNoTracking().Skip(randomId).Take(1).FirstOrDefaultAsync();
-			}
-			else
-				gear = await neiraDb.Gears.AsNoTracking().Where(c => c.Name.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
+			var gear = await DatabaseHelper.GetExoticAsync(Input);
 			//If not found gear by user input
 			if (gear == null)
 			{
@@ -280,9 +251,8 @@ namespace Neira.Bot.Modules
 			{
 				Embed.WithAuthor("Добро пожаловать в базу данных катализаторов экзотического оружия Нейроматрицы");
 				Embed.WithThumbnailUrl("https://bungie.net/common/destiny2_content/icons/d8acfda580e28f7765dd6a813394c847.png");
-				Embed.WithDescription("Для того чтобы найти информацию о нужном тебе катализаторе теперь достаточно написать `!катализатор мида` и я сразу отображу что я о нем знаю.\n" +
-					"А еще ты можешь написать `!катализатор любой` и я выдам тебе случайный катализатор.");
-				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://docs.neira.su/prochee/baza-katalizatorov-i-ekzotikov).");
+				Embed.WithDescription("Для того чтобы найти информацию о нужном тебе катализаторе теперь достаточно написать `!катализатор мида` и я сразу отображу что я о нем знаю.");
+				Embed.AddField(GlobalVariables.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://docs.neira.su/prochee/baza-katalizatorov-i-ekzotikov).");
 				Embed.WithColor(Color.Blue);
 				Embed.WithFooter($"Это сообщение будет автоматически удалено через 2 минуты.",
 					@"https://bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg");
@@ -291,23 +261,14 @@ namespace Neira.Bot.Modules
 				return;
 			}
 
-			Catalyst catalyst = null;
-			//Get random weapon catalyst
-			if (Input.ToLower() == "любой")
-			{
-				var r = new Random();
-				int randomId = r.Next(1, neiraDb.Catalysts.Count());
-				catalyst = await neiraDb.Catalysts.AsNoTracking().Skip(randomId).Take(1).FirstOrDefaultAsync();
-			}
-			else
-				catalyst = await neiraDb.Catalysts.AsNoTracking().Where(c => c.WeaponName.IndexOf(Alias(Input), StringComparison.CurrentCultureIgnoreCase) != -1).FirstOrDefaultAsync();
+			var catalyst = await DatabaseHelper.GetCatalystAsync(Input);
 
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
 			if (catalyst == null)
 			{
 				Embed.WithDescription(":x: Этой информации в моей базе данных нет. :frowning:");
 				Embed.WithColor(Color.Red);
-				Embed.AddField(Global.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://vk.com/topic-184785875_40234113).");
+				Embed.AddField(GlobalVariables.InvisibleString, "Полный список известных мне катализаторов ты можешь посмотреть [тут](https://docs.neira.su/prochee/baza-katalizatorov-i-ekzotikov).");
 				Embed.WithFooter("Это сообщение будет автоматически удалено через 1 минуту.");
 				await ReplyAndDeleteAsync(null, embed: Embed.Build(), timeout: TimeSpan.FromMinutes(1));
 				return;
@@ -342,11 +303,11 @@ namespace Neira.Bot.Modules
 				Footer = new EmbedFooterBuilder { Text = "neira.su", IconUrl = "http://neira.su/img/neira.png" }
 			};
 			//Elemens
-			embed.AddField("Тип энергии к которому привязан тип оружия:", Global.InvisibleString);
+			embed.AddField("Тип энергии к которому привязан тип оружия:", GlobalVariables.InvisibleString);
 			embed.AddField($"{CustomEmote.Arc} Молния", "Импульсные винтовки, пулемёты, дробовики, мечи, луки.");
 			embed.AddField($"{CustomEmote.Solar} Солнце", "Ракетные установки, автоматы, пистолеты-пулеметы, плазменные винтовки, линейно-плазменные винтовки.");
 			embed.AddField($"{CustomEmote.Void} Пустота", "Револьверы, снайперские винтовки, гранатомёты, винтовки разведчиков, пистолеты");
-			embed.AddField("Тип модификатора в доспехах", Global.InvisibleString);
+			embed.AddField("Тип модификатора в доспехах", GlobalVariables.InvisibleString);
 			//Armor Type
 			embed.AddField("Шлем", "Прицельность, локаторы боеприпасов.");
 			embed.AddField("Рукавицы", "Скорость перезарядки, откат гранат и ближнего боя.");
@@ -373,7 +334,7 @@ namespace Neira.Bot.Modules
 			}
 				.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку или единоразово купить мне кофе на любую сумму.\n[Я на Patreon](https://www.patreon.com/Cyber_Garret)")
 				.AddField("YandexMoney", "Так же вы можете помочь мне через [Яндекс Деньги](https://money.yandex.ru/to/410019748161790)")
-				.AddField(Global.InvisibleString, $"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}#{app.Owner.Discriminator}.");
+				.AddField(GlobalVariables.InvisibleString, $"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}#{app.Owner.Discriminator}.");
 
 			await ReplyAsync(embed: embed.Build());
 		}
@@ -387,14 +348,14 @@ namespace Neira.Bot.Modules
 		{
 			try
 			{
-				var guild = await db.GetGuildAccountAsync(Context.Guild.Id);
+				var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
 
-				var milestone = await db.GetMilestone(milestoneName);
+				var milestone = await DatabaseHelper.GetMilestone(milestoneName);
 
 				if (milestone == null)
 				{
 					var AvailableRaids = "Доступные для регистрации активности:\n\n";
-					var info = await db.GetAllMilestones();
+					var info = DatabaseHelper.GetAllMilestones();
 
 					foreach (var item in info)
 					{
@@ -410,7 +371,9 @@ namespace Neira.Bot.Modules
 					return;
 				}
 
-				DateTime.TryParseExact(raidTime, "dd.MM-HH:mm", CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
+				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
+
+				DateTime.TryParseExact(raidTime, formats, CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
 
 				if (dateTime == new DateTime())
 				{
@@ -433,16 +396,16 @@ namespace Neira.Bot.Modules
 				{
 					var message = new EmbedBuilder()
 						.WithColor(Color.Red)
-						.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи в {DateTime.Now.Year - 1000} г. и передай привет моему капитану.");
+						.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
 					await ReplyAndDeleteAsync(null, embed: message.Build());
 					return;
 				}
 
-				var msg = await ReplyAsync(message: guild.GlobalMention, embed: Milestone.StartEmbed(Context.User, milestone, dateTime, userMemo).Build());
-				await Milestone.RegisterMilestoneAsync(msg.Id, Context, milestone.Id, dateTime, userMemo);
+				var msg = await ReplyAsync(message: guild.GlobalMention, embed: EmbedsHelper.MilestoneNew(Context.User, milestone, dateTime, CustomEmote.Raid, userMemo));
+				await Milestone.RegisterNewMilestoneAsync(msg.Id, Context, milestone.Id, dateTime, userMemo);
 
 				//Slots
-				await msg.AddReactionAsync(Milestone.RaidEmote);
+				await msg.AddReactionAsync(CustomEmote.Raid);
 			}
 			catch (Exception ex)
 			{
@@ -457,8 +420,6 @@ namespace Neira.Bot.Modules
 				//Log full exception in console
 				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Milestone command", ex.Message, ex));
 			}
-
-
 		}
 
 		[Command("клан")]
@@ -468,7 +429,7 @@ namespace Neira.Bot.Modules
 			try
 			{
 				//Find Destiny 2 Clan associated to Discord Guild
-				var clans = await db.GetDestinyClan(Context.Guild.Id);
+				var clans = DatabaseHelper.GetDestinyClan(Context.Guild.Id);
 
 				//If not found any associated clan
 				if (clans.Count == 0)
@@ -515,7 +476,7 @@ namespace Neira.Bot.Modules
 					else
 					{
 						//Reply to user if Discord guild associated to one clan.
-						await ReplyAsync(embed: BuildedEmbeds.ClanStatus(clans.First()).Build());
+						await ReplyAsync(embed: EmbedsHelper.ClanStatus(clans.First()).Build());
 					}
 				}
 			}

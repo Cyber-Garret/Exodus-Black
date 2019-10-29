@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.Addons.Interactive;
 
-namespace Neira.Bot
+namespace Neira.Bot.Modules
 {
-	public class BotModuleBase : InteractiveBase
+	public class BaseModule : InteractiveBase
 	{
 		public IEmote WhiteHeavyCheckMark => new Emoji("\u2705");
 		public IEmote RedX => new Emoji("\u274C");

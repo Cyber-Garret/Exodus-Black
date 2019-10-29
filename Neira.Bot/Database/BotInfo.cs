@@ -1,4 +1,4 @@
-﻿namespace Neira.Bot.Models.Db
+﻿namespace Neira.Bot.Database
 {
 	public class BotInfo
 	{

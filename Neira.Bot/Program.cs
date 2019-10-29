@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Neira.Bot.Models;
-using Neira.Bot.Models.Db;
 using Neira.Bot.Services;
 
 using Nett;
@@ -49,7 +48,6 @@ namespace Neira.Bot
 			var Discord = service.GetRequiredService<DiscordSocketClient>();
 			Discord.Log += Logger.Log;
 
-			service.GetRequiredService<TimerService>().Configure();
 			service.GetRequiredService<DiscordEventHandlerService>().Configure();
 			await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 
@@ -86,15 +84,14 @@ namespace Neira.Bot
 					DefaultRetryMode = RetryMode.AlwaysRetry,
 					MessageCacheSize = 300
 				}))
-				.AddDbContext<NeiraContext>(options => options.UseSqlServer(connectionString))
 				.AddSingleton<CommandService>()
 				.AddSingleton<CommandHandlerService>()
 				.AddSingleton<DiscordEventHandlerService>()
 				.AddSingleton<InteractiveService>()
-				.AddSingleton<DbService>()
-				.AddSingleton<TimerService>()
+				.AddSingleton<XurService>()
 				.AddSingleton<MilestoneService>()
 				.AddSingleton<EmoteService>()
+				.AddSingleton<LevelingService>()
 				.BuildServiceProvider();
 		}
 

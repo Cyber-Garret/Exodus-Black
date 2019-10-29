@@ -12,15 +12,13 @@ using System.Threading.Tasks;
 
 namespace Neira.Bot.Modules
 {
-	public class EconomyModule : BotModuleBase
+	public class EconomyModule : BaseModule
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly EmoteService emote;
-		private readonly DbService db;
-		public EconomyModule(DiscordSocketClient socketClient, EmoteService emoteService, DbService dbService)
+		public EconomyModule(DiscordSocketClient socketClient, EmoteService emoteService)
 		{
 			Client = socketClient;
-			db = dbService;
 			emote = emoteService;
 		}
 
@@ -29,14 +27,14 @@ namespace Neira.Bot.Modules
 		[Cooldown(30)]
 		public async Task GetDaily()
 		{
-			var result = await db.GetDailyAsync(Context.User.Id);
+			var result = await DatabaseHelper.GetDailyAsync(Context.User.Id);
 
 			if (result.Success)
 			{
 				var embed = new EmbedBuilder
 				{
 					Color = Color.Gold,
-					Description = $"{emote.Glimmer}  | Поздравляю страж {Context.User.Username}, ты получил **{Global.DailyGlimmerGain}** блеска! Приходи завтра, чтобы получить еще!"
+					Description = $"{emote.Glimmer}  | Поздравляю страж {Context.User.Username}, ты получил **{GlobalVariables.DailyGlimmerGain}** блеска! Приходи завтра, чтобы получить еще!"
 				};
 
 				await ReplyAsync(embed: embed.Build());
@@ -55,21 +53,21 @@ namespace Neira.Bot.Modules
 		[Command("респект")]
 		[Summary("Увеличивает репутацию указанного стража. ")]
 		[Remarks("Пример: **!респект @Cyber_Garret**")]
-		[Cooldown(30), RequireContext(ContextType.Guild, ErrorMessage = Global.NotInGuildText)]
+		[Cooldown(30), RequireContext(ContextType.Guild, ErrorMessage = GlobalVariables.NotInGuildText)]
 		public async Task GetRep([NoSelf]SocketGuildUser recipient)
 		{
 			//Get user can add reputation?
-			var result = await db.GetRepAsync((SocketGuildUser)Context.User);
+			var result = await DatabaseHelper.GetRepAsync((SocketGuildUser)Context.User);
 
 			if (result.Success)
 			{
 				//Add Reputation to mentioned user
-				await db.AddRepAsync(recipient);
+				await DatabaseHelper.AddRepAsync(recipient);
 
 				var embed = new EmbedBuilder
 				{
 					Color = Color.Gold,
-					Description = $":diamond_shape_with_a_dot_inside: | Внимание страж {recipient.Mention}! Твоя репутация была повышена стражем {Context.User.Username}!"
+					Description = $":diamond_shape_with_a_dot_inside: | Внимание страж {recipient.Mention}!\nТвоя репутация была повышена стражем {Context.User.Mention}, не забудь его поблагодарить."
 				};
 
 				await ReplyAsync(embed: embed.Build());
@@ -89,17 +87,17 @@ namespace Neira.Bot.Modules
 		[Command("подарить"), Alias("дать")]
 		[Summary("Дарит блеск указанному стражу (само собой сумма списывается с твоего счета). ")]
 		[Remarks("!дать <количество> <Страж которому ты хочешь сделать подарок> Пример: **!дать 500 @Cyber_Garret**")]
-		[Cooldown(30), RequireContext(ContextType.Guild, ErrorMessage = Global.NotInGuildText)]
+		[Cooldown(30), RequireContext(ContextType.Guild, ErrorMessage = GlobalVariables.NotInGuildText)]
 		public async Task Gift(uint Ammount = 0, [NoSelf]IGuildUser recipient = null)
 		{
-			var config = await db.GetGuildAccountAsync(Context.Guild.Id);
+			var config = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
 
 			if (Ammount == 0)
 			{
 				var message = $"Страж, ты не указал сколько {emote.Glimmer} ты хочешь подарить.\n" +
 					$"Напомню что команда должна быть выполнена в таком формате **{config.CommandPrefix ?? "!"}дать 10 @Cyber_Garret**";
 
-				await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Red, message));
+				await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Red, message));
 				return;
 			}
 			else if (recipient == null)
@@ -107,30 +105,30 @@ namespace Neira.Bot.Modules
 				var message = $"Страж, ты не указал кому ты хочешь подарить {emote.Glimmer}\n" +
 					$"Напомню что команда должна быть выполнена в таком формате **{config.CommandPrefix ?? "!"}дать 10 @Cyber_Garret**";
 
-				await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Red, message));
+				await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Red, message));
 				return;
 			}
 
-			var senderAccount = await db.GetUserAccountAsync(Context.User);
+			var senderAccount = await DatabaseHelper.GetUserAccountAsync(Context.User);
 
 			if (senderAccount.Glimmer < Ammount)
 			{
 				var message = $":angry:  | Страж, ты не можешь подарить сумму {emote.Glimmer}, которой у тебя нет на счету!";
-				await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Red, message));
+				await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Red, message));
 			}
 			else
 			{
-				var recipientAccount = await db.GetUserAccountAsync(recipient);
+				var recipientAccount = await DatabaseHelper.GetUserAccountAsync(recipient);
 
 				senderAccount.Glimmer -= Ammount;
 				recipientAccount.Glimmer += Ammount;
 
-				await db.SaveUserAccountAsync(senderAccount);
+				await DatabaseHelper.SaveUserAccountAsync(senderAccount);
 
-				await db.SaveUserAccountAsync(recipientAccount);
+				await DatabaseHelper.SaveUserAccountAsync(recipientAccount);
 
 				var message = $":clap: | {Context.User.Username} подарил стражу {recipient.Mention} {Ammount} {emote.Glimmer}\nКак благородно!";
-				await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Gold, message));
+				await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Gold, message));
 
 			}
 		}
@@ -144,11 +142,11 @@ namespace Neira.Bot.Modules
 			if (page < 1)
 			{
 				var message = "Tы действительно этого хочешь? ***ТОЧНО?***";
-				await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Red, message));
+				await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Red, message));
 				return;
 			}
 			var guildUserIds = Context.Guild.Users.Select(user => user.Id);
-			var accounts = db.GetFilteredAccounts(acc => guildUserIds.Contains(acc.Id));
+			var accounts = DatabaseHelper.GetFilteredAccounts(acc => guildUserIds.Contains(acc.Id));
 
 			const int usersPerPage = 9;
 			// Calculate the highest accepted page number => amount of pages we need to be able to fit all users in them
@@ -157,7 +155,7 @@ namespace Neira.Bot.Modules
 			if (page > lastPageNumber)
 			{
 				var message = $"Такой страницы не существует. Последняя страница имеет номер **{lastPageNumber}**";
-				await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Red, message));
+				await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Red, message));
 				return;
 			}
 			// Sort the accounts descending by currency
@@ -187,9 +185,9 @@ namespace Neira.Bot.Modules
 		{
 			SocketUser target = mentionedUser ?? Context.User;
 
-			var account = await db.GetUserAccountAsync(target);
+			var account = await DatabaseHelper.GetUserAccountAsync(target);
 			var message = $"Баланс: **{account.Glimmer} {emote.Glimmer}**\n{GetGlimmerCountReaction(account.Glimmer, target.Username)}";
-			await ReplyAsync(embed: BuildedEmbeds.BaseGlimmerEmbed(Color.Gold, message, $"Капитал стража {target.Username}"));
+			await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Gold, message, $"Капитал стража {target.Username}"));
 		}
 
 		[Command("стата")]
@@ -200,7 +198,7 @@ namespace Neira.Bot.Modules
 		{
 			var target = mentionedUser ?? Context.User;
 
-			var userAccount = await db.GetGuildUserAccountAsync((SocketGuildUser)target);
+			var userAccount = await DatabaseHelper.GetGuildUserAccountAsync((SocketGuildUser)target);
 			var requiredXp = (Math.Pow(userAccount.LevelNumber + 1, 2) * 50);
 
 			var auth = new EmbedAuthorBuilder()
@@ -227,11 +225,11 @@ namespace Neira.Bot.Modules
 		[Summary("Отображение твоей глобальной статистики (Уровень, опыт)")]
 		[Remarks("!баланс <страж которого ты хочешь проверить (Если никого не указать по умолчанию отобразит твой аккаунт)> Пример: !баланс @Cyber_Garret")]
 		[Cooldown(10)]
-		public async Task WsashiStats(SocketUser mentionedUser = null)
+		public async Task NeiraStats(SocketUser mentionedUser = null)
 		{
 			var target = mentionedUser ?? Context.User;
 
-			var userAccount = await db.GetUserAccountAsync(target);
+			var userAccount = await DatabaseHelper.GetUserAccountAsync(target);
 			var requiredXp = (Math.Pow(userAccount.LevelNumber + 1, 2) * 50);
 
 			var auth = new EmbedAuthorBuilder()

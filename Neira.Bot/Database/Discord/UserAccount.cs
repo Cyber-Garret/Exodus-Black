@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Neira.Bot.Models.Db
+namespace Neira.Bot.Database
 {
 	public class UserAccount
 	{

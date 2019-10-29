@@ -5,10 +5,10 @@ using System.Globalization;
 
 namespace Neira.Bot
 {
-	internal static class Global
+	internal static class GlobalVariables
 	{
 		#region Economy
-		internal const ulong DailyGlimmerGain = 100;
+		internal const ulong DailyGlimmerGain = 50;
 		public const int MessageRewardCooldown = 30;
 		public const int MessageXPCooldown = 6;
 		public const int MessageRewardMinLenght = 20;

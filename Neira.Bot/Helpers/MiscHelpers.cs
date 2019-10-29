@@ -1,10 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Neira.Bot.Models.Db;
+using Neira.Bot.Database;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Neira.Bot.Helpers
 {
@@ -20,7 +18,7 @@ namespace Neira.Bot.Helpers
 				Description = text
 			};
 			//if guild have picture add to message.
-			if (guildUser.Guild.IconUrl != string.Empty)
+			if (!string.IsNullOrEmpty(guildUser.Guild.IconUrl))
 				embed.ThumbnailUrl = guildUser.Guild.IconUrl;
 
 			return embed;
