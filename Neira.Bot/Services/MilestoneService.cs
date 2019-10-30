@@ -82,40 +82,91 @@ namespace Neira.Bot.Services
 			{
 				var msg = await cache.GetOrDownloadAsync();
 
-				if (reaction.Emote.Equals(Emote.Raid))
+				using (var Db = new NeiraLinkContext())
 				{
-					using (var Db = new NeiraLinkContext())
+					//get milestone
+					var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+					if (milestone == null) return;
+
+					//check reaction
+					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+
+					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
 					{
-						//get milestone
-						var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
-
-						if (milestone == null) return;
-
-						//check reaction
-						var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
-
-						if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
+						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							Db.MilestoneUsers.Add(new MilestoneUser
-							{
-								MessageId = milestone.MessageId,
-								UserId = reaction.UserId
-							});
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
-						else
-						{
-							var user = Client.GetUser(reaction.UserId);
-							await msg.RemoveReactionAsync(Emote.Raid, user);
-						}
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
+					}
+					else
+					{
+						var user = Client.GetUser(reaction.UserId);
+						await msg.RemoveReactionAsync(Emote.Raid, user);
 					}
 				}
-
 			}
 			catch (Exception ex)
 			{
 				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Reaction Added in Milestone", ex.Message, ex));
+			}
+		}
+
+		internal async Task HandleReactionAddedV2(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
+		{
+			var msg = await cache.GetOrDownloadAsync();
+
+			using (var Db = new NeiraLinkContext())
+			{
+				//get milestone
+				var milestone = await Db.OldActiveMilestones.Include(r => r.Milestone).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+				if (milestone == null) return;
+
+				if (reaction.Emote.Equals(Emote.ReactSecond))
+				{
+					if (milestone.User2 == 0)
+					{
+						milestone.User2 = reaction.User.Value.Id;
+						HandleOldMilestone(msg, milestone);
+					}
+
+				}
+				else if (reaction.Emote.Equals(Emote.ReactThird))
+				{
+					if (milestone.User3 == 0)
+					{
+						milestone.User3 = reaction.User.Value.Id;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(Emote.ReactFourth))
+				{
+					if (milestone.User4 == 0)
+					{
+						milestone.User4 = reaction.User.Value.Id;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(Emote.ReactFifth))
+				{
+					if (milestone.User5 == 0)
+					{
+						milestone.User5 = reaction.User.Value.Id;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(Emote.ReactSixth))
+				{
+					if (milestone.User6 == 0)
+					{
+						milestone.User6 = reaction.User.Value.Id;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
 			}
 		}
 
@@ -159,11 +210,91 @@ namespace Neira.Bot.Services
 			}
 		}
 
+		public async Task HandleReactionRemovedV2(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
+		{
+			var msg = await cache.GetOrDownloadAsync();
+			using (var Db = new NeiraLinkContext())
+			{
+				var milestone = await Db.OldActiveMilestones.Include(r => r.Milestone).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+				if (milestone == null) return;
+
+				if (reaction.Emote.Equals(Emote.ReactSecond))
+				{
+					if (milestone.User2 == reaction.User.Value.Id)
+					{
+						milestone.User2 = 0;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(Emote.ReactThird))
+				{
+					if (milestone.User3 == reaction.User.Value.Id)
+					{
+						milestone.User3 = 0;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(Emote.ReactFourth))
+				{
+					if (milestone.User4 == reaction.User.Value.Id)
+					{
+						milestone.User4 = 0;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(Emote.ReactFifth))
+				{
+					if (milestone.User5 == reaction.User.Value.Id)
+					{
+						milestone.User5 = 0;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(Emote.ReactSixth))
+				{
+					if (milestone.User6 == reaction.User.Value.Id)
+					{
+						milestone.User6 = 0;
+						HandleOldMilestone(msg, milestone);
+					}
+				}
+			}
+		}
+
 		private async void HandleReaction(IUserMessage message, ActiveMilestone activeMilestone)
 		{
 			var newEmbed = EmbedsHelper.MilestoneRebuild(Client, activeMilestone, Emote.Raid);
 			if (newEmbed.Length != 0)
 				await message.ModifyAsync(m => m.Embed = newEmbed);
+		}
+
+		private async void HandleOldMilestone(IUserMessage message, OldActiveMilestone milestone)
+		{
+			var newEmbed = EmbedsHelper.MilestoneRebuildV2(Client, milestone);
+			if (newEmbed.Length != 0)
+			{
+				await message.ModifyAsync(m => m.Embed = newEmbed);
+				using (var Db = new NeiraLinkContext())
+				{
+					Db.OldActiveMilestones.Update(milestone);
+					await Db.SaveChangesAsync();
+				}
+			}
+		}
+
+		private async Task UpdateBotStatAsync()
+		{
+			using (var Db = new NeiraLinkContext())
+			{
+				//Update Bot stat for website.
+				var stats = Db.BotInfos.FirstOrDefault();
+				stats.Milestones++;
+				stats.Servers = Client.Guilds.Count;
+				stats.Users = Client.Guilds.Sum(u => u.Users.Count);
+				Db.BotInfos.Update(stats);
+				await Db.SaveChangesAsync();
+			}
 		}
 
 		public async Task RegisterNewMilestoneAsync(ulong msgId, SocketCommandContext context, int raidInfoId, DateTime date, string userMemo)
@@ -186,13 +317,7 @@ namespace Neira.Bot.Services
 					Db.ActiveMilestones.Add(newMilestone);
 					await Db.SaveChangesAsync();
 
-					//Update Bot stat for website.
-					var stats = Db.BotInfos.FirstOrDefault();
-					stats.Milestones++;
-					stats.Servers = Client.Guilds.Count;
-					stats.Users = Client.Guilds.Sum(u => u.Users.Count);
-					Db.BotInfos.Update(stats);
-					Db.SaveChanges();
+					_ = Task.Run(async () => await UpdateBotStatAsync());
 				}
 			}
 			catch (Exception ex)
@@ -200,6 +325,33 @@ namespace Neira.Bot.Services
 				await Logger.Log(new LogMessage(LogSeverity.Error, "Register Milestone Method", ex.Message, ex));
 			}
 
+		}
+
+		public async Task RegisterNewMilestoneV2Async(ulong msgId, SocketCommandContext context, int milestoneKey, DateTime date, string userMemo)
+		{
+			try
+			{
+				using (var Db = new NeiraLinkContext())
+				{
+					var newMilestone = new OldActiveMilestone
+					{
+						MessageId = msgId,
+						GuildId = context.Guild.Id,
+						MilestoneId = milestoneKey,
+						Memo = userMemo,
+						DateExpire = date,
+						User1 = context.User.Id
+					};
+					Db.OldActiveMilestones.Add(newMilestone);
+					await Db.SaveChangesAsync();
+
+					_ = Task.Run(async () => await UpdateBotStatAsync());
+				}
+			}
+			catch (Exception ex)
+			{
+				await Logger.Log(new LogMessage(LogSeverity.Error, "RegisterRaidAsync", ex.Message, ex));
+			}
 		}
 
 		public async Task RaidNotificationAsync(List<ulong> userIds, ActiveMilestone milestone)

@@ -12,6 +12,12 @@ namespace Neira.Bot.Services
 		public IEmote Solar;
 		public IEmote Void;
 		public IEmote Glimmer;
+		public IEmote ReactSecond => new Emoji("2\u20e3");
+		public IEmote ReactThird => new Emoji("3\u20e3");
+		public IEmote ReactFourth => new Emoji("4\u20e3");
+		public IEmote ReactFifth => new Emoji("5\u20e3");
+		public IEmote ReactSixth => new Emoji("6\u20e3");
+
 		private readonly DiscordSocketClient Client;
 
 		public EmoteService(DiscordSocketClient discordSocket)

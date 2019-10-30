@@ -245,6 +245,16 @@ namespace Neira.Bot.Modules
 			int SucessCount = 0;
 			int FailCount = 0;
 
+			var embed = new EmbedBuilder
+			{
+				Title = $":mailbox_with_mail: Вам сообщение от {Context.User.Username} с сервера **`{Context.Guild.Name}`**",
+				Color = Color.LightOrange,
+				ThumbnailUrl = Context.Guild.IconUrl,
+				Description = message,
+			};
+			embed.WithFooter("Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su");
+			embed.WithCurrentTimestamp();
+
 			foreach (var user in Context.Guild.Users)
 			{
 				if (user.Roles.Contains(role) || role.Name == "everyone")
@@ -252,14 +262,6 @@ namespace Neira.Bot.Modules
 					try
 					{
 						var DM = await user.GetOrCreateDMChannelAsync();
-
-						EmbedBuilder embed = new EmbedBuilder();
-						embed.WithTitle($"Сообщение от {Context.User.Username} с сервера **`{Context.Guild.Name}`**");
-						embed.WithColor(Color.Gold);
-						embed.WithDescription(message);
-						embed.WithThumbnailUrl(Context.Guild.IconUrl);
-						embed.WithFooter("Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su");
-						embed.WithCurrentTimestamp();
 
 						await DM.SendMessageAsync(embed: embed.Build());
 						SucessCount++;

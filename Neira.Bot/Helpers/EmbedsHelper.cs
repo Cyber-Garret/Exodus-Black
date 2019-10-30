@@ -5,6 +5,7 @@ using Neira.Bot.Database;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Neira.Bot.Helpers
 {
@@ -145,6 +146,32 @@ namespace Neira.Bot.Helpers
 			return embed.Build();
 		}
 
+		public static Embed MilestoneNewV2(SocketUser leader, Milestone milestone, DateTime date, string userMemo)
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = $"{date.Date.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. {milestone.Type}: {milestone.Name}",
+				Color = Color.Gold,
+				ThumbnailUrl = milestone.Icon
+			};
+
+			if (milestone.PreviewDesc != null)
+				embed.WithDescription(milestone.PreviewDesc);
+
+			if (userMemo != null)
+				embed.AddField("Заметка от лидера", userMemo);
+
+			embed.AddField("Страж #1", $"{leader.Mention} - {leader.Username}");
+			embed.AddField("Страж #2", "Свободно");
+			embed.AddField("Страж #3", "Свободно");
+			embed.AddField("Страж #4", "Свободно");
+			embed.AddField("Страж #5", "Свободно");
+			embed.AddField("Страж #6", "Свободно");
+			embed.WithFooter("Чтобы за вами закрепили место нажмите на реакцию, соответствующую месту.");
+
+			return embed.Build();
+		}
+
 		public static Embed MilestoneRebuild(DiscordSocketClient Client, ActiveMilestone activeMilestone, IEmote raidEmote)
 		{
 
@@ -180,6 +207,92 @@ namespace Neira.Bot.Helpers
 			}
 			if (embedFieldUsers.Value != null)
 				embed.AddField(embedFieldUsers);
+
+			return embed.Build();
+		}
+
+		public static Embed MilestoneRebuildV2(DiscordSocketClient Client, OldActiveMilestone milestoneV2)
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = $"{milestoneV2.DateExpire.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(milestoneV2.DateExpire.DayOfWeek)} в {milestoneV2.DateExpire.ToString("HH:mm")} по МСК. {milestoneV2.Milestone.Type}: {milestoneV2.Milestone.Name}",
+				Color = Color.Gold,
+				ThumbnailUrl = milestoneV2.Milestone.Icon
+			};
+			if (milestoneV2.Milestone.PreviewDesc != null)
+				embed.WithDescription(milestoneV2.Milestone.PreviewDesc);
+
+			if (milestoneV2.Memo != null)
+				embed.AddField("Заметка от лидера", milestoneV2.Memo);
+			//Slot 1 (Raid Leader)
+			embed.AddField("Страж #1", $"{Client.GetUser(milestoneV2.User1).Mention} - {Client.GetUser(milestoneV2.User1).Username}");
+			//Slot 2
+			if (milestoneV2.User2 != 0)
+			{
+				if (milestoneV2.User2 == milestoneV2.User1)
+					embed.AddField("Страж #2", $"**Зарезервировано лидером.**");
+				else
+				{
+					var user = Client.GetUser(milestoneV2.User2);
+					embed.AddField("Страж #2", $"{user.Mention} - {user.Username}");
+				}
+			}
+			else
+				embed.AddField("Страж #2", "Свободно");
+			//Slot 3
+			if (milestoneV2.User3 != 0)
+			{
+				if (milestoneV2.User3 == milestoneV2.User1)
+					embed.AddField("Страж #3", $"**Зарезервировано лидером.**");
+				else
+				{
+					var user = Client.GetUser(milestoneV2.User3);
+					embed.AddField("Страж #3", $"{user.Mention} - {user.Username}");
+				}
+			}
+			else
+				embed.AddField("Страж #3", "Свободно");
+			//Slot 4
+			if (milestoneV2.User4 != 0)
+			{
+				if (milestoneV2.User4 == milestoneV2.User1)
+					embed.AddField("Страж #4", $"**Зарезервировано лидером.**");
+				else
+				{
+					var user = Client.GetUser(milestoneV2.User4);
+					embed.AddField("Страж #4", $"{user.Mention} - {user.Username}");
+				}
+			}
+			else
+				embed.AddField("Страж #4", "Свободно");
+			//Slot 5
+			if (milestoneV2.User5 != 0)
+			{
+				if (milestoneV2.User5 == milestoneV2.User1)
+					embed.AddField("Страж #5", $"**Зарезервировано лидером.**");
+				else
+				{
+					var user = Client.GetUser(milestoneV2.User5);
+					embed.AddField("Страж #5", $"{user.Mention} - {user.Username}");
+				}
+			}
+			else
+				embed.AddField("Страж #5", "Свободно");
+			//Slot 6
+			if (milestoneV2.User6 != 0)
+			{
+				if (milestoneV2.User6 == milestoneV2.User1)
+					embed.AddField("Страж #6", $"**Зарезервировано лидером.**");
+				else
+				{
+					var user = Client.GetUser(milestoneV2.User6);
+					embed.AddField("Страж #6", $"{user.Mention} - {user.Username}");
+				}
+			}
+			else
+				embed.AddField("Страж #6", "Свободно");
+
+			embed.WithFooter("Чтобы за вами закрепили место нажмите на реакцию, соответствующую месту.");
 
 			return embed.Build();
 		}

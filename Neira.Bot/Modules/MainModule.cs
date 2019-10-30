@@ -344,7 +344,7 @@ namespace Neira.Bot.Modules
 		[Remarks("Пример: !сбор <Название> <Дата и время начала активности> <Заметка лидера(Не обязательно)>, например !сбор пн 17.07-20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
 		[Cooldown(10)]
-		public async Task RaidCollection(string milestoneName, string raidTime, [Remainder]string userMemo = null)
+		public async Task GoMilestone(string milestoneName, string raidTime, [Remainder]string userMemo = null)
 		{
 			try
 			{
@@ -406,6 +406,94 @@ namespace Neira.Bot.Modules
 
 				//Slots
 				await msg.AddReactionAsync(CustomEmote.Raid);
+			}
+			catch (Exception ex)
+			{
+				//reply to user if any error
+				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nУже пишу моему создателю, он сейчас все поправит.");
+				//Get App info 
+				var app = await Client.GetApplicationInfoAsync();
+				//Get Owner for DM
+				var owner = await app.Owner.GetOrCreateDMChannelAsync();
+				//Send DM message with exception
+				await owner.SendMessageAsync($"Капитан, проблема с командой сбор! **{ex.Message}** больше подробностей в консоли.");
+				//Log full exception in console
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Milestone command", ex.Message, ex));
+			}
+		}
+
+		[Command("рейд")]
+		[Summary("Команда для анонса активностей. Альтернативная версия.")]
+		[Remarks("Пример: !рейд <Название> <Дата и время начала активности> <Заметка лидера(Не обязательно)>, например !рейд пн 17.07-20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
+		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
+		[Cooldown(10)]
+		public async Task GoRaid(string milestoneName, string raidTime, [Remainder]string userMemo = null)
+		{
+			try
+			{
+				var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
+
+				var milestone = await DatabaseHelper.GetMilestone(milestoneName);
+
+				if (milestone == null)
+				{
+					var AvailableRaids = "Доступные для регистрации активности:\n\n";
+					var info = DatabaseHelper.GetAllMilestones();
+
+					foreach (var item in info)
+					{
+						AvailableRaids += $"**{item.Name}** или просто **{item.Alias}**\n";
+					}
+
+					var message = new EmbedBuilder()
+						.WithTitle("Страж, я не разобрала в какую активность ты хочешь пойти")
+						.WithColor(Color.Red)
+						.WithDescription(AvailableRaids += "\nПример: !рейд пж 17.07-20:00")
+						.WithFooter("Хочу напомнить, что я ищу как по полному названию рейда так и частичному. Это сообщение будет автоматически удалено через 2 минуты.");
+					await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
+					return;
+				}
+
+				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
+
+				DateTime.TryParseExact(raidTime, formats, CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
+
+				if (dateTime == new DateTime())
+				{
+					var message = new EmbedBuilder()
+						.WithTitle("Страж, ты указал неизвестный мне формат времени")
+						.WithColor(Color.Gold)
+						.AddField("Я понимаю время начала рейда в таком формате",
+						"Формат времени: **<день>.<месяц>-<час>:<минута>**\n" +
+						"**День:** от 01 до 31\n" +
+						"**Месяц:** от 01 до 12\n" +
+						"**Час:** от 00 до 23\n" +
+						"**Минута:** от 00 до 59\n" +
+						"В итоге у тебя должно получиться: **05.07-20:05** Пример: !сбор пж 21.05-20:00")
+						.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
+						.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+					await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
+					return;
+				}
+				if (dateTime < DateTime.Now)
+				{
+					var message = new EmbedBuilder()
+						.WithColor(Color.Red)
+						.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
+					await ReplyAndDeleteAsync(null, embed: message.Build());
+					return;
+				}
+
+				var msg = await ReplyAsync(message: guild.GlobalMention, embed: EmbedsHelper.MilestoneNewV2(Context.User, milestone, dateTime, userMemo));
+				await Milestone.RegisterNewMilestoneV2Async(msg.Id, Context, milestone.Id, dateTime, userMemo);
+
+				//Slots
+				//Slots
+				await msg.AddReactionAsync(CustomEmote.ReactSecond);
+				await msg.AddReactionAsync(CustomEmote.ReactThird);
+				await msg.AddReactionAsync(CustomEmote.ReactFourth);
+				await msg.AddReactionAsync(CustomEmote.ReactFifth);
+				await msg.AddReactionAsync(CustomEmote.ReactSixth);
 			}
 			catch (Exception ex)
 			{

@@ -202,7 +202,18 @@ namespace Neira.Bot.Services
 			Task.Run(async () =>
 			{
 				if (!reaction.User.Value.IsBot)
-					await milestone.HandleReactionAdded(cache, reaction);
+				{
+					//New milestone?
+					if (reaction.Emote.Equals(emoteService.Raid))
+						await milestone.HandleReactionAdded(cache, reaction);
+					//Or old?
+					else if (reaction.Emote.Equals(emoteService.ReactSecond)
+					|| reaction.Emote.Equals(emoteService.ReactThird)
+					|| reaction.Emote.Equals(emoteService.ReactFourth)
+					|| reaction.Emote.Equals(emoteService.ReactFifth)
+					|| reaction.Emote.Equals(emoteService.ReactSixth))
+						await milestone.HandleReactionAddedV2(cache, reaction);
+				}
 			});
 			return Task.CompletedTask;
 		}
@@ -211,7 +222,16 @@ namespace Neira.Bot.Services
 			Task.Run(async () =>
 			{
 				if (!reaction.User.Value.IsBot)
-					await milestone.HandleReactionRemoved(cache, reaction);
+					//New milestone?
+					if (reaction.Emote.Equals(emoteService.Raid))
+						await milestone.HandleReactionRemoved(cache, reaction);
+					//Or old?
+					else if (reaction.Emote.Equals(emoteService.ReactSecond)
+						|| reaction.Emote.Equals(emoteService.ReactThird)
+						|| reaction.Emote.Equals(emoteService.ReactFourth)
+						|| reaction.Emote.Equals(emoteService.ReactFifth)
+						|| reaction.Emote.Equals(emoteService.ReactSixth))
+						await milestone.HandleReactionRemovedV2(cache, reaction);
 			});
 			return Task.CompletedTask;
 		}

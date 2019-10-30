@@ -27,6 +27,7 @@ namespace Neira.Bot.Database
 		public virtual DbSet<Clan> Clans { get; set; }
 		public virtual DbSet<Clan_Member> Clan_Members { get; set; }
 		public virtual DbSet<Milestone> Milestones { get; set; }
+		public virtual DbSet<OldActiveMilestone> OldActiveMilestones { get; set; }
 		public virtual DbSet<ActiveMilestone> ActiveMilestones { get; set; }
 		public virtual DbSet<MilestoneUser> MilestoneUsers { get; set; }
 	}

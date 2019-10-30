@@ -62,16 +62,16 @@ namespace Neira.Bot.Services
 					//Load guild account settings
 					var config = await DatabaseHelper.GetGuildAccountAsync(user.Guild.Id);
 
-					if (config.NotificationChannel != 0)
+					if (config.WelcomeChannel != 0)
 					{
-						await Client.GetGuild(config.Id).GetTextChannel(config.NotificationChannel)
-						   .SendMessageAsync($"Бип! Поздравляю страж {user.Username}, ты только что поднялся до уровня {newLevel}!");
+						await Client.GetGuild(config.Id).GetTextChannel(config.WelcomeChannel)
+						   .SendMessageAsync($"Бип! Поздравляю стража {user.Mention}, он только что поднялся до уровня **{newLevel}**!");
 						return;
 					}
 					else
 					{
 						var dM = await user.GetOrCreateDMChannelAsync();
-						await dM.SendMessageAsync($"Бип! Поздравляю страж {user.Username}, ты только что поднялся до уровня {newLevel}!");
+						await dM.SendMessageAsync($"Бип! Поздравляю страж {user.Username}, ты только что поднялся до уровня {newLevel}, на сервере {user.Guild.Name}!");
 						return;
 					}
 				}
@@ -192,27 +192,27 @@ namespace Neira.Bot.Services
 				if (exotic == 0)
 				{
 					userAccount.ExoticEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **экзотическую** энграмму за достижение уровня {userAccount.LevelNumber}. ");
+					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **экзотическую** энграмму за достижение уровня {userAccount.LevelNumber}.");
 				}
 				else if (legendary == 0)
 				{
 					userAccount.LegendaryEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **легендарную** энграмму за достижение уровня {userAccount.LevelNumber}. ");
+					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **легендарную** энграмму за достижение уровня {userAccount.LevelNumber}.");
 				}
 				else if (rare == 0)
 				{
 					userAccount.RareEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **редкую** энграмму за достижение уровня {userAccount.LevelNumber}. ");
+					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **редкую** энграмму за достижение уровня {userAccount.LevelNumber}.");
 				}
 				else if (uc == 0)
 				{
 					userAccount.UncommonEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **необычную** энграмму за достижение уровня {userAccount.LevelNumber}. ");
+					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **необычную** энграмму за достижение уровня {userAccount.LevelNumber}.");
 				}
 				else
 				{
 					userAccount.CommonEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **обычную** энграмму за достижение уровня {userAccount.LevelNumber}. ");
+					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **обычную** энграмму за достижение уровня {userAccount.LevelNumber}.");
 				}
 
 				Db.UserAccounts.Update(userAccount);
