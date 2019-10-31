@@ -6,6 +6,7 @@ using Neira.Bot.Preconditions;
 using Neira.Bot.Services;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Neira.Bot.Modules
@@ -392,5 +393,60 @@ namespace Neira.Bot.Modules
 			}
 		}
 
+		[Command("онлайн")]
+		[Summary("Отображает некоторую информацию о дискорд сервере.")]
+		public async Task ServerInfoAsync()
+		{
+			try
+			{
+				var guild = Context.Guild;
+				await guild.DownloadUsersAsync();
+
+
+				var stat = new EmbedsHelper.UsersInStatuses
+				{
+					TotalUsers = guild.Users.Count,
+					UsersAFK = 0,
+					UsersDnD = 0,
+					UsersInvoice = 0,
+					UsersOffline = 0,
+					UsersOnline = 0,
+					UsersPlaying = 0,
+					UsersInDestiny = 0
+				};
+
+				var options = new ParallelOptions() { MaxDegreeOfParallelism = 10 };
+				Parallel.ForEach(guild.Users, options, user =>
+				{
+					//Playing game?
+					if (user.Activity != null)
+						Interlocked.Increment(ref stat.UsersPlaying);
+					//User playing Destiny 2?
+					if (user.Activity?.Name == "Destiny 2")
+						Interlocked.Increment(ref stat.UsersInDestiny);
+					//Sit in voice channel of current guild?
+					if (user.VoiceState.HasValue)
+						Interlocked.Increment(ref stat.UsersInvoice);
+					//User current status
+					if (user.Status == UserStatus.Online)
+						Interlocked.Increment(ref stat.UsersOnline);
+					else if (user.Status == UserStatus.Offline || user.Status == UserStatus.Invisible)
+						Interlocked.Increment(ref stat.UsersOffline);
+					else if (user.Status == UserStatus.Idle || user.Status == UserStatus.AFK)
+						Interlocked.Increment(ref stat.UsersAFK);
+					else if (user.Status == UserStatus.DoNotDisturb)
+						Interlocked.Increment(ref stat.UsersDnD);
+				});
+
+
+				await ReplyAsync(embed: EmbedsHelper.GuildInfo(Context, stat, NeiraWebsite));
+			}
+			catch (Exception ex)
+			{
+				await ReplyAsync($"Ошибка: {ex.Message}");
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Команда онлайн", ex.Message, ex));
+				throw;
+			}
+		}
 	}
 }
