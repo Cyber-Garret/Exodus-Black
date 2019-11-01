@@ -349,22 +349,22 @@ namespace Neira.Bot.Helpers
 
 			var embed = new EmbedBuilder
 			{
-				Title = $"Инфо о корабле {commandContext.Guild.Name}",
+				Title = $"Инфо о сервере {commandContext.Guild.Name}",
 				ThumbnailUrl = commandContext.Guild.IconUrl,
 				Color = Color.Teal
 			}
 			.AddField("Создан", $"{cAt.Day}.{cAt.Month}.{cAt.Year}", true)
 			.AddField("Регион", commandContext.Guild.VoiceRegionId, true)
 			.AddField(GlobalVariables.InvisibleString, "*Онлайн статистика стражей*")
-			.AddField("Стражи", users.TotalUsers, true)
-			.AddField("Стражи в сети", users.UsersOnline, true)
-			.AddField("Стражи не в сети", users.UsersOffline, true)
-			.AddField("Стражи в голосе", users.UsersInvoice, true)
-			.AddField("Стражи в AFK", users.UsersAFK, true)
-			.AddField("Стражи кирпичи", users.UsersDnD, true)
-			.AddField("Стражи в игре", users.UsersPlaying, true)
-			.AddField("Стражи в Destiny", users.UsersInDestiny, true)
-			.AddField(GlobalVariables.InvisibleString, "*Статистика корабля*")
+			.AddField("Всего", users.TotalUsers, true)
+			.AddField("В сети", users.UsersOnline, true)
+			.AddField("Не в сети", users.UsersOffline, true)
+			.AddField("В голосовых каналах", users.UsersInvoice, true)
+			.AddField("Не активен", users.UsersAFK, true)
+			.AddField("Не беспокоить", users.UsersDnD, true)
+			.AddField("В игре", users.UsersPlaying, true)
+			.AddField("В Destiny 2", users.UsersInDestiny, true)
+			.AddField(GlobalVariables.InvisibleString, "*Статистика сервера*")
 			.AddField("Ролей", commandContext.Guild.Roles.Count, true)
 			.AddField("Категорий", commandContext.Guild.CategoryChannels.Count, true)
 			.AddField("Голосовых каналов", commandContext.Guild.VoiceChannels.Count, true)

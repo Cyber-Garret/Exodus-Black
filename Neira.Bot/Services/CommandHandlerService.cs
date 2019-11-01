@@ -68,13 +68,11 @@ namespace Neira.Bot.Services
 					 context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
 				 });
 			}
-
 			await Task.Run(async () =>
-					  {
-						  await leveling.Level((SocketGuildUser)context.User);
-						  await leveling.GlobalLevel((SocketGuildUser)context.User);
-						  await leveling.MessageRewards((SocketGuildUser)context.User, message);
-					  });
+			 {
+				 await leveling.GlobalLevel((SocketGuildUser)context.User);
+				 await leveling.MessageRewards((SocketGuildUser)context.User, message);
+			 });
 		}
 
 	}

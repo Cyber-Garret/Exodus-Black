@@ -15,5 +15,6 @@ namespace Neira.Bot.Database
 		public ulong AutoroleID { get; set; } = 0;
 		public string CommandPrefix { get; set; }
 		public string GlobalMention { get; set; } = "@here";
+		public bool Economy { get; set; } = false;
 	}
 }

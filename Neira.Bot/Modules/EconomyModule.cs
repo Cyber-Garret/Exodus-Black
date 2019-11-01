@@ -24,13 +24,29 @@ namespace Neira.Bot.Modules
 
 		[Command("награда")]
 		[Summary("Ежедневная порция блеска, бесплатно!")]
-		[Cooldown(30)]
+		[Cooldown(300)]
 		public async Task GetDaily()
 		{
-			var result = await DatabaseHelper.GetDailyAsync(Context.User.Id);
+			var user = await DatabaseHelper.GetUserAccountAsync(Context.User);
+			var difference = DateTime.UtcNow - user.LastDaily.AddDays(1);
 
-			if (result.Success)
+
+			if (difference.TotalHours < 0)
 			{
+				var embed = new EmbedBuilder
+				{
+					Color = Color.Red,
+					Description = $"{emote.Glimmer}:clock1:  | **Страж {Context.User.Username}, ты уже получил свою бесплатную порцию блеска!\nВозвращайся через {difference:%h} ч. {difference:%m} мин.**"
+				};
+				await ReplyAsync(embed: embed.Build());
+			}
+			else
+			{
+				user.Glimmer += GlobalVariables.DailyGlimmerGain;
+				user.LastDaily = DateTime.UtcNow;
+
+				await DatabaseHelper.SaveUserAccountAsync(user);
+
 				var embed = new EmbedBuilder
 				{
 					Color = Color.Gold,
@@ -39,46 +55,42 @@ namespace Neira.Bot.Modules
 
 				await ReplyAsync(embed: embed.Build());
 			}
-			else
-			{
-				var embed = new EmbedBuilder
-				{
-					Color = Color.Red,
-					Description = $"{emote.Glimmer}:clock1:  | **Страж {Context.User.Username}, ты уже получил свою бесплатную порцию блеска!\nВозвращайся через {result.RefreshTimeSpan:%h} ч. {result.RefreshTimeSpan:%m} мин.**"
-				};
-				await ReplyAsync(embed: embed.Build());
-			}
 		}
 
 		[Command("респект")]
 		[Summary("Увеличивает репутацию указанного стража. ")]
 		[Remarks("Пример: **!респект @Cyber_Garret**")]
-		[Cooldown(30), RequireContext(ContextType.Guild, ErrorMessage = GlobalVariables.NotInGuildText)]
-		public async Task GetRep([NoSelf]SocketGuildUser recipient)
+		[Cooldown(300), RequireContext(ContextType.Guild, ErrorMessage = GlobalVariables.NotInGuildText)]
+		public async Task GetRep([NoSelf]SocketGuildUser mentionedUser)
 		{
 			//Get user can add reputation?
-			var result = await DatabaseHelper.GetRepAsync((SocketGuildUser)Context.User);
+			var sender = await DatabaseHelper.GetGuildUserAccountAsync((SocketGuildUser)Context.User);
+			var difference = DateTime.UtcNow - sender.LastRep.AddDays(1);
 
-			if (result.Success)
-			{
-				//Add Reputation to mentioned user
-				await DatabaseHelper.AddRepAsync(recipient);
-
-				var embed = new EmbedBuilder
-				{
-					Color = Color.Gold,
-					Description = $":diamond_shape_with_a_dot_inside: | Внимание страж {recipient.Mention}!\nТвоя репутация была повышена стражем {Context.User.Mention}, не забудь его поблагодарить."
-				};
-
-				await ReplyAsync(embed: embed.Build());
-			}
-			else
+			if (difference.TotalHours < 0)
 			{
 				var embed = new EmbedBuilder
 				{
 					Color = Color.Red,
-					Description = $":diamond_shape_with_a_dot_inside::clock1:  | **Страж {Context.User.Username}, ты уже кому-то повышал репутацию.\nТы сможешь кому-то поднять репутацию через {result.RefreshTimeSpan:%h} ч. {result.RefreshTimeSpan:%m} мин.**"
+					Description = $":diamond_shape_with_a_dot_inside::clock1:  | **Страж {Context.User.Username}, ты уже кому-то повышал репутацию.\nТы сможешь кому-то поднять репутацию через {difference:%h} ч. {difference:%m} мин.**"
 				};
+				await ReplyAsync(embed: embed.Build());
+			}
+			else
+			{
+				sender.LastRep = DateTime.UtcNow;
+				await DatabaseHelper.SaveGuildUserAccountAsync(sender);
+				//Add Reputation to mentioned user
+				var recipient = await DatabaseHelper.GetGuildUserAccountAsync(mentionedUser);
+				recipient.Reputation++;
+				await DatabaseHelper.SaveGuildUserAccountAsync(recipient);
+
+				var embed = new EmbedBuilder
+				{
+					Color = Color.Gold,
+					Description = $":diamond_shape_with_a_dot_inside: | Внимание страж {mentionedUser.Mention}!\nТвоя репутация была повышена стражем {Context.User.Mention}, не забудь его поблагодарить."
+				};
+
 				await ReplyAsync(embed: embed.Build());
 			}
 
@@ -214,9 +226,8 @@ namespace Neira.Bot.Modules
 			};
 
 			embed.AddField("Ур.", userAccount.LevelNumber, true);
-			embed.AddField("Опыт", $"{userAccount.XP}/{requiredXp} (Всего {userAccount.XP})", true);
+			embed.AddField("Опыт", $"{userAccount.XP}/{requiredXp}", true);
 			embed.AddField("Репутация", userAccount.Reputation, true);
-			embed.AddField("Предупреждения", 0, true);
 
 			await ReplyAsync(embed: embed.Build());
 		}

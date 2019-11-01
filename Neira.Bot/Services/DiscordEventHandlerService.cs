@@ -17,15 +17,17 @@ namespace Neira.Bot.Services
 		private readonly CommandHandlerService CommandHandlingService;
 		private readonly XurService xur;
 		private readonly MilestoneService milestone;
+		private readonly LevelingService leveling;
 		private readonly EmoteService emoteService;
 
 
-		public DiscordEventHandlerService(DiscordSocketClient socketClient, CommandHandlerService command, XurService xurService, MilestoneService milestoneService, EmoteService emote)
+		public DiscordEventHandlerService(DiscordSocketClient socketClient, CommandHandlerService command, XurService xurService, MilestoneService milestoneService, EmoteService emote,LevelingService levelingService)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
 			xur = xurService;
 			milestone = milestoneService;
+			leveling = levelingService;
 			emoteService = emote;
 		}
 
@@ -124,6 +126,7 @@ namespace Neira.Bot.Services
 			Task.Run(async () =>
 			{
 				await CommandHandlingService.HandleCommandAsync(message);
+				await leveling.Level((SocketGuildUser)message.Author);
 			});
 			return Task.CompletedTask;
 		}

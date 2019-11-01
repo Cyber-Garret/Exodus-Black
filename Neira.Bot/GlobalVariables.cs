@@ -8,7 +8,7 @@ namespace Neira.Bot
 	internal static class GlobalVariables
 	{
 		#region Economy
-		internal const ulong DailyGlimmerGain = 50;
+		internal const ulong DailyGlimmerGain = 25;
 		public const int MessageRewardCooldown = 30;
 		public const int MessageXPCooldown = 6;
 		public const int MessageRewardMinLenght = 20;

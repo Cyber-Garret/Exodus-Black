@@ -24,58 +24,55 @@ namespace Neira.Bot.Services
 		/// </summary>
 		internal async Task Level(SocketGuildUser user)
 		{
-			using (var Db = new NeiraLinkContext())
+			try
 			{
-				//Load or create user guild account
-				GuildUserAccount userAccount = null;
-				if (Db.GuildUserAccounts.Any(u => u.UserId == user.Id && u.GuildId == user.Guild.Id))
-					userAccount = await Db.GuildUserAccounts.SingleAsync(u => u.UserId == user.Id && u.GuildId == user.Guild.Id);
-				else
+				using (var Db = new NeiraLinkContext())
 				{
-					userAccount = new GuildUserAccount
-					{
-						UserId = user.Id,
-						GuildId = user.Guild.Id
-					};
-					Db.GuildUserAccounts.Add(userAccount);
-				}
-
-				DateTime now = DateTime.UtcNow;
-
-				if (now < userAccount.LastXPMessage.AddSeconds(GlobalVariables.MessageXPCooldown))
-					return;
-
-				userAccount.LastXPMessage = now;
-
-				//save old level value
-				uint oldLevel = userAccount.LevelNumber;
-				userAccount.XP += 13;
-
-				Db.GuildUserAccounts.Update(userAccount);
-				await Db.SaveChangesAsync();
-
-				//get new level value
-				uint newLevel = userAccount.LevelNumber;
-				//User level up?
-				if (oldLevel != newLevel)
-				{
-					//Load guild account settings
 					var config = await DatabaseHelper.GetGuildAccountAsync(user.Guild.Id);
+					if (!config.Economy) return;
 
-					if (config.WelcomeChannel != 0)
-					{
-						await Client.GetGuild(config.Id).GetTextChannel(config.WelcomeChannel)
-						   .SendMessageAsync($"Бип! Поздравляю стража {user.Mention}, он только что поднялся до уровня **{newLevel}**!");
+					//Load or create user guild account
+					var userAccount = await DatabaseHelper.GetGuildUserAccountAsync(user);
+
+					DateTime now = DateTime.UtcNow;
+
+					if (now < userAccount.LastXPMessage.AddSeconds(GlobalVariables.MessageXPCooldown))
 						return;
-					}
-					else
+
+					userAccount.LastXPMessage = now;
+
+					//save old level value
+					uint oldLevel = userAccount.LevelNumber;
+					userAccount.XP += 13;
+
+					await DatabaseHelper.SaveGuildUserAccountAsync(userAccount);
+
+					//get new level value
+					uint newLevel = userAccount.LevelNumber;
+					//User level up?
+					if (oldLevel != newLevel)
 					{
-						var dM = await user.GetOrCreateDMChannelAsync();
-						await dM.SendMessageAsync($"Бип! Поздравляю страж {user.Username}, ты только что поднялся до уровня {newLevel}, на сервере {user.Guild.Name}!");
-						return;
+
+						if (config.WelcomeChannel != 0)
+						{
+							await Client.GetGuild(config.Id).GetTextChannel(config.WelcomeChannel)
+							   .SendMessageAsync($"Бип! Поздравляю стража {user.Mention}, он только что поднялся до уровня **{newLevel}**!");
+							return;
+						}
+						else
+						{
+							var dM = await user.GetOrCreateDMChannelAsync();
+							await dM.SendMessageAsync($"Бип! Поздравляю страж {user.Username}, ты только что поднялся до уровня {newLevel}, на сервере {user.Guild.Name}!");
+							return;
+						}
 					}
+					else return;
 				}
-				else return;
+			}
+			catch (Exception ex)
+			{
+				await Logger.LogFullException(new Discord.LogMessage(Discord.LogSeverity.Critical, "Level Up in Guild", ex.Message, ex));
+				throw;
 			}
 		}
 
