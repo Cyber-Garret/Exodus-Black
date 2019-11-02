@@ -59,12 +59,6 @@ namespace Neira.Bot.Services
 							   .SendMessageAsync($"Бип! Поздравляю стража {user.Mention}, он только что поднялся до уровня **{newLevel}**!");
 							return;
 						}
-						else
-						{
-							var dM = await user.GetOrCreateDMChannelAsync();
-							await dM.SendMessageAsync($"Бип! Поздравляю страж {user.Username}, ты только что поднялся до уровня {newLevel}, на сервере {user.Guild.Name}!");
-							return;
-						}
 					}
 					else return;
 				}
@@ -179,38 +173,23 @@ namespace Neira.Bot.Services
 					};
 					Db.UserAccounts.Add(userAccount);
 				}
-				var channel = await user.GetOrCreateDMChannelAsync();
 				int level = (int)userAccount.LevelNumber;
 
 				int uc = level % 5;
 				int rare = level % 10;
 				int legendary = level % 15;
 				int exotic = level % 20;
+
 				if (exotic == 0)
-				{
 					userAccount.ExoticEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **экзотическую** энграмму за достижение уровня {userAccount.LevelNumber}.");
-				}
 				else if (legendary == 0)
-				{
 					userAccount.LegendaryEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **легендарную** энграмму за достижение уровня {userAccount.LevelNumber}.");
-				}
 				else if (rare == 0)
-				{
 					userAccount.RareEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **редкую** энграмму за достижение уровня {userAccount.LevelNumber}.");
-				}
 				else if (uc == 0)
-				{
 					userAccount.UncommonEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **необычную** энграмму за достижение уровня {userAccount.LevelNumber}.");
-				}
 				else
-				{
 					userAccount.CommonEngrams += 1;
-					await channel.SendMessageAsync($"Поздравляю страж {user.Username}, ты получил **обычную** энграмму за достижение уровня {userAccount.LevelNumber}.");
-				}
 
 				Db.UserAccounts.Update(userAccount);
 				await Db.SaveChangesAsync();
