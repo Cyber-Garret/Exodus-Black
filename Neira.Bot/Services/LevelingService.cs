@@ -56,7 +56,7 @@ namespace Neira.Bot.Services
 						if (config.WelcomeChannel != 0)
 						{
 							await Client.GetGuild(config.Id).GetTextChannel(config.WelcomeChannel)
-							   .SendMessageAsync($"Бип! Поздравляю стража {user.Mention}, он только что поднялся до уровня **{newLevel}**!");
+							   .SendMessageAsync($"Бип! Поздравляю стража {user.Nickname ?? user.Username}, он только что поднялся до уровня **{newLevel}**!");
 							return;
 						}
 					}
