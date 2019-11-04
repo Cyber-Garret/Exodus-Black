@@ -258,6 +258,12 @@ namespace Neira.Bot.Modules
 			embed.AddField("Ур.", userAccount.LevelNumber, true);
 			embed.AddField("Опыт", $"{userAccount.XP}/{requiredXp} (Всего {userAccount.XP})", true);
 			embed.AddField("Блеск", $"{userAccount.Glimmer}{emote.Glimmer}", true);
+			embed.AddField("Доступные Энграммы",
+				$"{emote.ExoticEngram} - **{userAccount.ExoticEngrams}**\n" +
+				$"{emote.LegendaryEngram} - **{userAccount.LegendaryEngrams}**\n" +
+				$"{emote.RareEngram} - **{userAccount.RareEngrams}**\n" +
+				$"{emote.UncommonEngram} - **{userAccount.UncommonEngrams}**\n" +
+				$"{emote.CommonEngram} - **{userAccount.CommonEngrams}**\n");
 
 			await ReplyAsync(embed: embed.Build());
 		}

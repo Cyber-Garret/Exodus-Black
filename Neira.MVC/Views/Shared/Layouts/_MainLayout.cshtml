@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Нейроматрица, это дискорд бот в мире Destiny 2">
+	<meta name="author" content="Cyber_Garret">
+
+	<title>@ViewData["Title"]</title>
+
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body id="page-top">
+	<!--Navigation-->
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+		<div class="container">
+			<a class="navbar-brand js-scroll-trigger" href="#page-top">Нейроматрица</a>
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				Меню
+				<i class="fas fa-bars"></i>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav text-uppercase ml-auto">
+					<li class="nav-item">
+						<a class="nav-link js-scroll-trigger" href="#stat">Статистика</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="http://docs.neira.su/" target="_blank">Документация</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link js-scroll-trigger" href="#donate">Поддержите нас</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!-- Header -->
+	<header class="masthead img-fluid">
+		<div class="container">
+			<div class="intro-text">
+				<div class="intro-lead-in">Страж, тебя приветствует</div>
+				<div class="intro-heading title-font">Нейроматрица</div>
+				<a class="btn btn-primary btn-xl" href="https://discordapp.com/oauth2/authorize?client_id=521693707238506498&scope=bot&permissions=269479104">Добавить в Дискорд</a>
+				<a class="btn btn-primary btn-xl js-scroll-trigger" href="#stat">Подробней</a>
+			</div>
+		</div>
+	</header>
+
+	@RenderBody()
+
+	@{await Html.RenderPartialAsync("_FooterPartial");}
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/lib/jquery-easing/jquery.easing.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="https://kit.fontawesome.com/f47d5ef618.js" crossorigin="anonymous"></script>
+
+	@RenderSection("Scripts", required: false)
+</body>
+</html>

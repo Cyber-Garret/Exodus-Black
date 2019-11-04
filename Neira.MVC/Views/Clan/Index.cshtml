@@ -1,0 +1,73 @@
+﻿@using Neira.MVC.Models.NeiraLink
+@model IEnumerable<Neira.MVC.Models.NeiraLink.Clan_Member>
+@{
+	Layout = "~/Views/Shared/Layouts/_ClanLayout.cshtml";
+	var CurrentClan = (Clan)ViewData["CurrentGuild"];
+	ViewData["Title"] = $"Нейроматрица | Клан {CurrentClan.Name}";
+}
+<!-- Header -->
+<header class="clanhead img-fluid" id="about">
+	<div class="container">
+		<div class="intro-text">
+			<a asp-controller="Clan" asp-action="OpenClan" asp-route-id="@CurrentClan.Id" rel="nofollow" target="_blank"><div class="intro-heading">@Html.Raw(CurrentClan.Name)</div></a>
+			<div class="intro-lead-in">Дата создания: @Html.Raw(CurrentClan.CreateDate.ToString("dd.MM.yyyy"))</div>
+			<div class="intro-lead-in">Стражей: @Html.Raw(CurrentClan.MemberCount)</div>
+			<div class="intro-lead-in">Девиз: @Html.Raw(CurrentClan.Motto)</div>
+		</div>
+	</div>
+</header>
+<div class="container text-center" style="margin-top:1rem;" id="members">
+	<h4>Стражи</h4>
+	<form asp-action="Index" method="get">
+		<div>
+			<p>
+				Поиск по имени: <input type="text" class="form-control-sm" name="SearchString" value="@ViewData["currentFilter"]" />
+				<input type="submit" class="btn btn-primary" value="Найти" /> |
+				<a asp-action="Index" asp-route-id="@CurrentClan.Id">Сбросить фильтры</a>
+			</p>
+		</div>
+	</form>
+	<p>
+		Данные о персонажах обновляются раз в <b>15 минут</b>.
+	</p>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Аватар</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Имя</a>
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Дата вступления</a>
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td><img class="img-thumbnail" src="@Html.Raw($"http://bungie.net{item.IconPath}")" style="max-height:3rem;" /></td>
+					<td>
+						<a asp-area="" asp-controller="Clan" asp-action="OpenProfile" asp-route-type="@item.DestinyMembershipType" asp-route-id="@item.DestinyMembershipId" rel="nofollow" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ClanJoinDate)
+					</td>
+					<td class="text-center">
+						@if (item.DateLastPlayed.HasValue)
+						{
+							@Html.DisplayFor(modelItem => item.DateLastPlayed)
+						}
+						else
+						{
+							<span class="text-danger">Профиль скрыт или недоступен</span>
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

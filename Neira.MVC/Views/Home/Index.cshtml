@@ -1,0 +1,129 @@
+﻿@model IndexViewModel
+@{
+	ViewData["Title"] = "Discord Bot Нейроматрица | дискорд бот Destiny 2";
+}
+
+<!-- Stat -->
+<section class="page-section" id="stat">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<h2 class="section-heading text-uppercase">Статистика бота</h2>
+				<h3 class="section-subheading text-muted">Наши достижения.</h3>
+			</div>
+		</div>
+		<div class="row text-center">
+			<div class="col-md-4">
+				<i class="fas fa-globe-europe" style="font-size:6rem;"></i>
+				<h2>Сообществ</h2>
+				<h1>@Model.BotInfo.Servers</h1>
+			</div>
+			<div class="col-md-4">
+				<i class="fas fa-users" style="font-size:6rem;"></i>
+				<h2>Пользователей</h2>
+				<h1>@Model.BotInfo.Users</h1>
+			</div>
+			<div class="col-md-4">
+				<i class="fas fa-clipboard-check" style="font-size:6rem;"></i>
+				<h2>Cобрано рейдов</h2>
+				<h1>@Model.BotInfo.Milestones</h1>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Features Grid -->
+<section class="bg-light page-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<h2 class="section-heading text-uppercase">Возможности бота</h2>
+				<h3 class="section-subheading text-muted">Нейроматрица является эффективным помощником в управлении и внутренней организации клана. Этот бот способен отследить и отобразить в логах всю важную информацию о малейших изменениях в составе клана.</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<ul class="timeline">
+					<li>
+						<div class="timeline-image">
+							<img class="rounded-circle img-fluid" src="~/img/features/1.jpg" alt="">
+						</div>
+						<div class="timeline-panel">
+							<div class="timeline-heading">
+								<h4>Уведомления</h4>
+							</div>
+							<div class="timeline-body">
+								<p class="text-muted">Получайте уведомления о том когда приходит и уходит Зур в любой, выбранный вами текстовый канал. А еще уже в разработке отображение ассортимента и карта с позицией, где его найти. Хотите красивое уведомление о новом страже на вашем сервере? Нейра подберет случайную фразу и фон и поприветствует нового участника.</p>
+							</div>
+						</div>
+					</li>
+					<li class="timeline-inverted">
+						<div class="timeline-image">
+							<img class="rounded-circle img-fluid" src="~/img/features/2.jpg" alt="">
+						</div>
+						<div class="timeline-panel">
+							<div class="timeline-heading">
+								<h4>Логирование</h4>
+							</div>
+							<div class="timeline-body">
+								<p class="text-muted">Кто-то покинул сервер, кто-то выгнал стража, что вообще происходит? Нейра может отслеживать разные действия участников на сервере - изменение/удаление сообщений, присоединение участников и ещё много всего!</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="timeline-image">
+							<img class="rounded-circle img-fluid" src="~/img/features/3.jpg" alt="">
+						</div>
+						<div class="timeline-panel">
+							<div class="timeline-heading">
+								<h4>Сбор Рейдов</h4>
+							</div>
+							<div class="timeline-body">
+								<p class="text-muted">Устали расписывать условия для сбора группы в рейд, редактировать сообщение, когда кто-то хочет в вашу группу, забыли, что у вас намечена активность? Нейра готова помочь вам оформить красивое сообщение, автоматически будет записывать участников при нажатии на одну реакцию, а за 15 минут до начала активности напомнит всем участникам личным сообщением.</p>
+							</div>
+						</div>
+					</li>
+					<li class="timeline-inverted">
+						<div class="timeline-image">
+							<img class="rounded-circle img-fluid" src="~/img/features/4.jpg" alt="">
+						</div>
+						<div class="timeline-panel">
+							<div class="timeline-heading">
+								<h4>База данных</h4>
+							</div>
+							<div class="timeline-body">
+								<p class="text-muted">Автономная база данных всего экзотического снаряжения и катализаторов прямо на вашем сервере! Получили новую крутую пушку, а где точно найти катализатор не знаете? Спросите Нейру!</p>
+							</div>
+						</div>
+					</li>
+					<li class="timeline-inverted">
+						<a href="https://discordapp.com/oauth2/authorize?client_id=521693707238506498&scope=bot&permissions=269479104" target="_blank">
+							<div class="timeline-image">
+								<h4>
+									Погрузись
+									<br>В нашу
+									<br>Сеть!
+								</h4>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- About -->
+<section class=" page-section" id="donate">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<h2 class="section-heading text-uppercase">Поддержите Нейроматрицу!</h2>
+				<h3 class="section-subheading text-muted">Бип! Я стараюсь вкладывать много любви и усилий в разработку Нейроматрицы и для хорошей и стабильной работы мне нужна Ваша помощь! Ваша материальная поддержка придаст мне больше мотивации развивать бота и придавать ему больше возможностей и функций. И, как минимум, покрыть расходы на ежемесячную аренду хостинга.</h3>
+				<a class="btn btn-primary" href="https://money.yandex.ru/to/410019748161790" target="_blank">Яндекс Деньги</a>
+				<a class="btn btn-primary" href="https://www.patreon.com/Cyber_Garret" target="_blank">Patreon</a>
+			</div>
+		</div>
+	</div>
+</section>
