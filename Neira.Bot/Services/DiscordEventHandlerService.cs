@@ -15,21 +15,30 @@ namespace Neira.Bot.Services
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
+		private readonly XurService xur;
 		private readonly MilestoneService milestone;
+		private readonly LevelingService leveling;
+		private readonly EmoteService emoteService;
 
 
-		public DiscordEventHandlerService(CommandHandlerService command, DiscordSocketClient socketClient, MilestoneService milestoneService)
+		public DiscordEventHandlerService(DiscordSocketClient socketClient, CommandHandlerService command, XurService xurService, MilestoneService milestoneService, EmoteService emote,LevelingService levelingService)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
+			xur = xurService;
 			milestone = milestoneService;
+			leveling = levelingService;
+			emoteService = emote;
 		}
 
 		public void Configure()
 		{
 			Client.Ready += Client_Ready;
 			Client.Disconnected += Client_Disconnected;
+
 			Client.JoinedGuild += Client_JoinedGuildAsync;
+			Client.LeftGuild += Client_LeftGuild;
+
 			Client.ChannelCreated += Client_ChannelCreatedAsync;
 			Client.ChannelDestroyed += Client_ChannelDestroyedAsync;
 			Client.GuildMemberUpdated += Client_GuildMemberUpdatedAsync;
@@ -47,7 +56,15 @@ namespace Neira.Bot.Services
 		#region Events
 		private Task Client_Ready()
 		{
-			Task.Run(() => milestone.Initialize());
+			Task.Run(() =>
+			{
+				//Run Xur timer
+				xur.Configure();
+				//Load custom emote from main discord server
+				emoteService.Initialize();
+				//Run Milestone timer
+				milestone.Initialize();
+			});
 			return Task.CompletedTask;
 		}
 
@@ -60,11 +77,19 @@ namespace Neira.Bot.Services
 		{
 			Task.Run(async () =>
 			{
-				await FailsafeDbOperations.GetGuildAccountAsync(guild.Id);
+				await DatabaseHelper.GetGuildAccountAsync(guild.Id);
 			});
 			return Task.CompletedTask;
 		}
 
+		private Task Client_LeftGuild(SocketGuild guild)
+		{
+			Task.Run(async () =>
+			{
+				await DatabaseHelper.RemoveGuildAccountAsync(guild.Id);
+			});
+			return Task.CompletedTask;
+		}
 		private Task Client_ChannelCreatedAsync(SocketChannel arg)
 		{
 			Task.Run(async () =>
@@ -101,6 +126,7 @@ namespace Neira.Bot.Services
 			Task.Run(async () =>
 			{
 				await CommandHandlingService.HandleCommandAsync(message);
+				await leveling.Level((SocketGuildUser)message.Author);
 			});
 			return Task.CompletedTask;
 		}
@@ -146,13 +172,21 @@ namespace Neira.Bot.Services
 			return Task.CompletedTask;
 		}
 
-		private Task Client_UserJoinedAsync(SocketGuildUser arg)
+		private Task Client_UserJoinedAsync(SocketGuildUser user)
 		{
 			Task.Run(async () =>
 			{
-				await UserJoined(arg);
-				await UserWelcome(arg);
-				await MiscHelpers.Autorole(arg);
+				//Message in Guild
+				await UserJoined(user);
+				await UserWelcome(user);
+				//AutoRole
+				var guild = await DatabaseHelper.GetGuildAccountAsync(user.Guild.Id);
+				if (guild.AutoroleID != 0)
+				{
+					var targetRole = user.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleID);
+					if (targetRole != null)
+						await user.AddRoleAsync(targetRole);
+				}
 			});
 			return Task.CompletedTask;
 		}
@@ -171,7 +205,18 @@ namespace Neira.Bot.Services
 			Task.Run(async () =>
 			{
 				if (!reaction.User.Value.IsBot)
-					await milestone.HandleReactionAdded(cache, reaction);
+				{
+					//New milestone?
+					if (reaction.Emote.Equals(emoteService.Raid))
+						await milestone.HandleReactionAdded(cache, reaction);
+					//Or old?
+					else if (reaction.Emote.Equals(emoteService.ReactSecond)
+					|| reaction.Emote.Equals(emoteService.ReactThird)
+					|| reaction.Emote.Equals(emoteService.ReactFourth)
+					|| reaction.Emote.Equals(emoteService.ReactFifth)
+					|| reaction.Emote.Equals(emoteService.ReactSixth))
+						await milestone.HandleReactionAddedV2(cache, reaction);
+				}
 			});
 			return Task.CompletedTask;
 		}
@@ -180,7 +225,16 @@ namespace Neira.Bot.Services
 			Task.Run(async () =>
 			{
 				if (!reaction.User.Value.IsBot)
-					await milestone.HandleReactionRemoved(cache, reaction);
+					//New milestone?
+					if (reaction.Emote.Equals(emoteService.Raid))
+						await milestone.HandleReactionRemoved(cache, reaction);
+					//Or old?
+					else if (reaction.Emote.Equals(emoteService.ReactSecond)
+						|| reaction.Emote.Equals(emoteService.ReactThird)
+						|| reaction.Emote.Equals(emoteService.ReactFourth)
+						|| reaction.Emote.Equals(emoteService.ReactFifth)
+						|| reaction.Emote.Equals(emoteService.ReactSixth))
+						await milestone.HandleReactionRemovedV2(cache, reaction);
 			});
 			return Task.CompletedTask;
 		}
@@ -216,7 +270,7 @@ namespace Neira.Bot.Services
 				#endregion
 
 				var currentIGuildChannel = (IGuildChannel)arg;
-				var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
+				var guild = DatabaseHelper.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
 				if (guild.LoggingChannel != 0)
 				{
 					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
@@ -259,7 +313,7 @@ namespace Neira.Bot.Services
 
 				if (arg is IGuildChannel currentIguildChannel)
 				{
-					var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIguildChannel.Guild.Id).Result;
+					var guild = DatabaseHelper.GetGuildAccountAsync(currentIguildChannel.Guild.Id).Result;
 					if (guild.LoggingChannel != 0)
 					{
 						await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
@@ -283,7 +337,7 @@ namespace Neira.Bot.Services
 				#endregion
 
 				#region Data
-				var guild = FailsafeDbOperations.GetGuildAccountAsync(before.Guild.Id).Result;
+				var guild = DatabaseHelper.GetGuildAccountAsync(before.Guild.Id).Result;
 				#endregion
 
 				#region Different Messages 
@@ -385,7 +439,7 @@ namespace Neira.Bot.Services
 			{
 				if (arg3 is IGuildChannel currentIGuildChannel)
 				{
-					var guild = FailsafeDbOperations.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
+					var guild = DatabaseHelper.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
 					if (messageAfter.Author.IsBot)
 						return;
 
@@ -480,7 +534,7 @@ namespace Neira.Bot.Services
 					return;
 				if (messageBefore.Value.Channel is ITextChannel textChannel)
 				{
-					var guild = FailsafeDbOperations.GetGuildAccountAsync(textChannel.Guild.Id).Result;
+					var guild = DatabaseHelper.GetGuildAccountAsync(textChannel.Guild.Id).Result;
 
 					var log = await textChannel.Guild.GetAuditLogsAsync(1);
 					var audit = log.ToList();
@@ -562,7 +616,7 @@ namespace Neira.Bot.Services
 				embed.WithFooter($"Кто создавал: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 				#endregion
 
-				var guild = FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id).Result;
+				var guild = DatabaseHelper.GetGuildAccountAsync(arg.Guild.Id).Result;
 
 				if (guild.LoggingChannel != 0)
 				{
@@ -599,7 +653,7 @@ namespace Neira.Bot.Services
 				embed.WithFooter($"Кто удалял: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 				#endregion
 
-				var guild = FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id).Result;
+				var guild = DatabaseHelper.GetGuildAccountAsync(arg.Guild.Id).Result;
 
 				if (guild.LoggingChannel != 0)
 				{
@@ -620,13 +674,13 @@ namespace Neira.Bot.Services
 				#region Checks
 				if (user == null || user.IsBot) return;
 
-				var guild = FailsafeDbOperations.GetGuildAccountAsync(user.Guild.Id).Result;
+				var guild = DatabaseHelper.GetGuildAccountAsync(user.Guild.Id).Result;
 				if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
 				#endregion
 
 				IDMChannel dM = await user.GetOrCreateDMChannelAsync();
 
-				await dM.SendMessageAsync(null, false, MiscHelpers.WelcomeEmbed(user).Build());
+				await dM.SendMessageAsync(null, false, MiscHelpers.WelcomeEmbed(user, guild.WelcomeMessage).Build());
 			}
 			catch (Exception ex)
 			{
@@ -638,7 +692,7 @@ namespace Neira.Bot.Services
 		{
 			try
 			{
-				var guild = await FailsafeDbOperations.GetGuildAccountAsync(user.Guild.Id);
+				var guild = await DatabaseHelper.GetGuildAccountAsync(user.Guild.Id);
 				if (guild.WelcomeChannel == 0) return;
 				if (!(Client.GetChannel(guild.WelcomeChannel) is SocketTextChannel channel)) return;
 				string[] randomWelcome =
@@ -670,8 +724,8 @@ namespace Neira.Bot.Services
 					"Так я прав... или я прав? ©Кейд-6",
 					"Сколько раз стиралась моя система? 41,42,43? ©Банши-44" };
 
-				string welcomeMessage = randomWelcome[Global.GetRandom.Next(randomWelcome.Length)];
-				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{Global.GetRandom.Next(1, 31)}.jpg");
+				string welcomeMessage = randomWelcome[GlobalVariables.GetRandom.Next(randomWelcome.Length)];
+				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{GlobalVariables.GetRandom.Next(1, 31)}.jpg");
 
 				using (var image = new MagickImage(background, 512, 200))
 				{
@@ -736,7 +790,7 @@ namespace Neira.Bot.Services
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
 				embed.WithTitle("💢 Страж покинул сервер");
 				embed.WithThumbnailUrl($"{arg.GetAvatarUrl() ?? arg.GetDefaultAvatarUrl()}");
-				embed.AddField(Global.InvisibleString,
+				embed.AddField(GlobalVariables.InvisibleString,
 					$"На корабле был известен как:\n**{arg.Nickname ?? arg.Username}**\n" +
 					$"Discord имя стража\n**{arg.Username}#{arg.Discriminator}**");
 				embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", arg.Mention);
@@ -767,7 +821,7 @@ namespace Neira.Bot.Services
 				embed.WithFooter($"Если ссылка на профиль некорректно отображается то просто скопируй <@{arg.Id}> вместе с <> и отправь в любой чат сообщением.");
 				#endregion
 
-				var guild = (await FailsafeDbOperations.GetGuildAccountAsync(arg.Guild.Id));
+				var guild = await DatabaseHelper.GetGuildAccountAsync(arg.Guild.Id);
 				if (guild.LoggingChannel != 0)
 				{
 					await Client.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)

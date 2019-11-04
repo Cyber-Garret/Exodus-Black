@@ -2,12 +2,11 @@
 using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Neira.Bot.Models;
 using Neira.Bot.Services;
-using Neira.Db;
 
 using Nett;
 
@@ -44,12 +43,11 @@ namespace Neira.Bot
 
 		private async Task StartAsync()
 		{
-			service = BuildServices();
+			service = BuildServices(config.ConnectionString);
 
 			var Discord = service.GetRequiredService<DiscordSocketClient>();
 			Discord.Log += Logger.Log;
 
-			service.GetRequiredService<TimerService>().Configure();
 			service.GetRequiredService<DiscordEventHandlerService>().Configure();
 			await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 
@@ -75,24 +73,25 @@ namespace Neira.Bot
 			}
 		}
 
-		public ServiceProvider BuildServices()
+		public ServiceProvider BuildServices(string connectionString)
 		{
 			return new ServiceCollection()
 				.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 				{
 					ExclusiveBulkDelete = true,
 					AlwaysDownloadUsers = true,
-					LogLevel = LogSeverity.Info,
+					LogLevel = LogSeverity.Verbose,
 					DefaultRetryMode = RetryMode.AlwaysRetry,
 					MessageCacheSize = 300
 				}))
-				.AddDbContext<NeiraContext>()
 				.AddSingleton<CommandService>()
 				.AddSingleton<CommandHandlerService>()
 				.AddSingleton<DiscordEventHandlerService>()
 				.AddSingleton<InteractiveService>()
-				.AddSingleton<TimerService>()
+				.AddSingleton<XurService>()
 				.AddSingleton<MilestoneService>()
+				.AddSingleton<EmoteService>()
+				.AddSingleton<LevelingService>()
 				.BuildServiceProvider();
 		}
 

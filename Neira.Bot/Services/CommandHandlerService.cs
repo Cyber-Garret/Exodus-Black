@@ -1,6 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
-
+using Neira.Bot.Helpers;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,16 +9,16 @@ namespace Neira.Bot.Services
 {
 	public class CommandHandlerService
 	{
-		#region Private fields
-		private readonly DiscordSocketClient Client;
-		private CommandService Commands;
 		private readonly IServiceProvider Services;
-		#endregion
+		private readonly DiscordSocketClient Client;
+		private readonly LevelingService leveling;
+		private CommandService Commands;
 
-		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService)
+		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService, LevelingService levelingService)
 		{
 			Services = serviceProvider;
 			Client = socketClient;
+			leveling = levelingService;
 			Commands = commandService;
 		}
 
@@ -33,18 +33,17 @@ namespace Neira.Bot.Services
 			await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), Services);
 		}
 
-		public async Task HandleCommandAsync(SocketMessage arg)
+		public async Task HandleCommandAsync(SocketMessage message)
 		{
-			// Ignore if not SocketUserMessage or its direct message or private groups
-			if (!(arg is SocketUserMessage msg)) return;
-			//if (msg.Channel is SocketDMChannel || msg.Channel is SocketGroupChannel) return;
+			// Ignore if not SocketUserMessage
+			if (!(message is SocketUserMessage msg)) return;
 
 			var context = new SocketCommandContext(Client, msg);
 			var prefix = "!";
-			if(msg.Channel is SocketGuildChannel)
+			if (msg.Channel is SocketGuildChannel)
 			{
 				//Get guild for load custom command Prefix.
-				var config = await FailsafeDbOperations.GetGuildAccountAsync(context.Guild.Id);
+				var config = await DatabaseHelper.GetGuildAccountAsync(context.Guild.Id);
 
 				if (!string.IsNullOrWhiteSpace(config.CommandPrefix))
 					prefix = config.CommandPrefix;
@@ -69,6 +68,11 @@ namespace Neira.Bot.Services
 					 context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
 				 });
 			}
+			await Task.Run(async () =>
+			 {
+				 await leveling.GlobalLevel((SocketGuildUser)context.User);
+				 await leveling.MessageRewards((SocketGuildUser)context.User, message);
+			 });
 		}
 
 	}
