@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Neira.MVC.Models.NeiraLink
+namespace Neira.Web.Models.NeiraLink
 {
 	public class NeiraContext : DbContext
 	{

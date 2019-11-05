@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Neira.MVC.Models.NeiraLink;
+using Neira.Web.Models.NeiraLink;
 
-namespace Neira.MVC
+namespace Neira.Web
 {
 	public class Startup
 	{

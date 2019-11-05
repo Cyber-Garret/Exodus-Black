@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using Neira.MVC.Models.NeiraLink;
+using Neira.Web.Models.NeiraLink;
 
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.MVC.Controllers
+namespace Neira.Web.Controllers
 {
 	public class ClanController : Controller
 	{

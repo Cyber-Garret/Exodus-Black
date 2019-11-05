@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Neira.MVC.Models;
-using Neira.MVC.Models.NeiraLink;
-using Neira.MVC.ViewModels;
+using Neira.Web.Models;
+using Neira.Web.Models.NeiraLink;
+using Neira.Web.ViewModels;
 
-namespace Neira.MVC.Controllers
+namespace Neira.Web.Controllers
 {
 	public class HomeController : Controller
 	{

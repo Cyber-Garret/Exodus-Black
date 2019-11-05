@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Neira.MVC.Models.NeiraLink
+namespace Neira.Web.Models.NeiraLink
 {
 	public class Clan
 	{

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.MVC.Models.NeiraLink
+namespace Neira.Web.Models.NeiraLink
 {
 	public class BotInfo
 	{

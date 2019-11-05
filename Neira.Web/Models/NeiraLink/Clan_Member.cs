@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Neira.MVC.Models.NeiraLink
+namespace Neira.Web.Models.NeiraLink
 {
 	public class Clan_Member
 	{

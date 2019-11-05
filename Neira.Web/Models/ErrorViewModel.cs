@@ -1,6 +1,6 @@
 using System;
 
-namespace Neira.MVC.Models
+namespace Neira.Web.Models
 {
 	public class ErrorViewModel
 	{

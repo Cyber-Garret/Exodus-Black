@@ -53,7 +53,7 @@ namespace Neira.Bot.Helpers
 			embed.WithTitle($"Онлайн статус стражей клана `{clan.Name}`");
 			embed.WithColor(Color.Gold);
 			////Bungie Clan link
-			embed.WithUrl($"https://www.bungie.net/ru/ClanV2?groupid={clan.Id}");
+			embed.WithUrl($"http://neira.su/Clan/{clan.Id}");
 			////Some clan main info
 			embed.WithDescription(
 				$"В данный момент в клане **{clan.MemberCount}**/100 стражей.");
