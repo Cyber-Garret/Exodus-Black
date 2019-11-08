@@ -1,12 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BungieWorker.Models;
+
+using Microsoft.EntityFrameworkCore;
+
 using Neira.API.Bungie;
-using Neira.Db;
-using Neira.Db.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Neira.BungieWorker.Bungie
+namespace BungieWorker.Bungie
 {
 	internal class ClanUpdater
 	{

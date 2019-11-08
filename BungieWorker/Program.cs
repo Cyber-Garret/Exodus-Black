@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Neira.BungieWorker
+namespace BungieWorker
 {
 	class Program
 	{
-		public static TimeSpan BungieTimer = TimeSpan.FromMinutes(15);
+		public static TimeSpan BungieTimer = TimeSpan.FromMinutes(1);
 		static void Main()
 		{
 			Console.Title = $"Neira Bungie Worker";

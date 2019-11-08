@@ -1,8 +1,9 @@
-﻿using Neira.BungieWorker.Bungie;
+﻿using BungieWorker.Bungie;
+
 using System;
 using System.Timers;
 
-namespace Neira.BungieWorker
+namespace BungieWorker
 {
 	internal class Workers
 	{

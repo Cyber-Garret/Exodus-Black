@@ -1,7 +1,6 @@
 ﻿using Serilog;
-using System.IO;
 
-namespace Neira.BungieWorker
+namespace BungieWorker
 {
 	internal class Logger
 	{
