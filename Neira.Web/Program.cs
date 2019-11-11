@@ -18,9 +18,19 @@ namespace Neira.Web
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 			Host.CreateDefaultBuilder(args)
-				.ConfigureWebHostDefaults(webBuilder =>
-				{
-					webBuilder.UseStartup<Startup>();
-				});
+			.ConfigureLogging((context, logging) =>
+			{
+				var env = context.HostingEnvironment;
+				var config = context.Configuration.GetSection("Logging");
+
+				logging.AddConfiguration(config);
+				logging.AddConsole();
+
+				logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+			})
+			.ConfigureWebHostDefaults(webBuilder =>
+			{
+				webBuilder.UseStartup<Startup>();
+			});
 	}
 }

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Neira.Web.Models.NeiraLink;
-
+using Neira.Web.ViewModels;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,12 +10,6 @@ namespace Neira.Web.Controllers
 {
 	public class ClanController : Controller
 	{
-		private readonly NeiraContext _context;
-
-		public ClanController(NeiraContext context)
-		{
-			_context = context;
-		}
 
 		// GET: /Clan/2733538
 		[Route("Clan/{id}/")]
@@ -27,13 +21,14 @@ namespace Neira.Web.Controllers
 			if (!ClanExists(id.Value))
 				return NotFound();
 
+			using var Db = new NeiraContext();
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
 			ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
 			ViewData["DateLastPlayedSortParm"] = sortOrder == "DateLastPlayed" ? "DateLastPlayed_desc" : "DateLastPlayed";
 			ViewData["CurrentFilter"] = searchString;
-			ViewData["CurrentGuild"] = _context.Clans.AsNoTracking().FirstOrDefault(C => C.Id == id);
+			ViewData["CurrentGuild"] = Db.Clans.AsNoTracking().FirstOrDefault(C => C.Id == id);
 
-			var destiny2Clan = from d in _context.Clan_Members.Include(c => c.Clan)
+			var destiny2Clan = from d in Db.Clan_Members.Include(c => c.Clan)
 							   where d.ClanId == id
 							   select d;
 
@@ -62,9 +57,21 @@ namespace Neira.Web.Controllers
 		[Route("OpenClan")]
 		public IActionResult OpenClan(long id) => RedirectPermanent($"https://www.bungie.net/ru/ClanV2?groupid={id}");
 
+		public IActionResult Detail(int id)
+		{
+			using var Db = new NeiraContext();
+			var model = new GuardianViewModel
+			{
+				GuardianInfo = Db.Clan_Members.FirstOrDefault(m => m.Id == id),
+				GuardianPlayedStat = Db.Clan_Member_Stats.Where(m => m.MemberId == id)
+			};
+			return View(model);
+		}
+
 		private bool ClanExists(long id)
 		{
-			return _context.Clans.Any(e => e.Id == id);
+			using var Db = new NeiraContext();
+			return Db.Clans.Any(e => e.Id == id);
 		}
 	}
 }

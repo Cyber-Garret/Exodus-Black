@@ -14,19 +14,18 @@ namespace Neira.Web.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly NeiraContext neira;
 
-		public HomeController(ILogger<HomeController> logger, NeiraContext neiraContext)
+		public HomeController(ILogger<HomeController> logger)
 		{
 			_logger = logger;
-			neira = neiraContext;
 		}
 
 		public IActionResult Index()
 		{
+			using var Db = new NeiraContext();
 			var model = new IndexViewModel
 			{
-				BotInfo = neira.BotInfos.FirstOrDefault()
+				BotInfo = Db.BotInfos.FirstOrDefault()
 			};
 
 			return View(model);

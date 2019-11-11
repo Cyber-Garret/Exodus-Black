@@ -16,8 +16,15 @@ namespace Neira.API.Bungie
 
 		public BungieApi()
 		{
-			var json = File.ReadAllText("config.json");
-			config = JsonConvert.DeserializeObject<Config>(json);
+			config = new Config
+			{
+				BungieConfig = new BungieConfig
+				{
+					BaseUrl = "https://www.bungie.net/Platform",
+					KeyName = "X-API-Key",
+					ApiKey = "6fdc49f28e454eb380e02931b5ed61d4"
+				}
+			};
 		}
 
 		public GetMembersOfGroup GetMembersOfGroupResponse(long groupId)

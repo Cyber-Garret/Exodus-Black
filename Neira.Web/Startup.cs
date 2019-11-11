@@ -11,6 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neira.Web.Models.NeiraLink;
+using Neira.Web.QuartzService;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 namespace Neira.Web
 {
@@ -26,11 +30,18 @@ namespace Neira.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			// get connection string from config file
-			string connection = Configuration.GetConnectionString("DefaultConnection");
-			// add NeiraContext in services
-			services.AddDbContext<NeiraContext>(options =>
-				options.UseSqlServer(connection));
+			//Register Quartz dedicated service
+			services.AddHostedService<QuartzHostedService>();
+			// Add Quartz services
+			services.AddSingleton<IJobFactory, SingletonJobFactory>();
+			services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+			// Add our job
+			services.AddSingleton<BungieJob>();
+			services.AddSingleton(new JobSchedule(typeof(BungieJob), "0 0/15 * * * ?")); // run every 15 minute
+
+			//services.AddSingleton<GuardianStatJob>();
+			//services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0/1 * * * ?")); // run every 1:00 night
 
 			services.AddControllersWithViews();
 		}

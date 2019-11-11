@@ -4,11 +4,15 @@ namespace Neira.Web.Models.NeiraLink
 {
 	public class NeiraContext : DbContext
 	{
-		public NeiraContext(DbContextOptions<NeiraContext> options) : base(options) { }
+		protected override void OnConfiguring(DbContextOptionsBuilder builder)
+		{
+			builder.UseSqlServer("Server=176.36.73.241;Database=NeiraLinkTest;User=sa;Password=26256Garret;MultipleActiveResultSets=true;");
+		}
 
-		public DbSet<BotInfo> BotInfos { get; set; }
+		public virtual DbSet<BotInfo> BotInfos { get; set; }
 		//Destiny 2
-		public DbSet<Clan> Clans { get; set; }
-		public DbSet<Clan_Member> Clan_Members { get; set; }
+		public virtual DbSet<Clan> Clans { get; set; }
+		public virtual DbSet<Clan_Member> Clan_Members { get; set; }
+		public virtual DbSet<Clan_Member_Stat> Clan_Member_Stats { get; set; }
 	}
 }

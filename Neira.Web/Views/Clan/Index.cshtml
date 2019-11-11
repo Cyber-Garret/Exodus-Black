@@ -43,6 +43,7 @@
 				<th>
 					<a asp-action="Index" asp-route-sortOrder="@ViewData["DateLastPlayedSortParm"]">Последний раз был в игре</a>
 				</th>
+				<th>Действия</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -66,6 +67,7 @@
 							<span class="text-danger">Профиль скрыт или недоступен</span>
 						}
 					</td>
+					<td><a asp-controller="Clan" asp-action="Detail" asp-route-Id="@item.Id">Чекнуть нубаса</a></td>
 				</tr>
 			}
 		</tbody>
