@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ChartJSCore.Helpers;
+using ChartJSCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using Neira.Web.Models.NeiraLink;
 using Neira.Web.ViewModels;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -59,15 +63,68 @@ namespace Neira.Web.Controllers
 
 		public IActionResult Detail(int id)
 		{
+			//Get data for Chart.js
+			Chart lineChart = GenerateLineChart(id);
+			ViewData["LineChart"] = lineChart;
+
 			using var Db = new NeiraContext();
 			var model = new GuardianViewModel
 			{
-				GuardianInfo = Db.Clan_Members.FirstOrDefault(m => m.Id == id),
-				GuardianPlayedStat = Db.Clan_Member_Stats.Where(m => m.MemberId == id)
+				GuardianInfo = Db.Clan_Members.FirstOrDefault(m => m.Id == id)
 			};
 			return View(model);
 		}
 
+		private Chart GenerateLineChart(int GuardianId)
+		{
+			using var Db = new NeiraContext();
+
+			var result = Db.Clan_Member_Stats.Where(m => m.MemberId == GuardianId).OrderBy(o => o.Date);
+
+			var chart = new Chart
+			{
+				Type = Enums.ChartType.Line
+			};
+
+			var data = new Data
+			{
+				Labels = new List<string>(result.Select(r => r.Date.ToString("dd.MM.yyyy")))
+			};
+
+			var GuardianDataset = new LineDataset()
+			{
+				Label = "Активность(Часов)",
+				Data = new List<double>(result.Select(r => Math.Round(TimeSpan.FromSeconds(r.PlayedTime).TotalHours, 1, MidpointRounding.AwayFromZero))),
+				Fill = "false",
+				BackgroundColor = ChartColor.FromRgba(75, 192, 192, 0.4),
+				BorderColor = ChartColor.FromRgb(75, 192, 192),
+				LineTension = 0.1,
+				BorderCapStyle = "butt",
+				BorderDash = new List<int> { },
+				BorderDashOffset = 0.0,
+				BorderJoinStyle = "miter",
+				PointBorderColor = new List<ChartColor> { ChartColor.FromRgb(75, 192, 192) },
+				PointBackgroundColor = new List<ChartColor> { ChartColor.FromHexString("#ffffff") },
+				PointBorderWidth = new List<int> { 1 },
+				PointHoverRadius = new List<int> { 5 },
+				PointHoverBackgroundColor = new List<ChartColor> { ChartColor.FromRgb(75, 192, 192) },
+				PointHoverBorderColor = new List<ChartColor> { ChartColor.FromRgb(220, 220, 220) },
+				PointHoverBorderWidth = new List<int> { 2 },
+				PointRadius = new List<int> { 1 },
+				PointHitRadius = new List<int> { 10 },
+				SpanGaps = false
+			};
+
+			//Add in chart two datasets
+			data.Datasets = new List<Dataset>
+			{
+				GuardianDataset
+			};
+
+			chart.Data = data;
+
+			return chart;
+		}
 		private bool ClanExists(long id)
 		{
 			using var Db = new NeiraContext();

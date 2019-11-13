@@ -6,17 +6,13 @@
 	ViewData["Title"] = $"Нейроматрица | Клан {CurrentClan.Name}";
 }
 <!-- Header -->
-<header class="clanhead img-fluid" id="about">
-	<div class="container">
-		<div class="intro-text">
-			<a asp-controller="Clan" asp-action="OpenClan" asp-route-id="@CurrentClan.Id" rel="nofollow" target="_blank"><div class="intro-heading">@Html.Raw(CurrentClan.Name)</div></a>
-			<div class="intro-lead-in">Дата создания: @Html.Raw(CurrentClan.CreateDate.ToString("dd.MM.yyyy"))</div>
-			<div class="intro-lead-in">Стражей: @Html.Raw(CurrentClan.MemberCount)</div>
-			<div class="intro-lead-in">Девиз: @Html.Raw(CurrentClan.Motto)</div>
-		</div>
-	</div>
-</header>
-<div class="container text-center" style="margin-top:1rem;" id="members">
+<div class="container text-center">
+	<h2>Клан <a asp-controller="Clan" asp-action="OpenClan" asp-route-id="@CurrentClan.Id" rel="nofollow" target="_blank">@Html.Raw(CurrentClan.Name)</a></h2>
+	<p><b>Дата создания:</b> @Html.Raw(CurrentClan.CreateDate.ToString("dd.MM.yyyy")) | <b>Стражей:</b> @Html.Raw(CurrentClan.MemberCount)</p>
+	<p><b>Девиз:</b> @Html.Raw(CurrentClan.Motto)</p>
+	<p><b>О клане:</b> @Html.Raw(CurrentClan.About)</p>
+</div>
+<div class="container" style="margin-top:1rem;" id="members">
 	<h4>Стражи</h4>
 	<form asp-action="Index" method="get">
 		<div>
@@ -67,7 +63,20 @@
 							<span class="text-danger">Профиль скрыт или недоступен</span>
 						}
 					</td>
-					<td><a asp-controller="Clan" asp-action="Detail" asp-route-Id="@item.Id">Чекнуть нубаса</a></td>
+					<td>
+						@if (item.ErrorCode == 0)
+						{
+						<span class="text-warning">Нет данных</span>
+						}
+						else if (item.ErrorCode == 1665)
+						{
+						<span class="text-danger">Профиль скрыт</span>
+						}
+						else
+						{
+						<a class="btn btn-primary" asp-controller="Clan" asp-action="Detail" asp-route-Id="@item.Id" target="_blank">Активность</a>
+						}
+					</td>
 				</tr>
 			}
 		</tbody>

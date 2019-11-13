@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Neira.Web.Models.NeiraLink;
+
 using Neira.Web.QuartzService;
+
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -40,8 +35,8 @@ namespace Neira.Web
 			services.AddSingleton<BungieJob>();
 			services.AddSingleton(new JobSchedule(typeof(BungieJob), "0 0/15 * * * ?")); // run every 15 minute
 
-			//services.AddSingleton<GuardianStatJob>();
-			//services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0/1 * * * ?")); // run every 1:00 night
+			services.AddSingleton<GuardianStatJob>();
+			services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0 0/4 * * ?")); // run every 4:00 night
 
 			services.AddControllersWithViews();
 		}

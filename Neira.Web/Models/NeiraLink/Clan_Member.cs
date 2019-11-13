@@ -31,5 +31,6 @@ namespace Neira.Web.Models.NeiraLink
 		}
 		public long ClanId { get; set; }
 		public Clan Clan { get; set; }
+		public int ErrorCode { get; set; }
 	}
 }

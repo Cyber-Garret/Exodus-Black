@@ -20,6 +20,7 @@ namespace Neira.Bot.Database
 		public virtual DbSet<Guild> Guilds { get; set; }
 		public virtual DbSet<UserAccount> UserAccounts { get; set; }
 		public virtual DbSet<GuildUserAccount> GuildUserAccounts { get; set; }
+		public virtual DbSet<ADOnline> ADOnlines { get; set; }
 
 		//Destiny 2
 		public virtual DbSet<Gear> Gears { get; set; }

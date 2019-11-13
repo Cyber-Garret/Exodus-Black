@@ -26,6 +26,8 @@ namespace Neira.Web.QuartzService
 
 		private void GrabGuardianPlayedTime()
 		{
+			logger.LogInformation("GrabGuardianPlayedTime start working at {RequestTime}", DateTime.Now);
+
 			using var Db = new NeiraContext();
 			var guardians = Db.Clan_Members.ToList();
 
@@ -33,41 +35,56 @@ namespace Neira.Web.QuartzService
 
 			foreach (var guardian in guardians)
 			{
-				var stat = new Clan_Member_Stat
-				{
-					MemberId = guardian.Id,
-					Date = DateTime.Now.AddDays(-1).Date,
-					PlayedTime = 0
-				};
+				if (StatExist(guardian.Id, DateTime.Now.AddDays(-1))) continue;
 
 				var profile = BungieApi.GetProfileResult(guardian.DestinyMembershipId, (int)guardian.DestinyMembershipType, DestinyComponentType.Profiles);
+				var BungieResponseCode = 0;
 				if (profile.ErrorCode == 1 && profile != null)
 				{
+					var stat = new Clan_Member_Stat
+					{
+						MemberId = guardian.Id,
+						Date = DateTime.Now.AddDays(-1).Date,
+						PlayedTime = 0
+					};
+
 					foreach (var item in profile.Response.Profile.Data.CharacterIds)
 					{
 						var data = BungieApi.LoadCharacterActivityHistory((int)guardian.DestinyMembershipType, guardian.DestinyMembershipId, Convert.ToInt64(item));
+						//ErrorCode 1 means all ok
 						if (data.ErrorCode == 1 && data.Response.Activities != null)
 						{
 							for (int i = 0; i < data.Response.Activities.Length; i++)
 							{
-								if (data.Response.Activities[i].Period < DateTime.Now && data.Response.Activities[i].Period > DateTime.Now.AddDays(-2))
+								if (data.Response.Activities[i].Period.Date == stat.Date.Date)
 								{
 									data.Response.Activities[i].Values.TryGetValue("activityDurationSeconds", out var value);
 									stat.PlayedTime += (int)value.Basic.Value;
 								}
 							}
 						}
-						else
-							logger.LogInformation($"Failed load data {guardian.Name} Response:\n ErrorCode: {data.ErrorCode}\n{data.ErrorStatus} - {data.Message}");
+						BungieResponseCode = (int)data.ErrorCode;
 					}
+
+					guardian.ErrorCode = BungieResponseCode;
+
+					if (BungieResponseCode != 1665)
+						Db.Clan_Member_Stats.Add(stat);
+
+					Db.Clan_Members.Update(guardian);
+					Db.SaveChanges();
 
 				}
 				else
 					logger.LogInformation($"Bungie error on {guardian.Name} Response:\n ErrorCode: {profile.ErrorCode}\n{profile.ErrorStatus} - {profile.Message}");
-
-				Db.Clan_Member_Stats.Add(stat);
-				Db.SaveChanges();
 			}
+			logger.LogInformation("GrabGuardianPlayedTime done work at {responseTime}",DateTime.Now);
+		}
+
+		private bool StatExist(int GuardianId, DateTime date)
+		{
+			using var Db = new NeiraContext();
+			return Db.Clan_Member_Stats.Any(m => m.MemberId == GuardianId && m.Date.Date == date.Date);
 		}
 	}
 }

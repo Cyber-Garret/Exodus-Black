@@ -92,6 +92,7 @@ namespace Neira.Bot
 				.AddSingleton<MilestoneService>()
 				.AddSingleton<EmoteService>()
 				.AddSingleton<LevelingService>()
+				.AddSingleton<ADOnlineService>()
 				.BuildServiceProvider();
 		}
 
