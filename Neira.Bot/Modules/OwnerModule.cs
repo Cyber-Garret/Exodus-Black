@@ -158,6 +158,66 @@ namespace Neira.Bot.Modules
 			}
 		}
 
+		[Command("ServerInfo")]
+		public async Task GuildInfo(ulong GuildId)
+		{
+			try
+			{
+				var guild = Context.Client.Guilds.FirstOrDefault(g => g.Id == GuildId);
+				if (guild == null)
+				{
+					await ReplyAsync($"Неудалось найти гильдию с ID **{GuildId}**");
+					return;
+				}
+				else
+				{
+					var embed = new EmbedBuilder
+					{
+						Title = $"Капитан, статистика сервера `{guild.Name}`",
+						Color = Color.Gold,
+						Description =
+						$"ID: {guild.Id}\n" +
+						$"Владелец: {guild.Owner.Username} ID {guild.OwnerId}\n" +
+						$"Стражей: {guild.Users.Count}\n" +
+						$"Каналов: {guild.Channels.Count}"
+					};
+					await ReplyAsync(embed: embed.Build());
+				}
+			}
+			catch (Exception ex)
+			{
+				await ReplyAsync($"Капитан, произошла критическая ошибка: **{ex.Message}**");
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Server Info command", ex.Message));
+				throw;
+			}
+			
+		}
+
+		[Command("LeaveServer")]
+		public async Task LeaveServer(ulong GuildId)
+		{
+			try
+			{
+				var guild = Context.Client.Guilds.FirstOrDefault(g => g.Id == GuildId);
+				if (guild == null)
+				{
+					await ReplyAsync($"Неудалось найти гильдию с ID **{GuildId}**");
+					return;
+				}
+				else
+				{
+					await guild.LeaveAsync();
+					await ReplyAsync($"Капитан, я покинула гильдию **{guild.Name}**");
+				}
+			}
+			catch (Exception ex)
+			{
+				await ReplyAsync($"Капитан, произошла критическая ошибка: **{ex.Message}**");
+				await Logger.LogFullException(new LogMessage(LogSeverity.Critical, "Leave guild command", ex.Message));
+				throw;
+			}
+		}
+
 		[Command("add glimmer"), Alias("addg")]
 		[Summary("Выдает некоторое количество блеска указанному аккаунту")]
 		public async Task AddGlimmer(uint Ammount, IUser user)
