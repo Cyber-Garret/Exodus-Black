@@ -19,9 +19,10 @@ namespace Neira.Bot.Services
 		private readonly MilestoneService milestone;
 		private readonly LevelingService leveling;
 		private readonly EmoteService emoteService;
+		private readonly ADOnlineService aDOnlineService;
 
 
-		public DiscordEventHandlerService(DiscordSocketClient socketClient, CommandHandlerService command, XurService xurService, MilestoneService milestoneService, EmoteService emote,LevelingService levelingService)
+		public DiscordEventHandlerService(DiscordSocketClient socketClient, CommandHandlerService command, XurService xurService, MilestoneService milestoneService, EmoteService emote,LevelingService levelingService, ADOnlineService aDOnline)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
@@ -29,6 +30,7 @@ namespace Neira.Bot.Services
 			milestone = milestoneService;
 			leveling = levelingService;
 			emoteService = emote;
+			aDOnlineService = aDOnline;
 		}
 
 		public void Configure()
@@ -64,6 +66,8 @@ namespace Neira.Bot.Services
 				emoteService.Initialize();
 				//Run Milestone timer
 				milestone.Initialize();
+				//Run 
+				aDOnlineService.Configure();
 			});
 			return Task.CompletedTask;
 		}

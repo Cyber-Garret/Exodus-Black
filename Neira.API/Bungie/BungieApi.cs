@@ -1,4 +1,5 @@
 ﻿
+using Neira.API.Bungie.Models.Results.Destiny2;
 using Neira.API.Bungie.Models.Results.Destiny2.GetProfile;
 using Neira.API.Bungie.Models.Results.GroupV2.GetGroup;
 using Neira.API.Bungie.Models.Results.GroupV2.GetMembersOfGroup;
@@ -15,8 +16,15 @@ namespace Neira.API.Bungie
 
 		public BungieApi()
 		{
-			var json = File.ReadAllText("config.json");
-			config = JsonConvert.DeserializeObject<Config>(json);
+			config = new Config
+			{
+				BungieConfig = new BungieConfig
+				{
+					BaseUrl = "https://www.bungie.net/Platform",
+					KeyName = "X-API-Key",
+					ApiKey = "6fdc49f28e454eb380e02931b5ed61d4"
+				}
+			};
 		}
 
 		public GetMembersOfGroup GetMembersOfGroupResponse(long groupId)
@@ -58,6 +66,16 @@ namespace Neira.API.Bungie
 				return null;
 			}
 
+		}
+
+		public GetActivityHistory LoadCharacterActivityHistory(int membershipType, string destinyMembershipId, long characterId)
+		{
+			var client = new RestClient(config.BungieConfig.BaseUrl + $"/Destiny2/{membershipType}/Account/{destinyMembershipId}/Character/{characterId}/Stats/Activities/");
+			var request = new RestRequest(Method.GET);
+			request.AddHeader(config.BungieConfig.KeyName, config.BungieConfig.ApiKey);
+			var response = client.Execute(request);
+
+			return GetActivityHistory.FromJson(response.Content);
 		}
 	}
 }

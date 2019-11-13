@@ -26,7 +26,7 @@ namespace Neira.Bot.Helpers
 
 		internal static string ClanStatus(Clan clan)
 		{
-			string message = $"В данный момент в `{clan.Name}` **{clan.MemberCount}**/100 стражей.\n";
+			string message = $"В данный момент в [`{clan.Name}`](http://neira.su/Clan/{clan.Id}) **{clan.MemberCount}**/100 стражей.\n";
 
 			#region lists for guardians sorted by specific last online date 
 			List<string> _ThisDay = new List<string>();

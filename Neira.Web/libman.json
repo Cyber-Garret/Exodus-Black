@@ -1,0 +1,14 @@
+{
+	"defaultProvider": "cdnjs",
+	"libraries": [
+		{
+			"library": "Chart.js@2.5.0",
+			"destination": "wwwroot/lib/Chart.js/"
+		},
+		{
+			"library": "require.js@2.3.6",
+			"destination": "wwwroot/lib/require.js/"
+		}
+	],
+	"version": "1.0"
+}
