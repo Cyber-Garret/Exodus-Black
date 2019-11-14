@@ -126,11 +126,11 @@ namespace Neira.Bot.Helpers
 		#endregion
 
 		#region Milestone
-		public static Embed MilestoneNew(SocketUser leader, Milestone milestone, DateTime date, IEmote raidEmote, string userMemo)
+		public static Embed MilestoneNew(SocketUser leader, Milestone milestone, IEmote raidEmote, string userMemo)
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = $"{date.Date.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. {milestone.Type}: {milestone.Name}",
+				Title = $"{milestone.Type}: {milestone.Name}",
 				Color = Color.DarkMagenta,
 				ThumbnailUrl = milestone.Icon
 			};
@@ -147,11 +147,11 @@ namespace Neira.Bot.Helpers
 			return embed.Build();
 		}
 
-		public static Embed MilestoneNewV2(SocketUser leader, Milestone milestone, DateTime date, string userMemo)
+		public static Embed MilestoneNewV2(SocketUser leader, Milestone milestone, string userMemo)
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = $"{date.Date.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(date.DayOfWeek)} в {date.ToString("HH:mm")} по МСК. {milestone.Type}: {milestone.Name}",
+				Title = $"{milestone.Type}: {milestone.Name}",
 				Color = Color.Gold,
 				ThumbnailUrl = milestone.Icon
 			};
@@ -178,7 +178,7 @@ namespace Neira.Bot.Helpers
 
 			var embed = new EmbedBuilder
 			{
-				Title = $"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
+				Title = $"{activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
 				Color = Color.DarkMagenta,
 				ThumbnailUrl = activeMilestone.Milestone.Icon
 
