@@ -1,13 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-using Microsoft.EntityFrameworkCore;
-
 using Neira.Bot.Database;
 using Neira.Bot.Helpers;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
@@ -36,59 +33,57 @@ namespace Neira.Bot.Services
 			};
 			XurTimer.Elapsed += MainTimer_Elapsed;
 		}
-		private async void MainTimer_Elapsed(object sender, ElapsedEventArgs e)
+		private void MainTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
 			// If signal time equal Friday 20:00 we will send message Xur is arrived in game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Friday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
-				await XurArrived();
+				XurArrived();
 			// If signal time equal Tuesday 20:00 we will send message Xur is leave game.
 			if (e.SignalTime.DayOfWeek == DayOfWeek.Tuesday && e.SignalTime.Hour == 20 && e.SignalTime.Minute == 00 && e.SignalTime.Second < 10)
-				await XurLeave();
+				XurLeave();
 		}
 
-		private async Task XurArrived()
+		private void XurArrived()
 		{
-			using (var Db = new NeiraLinkContext())
+			Parallel.ForEach(Client.Guilds, async SocketGuild =>
 			{
-				foreach (var guild in Db.Guilds)
+				using (var Db = new NeiraLinkContext())
 				{
-					if (guild.NotificationChannel != 0)
-					{
-						try
-						{
-							await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-						   .SendMessageAsync(text: guild.GlobalMention, embed: EmbedsHelper.XurArrived());
-						}
-						catch (Exception ex)
-						{
-							await Logger.Log(new LogMessage(LogSeverity.Error, "XurArrived", ex.Message, ex));
-						}
+					var guild = Db.Guilds.FirstOrDefault(g => g.Id == SocketGuild.Id);
+					if (guild == null || guild.NotificationChannel == 0) return;
 
+					try
+					{
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
+					   .SendMessageAsync(text: guild.GlobalMention, embed: EmbedsHelper.XurArrived());
+					}
+					catch (Exception ex)
+					{
+						await Logger.Log(new LogMessage(LogSeverity.Error, "XurArrived", ex.Message, ex));
 					}
 				}
-			}
+			});
 		}
-		private async Task XurLeave()
+		private void XurLeave()
 		{
-			using (var Db = new NeiraLinkContext())
+			Parallel.ForEach(Client.Guilds, async SocketGuild =>
 			{
-				foreach (var guild in Db.Guilds)
+				using (var Db = new NeiraLinkContext())
 				{
-					if (guild.NotificationChannel != 0)
-					{
-						try
-						{
-							await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-						   .SendMessageAsync(text: guild.GlobalMention, embed: EmbedsHelper.XurLeave());
-						}
-						catch (Exception ex)
-						{
-							await Logger.Log(new LogMessage(LogSeverity.Error, "XurLeave", ex.Message, ex));
-						}
+					var guild = Db.Guilds.FirstOrDefault(g => g.Id == SocketGuild.Id);
+					if (guild == null || guild.NotificationChannel == 0) return;
 
+					try
+					{
+						await Client.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
+					   .SendMessageAsync(text: guild.GlobalMention, embed: EmbedsHelper.XurLeave());
+					}
+					catch (Exception ex)
+					{
+						await Logger.Log(new LogMessage(LogSeverity.Error, "XurLeave", ex.Message, ex));
 					}
 				}
-			}
+			});
 		}
 	}
 }

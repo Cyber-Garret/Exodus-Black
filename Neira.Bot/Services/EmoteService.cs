@@ -31,7 +31,7 @@ namespace Neira.Bot.Services
 			Client = discordSocket;
 		}
 
-		public void Initialize()
+		public void Configure()
 		{
 			var NeiraHome = Client.GetGuild(Program.config.HomeDiscordServerId);
 			//Raid and milestone

@@ -15,22 +15,18 @@ namespace Neira.Bot.Services
 	{
 		private readonly DiscordSocketClient Client;
 		private readonly CommandHandlerService CommandHandlingService;
-		private readonly XurService xur;
 		private readonly MilestoneService milestone;
 		private readonly LevelingService leveling;
 		private readonly EmoteService emoteService;
-		private readonly ADOnlineService aDOnlineService;
 
 
-		public DiscordEventHandlerService(DiscordSocketClient socketClient, CommandHandlerService command, XurService xurService, MilestoneService milestoneService, EmoteService emote,LevelingService levelingService, ADOnlineService aDOnline)
+		public DiscordEventHandlerService(DiscordSocketClient socketClient, CommandHandlerService command, MilestoneService milestoneService, EmoteService emote, LevelingService levelingService)
 		{
 			Client = socketClient;
 			CommandHandlingService = command;
-			xur = xurService;
 			milestone = milestoneService;
 			leveling = levelingService;
 			emoteService = emote;
-			aDOnlineService = aDOnline;
 		}
 
 		public void Configure()
@@ -58,17 +54,8 @@ namespace Neira.Bot.Services
 		#region Events
 		private Task Client_Ready()
 		{
-			Task.Run(() =>
-			{
-				//Run Xur timer
-				xur.Configure();
-				//Load custom emote from main discord server
-				emoteService.Initialize();
-				//Run Milestone timer
-				milestone.Initialize();
-				//Run 
-				aDOnlineService.Configure();
-			});
+			emoteService.Configure();
+			Logger.Log(new LogMessage(LogSeverity.Verbose, "Client Ready", "Failsafe Ready to work!"));
 			return Task.CompletedTask;
 		}
 

@@ -30,7 +30,7 @@ namespace Neira.Bot.Services
 			Emote = emoteService;
 		}
 
-		public void Initialize()
+		public void Configure()
 		{
 			MilestoneTimer = new Timer
 			{
