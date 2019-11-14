@@ -36,7 +36,7 @@ namespace Neira.Web
 			services.AddSingleton(new JobSchedule(typeof(BungieJob), "0 0/15 * * * ?")); // run every 15 minute
 
 			services.AddSingleton<GuardianStatJob>();
-			services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0 0/4 * * ?")); // run every 4:00 night
+			services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0 4 * * ?")); // run every 4:00 night
 
 			services.AddControllersWithViews();
 		}
