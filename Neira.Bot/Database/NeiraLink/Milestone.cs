@@ -13,12 +13,13 @@ namespace Neira.Bot.Database
 		public string Name { get; set; }
 		[MaxLength(50)]
 		public string Alias { get; set; }
-		[MaxLength(1024)]
-		public string PreviewDesc { get; set; }
 		[MaxLength(50)]
 		public string Type { get; set; }
 		[MaxLength(1000)]
 		public string Icon { get; set; }
+		/// <summary>
+		/// Raid have 5 free space without leader, cycle for need 
+		/// </summary>
 		public byte MaxSpace { get; set; }
 
 		public List<ActiveMilestone> ActiveMilestones { get; set; }
@@ -31,6 +32,7 @@ namespace Neira.Bot.Database
 		public ulong MessageId { get; set; }
 		public ActiveMilestone ActiveMilestone { get; set; }
 		public ulong UserId { get; set; }
+		public byte? Place { get; set; }
 	}
 
 	public class ActiveMilestone
@@ -49,6 +51,7 @@ namespace Neira.Bot.Database
 		public ulong Leader { get; set; }
 		[Required]
 		public DateTime CreateDate { get; set; }
+		public byte MilestoneType { get; set; }
 
 		public List<MilestoneUser> MilestoneUsers { get; set; }
 	}

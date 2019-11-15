@@ -51,7 +51,6 @@ namespace Neira.Bot
 			service.GetRequiredService<DiscordEventHandlerService>().Configure();
 			await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 			service.GetRequiredService<XurService>().Configure();
-			service.GetRequiredService<MilestoneService>().Configure();
 			service.GetRequiredService<ADOnlineService>().Configure();
 
 

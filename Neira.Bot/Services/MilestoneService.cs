@@ -20,13 +20,19 @@ namespace Neira.Bot.Services
 		private readonly DiscordSocketClient Client;
 		private readonly EmoteService Emote;
 
+		private const byte Second = 2;
+		private const byte Three = 3;
+		private const byte Four = 4;
+		private const byte Five = 5;
+		private const byte Six = 6;
+
 		public MilestoneService(DiscordSocketClient socketClient, EmoteService emoteService)
 		{
 			Client = socketClient;
 			Emote = emoteService;
 		}
 
-		public async Task HandleReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
+		public async Task MilestoneReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
 			try
 			{
@@ -39,23 +45,96 @@ namespace Neira.Bot.Services
 
 					if (milestone == null) return;
 
-					//check reaction
-					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+					if (reaction.Emote.Equals(Emote.Raid))
+					{
+						//check reaction
+						var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
 
-					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
-					{
-						Db.MilestoneUsers.Add(new MilestoneUser
+						if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
 						{
-							MessageId = milestone.MessageId,
-							UserId = reaction.UserId
-						});
-						await Db.SaveChangesAsync();
-						HandleReaction(msg, milestone);
+							Db.MilestoneUsers.Add(new MilestoneUser
+							{
+								MessageId = milestone.MessageId,
+								UserId = reaction.UserId
+							});
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+						else
+						{
+							var user = Client.GetUser(reaction.UserId);
+							await msg.RemoveReactionAsync(Emote.Raid, user);
+						}
 					}
-					else
+					else if (reaction.Emote.Equals(Emote.ReactSecond))
 					{
-						var user = Client.GetUser(reaction.UserId);
-						await msg.RemoveReactionAsync(Emote.Raid, user);
+						if (!milestone.MilestoneUsers.Any(u => u.Place == 2))
+						{
+							Db.MilestoneUsers.Add(new MilestoneUser
+							{
+								MessageId = milestone.MessageId,
+								UserId = reaction.UserId,
+								Place = 2
+							});
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactThird))
+					{
+						if (!milestone.MilestoneUsers.Any(u => u.Place == 3))
+						{
+							Db.MilestoneUsers.Add(new MilestoneUser
+							{
+								MessageId = milestone.MessageId,
+								UserId = reaction.UserId,
+								Place = 3
+							});
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactFourth))
+					{
+						if (!milestone.MilestoneUsers.Any(u => u.Place == 4))
+						{
+							Db.MilestoneUsers.Add(new MilestoneUser
+							{
+								MessageId = milestone.MessageId,
+								UserId = reaction.UserId,
+								Place = 4
+							});
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactFifth))
+					{
+						if (!milestone.MilestoneUsers.Any(u => u.Place == 5))
+						{
+							Db.MilestoneUsers.Add(new MilestoneUser
+							{
+								MessageId = milestone.MessageId,
+								UserId = reaction.UserId,
+								Place = 5
+							});
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactSixth))
+					{
+						if (!milestone.MilestoneUsers.Any(u => u.Place == 6))
+						{
+							Db.MilestoneUsers.Add(new MilestoneUser
+							{
+								MessageId = milestone.MessageId,
+								UserId = reaction.UserId,
+								Place = 6
+							});
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
 					}
 				}
 			}
@@ -65,76 +144,21 @@ namespace Neira.Bot.Services
 			}
 		}
 
-		//internal async Task HandleReactionAddedV2(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
-		//{
-		//	var msg = await cache.GetOrDownloadAsync();
-
-		//	using (var Db = new NeiraLinkContext())
-		//	{
-		//		//get milestone
-		//		var milestone = await Db.OldActiveMilestones.Include(r => r.Milestone).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
-
-		//		if (milestone == null) return;
-
-		//		if (reaction.Emote.Equals(Emote.ReactSecond))
-		//		{
-		//			if (milestone.User2 == 0)
-		//			{
-		//				milestone.User2 = reaction.User.Value.Id;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactThird))
-		//		{
-		//			if (milestone.User3 == 0)
-		//			{
-		//				milestone.User3 = reaction.User.Value.Id;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactFourth))
-		//		{
-		//			if (milestone.User4 == 0)
-		//			{
-		//				milestone.User4 = reaction.User.Value.Id;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactFifth))
-		//		{
-		//			if (milestone.User5 == 0)
-		//			{
-		//				milestone.User5 = reaction.User.Value.Id;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactSixth))
-		//		{
-		//			if (milestone.User6 == 0)
-		//			{
-		//				milestone.User6 = reaction.User.Value.Id;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//	}
-		//}
-
-		public async Task HandleReactionRemoved(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
+		public async Task MilestoneReactionRemoved(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
 			try
 			{
 				var msg = await cache.GetOrDownloadAsync();
 
-				if (reaction.Emote.Equals(Emote.Raid))
+				using (var Db = new NeiraLinkContext())
 				{
-					using (var Db = new NeiraLinkContext())
+					//get milestone
+					var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+					if (milestone == null) return;
+
+					if (reaction.Emote.Equals(Emote.Raid))
 					{
-						//get milestone
-						var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
-
-						if (milestone == null) return;
-
 						//check reaction
 						var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
 
@@ -152,7 +176,58 @@ namespace Neira.Bot.Services
 							await msg.RemoveReactionAsync(Emote.Raid, user);
 						}
 					}
+					else if (reaction.Emote.Equals(Emote.ReactSecond))
+					{
+						if (milestone.MilestoneUsers.Any(m => m.Place == Second && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
+						{
+							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Second);
+							Db.Remove(user);
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactThird))
+					{
+						if (milestone.MilestoneUsers.Any(m => m.Place == 3 && m.UserId == reaction.UserId))
+						{
+							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+							Db.Remove(user);
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactFourth))
+					{
+						if (milestone.MilestoneUsers.Any(m => m.Place == 4 && m.UserId == reaction.UserId))
+						{
+							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+							Db.Remove(user);
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactFifth))
+					{
+						if (milestone.MilestoneUsers.Any(m => m.Place == 5 && m.UserId == reaction.UserId))
+						{
+							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == 5);
+							Db.Remove(user);
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
+					else if (reaction.Emote.Equals(Emote.ReactSixth))
+					{
+						if (milestone.MilestoneUsers.Any(m => m.Place == 6 && m.UserId == reaction.UserId))
+						{
+							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+							Db.Remove(user);
+							await Db.SaveChangesAsync();
+							HandleReaction(msg, milestone);
+						}
+					}
 				}
+
 			}
 			catch (Exception ex)
 			{
@@ -160,78 +235,12 @@ namespace Neira.Bot.Services
 			}
 		}
 
-		//public async Task HandleReactionRemovedV2(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
-		//{
-		//	var msg = await cache.GetOrDownloadAsync();
-		//	using (var Db = new NeiraLinkContext())
-		//	{
-		//		var milestone = await Db.OldActiveMilestones.Include(r => r.Milestone).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
-
-		//		if (milestone == null) return;
-
-		//		if (reaction.Emote.Equals(Emote.ReactSecond))
-		//		{
-		//			if (milestone.User2 == reaction.User.Value.Id)
-		//			{
-		//				milestone.User2 = 0;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactThird))
-		//		{
-		//			if (milestone.User3 == reaction.User.Value.Id)
-		//			{
-		//				milestone.User3 = 0;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactFourth))
-		//		{
-		//			if (milestone.User4 == reaction.User.Value.Id)
-		//			{
-		//				milestone.User4 = 0;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactFifth))
-		//		{
-		//			if (milestone.User5 == reaction.User.Value.Id)
-		//			{
-		//				milestone.User5 = 0;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//		else if (reaction.Emote.Equals(Emote.ReactSixth))
-		//		{
-		//			if (milestone.User6 == reaction.User.Value.Id)
-		//			{
-		//				milestone.User6 = 0;
-		//				HandleOldMilestone(msg, milestone);
-		//			}
-		//		}
-		//	}
-		//}
-
 		private async void HandleReaction(IUserMessage message, ActiveMilestone activeMilestone)
 		{
 			var newEmbed = EmbedsHelper.MilestoneRebuild(Client, activeMilestone, Emote.Raid);
 			if (newEmbed.Length != 0)
 				await message.ModifyAsync(m => m.Embed = newEmbed);
 		}
-
-		//private async void HandleOldMilestone(IUserMessage message, OldActiveMilestone milestone)
-		//{
-		//	var newEmbed = EmbedsHelper.MilestoneRebuildV2(Client, milestone);
-		//	if (newEmbed.Length != 0)
-		//	{
-		//		await message.ModifyAsync(m => m.Embed = newEmbed);
-		//		using (var Db = new NeiraLinkContext())
-		//		{
-		//			Db.OldActiveMilestones.Update(milestone);
-		//			await Db.SaveChangesAsync();
-		//		}
-		//	}
-		//}
 
 		private async Task UpdateBotStatAsync()
 		{
@@ -247,7 +256,7 @@ namespace Neira.Bot.Services
 			}
 		}
 
-		public async Task RegisterNewMilestoneAsync(ulong msgId, SocketCommandContext context, byte raidInfoId, string userMemo)
+		public async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, MilestoneType type, byte raidInfoId, string userMemo)
 		{
 			try
 			{
@@ -260,7 +269,8 @@ namespace Neira.Bot.Services
 						MilestoneId = raidInfoId,
 						Memo = userMemo,
 						CreateDate = DateTime.Now,
-						Leader = context.User.Id
+						Leader = context.User.Id,
+						MilestoneType = (byte)type
 					};
 
 					Db.ActiveMilestones.Add(newMilestone);
@@ -275,33 +285,6 @@ namespace Neira.Bot.Services
 			}
 
 		}
-
-		//public async Task RegisterNewMilestoneV2Async(ulong msgId, SocketCommandContext context, int milestoneKey, DateTime date, string userMemo)
-		//{
-		//	try
-		//	{
-		//		using (var Db = new NeiraLinkContext())
-		//		{
-		//			var newMilestone = new OldActiveMilestone
-		//			{
-		//				MessageId = msgId,
-		//				GuildId = context.Guild.Id,
-		//				MilestoneId = milestoneKey,
-		//				Memo = userMemo,
-		//				DateExpire = date,
-		//				User1 = context.User.Id
-		//			};
-		//			Db.OldActiveMilestones.Add(newMilestone);
-		//			await Db.SaveChangesAsync();
-
-		//			_ = Task.Run(async () => await UpdateBotStatAsync());
-		//		}
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		await Logger.Log(new LogMessage(LogSeverity.Error, "RegisterRaidAsync", ex.Message, ex));
-		//	}
-		//}
 
 		public async Task RaidNotificationAsync(List<ulong> userIds, ActiveMilestone milestone)
 		{
@@ -329,9 +312,5 @@ namespace Neira.Bot.Services
 
 
 	}
-	enum MilestoneType : byte
-	{
-		Default,
-		OldStyle
-	}
+
 }

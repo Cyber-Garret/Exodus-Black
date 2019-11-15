@@ -204,7 +204,7 @@ namespace Neira.Bot.Services
 					|| reaction.Emote.Equals(emoteService.ReactFourth)
 					|| reaction.Emote.Equals(emoteService.ReactFifth)
 					|| reaction.Emote.Equals(emoteService.ReactSixth))
-						await milestone.HandleReactionAdded(cache, reaction);
+						await milestone.MilestoneReactionAdded(cache, reaction);
 				}
 			});
 			return Task.CompletedTask;
@@ -221,7 +221,7 @@ namespace Neira.Bot.Services
 					|| reaction.Emote.Equals(emoteService.ReactFourth)
 					|| reaction.Emote.Equals(emoteService.ReactFifth)
 					|| reaction.Emote.Equals(emoteService.ReactSixth))
-						await milestone.HandleReactionRemoved(cache, reaction);
+						await milestone.MilestoneReactionRemoved(cache, reaction);
 			});
 			return Task.CompletedTask;
 		}
