@@ -75,6 +75,36 @@ namespace Neira.Web.Controllers
 			return View(model);
 		}
 
+		public async Task<IActionResult> ADAsync(string sortOrder, string searchString)
+		{
+			using var Db = new NeiraContext();
+			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
+			ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
+			ViewData["DateLastPlayedSortParm"] = sortOrder == "DateLastPlayed" ? "DateLastPlayed_desc" : "DateLastPlayed";
+			ViewData["CurrentFilter"] = searchString;
+
+			var AD = await Db.Clans.Where(c => c.Name.Contains("Адские")).Select(i => i.Id).ToListAsync();
+			var destiny2Clan = Db.Clan_Members.Include(c => c.Clan).Where(i => AD.Contains(i.ClanId));
+
+			if (!string.IsNullOrEmpty(searchString))
+				destiny2Clan = destiny2Clan.Where(m => m.Name.Contains(searchString)).Include(c => c.Clan);
+
+			if (destiny2Clan == null)
+				return NotFound();
+
+			destiny2Clan = sortOrder switch
+			{
+				"Name_desc" => destiny2Clan.OrderByDescending(m => m.Name).Include(c => c.Clan),
+				"Date" => destiny2Clan.OrderBy(m => m.ClanJoinDate).Include(c => c.Clan),
+				"Date_desc" => destiny2Clan.OrderByDescending(m => m.ClanJoinDate).Include(c => c.Clan),
+				"DateLastPlayed" => destiny2Clan.OrderBy(m => m.DateLastPlayed).Include(c => c.Clan),
+				"DateLastPlayed_desc" => destiny2Clan.OrderByDescending(m => m.DateLastPlayed).Include(c => c.Clan),
+				_ => destiny2Clan.OrderBy(m => m.Name).Include(c => c.Clan),
+			};
+
+			return View(await destiny2Clan.AsNoTracking().ToListAsync());
+		}
+
 		private Chart GenerateLineChart(int GuardianId)
 		{
 			using var Db = new NeiraContext();
