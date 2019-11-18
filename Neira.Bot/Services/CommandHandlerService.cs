@@ -57,8 +57,10 @@ namespace Neira.Bot.Services
 				var cmdSearchResult = Commands.Search(context, argPos);
 				//If command not found just finish Task
 				if (cmdSearchResult.Commands == null) return;
-				//Execute commant in current discord context
+				//Execute command in current discord context
 				var executionTask = Commands.ExecuteAsync(context, argPos, Services);
+
+				await msg.DeleteAsync();
 
 				await executionTask.ContinueWith(task =>
 				 {

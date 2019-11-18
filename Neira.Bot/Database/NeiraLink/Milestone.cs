@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Neira.Bot.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -51,7 +52,7 @@ namespace Neira.Bot.Database
 		public ulong Leader { get; set; }
 		[Required]
 		public DateTime CreateDate { get; set; }
-		public byte MilestoneType { get; set; }
+		public MilestoneType MilestoneType { get; set; }
 
 		public List<MilestoneUser> MilestoneUsers { get; set; }
 	}

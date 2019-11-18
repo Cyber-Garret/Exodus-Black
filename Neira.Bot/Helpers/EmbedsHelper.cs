@@ -225,25 +225,88 @@ namespace Neira.Bot.Helpers
 			return embed.Build();
 		}
 
-		public static Embed MilestoneRemindInDM(SocketUser user, ActiveMilestone milestone, SocketGuild socketGuild)
+		public static Embed MilestoneRemindInDM(DiscordSocketClient Client, ActiveMilestone milestone, SocketGuild socketGuild)
 		{
 			var authorBuilder = new EmbedAuthorBuilder
 			{
-				Name = $"Доброго времени суток, {user.Username}",
-				IconUrl = user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()
+				Name = $"Доброго времени суток, страж."
 			};
 
 			var embed = new EmbedBuilder()
 			{
-				Title = $"Хочу вам напомнить, что у вас через 15 минут начнется {milestone.Milestone.Type.ToLower()}.",
+				Title = $"Спешу вам сообщить что группа на активность {milestone.Milestone.Type.ToLower()} {milestone.Milestone.Name} в полном сборе .",
 				Author = authorBuilder,
-				Color = Color.DarkMagenta,
+				Color = Color.DarkGreen,
 				ThumbnailUrl = milestone.Milestone.Icon
 			};
-
 			if (milestone.Memo != null)
-				embed.AddField("Заметка от лидера:", milestone.Memo);
-			embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {socketGuild.Name}");
+				embed.WithDescription($"**Заметка от лидера:** {milestone.Memo}");
+
+			var embedFieldUsers = new EmbedFieldBuilder
+			{
+				Name = $"В боевую группу записались"
+			};
+
+			var leader = Client.GetUser(milestone.Leader);
+			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
+
+			int count = 2;
+			foreach (var user in milestone.MilestoneUsers)
+			{
+				if (user.UserId == milestone.Leader)
+				{
+					embedFieldUsers.Value += $"#{count} **Зарезервировано лидером.**\n";
+				}
+				else
+				{
+					var discordUser = Client.GetUser(user.UserId);
+					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+				}
+				count++;
+			}
+			if (embedFieldUsers.Value != null)
+				embed.AddField(embedFieldUsers);
+
+			embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {socketGuild.Name}", socketGuild.IconUrl);
+			embed.WithCurrentTimestamp();
+
+			return embed.Build();
+		}
+
+		public static Embed MilestoneEnd(DiscordSocketClient Client, ActiveMilestone activeMilestone)
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = $"{activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
+				Color = Color.Red,
+				Description = "**Ваш постоянный успех дал сбой, сбор закончен. Бип...**",
+				Timestamp = DateTimeOffset.Now
+			};
+			if (activeMilestone.Memo != null)
+				embed.AddField("Заметка от лидера:", activeMilestone.Memo);
+			var embedFieldUsers = new EmbedFieldBuilder
+			{
+				Name = $"В боевую группу записались"
+			};
+			var leader = Client.GetUser(activeMilestone.Leader);
+			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
+
+			int count = 2;
+			foreach (var user in activeMilestone.MilestoneUsers)
+			{
+				if (user.UserId == activeMilestone.Leader)
+				{
+					embedFieldUsers.Value += $"#{count} **Зарезервировано лидером.**\n";
+				}
+				else
+				{
+					var discordUser = Client.GetUser(user.UserId);
+					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+				}
+				count++;
+			}
+			if (embedFieldUsers.Value != null)
+				embed.AddField(embedFieldUsers);
 
 			return embed.Build();
 		}
