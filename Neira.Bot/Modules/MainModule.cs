@@ -433,8 +433,6 @@ namespace Neira.Bot.Modules
 				await msg.AddReactionAsync(CustomEmote.ReactFourth);
 				await msg.AddReactionAsync(CustomEmote.ReactFifth);
 				await msg.AddReactionAsync(CustomEmote.ReactSixth);
-
-				await msg.PinAsync();
 			}
 			catch (Exception ex)
 			{

@@ -245,9 +245,6 @@ namespace Neira.Bot.Services
 				await message.RemoveAllReactionsAsync();
 				await message.ModifyAsync(c => c.Embed = EmbedsHelper.MilestoneEnd(Client, activeMilestone));
 
-				if (activeMilestone.MilestoneType == MilestoneType.OldStyle)
-					await message.UnpinAsync();
-
 				await RaidNotificationAsync(activeMilestone);
 			}
 		}
