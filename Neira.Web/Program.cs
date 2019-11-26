@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using System;
 
 namespace Neira.Web
 {
@@ -13,11 +12,29 @@ namespace Neira.Web
 	{
 		public static void Main(string[] args)
 		{
-			CreateHostBuilder(args).Build().Run();
+			Log.Logger = new LoggerConfiguration()
+				.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+				.Enrich.FromLogContext()
+				.WriteTo.Console()
+				.CreateLogger();
+			try
+			{
+				Log.Information("Starting up");
+				CreateHostBuilder(args).Build().Run();
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal(ex, "Application start-up failed");
+			}
+			finally
+			{
+				Log.CloseAndFlush();
+			}
 		}
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 			Host.CreateDefaultBuilder(args)
+			.UseSerilog()
 			.ConfigureLogging((context, logging) =>
 			{
 				var env = context.HostingEnvironment;
@@ -25,7 +42,6 @@ namespace Neira.Web
 
 				logging.AddConfiguration(config);
 				logging.AddConsole();
-
 				logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
 			})
 			.ConfigureWebHostDefaults(webBuilder =>

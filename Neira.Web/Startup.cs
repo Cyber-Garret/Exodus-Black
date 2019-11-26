@@ -1,15 +1,21 @@
+using Discord;
+using Discord.Addons.Interactive;
+using Discord.Commands;
+using Discord.WebSocket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Neira.Web.Bot;
+using Neira.Web.Bot.Services;
 using Neira.Web.QuartzService;
 
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
+using Serilog;
 
 namespace Neira.Web
 {
@@ -39,6 +45,30 @@ namespace Neira.Web
 			services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0 4 * * ?")); // run every 4:00 night
 
 			services.AddControllersWithViews();
+
+			//Discord Bot
+			services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
+			{
+				ExclusiveBulkDelete = true,
+				AlwaysDownloadUsers = true,
+				LogLevel = LogSeverity.Verbose,
+				DefaultRetryMode = RetryMode.AlwaysRetry,
+				MessageCacheSize = 300
+			}))
+				.AddSingleton<CommandService>()
+				.AddSingleton<LoggingService>();
+
+			//.AddSingleton<CommandService>()
+			//.AddSingleton<CommandHandlerService>()
+			//.AddSingleton<DiscordEventHandlerService>()
+			//.AddSingleton<InteractiveService>()
+			//.AddSingleton<XurService>()
+			//.AddSingleton<MilestoneService>()
+			//.AddSingleton<EmoteService>()
+			//.AddSingleton<LevelingService>()
+			//.AddSingleton<ADOnlineService>()
+
+			services.AddHostedService<BotHostedService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +86,8 @@ namespace Neira.Web
 			}
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+
+			app.UseSerilogRequestLogging();
 
 			app.UseRouting();
 
