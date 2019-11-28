@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
+using Neira.Web.Database;
+using Neira.Web.Models;
+using Neira.Web.ViewModels;
+
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Neira.Web.Models;
-using Neira.Web.Models.NeiraLink;
-using Neira.Web.ViewModels;
 
 namespace Neira.Web.Controllers
 {
@@ -22,7 +21,7 @@ namespace Neira.Web.Controllers
 
 		public IActionResult Index()
 		{
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			var model = new IndexViewModel
 			{
 				BotInfo = Db.BotInfos.FirstOrDefault()

@@ -1,8 +1,4 @@
-﻿using Neira.Web.Models.NeiraLink;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Neira.Web.Database;
 
 namespace Neira.Web.ViewModels
 {

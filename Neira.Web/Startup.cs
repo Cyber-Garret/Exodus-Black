@@ -31,6 +31,7 @@ namespace Neira.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			#region Quartz
 			//Register Quartz dedicated service
 			services.AddHostedService<QuartzHostedService>();
 			// Add Quartz services
@@ -44,31 +45,42 @@ namespace Neira.Web
 			services.AddSingleton<GuardianStatJob>();
 			services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0 4 * * ?")); // run every 4:00 night
 
-			services.AddControllersWithViews();
+			services.AddSingleton<HellHoundJob>();
+			services.AddSingleton(new JobSchedule(typeof(HellHoundJob), "0 0 0/1 * * ?")); // run every hour
 
-			//Discord Bot
+			services.AddSingleton<XurArrivedJob>();
+			services.AddSingleton(new JobSchedule(typeof(XurArrivedJob), "0 0 20 ? * FRI")); // run every Friday in 20:00
+
+			services.AddSingleton<XurLeaveJob>();
+			services.AddSingleton(new JobSchedule(typeof(XurLeaveJob), "0 0 20 ? * TUE")); // run every Tuesday in 20:00
+			#endregion
+
+			#region Web
+			services.AddControllersWithViews();
+			#endregion
+
+			#region Bot
+			services.AddHostedService<BotHostedService>();
+
+			//Bot services for DI
 			services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 			{
 				ExclusiveBulkDelete = true,
 				AlwaysDownloadUsers = true,
-				LogLevel = LogSeverity.Verbose,
+				LogLevel = LogSeverity.Warning,
 				DefaultRetryMode = RetryMode.AlwaysRetry,
 				MessageCacheSize = 300
 			}))
 				.AddSingleton<CommandService>()
-				.AddSingleton<LoggingService>();
+				.AddSingleton<LoggingService>()
+				.AddSingleton<InteractiveService>()
+				.AddSingleton<EmoteService>()
+				.AddSingleton<MilestoneService>()
+				.AddSingleton<LevelingService>()
+				.AddSingleton<CommandHandlerService>()
+				.AddSingleton<GuildEventHandlerService>();
+			#endregion
 
-			//.AddSingleton<CommandService>()
-			//.AddSingleton<CommandHandlerService>()
-			//.AddSingleton<DiscordEventHandlerService>()
-			//.AddSingleton<InteractiveService>()
-			//.AddSingleton<XurService>()
-			//.AddSingleton<MilestoneService>()
-			//.AddSingleton<EmoteService>()
-			//.AddSingleton<LevelingService>()
-			//.AddSingleton<ADOnlineService>()
-
-			services.AddHostedService<BotHostedService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

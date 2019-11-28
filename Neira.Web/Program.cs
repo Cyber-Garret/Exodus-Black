@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Neira.Web.Models;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -10,10 +12,19 @@ namespace Neira.Web
 {
 	public class Program
 	{
+		private static IConfiguration _config { get; set; }
+
 		public static void Main(string[] args)
 		{
+			var builder = new ConfigurationBuilder()
+				.SetBasePath(AppContext.BaseDirectory)
+				.AddJsonFile("UserData/config.json");
+
+			_config = builder.Build();
+
 			Log.Logger = new LoggerConfiguration()
 				.MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+				.MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
 				.Enrich.FromLogContext()
 				.WriteTo.Console()
 				.CreateLogger();
@@ -35,18 +46,13 @@ namespace Neira.Web
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 			Host.CreateDefaultBuilder(args)
 			.UseSerilog()
-			.ConfigureLogging((context, logging) =>
-			{
-				var env = context.HostingEnvironment;
-				var config = context.Configuration.GetSection("Logging");
-
-				logging.AddConfiguration(config);
-				logging.AddConsole();
-				logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
-			})
 			.ConfigureWebHostDefaults(webBuilder =>
 			{
 				webBuilder.UseStartup<Startup>();
+			})
+			.ConfigureServices(service =>
+			{
+				service.Configure<Config>(_config);
 			});
 	}
 }

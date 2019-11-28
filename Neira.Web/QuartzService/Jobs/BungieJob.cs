@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using Neira.API.Bungie;
-using Neira.Web.Models.NeiraLink;
+using Neira.Web.Database;
+
 using Quartz;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +16,10 @@ namespace Neira.Web.QuartzService
 	[DisallowConcurrentExecution]
 	public class BungieJob : IJob
 	{
-		private readonly ILogger<BungieJob> logger;
+		private readonly ILogger<BungieJob> _logger;
 		public BungieJob(ILogger<BungieJob> logger)
 		{
-			this.logger = logger;
+			_logger = logger;
 		}
 
 		public Task Execute(IJobExecutionContext context)
@@ -29,11 +32,11 @@ namespace Neira.Web.QuartzService
 
 		private void UpdateClans()
 		{
-			logger.LogInformation("Update Destiny clans start working at {RequestTime}", DateTime.Now);
+			_logger.LogInformation("Update Destiny clans start working at {RequestTime}", DateTime.Now);
 
 			var bungieApi = new BungieApi();
 
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			var queue = new Queue<Clan>(Db.Clans);
 			while (queue.Count > 0)
 			{
@@ -55,21 +58,21 @@ namespace Neira.Web.QuartzService
 				}
 				catch (Exception ex)
 				{
-					logger.LogError(ex, $"Error in UpdateClansAsync method");
+					_logger.LogError(ex, $"Error in UpdateClansAsync method");
 				}
 			}
 			Db.SaveChanges();
 
-			logger.LogInformation("Update Destiny clans complete working at {RequestTime}", DateTime.Now);
+			_logger.LogInformation("Update Destiny clans complete working at {RequestTime}", DateTime.Now);
 		}
 
 		private void ClanMemberCheck()
 		{
-			logger.LogInformation("Clan member check start working at {RequestTime}", DateTime.Now);
+			_logger.LogInformation("Clan member check start working at {RequestTime}", DateTime.Now);
 
 			var bungieApi = new BungieApi();
 
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			var queue = new Queue<Clan>(Db.Clans.Include(m => m.Members));
 
 			while (queue.Count > 0)
@@ -143,19 +146,19 @@ namespace Neira.Web.QuartzService
 				}
 				catch (Exception ex)
 				{
-					logger.LogError(ex, "Error in ClanMemberCheckAsync method.");
+					_logger.LogError(ex, "Error in ClanMemberCheckAsync method.");
 				}
 			}
 
-			logger.LogInformation("Clan member check complete working at {RequestTime}", DateTime.Now);
+			_logger.LogInformation("Clan member check complete working at {RequestTime}", DateTime.Now);
 		}
 
 		private void UpdateMembersLastPlayedTime()
 		{
 
-			logger.LogInformation("Update Guardian last online time start working at {RequestTime}", DateTime.Now);
+			_logger.LogInformation("Update Guardian last online time start working at {RequestTime}", DateTime.Now);
 
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			var queue = new Queue<Clan_Member>(Db.Clan_Members.AsNoTracking().OrderBy(g => g.DateLastPlayed));
 			var bungieApi = new BungieApi();
 
@@ -177,14 +180,14 @@ namespace Neira.Web.QuartzService
 						Db.SaveChanges();
 					}
 					else
-						logger.LogInformation($"Bungie error on {guardian.Name} Response:\n ErrorCode: {profile.ErrorCode}\n{profile.ErrorStatus} - {profile.Message}");
+						_logger.LogInformation($"Bungie error on {guardian.Name} Response:\n ErrorCode: {profile.ErrorCode}\n{profile.ErrorStatus} - {profile.Message}");
 				}
 				catch (Exception ex)
 				{
-					logger.LogError(ex, $"Error in update last online time on Guardian {guardian.Name}.");
+					_logger.LogError(ex, $"Error in update last online time on Guardian {guardian.Name}.");
 				}
 			}
-			logger.LogInformation("Update Guardian last online time complete working at {RequestTime}", DateTime.Now);
+			_logger.LogInformation("Update Guardian last online time complete working at {RequestTime}", DateTime.Now);
 		}
 	}
 }

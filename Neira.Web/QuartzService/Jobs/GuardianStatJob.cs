@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+
 using Neira.API.Bungie;
-using Neira.Web.Models.NeiraLink;
+using Neira.Web.Database;
+
 using Quartz;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,14 +31,14 @@ namespace Neira.Web.QuartzService
 			logger.LogInformation("GrabGuardianPlayedTime start working at {RequestTime}", DateTime.Now);
 
 			var yesterday = DateTime.Now.AddDays(-1);
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			var guardians = Db.Clan_Members.ToList();
 
 			var BungieApi = new BungieApi();
 
 			Parallel.ForEach(guardians, new ParallelOptions { MaxDegreeOfParallelism = 10 }, guardian =>
 			{
-				using var DbContext = new NeiraContext();
+				using var DbContext = new NeiraLinkContext();
 				if (StatExist(guardian.Id, yesterday)) return;
 
 				var profile = BungieApi.GetProfileResult(guardian.DestinyMembershipId, (int)guardian.DestinyMembershipType, DestinyComponentType.Profiles);
@@ -85,7 +87,7 @@ namespace Neira.Web.QuartzService
 
 		private bool StatExist(int GuardianId, DateTime date)
 		{
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			return Db.Clan_Member_Stats.Any(m => m.MemberId == GuardianId && m.Date.Date == date.Date);
 		}
 	}

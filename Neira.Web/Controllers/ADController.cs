@@ -3,7 +3,7 @@ using ChartJSCore.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Neira.Web.Models.NeiraLink;
+using Neira.Web.Database;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace Neira.Web.Controllers
 
 		private Chart GenerateLineChart()
 		{
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 
 			var result = Db.ADOnlines.OrderBy(o => o.Date);
 
@@ -132,30 +132,6 @@ namespace Neira.Web.Controllers
 				PointHitRadius = new List<int> { 10 },
 				SpanGaps = false
 			};
-			//AFK
-			var AFK = new LineDataset()
-			{
-				Label = "Отошел",
-				Data = new List<double>(result.Select(r => (double)r.AFK)),
-				Fill = "false",
-				BackgroundColor = ChartColor.FromRgba(253, 225, 178, 0.4),
-				BorderColor = ChartColor.FromRgb(253, 225, 178),
-				LineTension = 0.1,
-				BorderCapStyle = "butt",
-				BorderDash = new List<int> { },
-				BorderDashOffset = 0.0,
-				BorderJoinStyle = "miter",
-				PointBorderColor = new List<ChartColor> { ChartColor.FromRgb(253, 225, 178) },
-				PointBackgroundColor = new List<ChartColor> { ChartColor.FromHexString("#ffffff") },
-				PointBorderWidth = new List<int> { 1 },
-				PointHoverRadius = new List<int> { 5 },
-				PointHoverBackgroundColor = new List<ChartColor> { ChartColor.FromRgb(253, 225, 178) },
-				PointHoverBorderColor = new List<ChartColor> { ChartColor.FromRgb(220, 220, 220) },
-				PointHoverBorderWidth = new List<int> { 2 },
-				PointRadius = new List<int> { 1 },
-				PointHitRadius = new List<int> { 10 },
-				SpanGaps = false
-			};
 			//InGame
 			var InGame = new LineDataset()
 			{
@@ -211,7 +187,6 @@ namespace Neira.Web.Controllers
 				Idle,
 				DnD,
 				InVoice,
-				AFK,
 				InGame,
 				InDestiny2
 			};

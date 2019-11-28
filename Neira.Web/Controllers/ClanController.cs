@@ -1,10 +1,12 @@
 ﻿using ChartJSCore.Helpers;
 using ChartJSCore.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using Neira.Web.Models.NeiraLink;
+using Neira.Web.Database;
 using Neira.Web.ViewModels;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +27,7 @@ namespace Neira.Web.Controllers
 			if (!ClanExists(id.Value))
 				return NotFound();
 
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
 			ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
 			ViewData["DateLastPlayedSortParm"] = sortOrder == "DateLastPlayed" ? "DateLastPlayed_desc" : "DateLastPlayed";
@@ -67,7 +69,7 @@ namespace Neira.Web.Controllers
 			Chart lineChart = GenerateLineChart(id);
 			ViewData["LineChart"] = lineChart;
 
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			var model = new GuardianViewModel
 			{
 				GuardianInfo = Db.Clan_Members.FirstOrDefault(m => m.Id == id)
@@ -77,7 +79,7 @@ namespace Neira.Web.Controllers
 
 		public async Task<IActionResult> ADAsync(string sortOrder, string searchString)
 		{
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "Name_desc" : "";
 			ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
 			ViewData["DateLastPlayedSortParm"] = sortOrder == "DateLastPlayed" ? "DateLastPlayed_desc" : "DateLastPlayed";
@@ -107,7 +109,7 @@ namespace Neira.Web.Controllers
 
 		private Chart GenerateLineChart(int GuardianId)
 		{
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 
 			var result = Db.Clan_Member_Stats.Where(m => m.MemberId == GuardianId).OrderBy(o => o.Date);
 
@@ -157,7 +159,7 @@ namespace Neira.Web.Controllers
 		}
 		private bool ClanExists(long id)
 		{
-			using var Db = new NeiraContext();
+			using var Db = new NeiraLinkContext();
 			return Db.Clans.Any(e => e.Id == id);
 		}
 	}

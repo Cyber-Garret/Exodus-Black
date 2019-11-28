@@ -12,7 +12,6 @@ namespace Neira.Web.Bot.Services
 {
 	public class LoggingService
 	{
-
 		// declare the fields used later in this class
 		private readonly ILogger _logger;
 		private readonly DiscordSocketClient _discord;
@@ -28,21 +27,30 @@ namespace Neira.Web.Bot.Services
 			// hook into these events with the methods provided below
 			_discord.Ready += OnReadyAsync;
 			_discord.Log += OnLogAsync;
+			_discord.Disconnected += OnDisconnectedAsync;
 			_commands.Log += OnLogAsync;
 		}
 
 		// this method executes on the bot being connected/ready
 		public Task OnReadyAsync()
 		{
+			//emoteService.Configure();
 			_logger.LogInformation($"Connected as -> [{_discord.CurrentUser}] :)");
 			_logger.LogInformation($"We are on [{_discord.Guilds.Count}] servers");
+			return Task.CompletedTask;
+		}
+
+		// this method executes on the bot being disconnected from Discord API
+		private Task OnDisconnectedAsync(Exception ex)
+		{
+			_logger.LogInformation($"Bot disconnected. [{ex.Message}]");
 			return Task.CompletedTask;
 		}
 
 		// this method switches out the severity level from Discord.Net's API, and logs appropriately
 		public Task OnLogAsync(LogMessage msg)
 		{
-			string logText = $"{msg.Source}: {msg.Exception?.ToString() ?? msg.Message}";
+			string logText = $"{msg.Source}: {msg.Message}";
 			switch (msg.Severity.ToString())
 			{
 				case "Critical":

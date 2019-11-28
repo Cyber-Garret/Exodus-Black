@@ -1,4 +1,4 @@
-﻿using Neira.Web.Models.NeiraLink;
+﻿using Neira.Web.Database;
 
 namespace Neira.Web.ViewModels
 {

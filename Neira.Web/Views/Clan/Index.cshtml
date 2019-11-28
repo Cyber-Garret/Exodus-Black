@@ -1,5 +1,5 @@
-﻿@using Neira.Web.Models.NeiraLink
-@model IEnumerable<Neira.Web.Models.NeiraLink.Clan_Member>
+﻿@using Neira.Web.Database
+@model IEnumerable<Neira.Web.Database.Clan_Member>
 @{
 	Layout = "~/Views/Shared/Layouts/_ClanLayout.cshtml";
 	var CurrentClan = (Clan)ViewData["CurrentGuild"];
@@ -66,15 +66,15 @@
 					<td>
 						@if (item.ErrorCode == 0)
 						{
-						<span class="text-warning">Нет данных</span>
+							<span class="text-warning">Нет данных</span>
 						}
 						else if (item.ErrorCode == 1665)
 						{
-						<span class="text-danger">Профиль скрыт</span>
+							<span class="text-danger">Профиль скрыт</span>
 						}
 						else
 						{
-						<a class="btn btn-primary" asp-controller="Clan" asp-action="Detail" asp-route-Id="@item.Id" target="_blank">Активность</a>
+							<a class="btn btn-primary" asp-controller="Clan" asp-action="Detail" asp-route-Id="@item.Id" target="_blank">Активность</a>
 						}
 					</td>
 				</tr>
