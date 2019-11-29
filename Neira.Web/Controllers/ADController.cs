@@ -3,12 +3,12 @@ using ChartJSCore.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Neira.Web.Database;
+using Neira.Database;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Neira.Web.Controllers
+namespace Neira.Controllers
 {
 	public class ADController : Controller
 	{

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Neira.Web.Database
+namespace Neira.Database
 {
 	public class ADOnline
 	{

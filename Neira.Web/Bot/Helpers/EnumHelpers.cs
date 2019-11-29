@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Neira.Web.Bot.Helpers
+namespace Neira.Bot.Helpers
 {
 	public enum MilestoneType : byte
 	{

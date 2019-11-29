@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28809.33
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.API", "Neira.API\Neira.API.csproj", "{955B700A-E4CB-490E-BECF-0E18FBD30932}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.Web", "Neira.Web\Neira.Web.csproj", "{C8D51E00-4542-4353-A0BC-8C438DDC7ED5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira", "Neira.Web\Neira.csproj", "{C8D51E00-4542-4353-A0BC-8C438DDC7ED5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

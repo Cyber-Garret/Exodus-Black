@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using Neira.Web.Database;
-using Neira.Web.Models;
-using Neira.Web.ViewModels;
+using Neira.Database;
+using Neira.Models;
+using Neira.ViewModels;
 
 using System.Diagnostics;
 using System.Linq;
 
-namespace Neira.Web.Controllers
+namespace Neira.Controllers
 {
 	public class HomeController : Controller
 	{

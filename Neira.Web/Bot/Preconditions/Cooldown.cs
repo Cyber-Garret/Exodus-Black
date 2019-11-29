@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Preconditions
+namespace Neira.Bot.Preconditions
 {
 	public sealed class Cooldown : PreconditionAttribute
 	{

@@ -4,7 +4,7 @@ using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Preconditions
+namespace Neira.Bot.Preconditions
 {
 	/// <summary>
 	/// Disallow use user parameter on self

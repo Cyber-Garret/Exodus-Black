@@ -3,15 +3,15 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Neira.Web.Bot.Services;
-using Neira.Web.Models;
+using Neira.Bot.Services;
+using Neira.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot
+namespace Neira.Bot
 {
 	public class BotHostedService : IHostedService
 	{

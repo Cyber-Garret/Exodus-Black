@@ -1,10 +1,10 @@
-﻿using Neira.Web.Bot.Helpers;
+﻿using Neira.Bot.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Neira.Web.Database
+namespace Neira.Database
 {
 	public class Milestone
 	{

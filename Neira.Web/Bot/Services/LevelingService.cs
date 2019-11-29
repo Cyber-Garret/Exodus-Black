@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Neira.Web.Bot.Helpers;
-using Neira.Web.Database;
+using Neira.Bot.Helpers;
+using Neira.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Services
+namespace Neira.Bot.Services
 {
 	public class LevelingService
 	{

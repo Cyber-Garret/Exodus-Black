@@ -1,6 +1,6 @@
-﻿using Neira.Web.Database;
+﻿using Neira.Database;
 
-namespace Neira.Web.ViewModels
+namespace Neira.ViewModels
 {
 	public class IndexViewModel
 	{

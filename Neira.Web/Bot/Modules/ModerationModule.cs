@@ -3,15 +3,15 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Neira.Web.Bot.Helpers;
-using Neira.Web.Bot.Preconditions;
+using Neira.Bot.Helpers;
+using Neira.Bot.Preconditions;
 
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Modules
+namespace Neira.Bot.Modules
 {
 	[RequireUserPermission(GuildPermission.Administrator,
 			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану корабля и его избранным стражам.",

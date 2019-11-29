@@ -5,10 +5,10 @@ using Discord.WebSocket;
 
 using Microsoft.EntityFrameworkCore;
 
-using Neira.Web.Database;
-using Neira.Web.Bot.Helpers;
-using Neira.Web.Bot.Preconditions;
-using Neira.Web.Bot.Services;
+using Neira.Database;
+using Neira.Bot.Helpers;
+using Neira.Bot.Preconditions;
+using Neira.Bot.Services;
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Neira.Web.Bot.Modules
+namespace Neira.Bot.Modules
 {
 	[Cooldown(5)]
 	[RequireBotPermission(ChannelPermission.SendMessages)]
@@ -354,7 +354,7 @@ namespace Neira.Web.Bot.Modules
 			{
 				var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
 
-				var milestone = DatabaseHelper.GetMilestone(milestoneName);
+				var milestone = await DatabaseHelper.GetMilestoneAsync(milestoneName);
 
 				if (milestone == null)
 				{
@@ -407,7 +407,7 @@ namespace Neira.Web.Bot.Modules
 			{
 				var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
 
-				var milestone = DatabaseHelper.GetMilestone(milestoneName);
+				var milestone = await DatabaseHelper.GetMilestoneAsync(milestoneName);
 
 				if (milestone == null)
 				{

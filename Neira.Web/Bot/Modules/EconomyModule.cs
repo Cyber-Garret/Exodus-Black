@@ -2,15 +2,15 @@
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neira.Web.Bot.Helpers;
-using Neira.Web.Bot.Preconditions;
-using Neira.Web.Bot.Services;
+using Neira.Bot.Helpers;
+using Neira.Bot.Preconditions;
+using Neira.Bot.Services;
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Modules
+namespace Neira.Bot.Modules
 {
 	public class EconomyModule : BaseModule
 	{

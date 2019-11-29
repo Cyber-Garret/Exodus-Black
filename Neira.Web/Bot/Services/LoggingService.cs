@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Services
+namespace Neira.Bot.Services
 {
 	public class LoggingService
 	{
@@ -16,12 +16,14 @@ namespace Neira.Web.Bot.Services
 		private readonly ILogger _logger;
 		private readonly DiscordSocketClient _discord;
 		private readonly CommandService _commands;
+		private readonly EmoteService _emote;
 
 		public LoggingService(IServiceProvider services)
 		{
 			// get the services we need via DI, and assign the fields declared above to them
 			_discord = services.GetRequiredService<DiscordSocketClient>();
 			_commands = services.GetRequiredService<CommandService>();
+			_emote = services.GetRequiredService<EmoteService>();
 			_logger = services.GetRequiredService<ILogger<LoggingService>>();
 
 			// hook into these events with the methods provided below
@@ -34,9 +36,9 @@ namespace Neira.Web.Bot.Services
 		// this method executes on the bot being connected/ready
 		public Task OnReadyAsync()
 		{
-			//emoteService.Configure();
 			_logger.LogInformation($"Connected as -> [{_discord.CurrentUser}] :)");
 			_logger.LogInformation($"We are on [{_discord.Guilds.Count}] servers");
+			_emote.Configure();
 			return Task.CompletedTask;
 		}
 

@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Neira.Web.Database;
+using Neira.Database;
 using System;
 using System.Collections.Generic;
 
-namespace Neira.Web.Bot.Helpers
+namespace Neira.Bot.Helpers
 {
 	class MiscHelpers
 	{

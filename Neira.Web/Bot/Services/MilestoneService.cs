@@ -4,14 +4,14 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Neira.Web.Bot.Helpers;
-using Neira.Web.Database;
+using Neira.Bot.Helpers;
+using Neira.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Services
+namespace Neira.Bot.Services
 {
 	public class MilestoneService
 	{
@@ -38,103 +38,101 @@ namespace Neira.Web.Bot.Services
 			{
 				var msg = await cache.GetOrDownloadAsync();
 
-				using (var Db = new NeiraLinkContext())
+				using var Db = new NeiraLinkContext();
+				//get milestone
+				var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+				if (milestone == null) return;
+
+				if (reaction.Emote.Equals(_emote.Raid))
 				{
-					//get milestone
-					var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+					//check reaction
+					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
 
-					if (milestone == null) return;
-
-					if (reaction.Emote.Equals(_emote.Raid))
+					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
 					{
-						//check reaction
-						var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
-
-						if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
+						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							Db.MilestoneUsers.Add(new MilestoneUser
-							{
-								MessageId = milestone.MessageId,
-								UserId = reaction.UserId
-							});
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
-						else
-						{
-							var user = _discord.GetUser(reaction.UserId);
-							await msg.RemoveReactionAsync(_emote.Raid, user);
-						}
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactSecond))
+					else
 					{
-						if (!milestone.MilestoneUsers.Any(u => u.Place == 2))
-						{
-							Db.MilestoneUsers.Add(new MilestoneUser
-							{
-								MessageId = milestone.MessageId,
-								UserId = reaction.UserId,
-								Place = 2
-							});
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+						var user = _discord.GetUser(reaction.UserId);
+						await msg.RemoveReactionAsync(_emote.Raid, user);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactThird))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactSecond))
+				{
+					if (!milestone.MilestoneUsers.Any(u => u.Place == 2))
 					{
-						if (!milestone.MilestoneUsers.Any(u => u.Place == 3))
+						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							Db.MilestoneUsers.Add(new MilestoneUser
-							{
-								MessageId = milestone.MessageId,
-								UserId = reaction.UserId,
-								Place = 3
-							});
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId,
+							Place = 2
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactFourth))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactThird))
+				{
+					if (!milestone.MilestoneUsers.Any(u => u.Place == 3))
 					{
-						if (!milestone.MilestoneUsers.Any(u => u.Place == 4))
+						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							Db.MilestoneUsers.Add(new MilestoneUser
-							{
-								MessageId = milestone.MessageId,
-								UserId = reaction.UserId,
-								Place = 4
-							});
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId,
+							Place = 3
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactFifth))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactFourth))
+				{
+					if (!milestone.MilestoneUsers.Any(u => u.Place == 4))
 					{
-						if (!milestone.MilestoneUsers.Any(u => u.Place == 5))
+						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							Db.MilestoneUsers.Add(new MilestoneUser
-							{
-								MessageId = milestone.MessageId,
-								UserId = reaction.UserId,
-								Place = 5
-							});
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId,
+							Place = 4
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactSixth))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactFifth))
+				{
+					if (!milestone.MilestoneUsers.Any(u => u.Place == 5))
 					{
-						if (!milestone.MilestoneUsers.Any(u => u.Place == 6))
+						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							Db.MilestoneUsers.Add(new MilestoneUser
-							{
-								MessageId = milestone.MessageId,
-								UserId = reaction.UserId,
-								Place = 6
-							});
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId,
+							Place = 5
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(_emote.ReactSixth))
+				{
+					if (!milestone.MilestoneUsers.Any(u => u.Place == 6))
+					{
+						Db.MilestoneUsers.Add(new MilestoneUser
+						{
+							MessageId = milestone.MessageId,
+							UserId = reaction.UserId,
+							Place = 6
+						});
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
 				}
 			}
@@ -150,81 +148,79 @@ namespace Neira.Web.Bot.Services
 			{
 				var msg = await cache.GetOrDownloadAsync();
 
-				using (var Db = new NeiraLinkContext())
+				using var Db = new NeiraLinkContext();
+				//get milestone
+				var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+
+				if (milestone == null) return;
+
+				if (reaction.Emote.Equals(_emote.Raid))
 				{
-					//get milestone
-					var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+					//check reaction
+					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
 
-					if (milestone == null) return;
+					if (reaction.UserId != milestone.Leader && UserExist)
+					{
+						var milestoneUser = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
 
-					if (reaction.Emote.Equals(_emote.Raid))
-					{
-						//check reaction
-						var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
-
-						if (reaction.UserId != milestone.Leader && UserExist)
-						{
-							var milestoneUser = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
-
-							Db.Remove(milestoneUser);
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
-						else
-						{
-							var user = _discord.GetUser(reaction.UserId);
-							await msg.RemoveReactionAsync(_emote.Raid, user);
-						}
+						Db.Remove(milestoneUser);
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactSecond))
+					else
 					{
-						if (milestone.MilestoneUsers.Any(m => m.Place == Second && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
-						{
-							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Second);
-							Db.Remove(user);
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+						var user = _discord.GetUser(reaction.UserId);
+						await msg.RemoveReactionAsync(_emote.Raid, user);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactThird))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactSecond))
+				{
+					if (milestone.MilestoneUsers.Any(m => m.Place == Second && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
 					{
-						if (milestone.MilestoneUsers.Any(m => m.Place == Three && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
-						{
-							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Three);
-							Db.Remove(user);
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Second);
+						Db.Remove(user);
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactFourth))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactThird))
+				{
+					if (milestone.MilestoneUsers.Any(m => m.Place == Three && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
 					{
-						if (milestone.MilestoneUsers.Any(m => m.Place == Four && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
-						{
-							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Four);
-							Db.Remove(user);
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Three);
+						Db.Remove(user);
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactFifth))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactFourth))
+				{
+					if (milestone.MilestoneUsers.Any(m => m.Place == Four && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
 					{
-						if (milestone.MilestoneUsers.Any(m => m.Place == Five && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
-						{
-							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Five);
-							Db.Remove(user);
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Four);
+						Db.Remove(user);
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
-					else if (reaction.Emote.Equals(_emote.ReactSixth))
+				}
+				else if (reaction.Emote.Equals(_emote.ReactFifth))
+				{
+					if (milestone.MilestoneUsers.Any(m => m.Place == Five && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
 					{
-						if (milestone.MilestoneUsers.Any(m => m.Place == Six && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
-						{
-							var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Six);
-							Db.Remove(user);
-							await Db.SaveChangesAsync();
-							HandleReaction(msg, milestone);
-						}
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Five);
+						Db.Remove(user);
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
+					}
+				}
+				else if (reaction.Emote.Equals(_emote.ReactSixth))
+				{
+					if (milestone.MilestoneUsers.Any(m => m.Place == Six && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
+					{
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Six);
+						Db.Remove(user);
+						await Db.SaveChangesAsync();
+						HandleReaction(msg, milestone);
 					}
 				}
 
@@ -251,40 +247,36 @@ namespace Neira.Web.Bot.Services
 
 		private async Task UpdateBotStatAsync()
 		{
-			using (var Db = new NeiraLinkContext())
-			{
-				//Update Bot stat for website.
-				var stats = Db.BotInfos.FirstOrDefault();
-				stats.Milestones++;
-				stats.Servers = _discord.Guilds.Count;
-				stats.Users = _discord.Guilds.Sum(u => u.Users.Count);
-				Db.BotInfos.Update(stats);
-				await Db.SaveChangesAsync();
-			}
+			using var Db = new NeiraLinkContext();
+			//Update Bot stat for website.
+			var stats = Db.BotInfos.FirstOrDefault();
+			stats.Milestones++;
+			stats.Servers = _discord.Guilds.Count;
+			stats.Users = _discord.Guilds.Sum(u => u.Users.Count);
+			Db.BotInfos.Update(stats);
+			await Db.SaveChangesAsync();
 		}
 
 		public async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, MilestoneType type, byte raidInfoId, string userMemo)
 		{
 			try
 			{
-				using (var Db = new NeiraLinkContext())
+				using var Db = new NeiraLinkContext();
+				ActiveMilestone newMilestone = new ActiveMilestone
 				{
-					ActiveMilestone newMilestone = new ActiveMilestone
-					{
-						MessageId = msgId,
-						GuildId = context.Guild.Id,
-						MilestoneId = raidInfoId,
-						Memo = userMemo,
-						CreateDate = DateTime.Now,
-						Leader = context.User.Id,
-						MilestoneType = type
-					};
+					MessageId = msgId,
+					GuildId = context.Guild.Id,
+					MilestoneId = raidInfoId,
+					Memo = userMemo,
+					CreateDate = DateTime.Now,
+					Leader = context.User.Id,
+					MilestoneType = type
+				};
 
-					Db.ActiveMilestones.Add(newMilestone);
-					await Db.SaveChangesAsync();
+				Db.ActiveMilestones.Add(newMilestone);
+				await Db.SaveChangesAsync();
 
-					_ = Task.Run(async () => await UpdateBotStatAsync());
-				}
+				_ = Task.Run(async () => await UpdateBotStatAsync());
 			}
 			catch (Exception ex)
 			{

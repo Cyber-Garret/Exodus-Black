@@ -2,14 +2,14 @@
 
 using Microsoft.EntityFrameworkCore;
 
-using Neira.Web.Database;
+using Neira.Database;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Helpers
+namespace Neira.Bot.Helpers
 {
 	public static class DatabaseHelper
 	{
@@ -78,27 +78,14 @@ namespace Neira.Web.Bot.Helpers
 		public static Gear GetExotic(string name)
 		{
 			using var Db = new NeiraLinkContext();
-			//We create dictionary because like in SQlite bugged
-			Dictionary<string, Gear> gears = new Dictionary<string, Gear>();
-			foreach (var item in Db.Gears.AsNoTracking())
-				gears.Add(item.Name.ToLowerInvariant(), item);
-
-			var gear = gears.FirstOrDefault(g => EF.Functions.Like(g.Key, $"%{Alias(name).ToLowerInvariant()}%"));
-			//var gear = Db.Gears.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.Name, $"%{Alias(name)}%"));
-			return gear.Value;
+			return Db.Gears.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.Name, $"%{Alias(name)}%"));
 		}
 
 		public static Catalyst GetCatalyst(string name)
 		{
 			using var Db = new NeiraLinkContext();
-			//We create dictionary because like in SQlite bugged
-			Dictionary<string, Catalyst> catalysts = new Dictionary<string, Catalyst>();
-			foreach (var item in Db.Catalysts.AsNoTracking())
-				catalysts.Add(item.WeaponName.ToLowerInvariant(), item);
+			return Db.Catalysts.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.WeaponName.ToLower(), $"%{Alias(name)}%"));
 
-			var catalyst = catalysts.FirstOrDefault(g => EF.Functions.Like(g.Key, $"%{Alias(name).ToLowerInvariant()}%"));
-			//var catalyst = Db.Catalysts.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.WeaponName.ToLower(), $"%{Alias(name)}%"));
-			return catalyst.Value;
 		}
 		public static List<Clan> GetDestinyClan(ulong id)
 		{
@@ -113,18 +100,11 @@ namespace Neira.Web.Bot.Helpers
 		/// </summary>
 		/// <param name="milestoneName">milestone name like "last wish" or "lw" or "wish"</param>
 		/// <returns>Milestone model or null</returns>
-		public static Milestone GetMilestone(string milestoneName)
+		public static async Task<Milestone> GetMilestoneAsync(string milestoneName)
 		{
 			using var Db = new NeiraLinkContext();
-			//We create dictionary because like in SQlite bugged
-			Dictionary<string, Milestone> milestones = new Dictionary<string, Milestone>();
-			foreach (var item in Db.Milestones.AsNoTracking())
-				milestones.Add(item.Name.ToLowerInvariant(), item);
 
-			var milestone = milestones.FirstOrDefault(m => m.Value.Alias == milestoneName.ToLower() || EF.Functions.Like(m.Value.Name, $"%{milestoneName}%"));
-
-			//return await Db.Milestones.AsNoTracking().FirstOrDefaultAsync(m => m.Alias == milestoneName.ToLower() || EF.Functions.Like(m.Name, $"%{milestoneName}%"));
-			return milestone.Value;
+			return await Db.Milestones.AsNoTracking().FirstOrDefaultAsync(m => m.Alias == milestoneName.ToLower() || EF.Functions.Like(m.Name, $"%{milestoneName}%"));
 		}
 
 		/// <summary>

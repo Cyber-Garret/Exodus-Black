@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Database
+namespace Neira.Database
 {
 	public class NeiraLinkContext : DbContext
 	{
@@ -15,7 +15,7 @@ namespace Neira.Web.Database
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseMySql("Server=95.181.198.84;Database=NeiraLink;Uid=Garret;Pwd=dGF12(TW8e;");
+			optionsBuilder.UseMySql("Server=localhost;Database=NeiraLink;Uid=root;Pwd=cIWzFtTtLX");
 			//optionsBuilder.UseSqlite("Data Source=UserData/NeiraLink.db;");
 		}
 		//Web

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Neira.Web.Database
+namespace Neira.Database
 {
 	public class UserAccount
 	{

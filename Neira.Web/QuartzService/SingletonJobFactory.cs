@@ -5,7 +5,7 @@ using Quartz.Spi;
 
 using System;
 
-namespace Neira.Web.QuartzService
+namespace Neira.QuartzService
 {
 	public class SingletonJobFactory : IJobFactory
 	{

@@ -3,8 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using Neira.Web.Bot.Helpers;
-using Neira.Web.Database;
+using Neira.Bot.Helpers;
+using Neira.Database;
 
 using Quartz;
 
@@ -12,7 +12,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.QuartzService
+namespace Neira.QuartzService
 {
 	[DisallowConcurrentExecution]
 	public class XurArrivedJob : IJob

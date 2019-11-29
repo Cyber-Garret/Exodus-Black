@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Neira.Web.Database
+namespace Neira.Database
 {
 	public class Catalyst
 	{

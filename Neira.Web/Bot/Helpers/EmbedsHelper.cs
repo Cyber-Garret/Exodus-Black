@@ -2,13 +2,13 @@
 using Discord.Commands;
 using Discord.WebSocket;
 
-using Neira.Web.Database;
+using Neira.Database;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Neira.Web.Bot.Helpers
+namespace Neira.Bot.Helpers
 {
 	public static class EmbedsHelper
 	{

@@ -3,13 +3,13 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Neira.Web.Models;
+using Neira.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Services
+namespace Neira.Bot.Services
 {
 	public class EmoteService
 	{

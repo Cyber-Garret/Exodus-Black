@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 
 using Neira.API.Bungie;
-using Neira.Web.Database;
+using Neira.Database;
 
 using Quartz;
 
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.QuartzService
+namespace Neira.QuartzService
 {
 	[DisallowConcurrentExecution]
 	public class BungieJob : IJob

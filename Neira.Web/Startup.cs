@@ -8,16 +8,16 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Neira.Web.Bot;
-using Neira.Web.Bot.Services;
-using Neira.Web.QuartzService;
+using Neira.Bot;
+using Neira.Bot.Services;
+using Neira.QuartzService;
 
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Serilog;
 
-namespace Neira.Web
+namespace Neira
 {
 	public class Startup
 	{

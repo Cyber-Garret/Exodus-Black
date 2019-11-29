@@ -4,15 +4,15 @@ using ChartJSCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using Neira.Web.Database;
-using Neira.Web.ViewModels;
+using Neira.Database;
+using Neira.ViewModels;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Controllers
+namespace Neira.Controllers
 {
 	public class ClanController : Controller
 	{

@@ -1,13 +1,13 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
-using Neira.Web.Bot.Helpers;
+using Neira.Bot.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Services
+namespace Neira.Bot.Services
 {
 	public class CommandHandlerService
 	{

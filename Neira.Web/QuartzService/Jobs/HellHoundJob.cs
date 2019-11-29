@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using Neira.Web.Database;
-using Neira.Web.Models;
+using Neira.Database;
+using Neira.Models;
 
 using Quartz;
 
@@ -14,7 +14,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Neira.Web.QuartzService
+namespace Neira.QuartzService
 {
 	[DisallowConcurrentExecution]
 	public class HellHoundJob : IJob

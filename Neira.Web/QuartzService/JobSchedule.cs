@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Neira.Web.QuartzService
+namespace Neira.QuartzService
 {
 	public class JobSchedule
 	{

@@ -4,7 +4,7 @@ using Discord.WebSocket;
 using ImageMagick;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Neira.Web.Bot.Helpers;
+using Neira.Bot.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Neira.Web.Bot.Services
+namespace Neira.Bot.Services
 {
 	public class GuildEventHandlerService
 	{

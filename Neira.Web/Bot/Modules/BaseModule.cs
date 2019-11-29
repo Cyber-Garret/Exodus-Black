@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Addons.Interactive;
 
-namespace Neira.Web.Bot.Modules
+namespace Neira.Bot.Modules
 {
 	public class BaseModule : InteractiveBase
 	{

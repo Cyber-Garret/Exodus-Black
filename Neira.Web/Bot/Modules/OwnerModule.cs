@@ -2,9 +2,9 @@
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Neira.API.Bungie;
-using Neira.Web.Database;
-using Neira.Web.Bot.Helpers;
-using Neira.Web.Bot.Services;
+using Neira.Database;
+using Neira.Bot.Helpers;
+using Neira.Bot.Services;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Neira.Web.Bot.Modules
+namespace Neira.Bot.Modules
 {
 	[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 	public class OwnerModule : BaseModule
