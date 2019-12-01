@@ -31,6 +31,7 @@ namespace Neira.Database
 		[Key]
 		public int Id { get; set; }
 		public ulong MessageId { get; set; }
+		[ForeignKey("FK_MilestoneUsers_ActiveMilestones_MessageId")]
 		public ActiveMilestone ActiveMilestone { get; set; }
 		public ulong UserId { get; set; }
 		public byte? Place { get; set; }

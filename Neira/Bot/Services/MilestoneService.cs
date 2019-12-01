@@ -40,7 +40,11 @@ namespace Neira.Bot.Services
 
 				using var Db = new NeiraLinkContext();
 				//get milestone
-				var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+				var milestone = await Db.ActiveMilestones
+					.Include(mu => mu.MilestoneUsers)
+					.Include(r => r.Milestone)
+					.Where(r => r.MessageId == cache.Id)
+					.FirstOrDefaultAsync();
 
 				if (milestone == null) return;
 
