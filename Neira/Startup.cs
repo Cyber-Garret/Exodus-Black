@@ -53,6 +53,12 @@ namespace Neira
 
 			services.AddSingleton<XurLeaveJob>();
 			services.AddSingleton(new JobSchedule(typeof(XurLeaveJob), "0 0 20 ? * TUE")); // run every Tuesday in 20:00
+
+			services.AddSingleton<MilestoneRemindJob>();
+			services.AddSingleton(new JobSchedule(typeof(MilestoneRemindJob), "0/10 * * * * ?")); // run every 10 seconds
+
+			services.AddSingleton<MilestoneClearingJob>();
+			services.AddSingleton(new JobSchedule(typeof(MilestoneClearingJob), "0 0 0/1 * * ?")); // run every hour
 			#endregion
 
 			#region Web

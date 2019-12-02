@@ -126,11 +126,11 @@ namespace Neira.Bot.Helpers
 		#endregion
 
 		#region Milestone
-		public static Embed MilestoneNew(SocketUser leader, Milestone milestone, MilestoneType type, string userMemo, IEmote raidEmote = null)
+		public static Embed MilestoneNew(SocketUser leader, Milestone milestone, DateTime dateExpire, MilestoneType type, string userMemo, IEmote raidEmote = null)
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = $"{milestone.Type}: {milestone.Name}",
+				Title = $"{dateExpire.Date.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(dateExpire.DayOfWeek)} в {dateExpire.ToString("HH:mm")} по МСК. {milestone.Type}: {milestone.Name}",
 				ThumbnailUrl = milestone.Icon
 			};
 			//Add milestone leader memo if represent
@@ -165,7 +165,7 @@ namespace Neira.Bot.Helpers
 
 			var embed = new EmbedBuilder
 			{
-				Title = $"{activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
+				Title = $"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
 				ThumbnailUrl = activeMilestone.Milestone.Icon
 
 			};

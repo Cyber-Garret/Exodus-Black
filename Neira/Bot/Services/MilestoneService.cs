@@ -240,7 +240,7 @@ namespace Neira.Bot.Services
 			var newEmbed = EmbedsHelper.MilestoneRebuild(_discord, activeMilestone, _emote.Raid);
 			if (newEmbed.Length != 0)
 				await message.ModifyAsync(m => m.Embed = newEmbed);
-			if (activeMilestone.Milestone.MaxSpace == activeMilestone.MilestoneUsers.Count + 1)
+			if (activeMilestone.Milestone.MaxSpace == activeMilestone.MilestoneUsers.Count + 1 && activeMilestone.DateExpire < DateTime.Now)
 			{
 				await message.RemoveAllReactionsAsync();
 				await message.ModifyAsync(c => c.Embed = EmbedsHelper.MilestoneEnd(_discord, activeMilestone));
@@ -261,7 +261,7 @@ namespace Neira.Bot.Services
 			await Db.SaveChangesAsync();
 		}
 
-		public async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, MilestoneType type, byte raidInfoId, string userMemo)
+		public async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, DateTime dateExpire, MilestoneType type, byte raidInfoId, string userMemo)
 		{
 			try
 			{
@@ -272,7 +272,7 @@ namespace Neira.Bot.Services
 					GuildId = context.Guild.Id,
 					MilestoneId = raidInfoId,
 					Memo = userMemo,
-					CreateDate = DateTime.Now,
+					DateExpire = dateExpire,
 					Leader = context.User.Id,
 					MilestoneType = type
 				};
@@ -314,11 +314,6 @@ namespace Neira.Bot.Services
 						_logger.LogWarning(ex, "RaidNotification in DM of user");
 					}
 				}
-
-				using var Db = new NeiraLinkContext();
-				var expiredMilestone = Db.ActiveMilestones.Include(m => m.MilestoneUsers).First(m => m.MessageId == milestone.MessageId);
-				Db.ActiveMilestones.Remove(expiredMilestone);
-				Db.SaveChanges();
 			}
 			catch (Exception ex)
 			{

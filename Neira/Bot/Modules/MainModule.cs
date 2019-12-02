@@ -70,9 +70,9 @@ namespace Neira.Bot.Modules
 				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n" +
 				"Больше информации ты можешь найти в моей [группе ВК](https://vk.com/failsafe_bot)\n" +
 				"и в [документации](https://docs.neira.su/)")
-				.AddField("Основные команды", mainCommands.Substring(0, mainCommands.Length - 2))
-				.AddField("Команды администраторов сервера", adminCommands.Substring(0, adminCommands.Length - 2))
-				.AddField("Команды экономики и репутации", economyCommands.Substring(0, economyCommands.Length - 2))
+				.AddField("Основные команды", mainCommands[0..^2])
+				.AddField("Команды администраторов сервера", adminCommands[0..^2])
+				.AddField("Команды экономики и репутации", economyCommands[0..^2])
 				.WithFooter(NeiraWebsite);
 
 			await ReplyAsync(embed: embed.Build());
@@ -111,7 +111,7 @@ namespace Neira.Bot.Modules
 				{
 					alias += $"{guild.CommandPrefix ?? "!"}{item}, ";
 				}
-				embed.AddField("Синонимы команды:", alias.Substring(0, alias.Length - 2));
+				embed.AddField("Синонимы команды:", alias[0..^2]);
 			}
 			if (command.Remarks != null)
 				embed.AddField("Заметка:", command.Remarks);
@@ -348,7 +348,7 @@ namespace Neira.Bot.Modules
 		[Remarks("Пример: !сбор <Название> <Заметка лидера(Не обязательно)>, например !сбор пн Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
 		[Cooldown(10)]
-		public async Task GoMilestone(string milestoneName, [Remainder]string userMemo = null)
+		public async Task GoMilestone(string milestoneName, string raidTime, [Remainder]string userMemo = null)
 		{
 			try
 			{
@@ -375,8 +375,38 @@ namespace Neira.Bot.Modules
 					return;
 				}
 
-				var msg = await ReplyAsync(message: guild.GlobalMention, embed: EmbedsHelper.MilestoneNew(Context.User, milestone, MilestoneType.Default, userMemo, _customEmote.Raid));
-				await _milestone.RegisterMilestoneAsync(msg.Id, Context, MilestoneType.Default, milestone.Id, userMemo);
+				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
+
+				DateTime.TryParseExact(raidTime, formats, CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
+
+				if (dateTime == new DateTime())
+				{
+					var message = new EmbedBuilder()
+						.WithTitle("Страж, ты указал неизвестный мне формат времени")
+						.WithColor(Color.Gold)
+						.AddField("Я понимаю время начала рейда в таком формате",
+						"Формат времени: **<день>.<месяц>-<час>:<минута>**\n" +
+						"**День:** от 01 до 31\n" +
+						"**Месяц:** от 01 до 12\n" +
+						"**Час:** от 00 до 23\n" +
+						"**Минута:** от 00 до 59\n" +
+						"В итоге у тебя должно получиться: **05.07-20:05** Пример: !сбор пж 21.05-20:00")
+						.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
+						.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+					await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
+					return;
+				}
+				if (dateTime < DateTime.Now)
+				{
+					var message = new EmbedBuilder()
+						.WithColor(Color.Red)
+						.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
+					await ReplyAndDeleteAsync(null, embed: message.Build());
+					return;
+				}
+
+				var msg = await ReplyAsync(message: guild.GlobalMention, embed: EmbedsHelper.MilestoneNew(Context.User, milestone, dateTime, MilestoneType.Default, userMemo, _customEmote.Raid));
+				await _milestone.RegisterMilestoneAsync(msg.Id, Context, dateTime, MilestoneType.Default, milestone.Id, userMemo);
 
 				//Slots
 				await msg.AddReactionAsync(_customEmote.Raid);
@@ -401,7 +431,7 @@ namespace Neira.Bot.Modules
 		[Remarks("Пример: !рейд <Название> <Заметка лидера(Не обязательно)>, например !рейд пн Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.EmbedLinks | ChannelPermission.ManageMessages | ChannelPermission.MentionEveryone)]
 		[Cooldown(10)]
-		public async Task GoRaid(string milestoneName, [Remainder]string userMemo = null)
+		public async Task GoRaid(string milestoneName, string raidTime, [Remainder]string userMemo = null)
 		{
 			try
 			{
@@ -428,8 +458,38 @@ namespace Neira.Bot.Modules
 					return;
 				}
 
-				var msg = await ReplyAsync(message: guild.GlobalMention, embed: EmbedsHelper.MilestoneNew(Context.User, milestone, MilestoneType.OldStyle, userMemo));
-				await _milestone.RegisterMilestoneAsync(msg.Id, Context, MilestoneType.OldStyle, milestone.Id, userMemo);
+				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
+
+				DateTime.TryParseExact(raidTime, formats, CultureInfo.InstalledUICulture, DateTimeStyles.None, out DateTime dateTime);
+
+				if (dateTime == new DateTime())
+				{
+					var message = new EmbedBuilder()
+						.WithTitle("Страж, ты указал неизвестный мне формат времени")
+						.WithColor(Color.Gold)
+						.AddField("Я понимаю время начала рейда в таком формате",
+						"Формат времени: **<день>.<месяц>-<час>:<минута>**\n" +
+						"**День:** от 01 до 31\n" +
+						"**Месяц:** от 01 до 12\n" +
+						"**Час:** от 00 до 23\n" +
+						"**Минута:** от 00 до 59\n" +
+						"В итоге у тебя должно получиться: **05.07-20:05** Пример: !сбор пж 21.05-20:00")
+						.AddField("Уведомление", "Время начала активности учитывается только по московскому времени. Также за 15 минут до начала активности, я уведомлю участников личным сообщением.")
+						.WithFooter("Это сообщение будет автоматически удалено через 2 минуты.");
+					await ReplyAndDeleteAsync(null, embed: message.Build(), timeout: TimeSpan.FromMinutes(2));
+					return;
+				}
+				if (dateTime < DateTime.Now)
+				{
+					var message = new EmbedBuilder()
+						.WithColor(Color.Red)
+						.WithDescription($"Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
+					await ReplyAndDeleteAsync(null, embed: message.Build());
+					return;
+				}
+
+				var msg = await ReplyAsync(message: guild.GlobalMention, embed: EmbedsHelper.MilestoneNew(Context.User, milestone, dateTime, MilestoneType.OldStyle, userMemo));
+				await _milestone.RegisterMilestoneAsync(msg.Id, Context, dateTime, MilestoneType.OldStyle, milestone.Id, userMemo);
 
 				//Slots
 				await msg.AddReactionAsync(_customEmote.ReactSecond);

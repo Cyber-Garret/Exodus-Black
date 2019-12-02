@@ -51,7 +51,7 @@ namespace Neira.Database
 		[Required]
 		public ulong Leader { get; set; }
 		[Required]
-		public DateTime CreateDate { get; set; }
+		public DateTime DateExpire { get; set; }
 		public MilestoneType MilestoneType { get; set; }
 
 		public List<MilestoneUser> MilestoneUsers { get; set; }
