@@ -15,7 +15,7 @@ namespace Neira.Database
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer("Server=78.47.220.185;Database=NeiraLink;User Id=sa;Password=Oh85B4Vv661O2s7MzodQ;MultipleActiveResultSets=true;");
+			optionsBuilder.UseSqlServer("Server=78.47.220.185;Database=NeiraLink;User Id=Neira;Password=PRu7bvfLTgGXcsTpoUQ7;MultipleActiveResultSets=true;");
 		}
 		//Web
 		public virtual DbSet<BotInfo> BotInfos { get; set; }

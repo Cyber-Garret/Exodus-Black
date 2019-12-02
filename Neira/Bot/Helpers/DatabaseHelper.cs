@@ -21,55 +21,49 @@ namespace Neira.Bot.Helpers
 		/// <returns>Guild model</returns>
 		public static async Task<Guild> GetGuildAccountAsync(ulong guildId)
 		{
-			using (var Db = new NeiraLinkContext())
+			using var Db = new NeiraLinkContext();
+			if (Db.Guilds.Any(g => g.Id == guildId))
+				return await Db.Guilds.SingleAsync(G => G.Id == guildId);
+			else
 			{
-				if (Db.Guilds.Any(g => g.Id == guildId))
-					return await Db.Guilds.SingleAsync(G => G.Id == guildId);
-				else
+				var newGuild = new Guild
 				{
-					var newGuild = new Guild
-					{
-						Id = guildId
-					};
+					Id = guildId
+				};
 
-					Db.Guilds.Add(newGuild);
-					await Db.SaveChangesAsync();
+				Db.Guilds.Add(newGuild);
+				await Db.SaveChangesAsync();
 
-					return newGuild;
-				}
+				return newGuild;
 			}
 		}
 
 		public static async Task SaveGuildAccountAsync(Guild guildAccount)
 		{
-			using (var Db = new NeiraLinkContext())
+			using var Db = new NeiraLinkContext();
+			if (Db.Guilds.Any(G => G.Id == guildAccount.Id))
+				Db.Guilds.Update(guildAccount);
+			else
 			{
-				if (Db.Guilds.Any(G => G.Id == guildAccount.Id))
-					Db.Guilds.Update(guildAccount);
-				else
+				var newGuild = new Guild
 				{
-					var newGuild = new Guild
-					{
-						Id = guildAccount.Id
-					};
+					Id = guildAccount.Id
+				};
 
-					Db.Guilds.Add(newGuild);
+				Db.Guilds.Add(newGuild);
 
-				}
-				await Db.SaveChangesAsync();
 			}
+			await Db.SaveChangesAsync();
 		}
 
 		public static async Task RemoveGuildAccountAsync(ulong guildId)
 		{
-			using (var Db = new NeiraLinkContext())
+			using var Db = new NeiraLinkContext();
+			if (Db.Guilds.Any(g => g.Id == guildId))
 			{
-				if (Db.Guilds.Any(g => g.Id == guildId))
-				{
-					var guild = Db.Guilds.First(g => g.Id == guildId);
-					Db.Guilds.Remove(guild);
-					await Db.SaveChangesAsync();
-				}
+				var guild = Db.Guilds.First(g => g.Id == guildId);
+				Db.Guilds.Remove(guild);
+				await Db.SaveChangesAsync();
 			}
 		}
 		#endregion
@@ -78,13 +72,13 @@ namespace Neira.Bot.Helpers
 		public static Gear GetExotic(string name)
 		{
 			using var Db = new NeiraLinkContext();
-			return Db.Gears.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.Name, $"%{Alias(name)}%"));
+			return Db.Gears.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.Name.ToLower(), $"%{Alias(name.ToLower())}%"));
 		}
 
 		public static Catalyst GetCatalyst(string name)
 		{
 			using var Db = new NeiraLinkContext();
-			return Db.Catalysts.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.WeaponName.ToLower(), $"%{Alias(name)}%"));
+			return Db.Catalysts.AsNoTracking().FirstOrDefault(c => EF.Functions.Like(c.WeaponName.ToLower(), $"%{Alias(name.ToLower())}%"));
 
 		}
 		public static List<Clan> GetDestinyClan(ulong id)

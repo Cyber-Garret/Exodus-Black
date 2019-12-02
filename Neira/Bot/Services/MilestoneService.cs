@@ -51,13 +51,13 @@ namespace Neira.Bot.Services
 				if (reaction.Emote.Equals(_emote.Raid))
 				{
 					//check reaction
-					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId);
 
 					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							MessageId = milestone.MessageId,
+							ActiveMilestoneMessageId = milestone.MessageId,
 							UserId = reaction.UserId
 						});
 						await Db.SaveChangesAsync();
@@ -75,7 +75,7 @@ namespace Neira.Bot.Services
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							MessageId = milestone.MessageId,
+							ActiveMilestoneMessageId = milestone.MessageId,
 							UserId = reaction.UserId,
 							Place = 2
 						});
@@ -89,7 +89,7 @@ namespace Neira.Bot.Services
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							MessageId = milestone.MessageId,
+							ActiveMilestoneMessageId = milestone.MessageId,
 							UserId = reaction.UserId,
 							Place = 3
 						});
@@ -103,7 +103,7 @@ namespace Neira.Bot.Services
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							MessageId = milestone.MessageId,
+							ActiveMilestoneMessageId = milestone.MessageId,
 							UserId = reaction.UserId,
 							Place = 4
 						});
@@ -117,7 +117,7 @@ namespace Neira.Bot.Services
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							MessageId = milestone.MessageId,
+							ActiveMilestoneMessageId = milestone.MessageId,
 							UserId = reaction.UserId,
 							Place = 5
 						});
@@ -131,7 +131,7 @@ namespace Neira.Bot.Services
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
-							MessageId = milestone.MessageId,
+							ActiveMilestoneMessageId = milestone.MessageId,
 							UserId = reaction.UserId,
 							Place = 6
 						});
@@ -161,11 +161,11 @@ namespace Neira.Bot.Services
 				if (reaction.Emote.Equals(_emote.Raid))
 				{
 					//check reaction
-					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId);
 
 					if (reaction.UserId != milestone.Leader && UserExist)
 					{
-						var milestoneUser = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId);
+						var milestoneUser = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId);
 
 						Db.Remove(milestoneUser);
 						await Db.SaveChangesAsync();
@@ -179,9 +179,9 @@ namespace Neira.Bot.Services
 				}
 				else if (reaction.Emote.Equals(_emote.ReactSecond))
 				{
-					if (milestone.MilestoneUsers.Any(m => m.Place == Second && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
+					if (milestone.MilestoneUsers.Any(m => m.Place == Second && m.UserId == reaction.UserId && m.ActiveMilestoneMessageId == reaction.MessageId))
 					{
-						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Second);
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId && u.Place == Second);
 						Db.Remove(user);
 						await Db.SaveChangesAsync();
 						HandleReaction(msg, milestone);
@@ -189,9 +189,9 @@ namespace Neira.Bot.Services
 				}
 				else if (reaction.Emote.Equals(_emote.ReactThird))
 				{
-					if (milestone.MilestoneUsers.Any(m => m.Place == Three && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
+					if (milestone.MilestoneUsers.Any(m => m.Place == Three && m.UserId == reaction.UserId && m.ActiveMilestoneMessageId == reaction.MessageId))
 					{
-						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Three);
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId && u.Place == Three);
 						Db.Remove(user);
 						await Db.SaveChangesAsync();
 						HandleReaction(msg, milestone);
@@ -199,9 +199,9 @@ namespace Neira.Bot.Services
 				}
 				else if (reaction.Emote.Equals(_emote.ReactFourth))
 				{
-					if (milestone.MilestoneUsers.Any(m => m.Place == Four && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
+					if (milestone.MilestoneUsers.Any(m => m.Place == Four && m.UserId == reaction.UserId && m.ActiveMilestoneMessageId == reaction.MessageId))
 					{
-						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Four);
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId && u.Place == Four);
 						Db.Remove(user);
 						await Db.SaveChangesAsync();
 						HandleReaction(msg, milestone);
@@ -209,9 +209,9 @@ namespace Neira.Bot.Services
 				}
 				else if (reaction.Emote.Equals(_emote.ReactFifth))
 				{
-					if (milestone.MilestoneUsers.Any(m => m.Place == Five && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
+					if (milestone.MilestoneUsers.Any(m => m.Place == Five && m.UserId == reaction.UserId && m.ActiveMilestoneMessageId == reaction.MessageId))
 					{
-						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Five);
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId && u.Place == Five);
 						Db.Remove(user);
 						await Db.SaveChangesAsync();
 						HandleReaction(msg, milestone);
@@ -219,9 +219,9 @@ namespace Neira.Bot.Services
 				}
 				else if (reaction.Emote.Equals(_emote.ReactSixth))
 				{
-					if (milestone.MilestoneUsers.Any(m => m.Place == Six && m.UserId == reaction.UserId && m.MessageId == reaction.MessageId))
+					if (milestone.MilestoneUsers.Any(m => m.Place == Six && m.UserId == reaction.UserId && m.ActiveMilestoneMessageId == reaction.MessageId))
 					{
-						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.MessageId == milestone.MessageId && u.Place == Six);
+						var user = Db.MilestoneUsers.First(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId && u.Place == Six);
 						Db.Remove(user);
 						await Db.SaveChangesAsync();
 						HandleReaction(msg, milestone);
