@@ -58,7 +58,7 @@ namespace Neira
 			services.AddSingleton(new JobSchedule(typeof(MilestoneRemindJob), "0/10 * * * * ?")); // run every 10 seconds
 
 			services.AddSingleton<MilestoneClearingJob>();
-			services.AddSingleton(new JobSchedule(typeof(MilestoneClearingJob), "0 0 0/1 * * ?")); // run every hour
+			services.AddSingleton(new JobSchedule(typeof(MilestoneClearingJob), "0 0/30 * * * ?")); // run every 30 minute
 			#endregion
 
 			#region Web

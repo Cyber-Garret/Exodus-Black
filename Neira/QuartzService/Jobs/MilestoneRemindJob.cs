@@ -31,7 +31,7 @@ namespace Neira.QuartzService
 				{
 					if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
 					{
-						await _milestone.RaidNotificationAsync(item);
+						await _milestone.RaidNotificationAsync(item, MilestoneService.RemindType.ByTimer);
 					}
 				});
 			}

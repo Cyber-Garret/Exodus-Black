@@ -240,12 +240,12 @@ namespace Neira.Bot.Services
 			var newEmbed = EmbedsHelper.MilestoneRebuild(_discord, activeMilestone, _emote.Raid);
 			if (newEmbed.Length != 0)
 				await message.ModifyAsync(m => m.Embed = newEmbed);
-			if (activeMilestone.Milestone.MaxSpace == activeMilestone.MilestoneUsers.Count + 1 && activeMilestone.DateExpire < DateTime.Now)
+			if (activeMilestone.Milestone.MaxSpace == activeMilestone.MilestoneUsers.Count + 1 && activeMilestone.DateExpire < DateTime.Now.AddMinutes(15))
 			{
 				await message.RemoveAllReactionsAsync();
 				await message.ModifyAsync(c => c.Embed = EmbedsHelper.MilestoneEnd(_discord, activeMilestone));
 
-				await RaidNotificationAsync(activeMilestone);
+				await RaidNotificationAsync(activeMilestone, RemindType.FullCount);
 			}
 		}
 
@@ -289,7 +289,7 @@ namespace Neira.Bot.Services
 
 		}
 
-		public async Task RaidNotificationAsync(ActiveMilestone milestone)
+		public async Task RaidNotificationAsync(ActiveMilestone milestone, RemindType type)
 		{
 			try
 			{
@@ -297,7 +297,14 @@ namespace Neira.Bot.Services
 				var Leader = _discord.GetUser(milestone.Leader);
 				var LeaderDM = await Leader.GetOrCreateDMChannelAsync();
 
-				await LeaderDM.SendMessageAsync(embed: EmbedsHelper.MilestoneRemindInDM(_discord, milestone, Guild));
+				Embed BakedEmbed = null;
+				if (type == RemindType.FullCount)
+					BakedEmbed = EmbedsHelper.MilestoneRemindByFullCount(_discord, milestone, Guild);
+				else
+					BakedEmbed = EmbedsHelper.MilestoneRemindByTimer(_discord, milestone, Guild);
+
+
+				await LeaderDM.SendMessageAsync(embed: BakedEmbed);
 
 				foreach (var user in milestone.MilestoneUsers)
 				{
@@ -307,7 +314,7 @@ namespace Neira.Bot.Services
 						var LoadedUser = _discord.GetUser(user.UserId);
 
 						var DM = await LoadedUser.GetOrCreateDMChannelAsync();
-						await DM.SendMessageAsync(embed: EmbedsHelper.MilestoneRemindInDM(_discord, milestone, Guild));
+						await DM.SendMessageAsync(embed: BakedEmbed);
 					}
 					catch (Exception ex)
 					{
@@ -320,6 +327,12 @@ namespace Neira.Bot.Services
 				_logger.LogWarning(ex, "RaidNotification Global");
 			}
 
+		}
+
+		public enum RemindType
+		{
+			FullCount,
+			ByTimer
 		}
 	}
 }

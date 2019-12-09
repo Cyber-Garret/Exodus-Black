@@ -19,7 +19,7 @@ namespace Neira.QuartzService
 			{
 				Parallel.ForEach(query, new ParallelOptions { MaxDegreeOfParallelism = 2 }, async item =>
 				{
-					if ((item.DateExpire.AddDays(1) < DateTime.Now && item.Milestone.MaxSpace == item.MilestoneUsers.Count + 1) || item.DateExpire.AddDays(2) < DateTime.Now)
+					if ((item.DateExpire.AddMinutes(30) < DateTime.Now && item.Milestone.MaxSpace == item.MilestoneUsers.Count + 1) || item.DateExpire.AddHours(1) < DateTime.Now)
 					{
 						using var Db = new NeiraLinkContext();
 						var milestone = Db.ActiveMilestones.First(m => m.MessageId == item.MessageId);
