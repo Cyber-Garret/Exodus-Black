@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 using Neira.Database;
 using Neira.Models;
@@ -7,16 +8,20 @@ using Neira.ViewModels;
 
 using System.Diagnostics;
 using System.Linq;
+using System;
+using Discord.WebSocket;
 
 namespace Neira.Controllers
 {
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		private readonly DiscordSocketClient _discord;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(IServiceProvider service, ILogger<HomeController> logger)
 		{
 			_logger = logger;
+			_discord = service.GetRequiredService<DiscordSocketClient>();
 		}
 
 		public IActionResult Index()
@@ -28,6 +33,11 @@ namespace Neira.Controllers
 			};
 
 			return View(model);
+		}
+
+		public IActionResult TopServers()
+		{
+			return View(_discord.Guilds.Take(50).OrderByDescending(g => g.MemberCount));
 		}
 
 		[Route("AddBot")]

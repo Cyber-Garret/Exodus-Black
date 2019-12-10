@@ -53,7 +53,7 @@ namespace Neira.Bot.Services
 					//check reaction
 					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId);
 
-					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
+					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count + 1 < milestone.Milestone.MaxSpace)
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
@@ -154,7 +154,11 @@ namespace Neira.Bot.Services
 
 				using var Db = new NeiraLinkContext();
 				//get milestone
-				var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+				var milestone = await Db.ActiveMilestones
+					.Include(r => r.Milestone)
+					.Include(mu => mu.MilestoneUsers)
+					.Where(r => r.MessageId == cache.Id)
+					.FirstOrDefaultAsync();
 
 				if (milestone == null) return;
 
