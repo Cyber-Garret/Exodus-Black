@@ -34,10 +34,11 @@ namespace Neira.Controllers
 
 			return View(model);
 		}
-
+		[Route("top-servers")]
 		public IActionResult TopServers()
 		{
-			return View(_discord.Guilds.Take(50).OrderByDescending(g => g.MemberCount));
+			var guilds = _discord.Guilds.OrderByDescending(g => g.MemberCount);
+			return View(guilds.Take(50));
 		}
 
 		[Route("AddBot")]
