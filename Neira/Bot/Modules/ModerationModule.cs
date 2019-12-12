@@ -223,15 +223,24 @@ namespace Neira.Bot.Modules
 
 		[Command("упоминание")]
 		[Summary("Изменяет упоминания в сборах и уведомлениях о Зуре here->everyone->Без упоминания и наоборот.")]
-		public async Task SetGuildMention()
+		public async Task SetGuildMention(SocketRole role = null)
 		{
 			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
-			if (guild.GlobalMention == "@here")
-				guild.GlobalMention = "@everyone";
-			else if (guild.GlobalMention == "@everyone")
-				guild.GlobalMention = null;
-			else if (guild.GlobalMention == null)
-				guild.GlobalMention = "@here";
+			if (role == null)
+			{
+				if (guild.GlobalMention == "@here")
+					guild.GlobalMention = "@everyone";
+				else if (guild.GlobalMention == "@everyone")
+					guild.GlobalMention = null;
+				else if (guild.GlobalMention == null)
+					guild.GlobalMention = "@here";
+				else
+					guild.GlobalMention = null;
+			}
+			else
+			{
+				guild.GlobalMention = $"<@&{role.Id}>";
+			}
 
 			await DatabaseHelper.SaveGuildAccountAsync(guild);
 
