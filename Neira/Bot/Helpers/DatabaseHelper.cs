@@ -66,6 +66,43 @@ namespace Neira.Bot.Helpers
 				await Db.SaveChangesAsync();
 			}
 		}
+
+		/// <summary>
+		/// Return one role saved as self role.
+		/// </summary>
+		/// <param name="guildId">Discord guild id</param>
+		/// <param name="roleId">Guild role id</param>
+		/// <returns>true or false</returns>
+		public static bool GetGuildSelfRole(ulong guildId, ulong roleId, ulong emoteId)
+		{
+			using var Db = new NeiraLinkContext();
+			return Db.GuildSelfRoles.Any(g => g.GuildId == guildId && (g.RoleId == roleId || g.EmoteId == emoteId));
+		}
+
+		/// <summary>
+		/// Get all saved self roles with emote for guild
+		/// </summary>
+		/// <param name="guildId">Discord guild id</param>
+		/// <returns>List of GuildSelfRole</returns>
+		public static IEnumerable<GuildSelfRole> GetGuildAllSelfRoles(ulong guildId)
+		{
+			using var Db = new NeiraLinkContext();
+			return Db.GuildSelfRoles.Where(g => g.GuildId == guildId);
+		}
+		public static async Task SaveGuildSelfRoleAsync(GuildSelfRole model)
+		{
+			using var Db = new NeiraLinkContext();
+			Db.GuildSelfRoles.Add(model);
+			await Db.SaveChangesAsync();
+		}
+
+		public static async Task ClearGuildSelfRoleAsync(ulong guildId)
+		{
+			using var Db = new NeiraLinkContext();
+			var roles = Db.GuildSelfRoles.Where(g => g.GuildId == guildId);
+			Db.RemoveRange(roles);
+			await Db.SaveChangesAsync();
+		}
 		#endregion
 
 		#region Destiny 2

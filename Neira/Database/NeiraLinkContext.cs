@@ -21,6 +21,7 @@ namespace Neira.Database
 		public virtual DbSet<BotInfo> BotInfos { get; set; }
 		//Discord
 		public virtual DbSet<Guild> Guilds { get; set; }
+		public virtual DbSet<GuildSelfRole> GuildSelfRoles { get; set; }
 		public virtual DbSet<UserAccount> UserAccounts { get; set; }
 		public virtual DbSet<GuildUserAccount> GuildUserAccounts { get; set; }
 		public virtual DbSet<ADOnline> ADOnlines { get; set; }
