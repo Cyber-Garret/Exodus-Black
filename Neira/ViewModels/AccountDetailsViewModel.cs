@@ -18,5 +18,6 @@ namespace Neira.ViewModels
         public BungieMembershipType Type { get; }
         public long Id { get; }
         public IList<Character> Characters { get; set; } = new List<Character>();
+        public IEnumerable<WeaponMod> WeaponMods { get; set; }
     }
 }

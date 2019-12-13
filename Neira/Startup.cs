@@ -99,6 +99,7 @@ namespace Neira
 
 			services.AddScoped<IMaxPowerService, MaxPowerService>();
 			services.AddScoped<IRecommendations, S9Recommendations>();
+			services.AddScoped<IWeaponMods, WeaponMods>();
 
 
 			var config = new Destiny2Config(Configuration["AppName"], Configuration["AppVersion"],

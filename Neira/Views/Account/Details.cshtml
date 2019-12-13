@@ -18,4 +18,24 @@
 			</div>
 		}
 	</div>
+	<h2>Модификаторы оружия</h2>
+	<div class="card-columns">
+		@foreach (var mod in Model.WeaponMods)
+		{
+			<div class="card">
+				<img src="@mod.IconUrl" class="card-img-top mx-auto" style="max-width:96px;" alt="@mod.Name">
+				<div class="card-body">
+					<h5 class="card-title">@mod.Name</h5>
+					@if (mod.IsUnlocked)
+					{
+						<p class="card-text badge-success">В колекции</p>
+					}
+					else
+					{
+						<p class="card-text badge-dark">Не получен</p>
+					}
+				</div>
+			</div>
+		}
+	</div>
 </div>

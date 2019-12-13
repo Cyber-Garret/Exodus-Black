@@ -1,5 +1,6 @@
 ﻿using Destiny2;
-
+using Destiny2.Definitions;
+using Destiny2.Responses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Neira.Models;
+using Neira.Services;
 using Neira.ViewModels;
 
 using System;
@@ -22,6 +24,7 @@ namespace Neira.Controllers
     {
         private readonly IDestiny2 _destiny;
         private readonly IManifest _manifest;
+        private readonly IWeaponMods _weaponMods;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IOptions<BungieSettings> _bungie;
         private readonly ILogger _logger;
@@ -30,6 +33,7 @@ namespace Neira.Controllers
         {
             _destiny = service.GetRequiredService<IDestiny2>();
             _manifest = service.GetRequiredService<IManifest>();
+            _weaponMods = service.GetRequiredService<IWeaponMods>();
             _contextAccessor = service.GetRequiredService<IHttpContextAccessor>();
             _bungie = service.GetRequiredService<IOptions<BungieSettings>>();
             _logger = service.GetRequiredService<ILogger<AccountController>>();
@@ -96,7 +100,12 @@ namespace Neira.Controllers
 
             var accessToken = _contextAccessor.HttpContext.GetTokenAsync("access_token");
 
-            var model = new AccountDetailsViewModel(membershipType, id);
+            var inventory = await _destiny.GetProfile(await accessToken, membershipType, id, DestinyComponentType.ItemReusablePlugs);
+
+            var model = new AccountDetailsViewModel(membershipType, id)
+            {
+                WeaponMods = await GetAccountModsAsync(inventory)
+            };
 
             var profileResponse = await _destiny.GetProfile(await accessToken, membershipType, id, DestinyComponentType.Characters);
             if (profileResponse == null)
@@ -111,7 +120,35 @@ namespace Neira.Controllers
                 model.Characters.Add(new Character(item.Key, item.Value, classDef, _bungie.Value.BaseUrl));
             }
 
+            
             return View(model);
+        }
+
+        private string GetIconUrl(DestinyInventoryItemDefinition itemDefinition)
+        {
+            if (!itemDefinition.DisplayProperties.HasIcon)
+            {
+                return string.Empty;
+            }
+
+            return _bungie.Value.BaseUrl + itemDefinition.DisplayProperties.Icon;
+        }
+
+        private async Task<IOrderedEnumerable<WeaponMod>> GetAccountModsAsync(DestinyProfileResponse inventory)
+        {
+            var inventoryModsTask = await _weaponMods.GetModsFromInventory(inventory);
+            var manifestModsTask = await _weaponMods.GetModsFromManifest();
+
+            var inventoryMods = inventoryModsTask.ToDictionary(mod => mod.Hash);
+
+            var weaponMods = manifestModsTask.Select(mod => new WeaponMod
+            {
+                IconUrl = GetIconUrl(mod),
+                Name = mod.DisplayProperties.Name,
+                IsUnlocked = inventoryMods.ContainsKey(mod.Hash),
+            }).OrderBy(mod => mod.Name);
+
+            return weaponMods;
         }
     }
 }
