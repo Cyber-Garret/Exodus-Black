@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira.API", "Neira.API\Neir
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neira", "Neira\Neira.csproj", "{C5550D59-01CF-458C-A206-B29085B72054}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Destiny2", "..\Destiny2\Destiny2.csproj", "{9AA6C490-AA4B-421F-842D-7CEC13F47363}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Destiny2", "Destiny2\Destiny2.csproj", "{34743F09-4427-4F41-A886-C527DDD66ADF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{C5550D59-01CF-458C-A206-B29085B72054}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5550D59-01CF-458C-A206-B29085B72054}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5550D59-01CF-458C-A206-B29085B72054}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9AA6C490-AA4B-421F-842D-7CEC13F47363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9AA6C490-AA4B-421F-842D-7CEC13F47363}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9AA6C490-AA4B-421F-842D-7CEC13F47363}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9AA6C490-AA4B-421F-842D-7CEC13F47363}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34743F09-4427-4F41-A886-C527DDD66ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34743F09-4427-4F41-A886-C527DDD66ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34743F09-4427-4F41-A886-C527DDD66ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34743F09-4427-4F41-A886-C527DDD66ADF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

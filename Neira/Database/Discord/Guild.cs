@@ -17,8 +17,6 @@ namespace Neira.Database
 		public string CommandPrefix { get; set; }
 		public string GlobalMention { get; set; } = "@here";
 		public bool Economy { get; set; } = false;
-
 		public ulong SelfRoleMessageId { get; set; } = 0;
-		public IEnumerable<GuildSelfRole> GuildSelfRoles { get; set; }
 	}
 }

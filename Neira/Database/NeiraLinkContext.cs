@@ -17,6 +17,11 @@ namespace Neira.Database
 		{
 			optionsBuilder.UseSqlServer("Server=78.47.220.185;Database=NeiraLink;User Id=Neira;Password=PRu7bvfLTgGXcsTpoUQ7;MultipleActiveResultSets=true;");
 		}
+
+		protected override void OnModelCreating(ModelBuilder model)
+		{
+			//model.Entity<GuildSelfRole>().HasNoKey();
+		}
 		//Web
 		public virtual DbSet<BotInfo> BotInfos { get; set; }
 		//Discord

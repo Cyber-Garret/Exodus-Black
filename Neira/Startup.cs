@@ -47,9 +47,6 @@ namespace Neira
 			services.AddSingleton<BungieJob>();
 			services.AddSingleton(new JobSchedule(typeof(BungieJob), "0 0/15 * * * ?")); // run every 15 minute
 
-			services.AddSingleton<GuardianStatJob>();
-			services.AddSingleton(new JobSchedule(typeof(GuardianStatJob), "0 0 4 * * ?")); // run every 4:00 night
-
 			services.AddSingleton<HellHoundJob>();
 			services.AddSingleton(new JobSchedule(typeof(HellHoundJob), "0 0 0/1 * * ?")); // run every hour
 
@@ -90,7 +87,8 @@ namespace Neira
 				.AddSingleton<MilestoneService>()
 				.AddSingleton<LevelingService>()
 				.AddSingleton<CommandHandlerService>()
-				.AddSingleton<GuildEventHandlerService>();
+				.AddSingleton<GuildEventHandlerService>()
+				.AddSingleton<GuildSelfRoleService>();
 			#endregion
 
 			#region Destiny2

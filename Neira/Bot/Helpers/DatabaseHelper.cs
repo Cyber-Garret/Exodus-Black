@@ -76,7 +76,7 @@ namespace Neira.Bot.Helpers
 		public static bool GetGuildSelfRole(ulong guildId, ulong roleId, ulong emoteId)
 		{
 			using var Db = new NeiraLinkContext();
-			return Db.GuildSelfRoles.Any(g => g.GuildId == guildId && (g.RoleId == roleId || g.EmoteId == emoteId));
+			return Db.GuildSelfRoles.Any(g => g.GuildID == guildId && (g.RoleID == roleId || g.EmoteID == emoteId));
 		}
 
 		/// <summary>
@@ -84,10 +84,11 @@ namespace Neira.Bot.Helpers
 		/// </summary>
 		/// <param name="guildId">Discord guild id</param>
 		/// <returns>List of GuildSelfRole</returns>
-		public static IEnumerable<GuildSelfRole> GetGuildAllSelfRoles(ulong guildId)
+		public static async Task<List<GuildSelfRole>> GetGuildAllSelfRolesAsync(ulong guildId)
 		{
 			using var Db = new NeiraLinkContext();
-			return Db.GuildSelfRoles.Where(g => g.GuildId == guildId);
+			var roles = await Db.GuildSelfRoles.Where(g => g.GuildID == guildId).ToListAsync();
+			return roles;
 		}
 		public static async Task SaveGuildSelfRoleAsync(GuildSelfRole model)
 		{
@@ -99,7 +100,7 @@ namespace Neira.Bot.Helpers
 		public static async Task ClearGuildSelfRoleAsync(ulong guildId)
 		{
 			using var Db = new NeiraLinkContext();
-			var roles = Db.GuildSelfRoles.Where(g => g.GuildId == guildId);
+			var roles = Db.GuildSelfRoles.Where(g => g.GuildID == guildId);
 			Db.RemoveRange(roles);
 			await Db.SaveChangesAsync();
 		}
