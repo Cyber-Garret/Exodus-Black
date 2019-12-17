@@ -105,7 +105,7 @@ namespace Neira.Services
                 _logger.LogDebug(item.ToString());
             }
 
-            return maxItems.ToDictionary(item => (ItemSlot.SlotHashes)item.Slot.Hash);
+            return maxItems.ToDictionary(item => item.Slot.Hash);
         }
 
         public decimal ComputePower(IEnumerable<Item> items)

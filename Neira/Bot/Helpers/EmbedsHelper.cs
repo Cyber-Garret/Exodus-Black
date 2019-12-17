@@ -325,7 +325,7 @@ namespace Neira.Bot.Helpers
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = $"{activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
+				Title = $"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
 				Color = Color.Red,
 				Description = "**Ваш постоянный успех дал сбой, сбор закончен. Бип...**",
 				Timestamp = DateTimeOffset.Now
