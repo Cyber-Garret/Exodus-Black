@@ -48,6 +48,7 @@ namespace Neira.Bot.Modules
 			var mainCommands = string.Empty;
 			var adminCommands = string.Empty;
 			var economyCommands = string.Empty;
+			var selfRoleCommands = string.Empty;
 
 			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
 
@@ -59,6 +60,8 @@ namespace Neira.Bot.Modules
 					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(EconomyModule).Name)
 					economyCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
+				else if (command.Module.Name == typeof(SelfRoleModule).Name)
+					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 
 			}
 
@@ -73,6 +76,7 @@ namespace Neira.Bot.Modules
 				.AddField("Основные команды", mainCommands[0..^2])
 				.AddField("Команды администраторов сервера", adminCommands[0..^2])
 				.AddField("Команды экономики и репутации", economyCommands[0..^2])
+				.AddField("Команды настройки Автороли", selfRoleCommands[0..^2])
 				.WithFooter(NeiraWebsite);
 
 			await ReplyAsync(embed: embed.Build());
@@ -336,7 +340,7 @@ namespace Neira.Bot.Modules
 				ImageUrl = "https://www.bungie.net/img/UserThemes/d2_13/mobiletheme.jpg",
 				Footer = NeiraWebsite
 			}
-				.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку или единоразово купить мне кофе на любую сумму.\n[Я на Patreon](https://www.patreon.com/Cyber_Garret)")
+				//.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку или единоразово купить мне кофе на любую сумму.\n[Я на Patreon](https://www.patreon.com/Cyber_Garret)")
 				.AddField("YandexMoney", "Так же вы можете помочь мне через [Яндекс Деньги](https://money.yandex.ru/to/410019748161790)")
 				.AddField(GlobalVariables.InvisibleString, $"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}#{app.Owner.Discriminator}.");
 

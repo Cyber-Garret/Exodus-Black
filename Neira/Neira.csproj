@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Destiny2\Destiny2.csproj" />
+    <ProjectReference Include="..\Destiny2\Destiny2.csproj" />
     <ProjectReference Include="..\Neira.API\Neira.API.csproj" />
   </ItemGroup>
 

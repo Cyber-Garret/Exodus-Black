@@ -23,6 +23,7 @@ namespace Neira.Bot.Services
 		private readonly MilestoneService milestone;
 		private readonly LevelingService leveling;
 		private readonly EmoteService emoteService;
+		private readonly GuildSelfRoleService roleService;
 
 
 		public GuildEventHandlerService(IServiceProvider services)
@@ -33,6 +34,7 @@ namespace Neira.Bot.Services
 			milestone = services.GetRequiredService<MilestoneService>();
 			leveling = services.GetRequiredService<LevelingService>();
 			emoteService = services.GetRequiredService<EmoteService>();
+			roleService = services.GetRequiredService<GuildSelfRoleService>();
 		}
 
 		public void Configure()
@@ -201,6 +203,8 @@ namespace Neira.Bot.Services
 					|| reaction.Emote.Equals(emoteService.ReactFifth)
 					|| reaction.Emote.Equals(emoteService.ReactSixth))
 						await milestone.MilestoneReactionAdded(cache, reaction);
+					await roleService.SelfRoleReactionAdded(cache, reaction);
+
 				}
 			});
 			return Task.CompletedTask;
@@ -218,6 +222,7 @@ namespace Neira.Bot.Services
 					|| reaction.Emote.Equals(emoteService.ReactFifth)
 					|| reaction.Emote.Equals(emoteService.ReactSixth))
 						await milestone.MilestoneReactionRemoved(cache, reaction);
+				await roleService.SelfRoleReactionRemoved(cache, reaction);
 			});
 			return Task.CompletedTask;
 		}

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.Logging;
 using Neira.Bot.Services;
 using Neira.Database;
 
@@ -14,9 +14,11 @@ namespace Neira.QuartzService
 {
 	public class MilestoneRemindJob : IJob
 	{
+		private readonly ILogger<MilestoneRemindJob> _logger;
 		private readonly MilestoneService _milestone;
 		public MilestoneRemindJob(IServiceProvider service)
 		{
+			_logger = service.GetRequiredService<ILogger<MilestoneRemindJob>>();
 			_milestone = service.GetRequiredService<MilestoneService>();
 		}
 		public Task Execute(IJobExecutionContext context)
@@ -29,10 +31,18 @@ namespace Neira.QuartzService
 			{
 				Parallel.ForEach(query, new ParallelOptions { MaxDegreeOfParallelism = 2 }, async item =>
 				{
-					if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
+					try
 					{
-						await _milestone.RaidNotificationAsync(item, MilestoneService.RemindType.ByTimer);
+						if (timer.Date == item.DateExpire.Date && timer.Hour == item.DateExpire.Hour && timer.Minute == item.DateExpire.Minute && timer.Second < 10)
+						{
+							await _milestone.RaidNotificationAsync(item, MilestoneService.RemindType.ByTimer);
+						}
 					}
+					catch (Exception ex)
+					{
+						_logger.LogError(ex, "MilestoneRemindJob");
+					}
+
 				});
 			}
 			return Task.CompletedTask;

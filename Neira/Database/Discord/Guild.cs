@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Neira.Database
@@ -16,5 +17,6 @@ namespace Neira.Database
 		public string CommandPrefix { get; set; }
 		public string GlobalMention { get; set; } = "@here";
 		public bool Economy { get; set; } = false;
+		public ulong SelfRoleMessageId { get; set; } = 0;
 	}
 }
