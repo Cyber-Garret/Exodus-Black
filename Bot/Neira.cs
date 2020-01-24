@@ -14,17 +14,17 @@ using Microsoft.Extensions.Options;
 
 namespace Bot
 {
-	public class Worker : BackgroundService
+	public class Neira : BackgroundService
 	{
 		private readonly IServiceProvider _service;
-		private readonly ILogger<Worker> _logger;
+		private readonly ILogger<Neira> _logger;
 		private readonly DiscordSocketClient _discord;
 		private readonly BotConfig _config;
 
-		public Worker(IServiceProvider service)
+		public Neira(IServiceProvider service)
 		{
 			_service = service;
-			_logger = service.GetRequiredService<ILogger<Worker>>();
+			_logger = service.GetRequiredService<ILogger<Neira>>();
 			_discord = service.GetRequiredService<DiscordSocketClient>();
 			_config = service.GetRequiredService<IOptions<BotConfig>>().Value;
 		}
@@ -33,19 +33,18 @@ namespace Bot
 		{
 			//Initialize service
 			_service.GetRequiredService<DiscordLogging>().Configure();
-			//_service.GetRequiredService<GuildEventHandlerService>().Configure();
-			//await _service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
+			_service.GetRequiredService<GuildEventHandler>().InitDiscordEvents();
+			await _service.GetRequiredService<CommandHandler>().ConfigureAsync();
 
 			await _discord.LoginAsync(TokenType.Bot, _config.Token);
 			await _discord.StartAsync();
 			await _discord.SetStatusAsync(UserStatus.Online);
 			await Task.Delay(-1, stoppingToken);
-
-			if (stoppingToken.IsCancellationRequested)
-			{
-				await _discord.SetStatusAsync(UserStatus.Offline);
-				await _discord.LogoutAsync();
-			}
+		}
+		public override async Task StopAsync(CancellationToken cancellationToken)
+		{
+			await _discord.SetStatusAsync(UserStatus.Offline);
+			await _discord.LogoutAsync();
 		}
 	}
 }

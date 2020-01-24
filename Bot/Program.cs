@@ -1,12 +1,19 @@
 using Bot.Entity;
 using Bot.Services;
+using Bot.Services.Quartz;
+using Bot.Services.Quartz.Jobs;
 using Discord;
+using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 namespace Bot
 {
@@ -24,7 +31,8 @@ namespace Bot
 					//load and map bot settings to class
 					services.Configure<BotConfig>(options => hostContext.Configuration.GetSection("BotConfig").Bind(options));
 
-					services.AddHostedService<Worker>();
+					// Bot services
+					services.AddHostedService<Neira>();
 
 					services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 					{
@@ -38,6 +46,17 @@ namespace Bot
 					services.AddSingleton<DiscordLogging>();
 					services.AddSingleton<CommandHandler>();
 					services.AddSingleton<MilestoneEmoji>();
+					services.AddSingleton<InteractiveService>();
+					services.AddSingleton<GuildEventHandler>();
+
+					// Quartz services
+					services.AddHostedService<Quartz>();
+					services.AddSingleton<IJobFactory, SingletonJobFactory>();
+					services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+					// Quartz jobs
+					services.AddSingleton<XurArrive>();
+					services.AddSingleton(new JobSchedule(typeof(XurArrive), "0 0 20 ? * FRI")); // run every Friday in 20:00
+
 				});
 	}
 }

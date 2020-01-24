@@ -48,7 +48,7 @@ namespace Bot.Services
 
 			var argPos = 0;
 			// ignore if command not start from prefix
-			if (!msg.HasCharPrefix(_config.Prefix, ref argPos)) return;
+			if (!msg.HasStringPrefix(_config.Prefix, ref argPos)) return;
 
 			// search command
 			var cmdSearchResult = _command.Search(context, argPos);

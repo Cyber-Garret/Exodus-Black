@@ -11,7 +11,7 @@ namespace Bot.Core
 	{
 		private const string configFile = "guild.json";
 
-		internal static Guild guild;
+		internal static Guild settings;
 
 		static GuildConfig()
 		{
@@ -21,18 +21,17 @@ namespace Bot.Core
 
 			var guildPath = Path.Combine(Directory.GetCurrentDirectory(), Constants.ResourceFolder, configFile);
 
-			if (!File.Exists(guildPath))
+			if (File.Exists(guildPath))
 			{
-				guild = new Guild();
-				var json = JsonConvert.SerializeObject(guild);
-				File.WriteAllText(guildPath, json);
+				var json = File.ReadAllText(guildPath, Encoding.Unicode);
+				settings = JsonConvert.DeserializeObject<Guild>(json);
 			}
 			else
 			{
-				var json = File.ReadAllText(guildPath);
-				guild = JsonConvert.DeserializeObject<Guild>(json);
+				settings = new Guild();
+				var json = JsonConvert.SerializeObject(settings);
+				File.WriteAllText(guildPath, json, Encoding.Unicode);
 			}
-
 		}
 	}
 }

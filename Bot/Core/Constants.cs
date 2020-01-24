@@ -8,6 +8,9 @@ namespace Bot.Core
 	{
 		internal const string ResourceFolder = "resources";
 		internal const string BackgroundsFolder = "backgrounds";
+		internal const string ExoticsFolder = "exotics";
+		internal const string CatalystFolder = "catalysts";
+
 		internal const string InvisibleString = "\u200b";
 	}
 }
