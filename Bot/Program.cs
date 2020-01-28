@@ -55,7 +55,11 @@ namespace Bot
 					services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 					// Quartz jobs
 					services.AddSingleton<XurArrive>();
+					services.AddSingleton<XurLeave>();
+
+					// Quartz triggers
 					services.AddSingleton(new JobSchedule(typeof(XurArrive), "0 0 20 ? * FRI")); // run every Friday in 20:00
+					services.AddSingleton(new JobSchedule(typeof(XurLeave), "0 0 20 ? * TUE")); // run every Tuesday in 20:00
 
 				});
 	}
