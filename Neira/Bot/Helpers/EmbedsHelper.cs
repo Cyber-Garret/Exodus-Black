@@ -360,24 +360,6 @@ namespace Neira.Bot.Helpers
 		}
 		#endregion
 
-		#region Economic
-		public static Embed Glimmer(Color color, string text, string title = null, EmbedFooterBuilder footerBuilder = null)
-		{
-			var embed = new EmbedBuilder
-			{
-				Color = color,
-				Description = text
-			};
-			if (!string.IsNullOrWhiteSpace(title))
-				embed.Title = title;
-
-			if (footerBuilder != null)
-				embed.Footer = footerBuilder;
-
-			return embed.Build();
-		}
-		#endregion
-
 		#region Discord
 		public static Embed GuildInfo(SocketCommandContext commandContext, UsersInStatuses users, EmbedFooterBuilder footer = null)
 		{

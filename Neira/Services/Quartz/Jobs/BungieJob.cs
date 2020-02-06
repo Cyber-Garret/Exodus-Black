@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.QuartzService
+namespace Neira.Services.Quartz
 {
 	[DisallowConcurrentExecution]
 	public class BungieJob : IJob

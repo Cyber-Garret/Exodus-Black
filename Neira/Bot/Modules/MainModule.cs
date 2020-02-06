@@ -47,7 +47,6 @@ namespace Neira.Bot.Modules
 
 			var mainCommands = string.Empty;
 			var adminCommands = string.Empty;
-			var economyCommands = string.Empty;
 			var selfRoleCommands = string.Empty;
 
 			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
@@ -58,8 +57,6 @@ namespace Neira.Bot.Modules
 					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
 					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
-				else if (command.Module.Name == typeof(EconomyModule).Name)
-					economyCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(SelfRoleModule).Name)
 					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 
@@ -75,7 +72,6 @@ namespace Neira.Bot.Modules
 				"и в [документации](https://docs.neira.su/)")
 				.AddField("Основные команды", mainCommands[0..^2])
 				.AddField("Команды администраторов сервера", adminCommands[0..^2])
-				.AddField("Команды экономики и репутации", economyCommands[0..^2])
 				.AddField("Команды настройки Автороли", selfRoleCommands[0..^2])
 				.WithFooter(NeiraWebsite);
 
@@ -128,80 +124,6 @@ namespace Neira.Bot.Modules
 		public async Task Bip()
 		{
 			await ReplyAsync("Бип...");
-		}
-
-		[Command("зур")]
-		[Summary("Отвечает в данный момент Зур в системе или нет, если да, то отображает ссылки на сторонние ресурсы с его расположением и ассортиментом.")]
-		[Remarks("Пример: !зур, префикс команды может отличаться от стандартного.")]
-		public async Task XurCommand()
-		{
-			#region Check DayOfWeek
-			DateTime today = DateTime.Now;
-			TimeSpan start = new TimeSpan(20, 0, 0);
-			TimeSpan end = start; //setting the same value as your start and end time is same
-			DateTime fridayStartCheck = new DateTime();
-			DateTime tuesdayEndCheck = new DateTime();
-
-			if (today.DayOfWeek == DayOfWeek.Friday)
-			{
-				fridayStartCheck = DateTime.Parse(today.ToShortDateString());
-				fridayStartCheck += start;
-				tuesdayEndCheck = DateTime.Parse(today.AddDays(+5).ToShortDateString());
-				tuesdayEndCheck += end;
-			}
-			if (today.DayOfWeek == DayOfWeek.Saturday)
-			{
-				fridayStartCheck = DateTime.Parse(today.AddDays(-1).ToShortDateString());
-				fridayStartCheck += start;
-				tuesdayEndCheck = DateTime.Parse(today.AddDays(+4).ToShortDateString());
-				tuesdayEndCheck += end;
-			}
-			if (today.DayOfWeek == DayOfWeek.Sunday)
-			{
-				fridayStartCheck = DateTime.Parse(today.AddDays(-2).ToShortDateString());
-				fridayStartCheck += start;
-				tuesdayEndCheck = DateTime.Parse(today.AddDays(+3).ToShortDateString());
-				tuesdayEndCheck += end;
-			}
-			if (today.DayOfWeek == DayOfWeek.Monday)
-			{
-				fridayStartCheck = DateTime.Parse(today.AddDays(-3).ToShortDateString());
-				fridayStartCheck += start;
-				tuesdayEndCheck = DateTime.Parse(today.AddDays(+2).ToShortDateString());
-				tuesdayEndCheck += end;
-			}
-			if (today.DayOfWeek == DayOfWeek.Tuesday)
-			{
-				fridayStartCheck = DateTime.Parse(today.AddDays(-5).ToShortDateString());
-				fridayStartCheck += start;
-				tuesdayEndCheck = DateTime.Parse(today.ToShortDateString());
-				tuesdayEndCheck += end;
-			}
-			#endregion
-
-			EmbedBuilder Embed = new EmbedBuilder()
-				.WithThumbnailUrl("https://i.imgur.com/sFZZlwF.png");
-
-			if (today >= fridayStartCheck && today <= tuesdayEndCheck)
-			{
-
-				Embed.WithColor(Color.Gold)
-					.WithTitle($"Уважаемый пользователь {Context.User}")
-					.WithDescription("По моим данным Зур в данный момент в пределах солнечной системы, но\n" +
-					"так как мои алгоритмы глобального позиционирования пока еще в разработке, определить его точное местоположение я не могу.\n" +
-					"[Но я уверена что тут ты сможешь отыскать его положение](https://whereisxur.com/)\n" +
-					"[Или тут](https://ftw.in/game/destiny-2/find-xur)")
-					.WithFooter("Напоминаю! Зур покинет пределы солнечной системы во вторник 20:00 по МСК. Это сообщение будет автоматически удалено через 2 минуты. ");
-
-			}
-			else
-			{
-				Embed.WithColor(Color.Red)
-					.WithTitle($"Уважаемый пользователь {Context.User}")
-					.WithDescription("По моим данным Зур не в пределах солнечной системы.")
-					.WithFooter("Зур прибудет в пятницу 20:00 по МСК. Я сообщу. Это сообщение будет автоматически удалено через 2 минуты.");
-			}
-			await ReplyAndDeleteAsync(null, embed: Embed.Build(), timeout: TimeSpan.FromMinutes(2));
 		}
 
 		[Command("экзот")]
@@ -340,7 +262,6 @@ namespace Neira.Bot.Modules
 				ImageUrl = "https://www.bungie.net/img/UserThemes/d2_13/mobiletheme.jpg",
 				Footer = NeiraWebsite
 			}
-				//.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку или единоразово купить мне кофе на любую сумму.\n[Я на Patreon](https://www.patreon.com/Cyber_Garret)")
 				.AddField("YandexMoney", "Так же вы можете помочь мне через [Яндекс Деньги](https://money.yandex.ru/to/410019748161790)")
 				.AddField(GlobalVariables.InvisibleString, $"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}#{app.Owner.Discriminator}.");
 

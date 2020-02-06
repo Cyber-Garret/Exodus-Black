@@ -47,8 +47,6 @@ namespace Neira.Bot.Modules
 				$"- Стражей на корабле: **{Context.Guild.Users.Count}**\n" +
 				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
 				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
-				$"- Оповещения о новых стражах и когда кто-то поднимает ур. я присылаю в **<#{guild.WelcomeChannel}>**\n" +
-				$"- Статус экономики: {ConvertEconomyBool(guild.Economy)}\n" +
 				$"- Глобальное упоминание в некоторых сообщениях: **{guild.GlobalMention ?? "Без упоминания"}**");
 
 			await ReplyAsync(embed: embed.Build());
@@ -245,26 +243,6 @@ namespace Neira.Bot.Modules
 			await DatabaseHelper.SaveGuildAccountAsync(guild);
 
 			await ReplyAsync($"Капитан, теперь в некоторых сообщениях я буду использовать {guild.GlobalMention ?? "**Без упоминания**"}");
-		}
-
-		[Command("экономика")]
-		[Summary("Включает или выключает экономику на сервере.")]
-		public async Task Economy()
-		{
-			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
-			string message = string.Empty;
-			if (!guild.Economy)
-			{
-				guild.Economy = true;
-				message = "Капитан, теперь на твоем сервере включена экономика.";
-			}
-			else if (guild.Economy)
-			{
-				guild.Economy = false;
-				message = "Капитан, ты отключил экономику для сервера.";
-			}
-			await DatabaseHelper.SaveGuildAccountAsync(guild);
-			await ReplyAsync(message);
 		}
 
 		[Command("рассылка")]
