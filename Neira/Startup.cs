@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Neira.Bot;
 using Neira.Bot.Services;
 using Neira.Models;
+using Neira.QuartzService;
+using Neira.Services;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -20,7 +22,7 @@ using Serilog;
 using System;
 using System.IO;
 
-namespace Neira.Services.Quartz
+namespace Neira
 {
 	public class Startup
 	{
@@ -44,6 +46,9 @@ namespace Neira.Services.Quartz
 			// Add our job
 			services.AddSingleton<BungieJob>();
 			services.AddSingleton(new JobSchedule(typeof(BungieJob), "0 0/15 * * * ?")); // run every 15 minute
+
+			services.AddSingleton<HellHoundJob>();
+			services.AddSingleton(new JobSchedule(typeof(HellHoundJob), "0 0 0/1 * * ?")); // run every hour
 
 			services.AddSingleton<XurArrivedJob>();
 			services.AddSingleton(new JobSchedule(typeof(XurArrivedJob), "0 0 20 ? * FRI")); // run every Friday in 20:00
@@ -90,6 +95,11 @@ namespace Neira.Services.Quartz
 			services.Configure<BungieSettings>(Configuration.GetSection("Bungie"));
 			var bungie = Configuration.GetSection("Bungie").Get<BungieSettings>();
 
+			services.AddScoped<IMaxPowerService, MaxPowerService>();
+			services.AddScoped<IRecommendations, S9Recommendations>();
+			services.AddScoped<IWeaponMods, WeaponMods>();
+
+
 			var config = new Destiny2Config(Configuration["AppName"], Configuration["AppVersion"],
 				Configuration["AppId"], Configuration["Url"], Configuration["Email"])
 			{
@@ -98,6 +108,16 @@ namespace Neira.Services.Quartz
 				ManifestDatabasePath = Path.Combine(AppContext.BaseDirectory, "Destiny2Manifest")
 			};
 			services.AddDestiny2(config);
+
+			services.AddBungieAuthentication(new AuthenticationConfiguration
+			{
+				LoginCookieName = bungie.LoginCookieName,
+				ClientId = bungie.ClientId,
+				ClientSecret = bungie.ClientSecret,
+				AuthorizationEndpoint = bungie.AuthorizationEndpoint,
+				TokenEndpoint = bungie.TokenEndpoint,
+				CallbackPath = "/signin-bungie/"
+			});
 			#endregion
 		}
 

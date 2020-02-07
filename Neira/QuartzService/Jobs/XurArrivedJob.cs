@@ -12,7 +12,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neira.Services.Quartz
+namespace Neira.QuartzService
 {
 	[DisallowConcurrentExecution]
 	public class XurArrivedJob : IJob

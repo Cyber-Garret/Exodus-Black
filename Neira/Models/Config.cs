@@ -9,5 +9,6 @@ namespace Neira.Models
 	{
 		public string BotToken { get; set; }
 		public ulong NeiraHomeServerId { get; set; } = 521689023962415104;
+		public ulong HellHoundDiscordServer { get; set; } = 513825031525105684;
 	}
 }

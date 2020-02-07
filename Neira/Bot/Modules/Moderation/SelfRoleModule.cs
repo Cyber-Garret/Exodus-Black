@@ -1,12 +1,15 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using Neira.Bot.Preconditions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Neira.Bot.Helpers;
 using Neira.Database;
+using Microsoft.Extensions.Logging;
 
 namespace Neira.Bot.Modules
 {
@@ -16,6 +19,13 @@ namespace Neira.Bot.Modules
 	[Cooldown(5)]
 	public class SelfRoleModule : BaseModule
 	{
+		private readonly DiscordSocketClient _discord;
+		private readonly ILogger<SelfRoleModule> _logger;
+		public SelfRoleModule(IServiceProvider service)
+		{
+			_discord = service.GetRequiredService<DiscordSocketClient>();
+			_logger = service.GetRequiredService<ILogger<SelfRoleModule>>();
+		}
 
 		[Command("ДобавитьРоль"), Alias("др")]
 		[Summary("Роль должна быть с возможность @упоминания. Эмодзи можно использовать только серверные.")]

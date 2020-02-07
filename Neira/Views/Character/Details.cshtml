@@ -1,0 +1,80 @@
+﻿@model CharacterViewModel
+@using Humanizer
+@using System.Linq
+
+@{
+	Layout = "~/Views/Shared/Layouts/_ClanLayout.cshtml";
+	ViewData["Title"] = "Нейроматрица | Снаряжение стража";
+}
+<div class="container">
+	<p>
+		<a asp-route="AccountDetails" asp-route-type="@((int)Model.Type)" asp-route-id="@Model.AccountId">&lt;&lt; Мои стражи</a>
+	</p>
+
+	<picture class="float-right">
+		<source media="(min-width: 992px)" srcset="@Model.EmblemBackgroundPath">
+		<img src="@Model.EmblemPath" class="d-none d-md-block">
+	</picture>
+	<h1>Ур. силы: @(Model.MaxPowerHuman)</h1>
+	<ul>
+		<li>Базовая сила: @Model.BasePowerHuman</li>
+		<li>Бонус силы сезонного артефакта: @Model.BonusPower</li>
+	</ul>
+
+	<h1>Ур. силы энграмм</h1>
+	<ul>
+		@foreach (var engram in Model.Engrams)
+		{
+			<li>@engram.Description</li>
+		}
+	</ul>
+
+	<div class="container">
+		@{
+			var lowestItems = Model.LowestItems;
+			var recommendations = Model.Recommendations;
+		}
+
+		@if (Model.Recommendations.Any())
+		{
+			<div class="row">
+				<h1>Рекомендации</h1>
+			</div>
+			<div class="row">
+				<ol>
+					@foreach (var recommendation in recommendations)
+					{
+						<li>@recommendation</li>
+					}
+				</ol>
+			</div>
+		}
+
+		@if (lowestItems.Any())
+		{
+			<div class="row">
+				<h1>Снаряжение низкого ур.</h1>
+			</div>
+			<div class="row">
+				@foreach (var item in lowestItems)
+				{
+					<div class="col-auto">
+						@await Html.PartialAsync("ItemPartial", item)
+					</div>
+				}
+			</div>
+		}
+
+		<div class="row">
+			<h1>Снаряжение с наивысшим ур. силы</h1>
+		</div>
+		<div class="row">
+			@foreach (var item in Model.Items)
+			{
+				<div class="col-md-4">
+					@await Html.PartialAsync("ItemPartial", item)
+				</div>
+			}
+		</div>
+	</div>
+</div>
