@@ -326,27 +326,6 @@ namespace Neira.Bot.Modules
 			await ReplyAsync(embed: embed.Build());
 		}
 
-		[Command("помощь"), Alias("донат")]
-		[Summary("Информация о том как помочь развитию бота")]
-		public async Task Donate()
-		{
-			var app = await _discord.GetApplicationInfoAsync();
-
-			var embed = new EmbedBuilder()
-			{
-				Title = "Поддержите Нейроматрицу!",
-				Color = Color.Green,
-				Description = "Бип! Я стараюсь вкладывать много любви и усилий в разработку Нейроматрицы и для хорошей и стабильной работы мне нужна Ваша помощь! Ваша материальная поддержка придаст мне больше мотивации развивать бота и придавать ему больше возможностей и функций. И, как минимум, покрыть расходы на ежемесячную аренду хостинга.",
-				ImageUrl = "https://www.bungie.net/img/UserThemes/d2_13/mobiletheme.jpg",
-				Footer = NeiraWebsite
-			}
-				//.AddField("Patreon", "При помощи системы Патреон вы можете оформить месячную подписку или единоразово купить мне кофе на любую сумму.\n[Я на Patreon](https://www.patreon.com/Cyber_Garret)")
-				.AddField("YandexMoney", "Так же вы можете помочь мне через [Яндекс Деньги](https://money.yandex.ru/to/410019748161790)")
-				.AddField(GlobalVariables.InvisibleString, $"В любом случае спасибо что проявляете интерес к Нейроматрице. С наилучшими пожеланиями {app.Owner.Username}#{app.Owner.Discriminator}.");
-
-			await ReplyAsync(embed: embed.Build());
-		}
-
 		[Command("сбор")]
 		[Summary("Команда для анонса активностей.")]
 		[Remarks("Пример: !сбор <Название> <Заметка лидера(Не обязательно)>, например !сбор пн Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
@@ -589,6 +568,23 @@ namespace Neira.Bot.Modules
 			{
 				_logger.LogCritical(ex, "Milestone command");
 			}
+		}
+
+		[Command("опрос")]
+		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
+		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
+		public async Task StartPoll([Remainder] string input)
+		{
+			var author = (SocketGuildUser)Context.User;
+
+			var embed = new EmbedBuilder()
+				.WithAuthor($"Голосование от {author.Nickname ?? author.Username}", author.GetAvatarUrl() ?? author.GetDefaultAvatarUrl())
+				.WithColor(Color.Green)
+				.AddField($"Тема голосования", input);
+
+			var msg = await ReplyAsync(embed: embed.Build());
+
+			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
 		}
 	}
 }

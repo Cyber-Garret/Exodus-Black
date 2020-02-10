@@ -360,21 +360,6 @@ namespace Neira.Bot.Modules
 			}
 		}
 
-		[Command("опрос")]
-		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
-		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
-		public async Task StartPoll([Remainder] string input)
-		{
-			var embed = new EmbedBuilder()
-				.WithAuthor($"Голосование от {Context.User.Username}", Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl())
-				.WithColor(Color.Green)
-				.AddField($"Тема голосования", input);
-
-			var msg = await ReplyAsync(embed: embed.Build());
-
-			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
-		}
-
 		[Command("рандом")]
 		[Alias("ранд")]
 		[Summary("Случайным образом выбирает от 1 до 10 Стражей из указаной роли. Если не указано количество, по умолчанию выбирает одного.")]
