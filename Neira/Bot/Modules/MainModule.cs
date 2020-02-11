@@ -47,7 +47,6 @@ namespace Neira.Bot.Modules
 
 			var mainCommands = string.Empty;
 			var adminCommands = string.Empty;
-			var economyCommands = string.Empty;
 			var selfRoleCommands = string.Empty;
 
 			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
@@ -58,8 +57,6 @@ namespace Neira.Bot.Modules
 					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
 					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
-				else if (command.Module.Name == typeof(EconomyModule).Name)
-					economyCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 				else if (command.Module.Name == typeof(SelfRoleModule).Name)
 					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
 
@@ -75,7 +72,6 @@ namespace Neira.Bot.Modules
 				"и в [документации](https://docs.neira.su/)")
 				.AddField("Основные команды", mainCommands[0..^2])
 				.AddField("Команды администраторов сервера", adminCommands[0..^2])
-				.AddField("Команды экономики и репутации", economyCommands[0..^2])
 				.AddField("Команды настройки Автороли", selfRoleCommands[0..^2])
 				.WithFooter(NeiraWebsite);
 
@@ -397,13 +393,7 @@ namespace Neira.Bot.Modules
 			catch (Exception ex)
 			{
 				//reply to user if any error
-				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nУже пишу моему создателю, он сейчас все поправит.");
-				//Get App info 
-				var app = await _discord.GetApplicationInfoAsync();
-				//Get Owner for DM
-				var owner = await app.Owner.GetOrCreateDMChannelAsync();
-				//Send DM message with exception
-				await owner.SendMessageAsync($"Капитан, проблема с командой сбор! **{ex.Message}** больше подробностей в консоли.");
+				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nПни моего создателя, что-бы он посмотрел в чем проблема.");
 				//Log full exception in console
 				_logger.LogCritical(ex, "Milestone command");
 			}

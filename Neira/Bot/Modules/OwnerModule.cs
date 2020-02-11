@@ -15,10 +15,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Neira.Bot.Modules
 {
-	[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 	public class OwnerModule : BaseModule
 	{
 		private readonly ILogger _logger;
+		private const ulong Cyber_Garret = 316272461291192322;
 		public OwnerModule(IServiceProvider service)
 		{
 			_logger = service.GetRequiredService<ILogger<OwnerModule>>();
@@ -36,6 +36,8 @@ namespace Neira.Bot.Modules
 		[Command("add clan")]
 		public async Task AddClan(long ClanId)
 		{
+			//Because app in Team =( cant retrieve info about Owner
+			if (Context.User.Id != Cyber_Garret) return;
 			try
 			{
 				if (Destiny2ClanExists(ClanId))
@@ -85,6 +87,8 @@ namespace Neira.Bot.Modules
 		[Command("sync clan")]
 		public async Task AssociateClan(ulong DiscordGuildId, long DestinyClanId)
 		{
+			//Because app in Team =( cant retrieve info about Owner
+			if (Context.User.Id != Cyber_Garret) return;
 			try
 			{
 				using (var Db = new NeiraLinkContext())
@@ -125,13 +129,13 @@ namespace Neira.Bot.Modules
 		[Summary("Выводит техническую информацию о боте.")]
 		public async Task InfoAsync()
 		{
-			var app = await Context.Client.GetApplicationInfoAsync();
+			//Because app in Team =( cant retrieve info about Owner
+			if (Context.User.Id != Cyber_Garret) return;
 
 			var embed = new EmbedBuilder();
 			embed.WithColor(Color.Green);
 			embed.WithTitle("Моя техническая информация");
 			embed.AddField("Инфо",
-				$"- Автор: {app.Owner}\n" +
 				$"- Библиотека: Discord.Net ({DiscordConfig.Version})\n" +
 				$"- Среда выполнения: {RuntimeInformation.FrameworkDescription} {RuntimeInformation.ProcessArchitecture} " +
 					$"({RuntimeInformation.OSDescription} {RuntimeInformation.OSArchitecture})\n" +
@@ -149,6 +153,9 @@ namespace Neira.Bot.Modules
 		[Command("search guild"), Alias("sg")]
 		public async Task SearchGuild([Remainder]string name)
 		{
+			//Because app in Team =( cant retrieve info about Owner
+			if (Context.User.Id != Cyber_Garret) return;
+
 			if (string.IsNullOrWhiteSpace(name))
 				await ReplyAndDeleteAsync("Название Discord сервера не было представлено");
 			else
@@ -164,6 +171,9 @@ namespace Neira.Bot.Modules
 		[Command("ServerInfo")]
 		public async Task GuildInfo(ulong GuildId)
 		{
+			//Because app in Team =( cant retrieve info about Owner
+			if (Context.User.Id != Cyber_Garret) return;
+
 			try
 			{
 				var guild = Context.Client.Guilds.FirstOrDefault(g => g.Id == GuildId);
@@ -198,6 +208,9 @@ namespace Neira.Bot.Modules
 		[Command("LeaveServer")]
 		public async Task LeaveServer(ulong GuildId)
 		{
+			//Because app in Team =( cant retrieve info about Owner
+			if (Context.User.Id != Cyber_Garret) return;
+
 			try
 			{
 				var guild = Context.Client.Guilds.FirstOrDefault(g => g.Id == GuildId);
@@ -217,20 +230,6 @@ namespace Neira.Bot.Modules
 				await ReplyAsync($"Капитан, произошла критическая ошибка: **{ex.Message}**");
 				_logger.LogWarning(ex, "LeaveGuildCommand");
 			}
-		}
-
-		[Command("add glimmer"), Alias("addg")]
-		[Summary("Выдает некоторое количество блеска указанному аккаунту")]
-		public async Task AddGlimmer(uint Ammount, IUser user)
-		{
-			var userAccount = await DatabaseHelper.GetUserAccountAsync(user);
-
-			userAccount.Glimmer += Ammount;
-			await DatabaseHelper.SaveUserAccountAsync(userAccount);
-
-			var message = $":white_check_mark:  | **{Ammount}** блеска было добавлено, на аккаунт стража {user.Username}";
-
-			await ReplyAsync(embed: EmbedsHelper.Glimmer(Color.Green, message));
 		}
 	}
 }

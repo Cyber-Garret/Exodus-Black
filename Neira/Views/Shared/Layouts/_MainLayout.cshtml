@@ -29,23 +29,14 @@
 						<a class="nav-link font-weight-bold" href="http://docs.neira.su/" target="_blank">Документация</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link font-weight-bold" asp-controller="Clan" asp-action="Index">Кланы</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link font-weight-bold" asp-controller="Home" asp-action="TopServers">Топ серверов</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link js-scroll-trigger font-weight-bold" href="#donate">Поддержите нас</a>
 					</li>
-					@if (User.Identity.IsAuthenticated)
-					{
-						<li class="nav-item">
-							<a class="nav-link font-weight-bold" asp-area="" asp-action="Index" asp-controller="Account">Кабинет</a>
-						</li>
-					}
-					else
-					{
-						<li class="nav-item">
-							<a class="nav-link font-weight-bold" asp-area="" asp-action="Login" asp-controller="Account" asp-route-returnUrl="/Account">Войти</a>
-						</li>
-					}
 				</ul>
 			</div>
 		</div>

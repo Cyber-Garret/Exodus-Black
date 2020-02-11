@@ -21,7 +21,6 @@ namespace Neira.Bot.Services
 		private readonly DiscordSocketClient _discord;
 		private readonly CommandHandlerService CommandHandlingService;
 		private readonly MilestoneService milestone;
-		private readonly LevelingService leveling;
 		private readonly EmoteService emoteService;
 		private readonly GuildSelfRoleService roleService;
 
@@ -32,7 +31,6 @@ namespace Neira.Bot.Services
 			_discord = services.GetRequiredService<DiscordSocketClient>();
 			CommandHandlingService = services.GetRequiredService<CommandHandlerService>();
 			milestone = services.GetRequiredService<MilestoneService>();
-			leveling = services.GetRequiredService<LevelingService>();
 			emoteService = services.GetRequiredService<EmoteService>();
 			roleService = services.GetRequiredService<GuildSelfRoleService>();
 		}
@@ -115,16 +113,14 @@ namespace Neira.Bot.Services
 			Task.Run(async () =>
 			{
 				await CommandHandlingService.HandleCommandAsync(message);
-				await leveling.Level((SocketGuildUser)message.Author);
 			});
 			return Task.CompletedTask;
 		}
 		private Task Client_MessageUpdatedAsync(Cacheable<IMessage, ulong> cacheMessageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{
-			if (!cacheMessageBefore.HasValue)
+			if (!cacheMessageBefore.HasValue || cacheMessageBefore.Value.Author.IsBot)
 				return Task.CompletedTask;
-			if (cacheMessageBefore.Value.Author.IsBot)
-				return Task.CompletedTask;
+
 			Task.Run(async () =>
 			{
 				await MessageUpdated(cacheMessageBefore, messageAfter, channel);
@@ -133,10 +129,9 @@ namespace Neira.Bot.Services
 		}
 		private Task Client_MessageDeletedAsync(Cacheable<IMessage, ulong> cacheMessage, ISocketMessageChannel channel)
 		{
-			if (!cacheMessage.HasValue)
+			if (!cacheMessage.HasValue || cacheMessage.Value.Author.IsBot)
 				return Task.CompletedTask;
-			if (cacheMessage.Value.Author.IsBot)
-				return Task.CompletedTask;
+
 			Task.Run(async () =>
 			{
 				await MessageDeleted(cacheMessage);

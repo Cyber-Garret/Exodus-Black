@@ -16,10 +16,15 @@ namespace Neira.Controllers
 {
 	public class ClanController : Controller
 	{
+		public IActionResult Index()
+		{
+			using var db = new NeiraLinkContext();
 
+			return View(db.Clans.ToList());
+		}
 		// GET: /Clan/2733538
 		[Route("Clan/{id}/")]
-		public async Task<IActionResult> Index(long? id, string sortOrder, string searchString)
+		public async Task<IActionResult> Details(long? id, string sortOrder, string searchString)
 		{
 			if (id == null)
 				return NotFound();

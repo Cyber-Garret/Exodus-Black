@@ -13,14 +13,12 @@ namespace Neira.Bot.Services
 	{
 		private readonly IServiceProvider Services;
 		private readonly DiscordSocketClient Client;
-		private readonly LevelingService leveling;
 		private CommandService Commands;
 
-		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService, LevelingService levelingService)
+		public CommandHandlerService(IServiceProvider serviceProvider, DiscordSocketClient socketClient, CommandService commandService)
 		{
 			Services = serviceProvider;
 			Client = socketClient;
-			leveling = levelingService;
 			Commands = commandService;
 		}
 
@@ -68,12 +66,6 @@ namespace Neira.Bot.Services
 					if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
 
 				context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
-			});
-
-			await Task.Run(async () =>
-			{
-				await leveling.GlobalLevel((SocketGuildUser)context.User);
-				await leveling.MessageRewards((SocketGuildUser)context.User, message);
 			});
 		}
 
