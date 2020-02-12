@@ -15,10 +15,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Neira.Bot.Modules
 {
-	[RequireOwner(ErrorMessage = "Эта команда доступна только моему создателю.")]
 	public class OwnerModule : BaseModule
 	{
 		private readonly ILogger _logger;
+		private const ulong Garret = 316272461291192322;
 		public OwnerModule(IServiceProvider service)
 		{
 			_logger = service.GetRequiredService<ILogger<OwnerModule>>();
@@ -36,6 +36,7 @@ namespace Neira.Bot.Modules
 		[Command("add clan")]
 		public async Task AddClan(long ClanId)
 		{
+			if (Context.User.Id != Garret) return;
 			try
 			{
 				if (Destiny2ClanExists(ClanId))
@@ -85,6 +86,7 @@ namespace Neira.Bot.Modules
 		[Command("sync clan")]
 		public async Task AssociateClan(ulong DiscordGuildId, long DestinyClanId)
 		{
+			if (Context.User.Id != Garret) return;
 			try
 			{
 				using (var Db = new NeiraLinkContext())
@@ -125,6 +127,7 @@ namespace Neira.Bot.Modules
 		[Summary("Выводит техническую информацию о боте.")]
 		public async Task InfoAsync()
 		{
+			if (Context.User.Id != Garret) return;
 			var app = await Context.Client.GetApplicationInfoAsync();
 
 			var embed = new EmbedBuilder();
@@ -149,6 +152,7 @@ namespace Neira.Bot.Modules
 		[Command("search guild"), Alias("sg")]
 		public async Task SearchGuild([Remainder]string name)
 		{
+			if (Context.User.Id != Garret) return;
 			if (string.IsNullOrWhiteSpace(name))
 				await ReplyAndDeleteAsync("Название Discord сервера не было представлено");
 			else
@@ -164,6 +168,7 @@ namespace Neira.Bot.Modules
 		[Command("ServerInfo")]
 		public async Task GuildInfo(ulong GuildId)
 		{
+			if (Context.User.Id != Garret) return;
 			try
 			{
 				var guild = Context.Client.Guilds.FirstOrDefault(g => g.Id == GuildId);
@@ -198,6 +203,7 @@ namespace Neira.Bot.Modules
 		[Command("LeaveServer")]
 		public async Task LeaveServer(ulong GuildId)
 		{
+			if (Context.User.Id != Garret) return;
 			try
 			{
 				var guild = Context.Client.Guilds.FirstOrDefault(g => g.Id == GuildId);
@@ -223,6 +229,7 @@ namespace Neira.Bot.Modules
 		[Summary("Выдает некоторое количество блеска указанному аккаунту")]
 		public async Task AddGlimmer(uint Ammount, IUser user)
 		{
+			if (Context.User.Id != Garret) return;
 			var userAccount = await DatabaseHelper.GetUserAccountAsync(user);
 
 			userAccount.Glimmer += Ammount;
