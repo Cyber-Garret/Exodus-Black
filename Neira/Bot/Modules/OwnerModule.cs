@@ -131,6 +131,7 @@ namespace Neira.Bot.Modules
 		{
 			//Because app in Team =( cant retrieve info about Owner
 			if (Context.User.Id != Cyber_Garret) return;
+			var app = await Context.Client.GetApplicationInfoAsync();
 
 			var embed = new EmbedBuilder();
 			embed.WithColor(Color.Green);
