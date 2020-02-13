@@ -58,7 +58,7 @@ namespace Bot.Services
 			}
 			else
 			{
-				logger.LogInformation($"Не найдено экзотическое снаряжение: {Alias(name)}\nВ хранилище {ExoticCollection.Count} ед. экзотического снаряжения.");
+				logger.LogInformation($"Не найдено экзотическое снаряжение: ({Alias(name)}). В хранилище {ExoticCollection.Count} ед. экзотического снаряжения.");
 				return null;
 			}
 		}

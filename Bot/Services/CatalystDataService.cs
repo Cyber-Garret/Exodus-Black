@@ -57,7 +57,7 @@ namespace Bot.Services
 			}
 			else
 			{
-				logger.LogInformation($"Не удалось найти катализатор: {Alias(name)}\nВ хранилище {CatalystCollection.Count} ед. катализаторов оружия.");
+				logger.LogInformation($"Не удалось найти катализатор: ({Alias(name)}). В хранилище {CatalystCollection.Count} ед. катализаторов оружия.");
 				return null;
 			}
 		}
