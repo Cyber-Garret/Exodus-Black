@@ -1,18 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Bot.Services;
+using Bot.Services.Data;
+
+using Discord;
+using Discord.Addons.Interactive;
+using Discord.Commands;
+using Discord.WebSocket;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using Serilog.Events;
-using Serilog.Core;
+
 using Serilog;
-using Discord.WebSocket;
-using Discord;
-using Discord.Commands;
+using Serilog.Core;
+
+using System;
 
 namespace Bot
 {
@@ -45,6 +47,7 @@ namespace Bot
 						// File storages
 						services.AddSingleton<ExoticDataService>();
 						services.AddSingleton<CatalystDataService>();
+						services.AddSingleton<GuildDataService>();
 						// bot services
 						services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 						{
@@ -55,7 +58,11 @@ namespace Bot
 							MessageCacheSize = 300
 						}))
 						.AddSingleton<CommandService>()
-						.AddSingleton<LoggingService>();
+						.AddSingleton<InteractiveService>()
+						.AddSingleton<LoggingService>()
+						.AddSingleton<DiscordEventHandlerService>()
+						.AddSingleton<CommandHandlerService>()
+						.AddSingleton<EmoteService>();
 					})
 					.ConfigureAppConfiguration((hostingContext, config) =>
 					{

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Bot.Services;
+using Bot.Services.Data;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ namespace Bot
 		private readonly DiscordSocketClient discord;
 		private readonly ExoticDataService exoticData;
 		private readonly CatalystDataService catalystData;
+		private readonly GuildDataService guildData;
 
 		public Neira(IServiceProvider service)
 		{
@@ -30,6 +32,7 @@ namespace Bot
 			exoticData = service.GetRequiredService<ExoticDataService>();
 			catalystData = service.GetRequiredService<CatalystDataService>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
+			guildData = service.GetRequiredService<GuildDataService>();
 		}
 
 		public async Task StartAsync(CancellationToken cancellationToken)
@@ -40,9 +43,10 @@ namespace Bot
 				// Load data from local json files to in memory dictionaries.
 				exoticData.LoadData();
 				catalystData.LoadData();
+				guildData.LoadData();
 
 				service.GetRequiredService<LoggingService>().Configure();
-				//service.GetRequiredService<GuildEventHandlerService>().Configure();
+				service.GetRequiredService<DiscordEventHandlerService>().Configure();
 				await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
 
 				await discord.LoginAsync(TokenType.Bot, token);

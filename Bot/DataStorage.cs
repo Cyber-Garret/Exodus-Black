@@ -18,6 +18,14 @@ namespace Bot
 			return JsonConvert.DeserializeObject<T>(json);
 		}
 
+		internal static void StoreObject(object obj, string filePath, bool useIndentations)
+		{
+			var formatting = (useIndentations) ? Formatting.Indented : Formatting.None;
+
+			string json = JsonConvert.SerializeObject(obj, formatting);
+			File.WriteAllText(filePath, json);
+		}
+
 		private static string GetOrCreateFileContents(string filePath)
 		{
 			if (!File.Exists(filePath))

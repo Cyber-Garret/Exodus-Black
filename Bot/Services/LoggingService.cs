@@ -19,6 +19,7 @@ namespace Bot.Services
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
 		private readonly CommandService command;
+		private readonly EmoteService emote;
 
 		public LoggingService(IServiceProvider services)
 		{
@@ -26,6 +27,7 @@ namespace Bot.Services
 			discord = services.GetRequiredService<DiscordSocketClient>();
 			command = services.GetRequiredService<CommandService>();
 			logger = services.GetRequiredService<ILogger<LoggingService>>();
+			emote = services.GetRequiredService<EmoteService>();
 		}
 
 		public void Configure()
@@ -38,61 +40,72 @@ namespace Bot.Services
 		}
 
 		// this method executes on the bot being connected/ready
-		private Task OnReadyAsync()
+		public Task OnReadyAsync()
 		{
-			logger.LogInformation($"Connected as -> [{discord.CurrentUser}] :)");
+			Task.Run(() =>
+			{
+				logger.LogWarning($"Капитан, я подключилась под аккаунтом -> [{discord.CurrentUser}] :)");
+				logger.LogInformation($"В данный момент я на {discord.Guilds.Count} серверах. ");
+
+				if (emote.Raid == null)
+					emote.Configure();
+			});
+
 			return Task.CompletedTask;
 		}
 
 		// this method executes on the bot being disconnected from Discord API
-		private Task OnDisconnectedAsync(Exception ex)
+		public Task OnDisconnectedAsync(Exception ex)
 		{
-			logger.LogInformation($"Bot disconnected. [{ex.Message}]");
+			logger.LogInformation($"Нейра отключена. [{ex.Message}]");
 			return Task.CompletedTask;
 		}
 
 		// this method switches out the severity level from Discord.Net's API, and logs appropriately
-		private Task OnLogAsync(LogMessage message)
+		public Task OnLogAsync(LogMessage msg)
 		{
-			string logText = $"{message.Source}: {message.Message}";
-			switch (message.Severity)
+			string logText = $"{msg.Source}: {msg.Message}";
+			switch (msg.Severity.ToString())
 			{
-				case LogSeverity.Critical:
+				case "Critical":
 					{
 						logger.LogCritical(logText);
 						break;
 					}
-				case LogSeverity.Error:
-					{
-						logger.LogError(logText);
-						break;
-					}
-				case LogSeverity.Warning:
+				case "Warning":
 					{
 						logger.LogWarning(logText);
 						break;
 					}
-				case LogSeverity.Info:
+				case "Info":
 					{
 						logger.LogInformation(logText);
 						break;
 					}
-				case LogSeverity.Verbose:
+				case "Verbose":
 					{
-						logger.LogTrace(logText);
+						logger.LogInformation(logText);
 						break;
 					}
-				case LogSeverity.Debug:
+				case "Debug":
 					{
 						logger.LogDebug(logText);
 						break;
 					}
-
+				case "Error":
+					{
+						logger.LogError(logText);
+						break;
+					}
 				default:
-					logger.LogWarning(logText);
-					break;
+					{
+						logger.LogWarning(logText);
+						break;
+					}
 			}
+
 			return Task.CompletedTask;
+
 		}
 	}
 }

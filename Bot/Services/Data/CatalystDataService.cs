@@ -7,12 +7,10 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 
-namespace Bot.Services
+namespace Bot.Services.Data
 {
-	public class CatalystDataService
+	public class CatalystDataService : DataConstants
 	{
-		private const string ResourcesFolder = "resources";
-		private const string CatalystsFolder = "catalysts";
 		private static readonly ConcurrentDictionary<string, Catalyst> CatalystCollection = new ConcurrentDictionary<string, Catalyst>();
 
 		private readonly ILogger logger;
@@ -27,9 +25,9 @@ namespace Bot.Services
 		/// <summary>
 		/// Load data from local json files to static ConcurrentDictionary for further usage.
 		/// </summary>
-		internal void LoadData()
+		public void LoadData()
 		{
-			var exoticsFolder = Directory.CreateDirectory(Path.Combine(RootDirectory, ResourcesFolder, CatalystsFolder));
+			var exoticsFolder = Directory.CreateDirectory(Path.Combine(RootDirectory, RootFolder, CatalystFolder));
 			var files = exoticsFolder.GetFiles("*.json");
 			if (files.Length > 0)
 			{
@@ -47,7 +45,7 @@ namespace Bot.Services
 		/// </summary>
 		/// <param name="name">Exotic gear name.(Allow full and partial)</param>
 		/// <returns>Class or Null</returns>
-		internal Catalyst SearchCatalyst(string name)
+		public Catalyst SearchCatalyst(string name)
 		{
 			var searchName = CatalystCollection.Keys.FirstOrDefault(key => key.Contains(Alias(name), StringComparison.InvariantCultureIgnoreCase));
 			if (searchName != null)

@@ -8,12 +8,10 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 
-namespace Bot.Services
+namespace Bot.Services.Data
 {
-	public class ExoticDataService
+	public class ExoticDataService : DataConstants
 	{
-		private const string ResourcesFolder = "resources";
-		private const string ExoticsFolder = "exotics";
 		private static readonly ConcurrentDictionary<string, Exotic> ExoticCollection = new ConcurrentDictionary<string, Exotic>();
 
 		private readonly ILogger logger;
@@ -30,7 +28,8 @@ namespace Bot.Services
 		/// </summary>
 		internal void LoadData()
 		{
-			var exoticsFolder = Directory.CreateDirectory(Path.Combine(RootDirectory, ResourcesFolder, ExoticsFolder));
+			
+			var exoticsFolder = Directory.CreateDirectory(Path.Combine(RootDirectory, RootFolder, ExoticsFolder));
 			var files = exoticsFolder.GetFiles("*.json");
 			if (files.Length > 0)
 			{
@@ -41,7 +40,7 @@ namespace Bot.Services
 				}
 			}
 
-			this.logger.LogInformation($"Загружено {ExoticCollection.Count} ед. экзотического снаряжения.");
+			logger.LogInformation($"Загружено {ExoticCollection.Count} ед. экзотического снаряжения.");
 		}
 		/// <summary>
 		/// Search exotic by full or partial name and return class if founded or return null if not found.
