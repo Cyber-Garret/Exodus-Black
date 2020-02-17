@@ -54,6 +54,13 @@ namespace Bot.Services.Data
 			});
 		}
 
+		internal void SaveAccounts(params IGuild[] guilds)
+		{
+			foreach (var guild in guilds)
+			{
+				DataStorage.StoreObject(GetGuildAccount(guild.Id), Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{guild.Id}.json"), useIndentations: true);
+			}
+		}
 		/// <summary>
 		/// Saves one or multiple Discord guild accounts by provided Ids
 		/// </summary>

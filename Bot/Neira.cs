@@ -69,6 +69,10 @@ namespace Bot
 		{
 			await discord.SetStatusAsync(UserStatus.Offline);
 			await discord.StopAsync();
+
+			// save all guild accounts
+			guildData.SaveAccounts();
+			logger.LogInformation("Аккаунты успешно сохранены.");
 		}
 	}
 }

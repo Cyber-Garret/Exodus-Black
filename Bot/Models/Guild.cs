@@ -16,7 +16,7 @@ namespace Bot.Models
 		public string CommandPrefix { get; set; } = null;
 		public string GlobalMention { get; set; } = "@here";
 		public ulong SelfRoleMessageId { get; set; } = 0;
-		public IEnumerable<GuildSelfRole> GuildSelfRoles { get; set; } = new List<GuildSelfRole>();
+		public List<GuildSelfRole> GuildSelfRoles { get; set; } = new List<GuildSelfRole>();
 	}
 
 	public class GuildSelfRole
