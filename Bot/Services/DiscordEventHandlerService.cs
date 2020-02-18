@@ -11,6 +11,7 @@ using System.Linq;
 using System.IO;
 using ImageMagick;
 using System.Net;
+using Bot.Services.Data;
 
 namespace Bot.Services
 {
@@ -22,14 +23,16 @@ namespace Bot.Services
 		private readonly CommandHandlerService commandHandler;
 		//private readonly MilestoneService milestone;
 		private readonly EmoteService emote;
-		//private readonly GuildSelfRoleService roleService;
-
+		private readonly SelfRoleService roleService;
+		private readonly GuildDataService guildData;
 		public DiscordEventHandlerService(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			commandHandler = service.GetRequiredService<CommandHandlerService>();
 			emote = service.GetRequiredService<EmoteService>();
+			guildData = service.GetRequiredService<GuildDataService>();
+			roleService = service.GetRequiredService<SelfRoleService>();
 		}
 
 		public void Configure()
@@ -57,19 +60,19 @@ namespace Bot.Services
 		}
 
 		#region Events
-		private Task Discord_JoinedGuild(SocketGuild arg)
+		private Task Discord_JoinedGuild(SocketGuild guild)
 		{
-			Task.Run(async () =>
-			{//TODO: Guilds in JSON
-			 //await DatabaseHelper.GetGuildAccountAsync(guild.Id);
+			Task.Run(() =>
+			{
+				guildData.GetGuildAccount(guild);
 			});
 			return Task.CompletedTask;
 		}
 
 		private Task Discord_LeftGuild(SocketGuild arg)
 		{
-			Task.Run(async () =>
-			{//TODO: Guilds in JSON
+			Task.Run(() =>
+			{//TODO: Remove guild(or mark is deleted) and send message for guild owner
 			 //await DatabaseHelper.RemoveGuildAccountAsync(guild.Id);
 			});
 			return Task.CompletedTask;
@@ -165,14 +168,14 @@ namespace Bot.Services
 				await UserJoined(guildUser);
 				await UserWelcome(guildUser);
 				//AutoRole
-				//TODO: Guilds in JSON
-				//var guild = await DatabaseHelper.GetGuildAccountAsync(guildUser.Guild.Id);
-				//if (guild.AutoroleID != 0)
-				//{
-				//	var targetRole = guildUser.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleID);
-				//	if (targetRole != null)
-				//		await guildUser.AddRoleAsync(targetRole);
-				//}
+
+				var guild = guildData.GetGuildAccount(guildUser.Guild);
+				if (guild.AutoroleID != 0)
+				{
+					var targetRole = guildUser.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleID);
+					if (targetRole != null)
+						await guildUser.AddRoleAsync(targetRole);
+				}
 			});
 			return Task.CompletedTask;
 		}
@@ -200,8 +203,8 @@ namespace Bot.Services
 					|| reaction.Emote.Equals(emote.ReactFifth)
 					|| reaction.Emote.Equals(emote.ReactSixth)) ;
 					//	await milestone.MilestoneReactionAdded(cacheable, reaction);
-					//TODO: Milestone and Self Role services
-					//await roleService.SelfRoleReactionAdded(cacheable, reaction);
+					//TODO: Milestone service
+					await roleService.SelfRoleReactionAdded(cacheable, reaction);
 
 				}
 			});
@@ -221,8 +224,8 @@ namespace Bot.Services
 					|| reaction.Emote.Equals(emote.ReactFifth)
 					|| reaction.Emote.Equals(emote.ReactSixth)) ;
 				//await milestone.MilestoneReactionRemoved(cacheable, reaction);
-				//TODO: Milestone and Self Role services
-				//await roleService.SelfRoleReactionRemoved(cacheable, reaction);
+				//TODO: Milestone services
+				await roleService.SelfRoleReactionRemoved(cacheable, reaction);
 			});
 			return Task.CompletedTask;
 		}
@@ -258,13 +261,13 @@ namespace Bot.Services
 				#endregion
 
 				var currentIGuildChannel = (IGuildChannel)arg;
-				//TODO: Guilds in JSON
-				//var guild = DatabaseHelper.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
-				//if (guild.LoggingChannel != 0)
-				//{
-				//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-				//		.SendMessageAsync(null, false, embed.Build());
-				//}
+
+				var guild = guildData.GetGuildAccount(currentIGuildChannel.Guild);
+				if (guild.LoggingChannel != 0)
+				{
+					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						.SendMessageAsync(null, false, embed.Build());
+				}
 			}
 			catch (Exception ex)
 			{
@@ -301,13 +304,13 @@ namespace Bot.Services
 				#endregion
 
 				if (arg is IGuildChannel currentIguildChannel)
-				{//TODO: Guilds in JSON
-				 //var guild = DatabaseHelper.GetGuildAccountAsync(currentIguildChannel.Guild.Id).Result;
-				 //if (guild.LoggingChannel != 0)
-				 //{
-				 //	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-				 //		.SendMessageAsync(null, false, embed.Build());
-				 //}
+				{
+					var guild = guildData.GetGuildAccount(currentIguildChannel.Guild);
+					if (guild.LoggingChannel != 0)
+					{
+						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+							.SendMessageAsync(null, false, embed.Build());
+					}
 				}
 
 			}
@@ -320,15 +323,10 @@ namespace Bot.Services
 		{
 			try
 			{
-				#region Checks
 				if (after == null || before == after || before.IsBot)
 					return;
-				#endregion
 
-				#region Data
-				//TODO: Guilds in JSON
-				//var guild = DatabaseHelper.GetGuildAccountAsync(before.Guild.Id).Result;
-				#endregion
+				var guild = guildData.GetGuildAccount(before.Guild);
 
 				#region Different Messages 
 				if (before.Nickname != after.Nickname)
@@ -357,11 +355,11 @@ namespace Bot.Services
 					}
 					#endregion
 
-					//if (guild.LoggingChannel != 0)
-					//{
-					//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-					//		.SendMessageAsync(null, false, embed.Build());
-					//}
+					if (guild.LoggingChannel != 0)
+					{
+						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+							.SendMessageAsync(null, false, embed.Build());
+					}
 				}
 
 				if (before.Roles.Count != after.Roles.Count)
@@ -408,11 +406,11 @@ namespace Bot.Services
 					}
 					#endregion
 
-					//if (guild.LoggingChannel != 0)
-					//{
-					//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-					//		.SendMessageAsync(null, false, embed.Build());
-					//}
+					if (guild.LoggingChannel != 0)
+					{
+						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+							.SendMessageAsync(null, false, embed.Build());
+					}
 				}
 				#endregion
 
@@ -429,8 +427,7 @@ namespace Bot.Services
 			{
 				if (arg3 is IGuildChannel currentIGuildChannel)
 				{
-					//TODO: Guilds in JSON
-					//var guild = DatabaseHelper.GetGuildAccountAsync(currentIGuildChannel.Guild.Id).Result;
+					var guild = guildData.GetGuildAccount(currentIGuildChannel.Guild);
 					if (messageAfter.Author.IsBot)
 						return;
 
@@ -503,12 +500,12 @@ namespace Bot.Services
 					}
 
 
-					//if (guild.LoggingChannel != 0)
-					//{
+					if (guild.LoggingChannel != 0)
+					{
 
-					//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-					//		.SendMessageAsync(null, false, embed.Build());
-					//}
+						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+							.SendMessageAsync(null, false, embed.Build());
+					}
 				}
 			}
 			catch (Exception ex)
@@ -525,8 +522,7 @@ namespace Bot.Services
 					return;
 				if (messageBefore.Value.Channel is ITextChannel textChannel)
 				{
-					//TODO: Guilds in JSON
-					//var guild = DatabaseHelper.GetGuildAccountAsync(textChannel.Guild.Id).Result;
+					var guild = guildData.GetGuildAccount(textChannel.Guild);
 
 					var log = await textChannel.Guild.GetAuditLogsAsync(1);
 					var audit = log.ToList();
@@ -572,12 +568,12 @@ namespace Bot.Services
 						embedDel.AddField("Текст сообщения", $"{messageBefore.Value.Content}");
 					}
 
-					//if (guild.LoggingChannel != 0)
-					//{
+					if (guild.LoggingChannel != 0)
+					{
 
-					//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-					//		.SendMessageAsync(null, false, embedDel.Build());
-					//}
+						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+							.SendMessageAsync(null, false, embedDel.Build());
+					}
 				}
 			}
 			catch (Exception ex)
@@ -586,34 +582,34 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task RoleCreated(SocketRole arg)
+		private async Task RoleCreated(SocketRole role)
 		{
 			try
 			{
 				#region Data
-				var log = await arg.Guild.GetAuditLogsAsync(1).FlattenAsync();
+				var log = await role.Guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
 				var check = audit[0].Data as RoleCreateAuditLogData;
 				var name = "Неизвестно";
 				var embed = new EmbedBuilder();
-				if (check?.RoleId == arg.Id)
+				if (check?.RoleId == role.Id)
 					name = audit[0].User.Username;
 				#endregion
 
 				#region Message
 				embed.WithColor(Color.Orange);
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
-				embed.AddField("🔑 Создана роль", $"Название: **{arg.Name}**");
+				embed.AddField("🔑 Создана роль", $"Название: **{role.Name}**");
 				embed.WithFooter($"Кто создавал: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 				#endregion
-				//TODO: Guilds in JSON
-				//var guild = DatabaseHelper.GetGuildAccountAsync(arg.Guild.Id).Result;
 
-				//if (guild.LoggingChannel != 0)
-				//{
-				//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-				//		.SendMessageAsync(null, false, embed.Build());
-				//}
+				var guild = guildData.GetGuildAccount(role.Guild);
+
+				if (guild.LoggingChannel != 0)
+				{
+					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						.SendMessageAsync(null, false, embed.Build());
+				}
 			}
 			catch (Exception ex)
 			{
@@ -621,17 +617,17 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task RoleDeleted(SocketRole arg)
+		private async Task RoleDeleted(SocketRole role)
 		{
 			try
 			{
 				#region Data
-				var log = await arg.Guild.GetAuditLogsAsync(1).FlattenAsync();
+				var log = await role.Guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
 				var check = audit[0].Data as RoleDeleteAuditLogData;
 				var name = "Неизвестно";
 				var embed = new EmbedBuilder();
-				if (check?.RoleId == arg.Id)
+				if (check?.RoleId == role.Id)
 					name = audit[0].User.Username;
 				#endregion
 
@@ -639,18 +635,18 @@ namespace Bot.Services
 				embed.WithColor(Color.Red);
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
 				embed.AddField("❌ Удалена роль",
-					$"Название: **{arg.Name}**\n" +
-					$"Цвет: **{arg.Color}**");
+					$"Название: **{role.Name}**\n" +
+					$"Цвет: **{role.Color}**");
 				embed.WithFooter($"Кто удалял: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 				#endregion
-				//TODO: Guilds in JSON
-				//var guild = DatabaseHelper.GetGuildAccountAsync(arg.Guild.Id).Result;
 
-				//if (guild.LoggingChannel != 0)
-				//{
-				//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-				//		.SendMessageAsync(null, false, embed.Build());
-				//}
+				var guild = guildData.GetGuildAccount(role.Guild);
+
+				if (guild.LoggingChannel != 0)
+				{
+					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						.SendMessageAsync(null, false, embed.Build());
+				}
 			}
 			catch (Exception ex)
 			{
@@ -664,13 +660,13 @@ namespace Bot.Services
 			{
 				#region Checks
 				if (user == null || user.IsBot) return;
-				//TODO: Guilds in JSON
-				//var guild = DatabaseHelper.GetGuildAccountAsync(user.Guild.Id).Result;
-				//if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
+
+				var guild = guildData.GetGuildAccount(user.Guild);
+				if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
 				#endregion
 
 				IDMChannel dM = await user.GetOrCreateDMChannelAsync();
-
+				//TODO: Welcome embed
 				//await dM.SendMessageAsync(null, false, MiscHelpers.WelcomeEmbed(user, guild.WelcomeMessage).Build());
 			}
 			catch (Exception ex)
@@ -682,10 +678,10 @@ namespace Bot.Services
 		private async Task UserWelcome(SocketGuildUser user)
 		{
 			try
-			{//TODO: Guilds in JSON
-			 //var guild = await DatabaseHelper.GetGuildAccountAsync(user.Guild.Id);
-			 //if (guild.WelcomeChannel == 0) return;
-			 //if (!(discord.GetChannel(guild.WelcomeChannel) is SocketTextChannel channel)) return;
+			{
+				var guild = guildData.GetGuildAccount(user.Guild.Id);
+				if (guild.WelcomeChannel == 0) return;
+				if (!(discord.GetChannel(guild.WelcomeChannel) is SocketTextChannel channel)) return;
 				string[] randomWelcome =
 					{
 					"Опять Кабал? ©Ашер",
@@ -743,7 +739,7 @@ namespace Bot.Services
 				image.Composite(avatar, 40, 33, CompositeOperator.Over);
 
 				image.Composite(label, 251, 5, CompositeOperator.Over);
-				//await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
+				await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
 			}
 			catch (Exception ex)
 			{
@@ -751,17 +747,17 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task UserLeft(SocketGuildUser arg)
+		private async Task UserLeft(SocketGuildUser user)
 		{
 			try
 			{
 				#region Checks
-				if (arg == null || arg.IsBot)
+				if (user == null || user.IsBot)
 					return;
 				#endregion
 
 				#region Data
-				var log = await arg.Guild.GetAuditLogsAsync(1).FlattenAsync();
+				var log = await user.Guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
 				var embed = new EmbedBuilder();
 				#endregion
@@ -770,15 +766,15 @@ namespace Bot.Services
 				embed.WithColor(Color.Red);
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
 				embed.WithTitle("💢 Страж покинул сервер");
-				embed.WithThumbnailUrl($"{arg.GetAvatarUrl() ?? arg.GetDefaultAvatarUrl()}");
+				embed.WithThumbnailUrl($"{user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()}");
 				embed.AddField(GlobalVariables.InvisibleString,
-					$"На корабле был известен как:\n**{arg.Nickname ?? arg.Username}**\n" +
-					$"Discord имя стража\n**{arg.Username}#{arg.Discriminator}**");
-				embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", arg.Mention);
+					$"На корабле был известен как:\n**{user.Nickname ?? user.Username}**\n" +
+					$"Discord имя стража\n**{user.Username}#{user.Discriminator}**");
+				embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", user.Mention);
 				if (audit[0].Action == ActionType.Kick)
 				{
 					var test = audit[0].Data as KickAuditLogData;
-					if (test.Target.Id == arg.Id)
+					if (test.Target.Id == user.Id)
 					{
 						embed.WithTitle("🦶 Страж был выгнан");
 						var name = audit[0].User.Username ?? "Неизвестно";
@@ -790,7 +786,7 @@ namespace Bot.Services
 				if (audit[0].Action == ActionType.Ban)
 				{
 					var test = audit[0].Data as BanAuditLogData;
-					if (test.Target.Id == arg.Id)
+					if (test.Target.Id == user.Id)
 					{
 						embed.WithTitle("🔨 Страж был забанен");
 						var name = audit[0].User.Username ?? "Неизвестно";
@@ -799,15 +795,15 @@ namespace Bot.Services
 							 $"Кто забанил: {name}");
 					}
 				}
-				embed.WithFooter($"Если ссылка на профиль некорректно отображается то просто скопируй <@{arg.Id}> вместе с <> и отправь в любой чат сообщением.");
+				embed.WithFooter($"Если ссылка на профиль некорректно отображается то просто скопируй <@{user.Id}> вместе с <> и отправь в любой чат сообщением.");
 				#endregion
-				//TODO: Guilds in JSON
-				//var guild = await DatabaseHelper.GetGuildAccountAsync(arg.Guild.Id);
-				//if (guild.LoggingChannel != 0)
-				//{
-				//	await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-				//		.SendMessageAsync(null, false, embed.Build());
-				//}
+
+				var guild = guildData.GetGuildAccount(user.Guild);
+				if (guild.LoggingChannel != 0)
+				{
+					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						.SendMessageAsync(null, false, embed.Build());
+				}
 			}
 			catch (Exception ex)
 			{

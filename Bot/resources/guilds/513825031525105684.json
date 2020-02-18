@@ -1,0 +1,13 @@
+{
+  "Id": 513825031525105684,
+  "NotificationChannel": 0,
+  "LoggingChannel": 0,
+  "WelcomeChannel": 0,
+  "WelcomeMessage": null,
+  "LeaveMessage": null,
+  "AutoroleID": 0,
+  "CommandPrefix": null,
+  "GlobalMention": "@here",
+  "SelfRoleMessageId": 0,
+  "GuildSelfRoles": []
+}

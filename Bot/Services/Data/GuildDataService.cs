@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Bot.Services.Data
@@ -52,6 +53,16 @@ namespace Bot.Services.Data
 				DataStorage.StoreObject(newAccount, Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{id}.json"), useIndentations: true);
 				return newAccount;
 			});
+		}
+
+		/// <summary>
+		/// Used for find guild settings by self role message id.
+		/// </summary>
+		/// <param name="id">Saved message ulong id</param>
+		/// <returns>Full guild account settings</returns>
+		internal Guild FindBySelRoleMessage(ulong id)
+		{
+			return guildAccounts.Values.FirstOrDefault(g => g.SelfRoleMessageId == id);
 		}
 
 		internal void SaveAccounts(params IGuild[] guilds)

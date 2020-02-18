@@ -8,6 +8,19 @@
   "AutoroleID": 0,
   "CommandPrefix": null,
   "GlobalMention": "@here",
-  "SelfRoleMessageId": 0,
-  "GuildSelfRoles": []
+  "SelfRoleMessageId": 679304419153674241,
+  "GuildSelfRoles": [
+    {
+      "EmoteID": 640837445142839298,
+      "RoleID": 613667907951394824
+    },
+    {
+      "EmoteID": 640837445369200659,
+      "RoleID": 633645853235740674
+    },
+    {
+      "EmoteID": 636564442053869578,
+      "RoleID": 587894672630743041
+    }
+  ]
 }

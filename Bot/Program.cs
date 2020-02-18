@@ -62,7 +62,8 @@ namespace Bot
 						.AddSingleton<LoggingService>()
 						.AddSingleton<DiscordEventHandlerService>()
 						.AddSingleton<CommandHandlerService>()
-						.AddSingleton<EmoteService>();
+						.AddSingleton<EmoteService>()
+						.AddSingleton<SelfRoleService>();
 					})
 					.ConfigureAppConfiguration((hostingContext, config) =>
 					{

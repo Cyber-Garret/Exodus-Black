@@ -20,7 +20,7 @@ namespace Bot.Modules
 	[Cooldown(5)]
 	public class SelfRoleModule : InteractiveBase
 	{
-		GuildDataService guildData;
+		private readonly GuildDataService guildData;
 
 		public SelfRoleModule(IServiceProvider service)
 		{
@@ -45,7 +45,7 @@ namespace Bot.Modules
 
 			if (role == null || emote == null)
 			{
-				await ReplyAndDeleteAsync("Капитан, ты не указал роль и\\или эмодзи.");
+				await ReplyAndDeleteAsync(@"Капитан, ты не указал роль и\\или эмодзи.");
 				return;
 			}
 			var guild = guildData.GetGuildAccount(Context.Guild);
@@ -63,7 +63,7 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync($"Успех! Капитан я сохранила данную связку роли {role.Mention} и {emote} в своей базе данных.", timeout: TimeSpan.FromSeconds(30));
 			}
 			else
-				await ReplyAndDeleteAsync("Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей.");
+				await ReplyAndDeleteAsync(@"Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей.");
 
 		}
 
@@ -87,11 +87,11 @@ namespace Bot.Modules
 		[Summary("Отображает список авторолей и привязанные к ним эмодзи.")]
 		public async Task ListGuildRole()
 		{
-			var roles = await DatabaseHelper.GetGuildAllSelfRolesAsync(Context.Guild.Id);
-			if (roles.Count > 0)
+			var guild = guildData.GetGuildAccount(Context.Guild);
+			if (guild.GuildSelfRoles.Count > 0)
 			{
 				var message = "В моей базе записанны такие автороли и эмодзи привязанные к ним:\n";
-				foreach (var item in roles)
+				foreach (var item in guild.GuildSelfRoles)
 				{
 					var emote = await Context.Guild.GetEmoteAsync(item.EmoteID);
 					var role = Context.Guild.GetRole(item.RoleID);
@@ -99,7 +99,8 @@ namespace Bot.Modules
 				}
 				await ReplyAndDeleteAsync(message, timeout: TimeSpan.FromMinutes(1));
 			}
-			await ReplyAndDeleteAsync("Капитан, в мой базе не записанно ни одной автороли.");
+			else
+				await ReplyAndDeleteAsync("Капитан, в мой базе не записанно ни одной автороли.");
 		}
 
 		[Command("РазместитьРоли"), Alias("рр")]
@@ -111,24 +112,52 @@ namespace Bot.Modules
 		{
 			if (string.IsNullOrWhiteSpace(text)) return;
 
-			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
-			var guildRoles = await DatabaseHelper.GetGuildAllSelfRolesAsync(Context.Guild.Id);
-			if (guildRoles.Count() < 2)
+			var guild = guildData.GetGuildAccount(Context.Guild);
+			if (guild.GuildSelfRoles.Count < 2)
 			{
-				await ReplyAndDeleteAsync($"Капитан, добавль больше авторолей чтобы я могла разместить сообщение.");
+				await ReplyAndDeleteAsync($"Капитан, добавь больше авторолей чтобы я могла разместить сообщение.");
 				return;
 			}
 
-			var message = await ReplyAsync(embed: await EmbedsHelper.SelfRoleMessageAsync(Context, guildRoles, text));
+			var message = await ReplyAsync(embed: await SelfRoleMessageAsync(Context, guild.GuildSelfRoles, text));
 
 			guild.SelfRoleMessageId = message.Id;
-			await DatabaseHelper.SaveGuildAccountAsync(guild);
+			guildData.SaveAccounts(Context.Guild);
 
-			foreach (var role in guildRoles)
+			foreach (var role in guild.GuildSelfRoles)
 			{
 				var emote = await Context.Guild.GetEmoteAsync(role.EmoteID);
 				await message.AddReactionAsync(emote);
 			}
 		}
+
+		#region Methods
+		private static async Task<Embed> SelfRoleMessageAsync(SocketCommandContext Context, List<GuildSelfRole> GuildRoles, string text)
+		{
+			//Initial Embed
+			var embed = new EmbedBuilder
+			{
+				Color = Color.Gold,
+				Description = text
+			};
+			//Add guild as Author
+			embed.WithAuthor(Context.Guild.Name, Context.Guild.IconUrl);
+			//Create field with roles and associated emotes
+			var embedField = new EmbedFieldBuilder
+			{
+				Name = GlobalVariables.InvisibleString
+			};
+			foreach (var item in GuildRoles)
+			{
+				var emote = await Context.Guild.GetEmoteAsync(item.EmoteID);
+				var role = Context.Guild.GetRole(item.RoleID);
+				embedField.Value += $"Нажми на {emote} что бы получить роль {role.Mention}\n";
+			}
+			embed.AddField(embedField);
+
+			return embed.Build();
+		}
+		#endregion
+
 	}
 }

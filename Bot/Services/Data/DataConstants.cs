@@ -14,7 +14,7 @@ namespace Bot.Services.Data
 
 		public DataConstants()
 		{
-			//TODO Check directories exist? If not create.
+			//TODO Check directories exist? and path system
 		}
 	}
 }
