@@ -1,4 +1,5 @@
-﻿using Bot.Models;
+﻿using Bot.Core.Data;
+using Bot.Models;
 
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,7 @@ using System.Linq;
 
 namespace Bot.Services.Data
 {
-	public class ExoticDataService : DataConstants
+	public class ExoticDataService : PathConstants
 	{
 		private static readonly ConcurrentDictionary<string, Exotic> ExoticCollection = new ConcurrentDictionary<string, Exotic>();
 

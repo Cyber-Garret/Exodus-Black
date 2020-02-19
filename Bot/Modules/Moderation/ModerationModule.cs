@@ -18,9 +18,9 @@ namespace Bot.Modules
 {
 	[RequireUserPermission(GuildPermission.Administrator,
 			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану и его избранным стражам.",
-			NotAGuildErrorMessage = GlobalVariables.NotInGuildText)]
+			NotAGuildErrorMessage = NotInGuildText)]
 	[Cooldown(5)]
-	public class ModerationModule : InteractiveBase
+	public class ModerationModule : BaseModule
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
@@ -374,6 +374,7 @@ namespace Bot.Modules
 				var embed = new EmbedBuilder()
 					.WithColor(Color.Gold);
 				var field = new EmbedFieldBuilder();
+				var random = new Random();
 				//Chose right field name by count
 				if (count == 1)
 					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этого стража:";
@@ -381,7 +382,7 @@ namespace Bot.Modules
 					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этих стражей:";
 				for (int i = 0; i < count; i++)
 				{
-					var num = GlobalVariables.GetRandom.Next(0, filteredusers.Count());
+					var num = random.Next(0, filteredusers.Count());
 					//Pick random user
 					var user = filteredusers.ElementAt(num);
 

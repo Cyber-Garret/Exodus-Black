@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
-
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
-namespace Bot
+namespace Bot.Core.Data
 {
-	internal class DataStorage
+	internal static class DataStorage
 	{
 		/// <summary>
 		/// Create or read file content by full path and return mapped to class json content
@@ -18,12 +20,18 @@ namespace Bot
 			return JsonConvert.DeserializeObject<T>(json);
 		}
 
-		internal static void StoreObject(object obj, string filePath, bool useIndentations)
+		internal static void SaveObject(object obj, string filePath, bool useIndentations)
 		{
 			var formatting = (useIndentations) ? Formatting.Indented : Formatting.None;
 
 			string json = JsonConvert.SerializeObject(obj, formatting);
 			File.WriteAllText(filePath, json);
+		}
+
+		internal static void RemoveObject(string filePath)
+		{
+			if (File.Exists(filePath))
+				File.Delete(filePath);
 		}
 
 		private static string GetOrCreateFileContents(string filePath)

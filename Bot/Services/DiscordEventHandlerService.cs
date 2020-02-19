@@ -711,8 +711,8 @@ namespace Bot.Services
 					"Так я прав... или я прав? ©Кейд-6",
 					"Сколько раз стиралась моя система? 41,42,43? ©Банши-44" };
 
-				string welcomeMessage = randomWelcome[GlobalVariables.GetRandom.Next(randomWelcome.Length)];
-				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{GlobalVariables.GetRandom.Next(1, 31)}.jpg");
+				string welcomeMessage = randomWelcome[ConstVariables.GetRandom.Next(randomWelcome.Length)];
+				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{ConstVariables.GetRandom.Next(1, 31)}.jpg");
 
 				using var image = new MagickImage(background, 512, 200);
 				var readSettings = new MagickReadSettings
@@ -767,7 +767,7 @@ namespace Bot.Services
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
 				embed.WithTitle("💢 Страж покинул сервер");
 				embed.WithThumbnailUrl($"{user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()}");
-				embed.AddField(GlobalVariables.InvisibleString,
+				embed.AddField(ConstVariables.InvisibleString,
 					$"На корабле был известен как:\n**{user.Nickname ?? user.Username}**\n" +
 					$"Discord имя стража\n**{user.Username}#{user.Discriminator}**");
 				embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", user.Mention);

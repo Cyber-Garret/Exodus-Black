@@ -1,3 +1,4 @@
+using Bot.Core.QuartzJobs;
 using Bot.Services;
 using Bot.Services.Data;
 
@@ -10,6 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
 using Serilog;
 using Serilog.Core;
@@ -44,6 +49,10 @@ namespace Bot
 					.ConfigureServices((hostContext, services) =>
 					{
 						services.AddHostedService<Neira>();
+						// Quartz services
+						services.AddHostedService<Quartz>();
+						services.AddSingleton<IJobFactory, SingletonJobFactory>();
+						services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 						// File storages
 						services.AddSingleton<ExoticDataService>();
 						services.AddSingleton<CatalystDataService>();
@@ -64,6 +73,16 @@ namespace Bot
 						.AddSingleton<CommandHandlerService>()
 						.AddSingleton<EmoteService>()
 						.AddSingleton<SelfRoleService>();
+						// Quartz jobs
+						services.AddSingleton<XurArrive>();
+						services.AddSingleton<XurLeave>();
+						services.AddSingleton<MilestoneRemind>();
+						// Quartz triggers
+						var hour = hostContext.Configuration.GetSection("Bot:XurHour").Get<int>();
+						services.AddSingleton(new JobSchedule(typeof(XurArrive), $"0 0 {hour} ? * FRI")); // run every Friday in 20:00
+						services.AddSingleton(new JobSchedule(typeof(XurLeave), $"0 0 {hour} ? * TUE")); // run every Tuesday in 20:00
+
+						services.AddSingleton(new JobSchedule(typeof(MilestoneRemind), "0/10 * * * * ?")); // run every 10 seconds.
 					})
 					.ConfigureAppConfiguration((hostingContext, config) =>
 					{

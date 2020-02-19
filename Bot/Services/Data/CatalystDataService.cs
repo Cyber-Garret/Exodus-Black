@@ -1,7 +1,9 @@
-﻿using Bot.Models;
+﻿using Bot.Core.Data;
+using Bot.Models;
 
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -9,7 +11,7 @@ using System.Linq;
 
 namespace Bot.Services.Data
 {
-	public class CatalystDataService : DataConstants
+	public class CatalystDataService : PathConstants
 	{
 		private static readonly ConcurrentDictionary<string, Catalyst> CatalystCollection = new ConcurrentDictionary<string, Catalyst>();
 

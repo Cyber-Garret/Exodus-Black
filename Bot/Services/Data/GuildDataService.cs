@@ -1,4 +1,5 @@
-﻿using Bot.Models;
+﻿using Bot.Core.Data;
+using Bot.Models;
 using Discord;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace Bot.Services.Data
 {
-	public class GuildDataService : DataConstants
+	public class GuildDataService : PathConstants
 	{
 		private static readonly ConcurrentDictionary<ulong, Guild> guildAccounts = new ConcurrentDictionary<ulong, Guild>();
 
@@ -50,7 +51,7 @@ namespace Bot.Services.Data
 			return guildAccounts.GetOrAdd(id, (key) =>
 			{
 				var newAccount = new Guild { Id = id };
-				DataStorage.StoreObject(newAccount, Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{id}.json"), useIndentations: true);
+				DataStorage.SaveObject(newAccount, Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{id}.json"), useIndentations: true);
 				return newAccount;
 			});
 		}
@@ -69,7 +70,7 @@ namespace Bot.Services.Data
 		{
 			foreach (var guild in guilds)
 			{
-				DataStorage.StoreObject(GetGuildAccount(guild.Id), Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{guild.Id}.json"), useIndentations: true);
+				DataStorage.SaveObject(GetGuildAccount(guild.Id), Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{guild.Id}.json"), useIndentations: true);
 			}
 		}
 		/// <summary>
@@ -79,7 +80,7 @@ namespace Bot.Services.Data
 		{
 			foreach (var id in ids)
 			{
-				DataStorage.StoreObject(GetGuildAccount(id), Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{id}.json"), useIndentations: true);
+				DataStorage.SaveObject(GetGuildAccount(id), Path.Combine(RootDirectory, RootFolder, GuildsFolder, $"{id}.json"), useIndentations: true);
 			}
 		}
 

@@ -1,20 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Bot.Services;
 using Bot.Services.Data;
+
 using Discord;
 using Discord.WebSocket;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Bot
 {
-	public class Neira : IHostedService
+	public class Neira : BackgroundService
 	{
 		private readonly IConfiguration config;
 		private readonly IServiceProvider service;
@@ -23,6 +24,8 @@ namespace Bot
 		private readonly ExoticDataService exoticData;
 		private readonly CatalystDataService catalystData;
 		private readonly GuildDataService guildData;
+		private readonly MilestoneInfoDataService milestoneInfoData;
+		private readonly MilestoneDataService milestoneData;
 
 		public Neira(IServiceProvider service)
 		{
@@ -33,17 +36,22 @@ namespace Bot
 			catalystData = service.GetRequiredService<CatalystDataService>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			guildData = service.GetRequiredService<GuildDataService>();
+			milestoneInfoData = service.GetRequiredService<MilestoneInfoDataService>();
+			milestoneData = service.GetRequiredService<MilestoneDataService>();
 		}
 
-		public async Task StartAsync(CancellationToken cancellationToken)
+		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
 		{
 			try
 			{
-				var token = config["Bot:Token"];
 				// Load data from local json files to in memory dictionaries.
 				exoticData.LoadData();
 				catalystData.LoadData();
 				guildData.LoadData();
+				milestoneInfoData.LoadData();
+				milestoneData.LoadData();
+
+				var token = config["Bot:Token"];
 
 				service.GetRequiredService<LoggingService>().Configure();
 				service.GetRequiredService<DiscordEventHandlerService>().Configure();
@@ -65,7 +73,7 @@ namespace Bot
 			}
 		}
 
-		public async Task StopAsync(CancellationToken cancellationToken)
+		public override async Task StopAsync(CancellationToken cancellationToken)
 		{
 			await discord.SetStatusAsync(UserStatus.Offline);
 			await discord.StopAsync();
@@ -73,6 +81,10 @@ namespace Bot
 			// save all guild accounts
 			guildData.SaveAccounts();
 			logger.LogInformation("Аккаунты успешно сохранены.");
+			milestoneData.SaveMilestones();
+			logger.LogInformation("Активности успешно сохранены.");
+			
+			discord.Dispose();
 		}
 	}
 }

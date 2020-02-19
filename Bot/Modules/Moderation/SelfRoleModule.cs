@@ -16,9 +16,9 @@ namespace Bot.Modules
 {
 	[RequireUserPermission(GuildPermission.Administrator,
 			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану и его избранным стражам.",
-			NotAGuildErrorMessage = GlobalVariables.NotInGuildText)]
+			NotAGuildErrorMessage = NotInGuildText)]
 	[Cooldown(5)]
-	public class SelfRoleModule : InteractiveBase
+	public class SelfRoleModule : BaseModule
 	{
 		private readonly GuildDataService guildData;
 
@@ -145,7 +145,7 @@ namespace Bot.Modules
 			//Create field with roles and associated emotes
 			var embedField = new EmbedFieldBuilder
 			{
-				Name = GlobalVariables.InvisibleString
+				Name = InvisibleString
 			};
 			foreach (var item in GuildRoles)
 			{
