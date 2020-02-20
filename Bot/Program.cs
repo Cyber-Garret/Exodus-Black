@@ -1,6 +1,5 @@
 using Bot.Core.QuartzJobs;
 using Bot.Services;
-using Bot.Services.Data;
 
 using Discord;
 using Discord.Addons.Interactive;
@@ -53,10 +52,6 @@ namespace Bot
 						services.AddHostedService<Quartz>();
 						services.AddSingleton<IJobFactory, SingletonJobFactory>();
 						services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-						// File storages
-						services.AddSingleton<ExoticDataService>();
-						services.AddSingleton<CatalystDataService>();
-						services.AddSingleton<GuildDataService>();
 						// bot services
 						services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 						{
@@ -72,7 +67,8 @@ namespace Bot
 						.AddSingleton<DiscordEventHandlerService>()
 						.AddSingleton<CommandHandlerService>()
 						.AddSingleton<EmoteService>()
-						.AddSingleton<SelfRoleService>();
+						.AddSingleton<SelfRoleService>()
+						.AddSingleton<MilestoneService>();
 						// Quartz jobs
 						services.AddSingleton<XurArrive>();
 						services.AddSingleton<XurLeave>();

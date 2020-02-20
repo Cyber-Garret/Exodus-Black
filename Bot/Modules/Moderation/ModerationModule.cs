@@ -5,7 +5,7 @@ using Discord.Commands;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Bot.Services.Data;
+using Bot.Core.Data;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Discord.WebSocket;
@@ -24,12 +24,10 @@ namespace Bot.Modules
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
-		private readonly GuildDataService guildData;
 		public ModerationModule(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<ModerationModule>>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
-			guildData = service.GetRequiredService<GuildDataService>();
 		}
 
 		[Command("настройки")]
@@ -37,7 +35,7 @@ namespace Bot.Modules
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
 			string FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
@@ -52,7 +50,7 @@ namespace Bot.Modules
 				$"- Стражей на корабле: **{Context.Guild.Users.Count}**\n" +
 				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
 				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
-				$"- Оповещения о новых стражах и когда кто-то поднимает ур. я присылаю в **<#{guild.WelcomeChannel}>**\n" +
+				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**\n" +
 				$"- Глобальное упоминание в некоторых сообщениях: **{guild.GlobalMention ?? "Без упоминания"}**");
 
 			await ReplyAsync(embed: embed.Build());
@@ -64,7 +62,7 @@ namespace Bot.Modules
 		public async Task SetNotificationChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			var embed = new EmbedBuilder()
 				.WithTitle("Новостной канал");
@@ -84,7 +82,7 @@ namespace Bot.Modules
 			}
 
 			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 		}
 
 		[Command("логи")]
@@ -93,7 +91,7 @@ namespace Bot.Modules
 		public async Task SetLogChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			var embed = new EmbedBuilder()
 				.WithTitle("Технический канал");
@@ -113,7 +111,7 @@ namespace Bot.Modules
 			}
 
 			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 		}
 
 		[Command("приветствие")]
@@ -122,7 +120,7 @@ namespace Bot.Modules
 		public async Task SetWelcomeChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			var embed = new EmbedBuilder()
 				.WithTitle("Приветственный канал");
@@ -142,7 +140,7 @@ namespace Bot.Modules
 			}
 
 			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 		}
 
 		[Command("сохранить приветствие")]
@@ -154,11 +152,11 @@ namespace Bot.Modules
 			if (string.IsNullOrWhiteSpace(message)) return;
 
 			// Get or create personal guild settings
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			guild.WelcomeMessage = message;
 
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 
 			await ReplyAsync(":smiley: Приветственное сообщение сохранено.");
 		}
@@ -168,7 +166,7 @@ namespace Bot.Modules
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
 			{
@@ -185,20 +183,20 @@ namespace Bot.Modules
 		[Summary("Позволяет изменить префикс команд для сервера.")]
 		public async Task GuildPrefix(string prefix = null)
 		{
-			var config = guildData.GetGuildAccount(Context.Guild);
+			var config = GuildData.GetGuildAccount(Context.Guild);
 
 			string message;
 			if (prefix == null)
 			{
 				config.CommandPrefix = null;
-				guildData.SaveAccounts(Context.Guild);
+				GuildData.SaveAccounts(Context.Guild);
 
 				message = $"Для команд установлен префикс по умолчанию `!`";
 			}
 			else
 			{
 				config.CommandPrefix = prefix;
-				guildData.SaveAccounts(Context.Guild);
+				GuildData.SaveAccounts(Context.Guild);
 
 				message = $"Для команд установлен префикс `{prefix}`";
 			}
@@ -212,9 +210,9 @@ namespace Bot.Modules
 		[RequireBotPermission(GuildPermission.ManageRoles)]
 		public async Task AutoRoleRoleAdd(IRole _role)
 		{
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 			guild.AutoroleID = _role.Id;
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 
 			var embed = new EmbedBuilder
 			{
@@ -233,7 +231,7 @@ namespace Bot.Modules
 		[Summary("Изменяет упоминания в сборах и уведомлениях о Зуре here->everyone->Без упоминания и наоборот.")]
 		public async Task SetGuildMention(SocketRole role = null)
 		{
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 			if (role == null)
 			{
 				if (guild.GlobalMention == "@here")
@@ -250,7 +248,7 @@ namespace Bot.Modules
 				guild.GlobalMention = $"<@&{role.Id}>";
 			}
 
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 
 			await ReplyAsync($"Капитан, теперь в некоторых сообщениях я буду использовать {guild.GlobalMention ?? "**Без упоминания**"}");
 		}

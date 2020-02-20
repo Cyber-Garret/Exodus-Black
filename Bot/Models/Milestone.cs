@@ -12,12 +12,6 @@ namespace Bot.Models
 		public string Note { get; set; }
 		public ulong Leader { get; set; }
 		public DateTime DateExpire { get; set; }
-		public List<MilestoneUser> MilestoneUsers { get; set; } = new List<MilestoneUser>();
-	}
-
-	public class MilestoneUser
-	{
-		public byte? Place { get; set; }
-		public ulong UserId { get; set; }
+		public List<ulong> MilestoneUsers { get; set; } = new List<ulong>();
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Bot.Services.Data;
+﻿using Bot.Core.Data;
 
 using Discord;
 using Discord.WebSocket;
@@ -18,13 +18,11 @@ namespace Bot.Core.QuartzJobs
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
-		private readonly GuildDataService guildData;
 
 		public XurLeave(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<XurArrive>>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
-			guildData = service.GetRequiredService<GuildDataService>();
 		}
 		public Task Execute(IJobExecutionContext context)
 		{
@@ -34,7 +32,7 @@ namespace Bot.Core.QuartzJobs
 			{
 				try
 				{
-					var guild = guildData.GetGuildAccount(SocketGuild);
+					var guild = GuildData.GetGuildAccount(SocketGuild);
 
 					if (guild.NotificationChannel == 0) return;
 

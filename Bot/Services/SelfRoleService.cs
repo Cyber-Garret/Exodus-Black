@@ -1,4 +1,4 @@
-﻿using Bot.Services.Data;
+﻿using Bot.Core.Data;
 
 using Discord;
 using Discord.WebSocket;
@@ -15,12 +15,10 @@ namespace Bot.Services
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
-		private readonly GuildDataService guildData;
 		public SelfRoleService(IServiceProvider service)
 		{
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			logger = service.GetRequiredService<ILogger<SelfRoleService>>();
-			guildData = service.GetRequiredService<GuildDataService>();
 		}
 		public async Task SelfRoleReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
 		{
@@ -28,7 +26,7 @@ namespace Bot.Services
 			{
 				var msg = await cache.GetOrDownloadAsync();
 
-				var guild = guildData.FindBySelRoleMessage(msg.Id);
+				var guild = GuildData.FindGuildBySelfRoleMessage(msg.Id);
 
 				if (guild == null || guild.GuildSelfRoles.Count < 0) return;
 
@@ -54,7 +52,7 @@ namespace Bot.Services
 			{
 				var msg = await cache.GetOrDownloadAsync();
 
-				var guild = guildData.FindBySelRoleMessage(msg.Id);
+				var guild = GuildData.FindGuildBySelfRoleMessage(msg.Id);
 
 				if (guild == null || guild.GuildSelfRoles.Count < 0) return;
 

@@ -11,7 +11,7 @@ using System.Linq;
 using System.IO;
 using ImageMagick;
 using System.Net;
-using Bot.Services.Data;
+using Bot.Core.Data;
 
 namespace Bot.Services
 {
@@ -21,17 +21,16 @@ namespace Bot.Services
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
 		private readonly CommandHandlerService commandHandler;
-		//private readonly MilestoneService milestone;
+		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 		private readonly SelfRoleService roleService;
-		private readonly GuildDataService guildData;
 		public DiscordEventHandlerService(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			commandHandler = service.GetRequiredService<CommandHandlerService>();
+			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
-			guildData = service.GetRequiredService<GuildDataService>();
 			roleService = service.GetRequiredService<SelfRoleService>();
 		}
 
@@ -64,7 +63,7 @@ namespace Bot.Services
 		{
 			Task.Run(() =>
 			{
-				guildData.GetGuildAccount(guild);
+				GuildData.GetGuildAccount(guild);
 			});
 			return Task.CompletedTask;
 		}
@@ -169,7 +168,7 @@ namespace Bot.Services
 				await UserWelcome(guildUser);
 				//AutoRole
 
-				var guild = guildData.GetGuildAccount(guildUser.Guild);
+				var guild = GuildData.GetGuildAccount(guildUser.Guild);
 				if (guild.AutoroleID != 0)
 				{
 					var targetRole = guildUser.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleID);
@@ -196,14 +195,9 @@ namespace Bot.Services
 				if (!reaction.User.Value.IsBot)
 				{
 					//New milestone?
-					if (reaction.Emote.Equals(emote.Raid)
-					|| reaction.Emote.Equals(emote.ReactSecond)
-					|| reaction.Emote.Equals(emote.ReactThird)
-					|| reaction.Emote.Equals(emote.ReactFourth)
-					|| reaction.Emote.Equals(emote.ReactFifth)
-					|| reaction.Emote.Equals(emote.ReactSixth)) ;
-					//	await milestone.MilestoneReactionAdded(cacheable, reaction);
-					//TODO: Milestone service
+					if (reaction.Emote.Equals(emote.Raid))
+						await milestoneHandler.MilestoneReactionAdded(cacheable, reaction);
+					// self role message?
 					await roleService.SelfRoleReactionAdded(cacheable, reaction);
 
 				}
@@ -216,16 +210,13 @@ namespace Bot.Services
 			Task.Run(async () =>
 			{
 				if (!reaction.User.Value.IsBot)
+				{
 					//New milestone?
-					if (reaction.Emote.Equals(emote.Raid)
-					|| reaction.Emote.Equals(emote.ReactSecond)
-					|| reaction.Emote.Equals(emote.ReactThird)
-					|| reaction.Emote.Equals(emote.ReactFourth)
-					|| reaction.Emote.Equals(emote.ReactFifth)
-					|| reaction.Emote.Equals(emote.ReactSixth)) ;
-				//await milestone.MilestoneReactionRemoved(cacheable, reaction);
-				//TODO: Milestone services
-				await roleService.SelfRoleReactionRemoved(cacheable, reaction);
+					if (reaction.Emote.Equals(emote.Raid))
+						await milestoneHandler.MilestoneReactionRemoved(cacheable, reaction);
+
+					await roleService.SelfRoleReactionRemoved(cacheable, reaction);
+				}
 			});
 			return Task.CompletedTask;
 		}
@@ -262,7 +253,7 @@ namespace Bot.Services
 
 				var currentIGuildChannel = (IGuildChannel)arg;
 
-				var guild = guildData.GetGuildAccount(currentIGuildChannel.Guild);
+				var guild = GuildData.GetGuildAccount(currentIGuildChannel.Guild);
 				if (guild.LoggingChannel != 0)
 				{
 					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
@@ -305,7 +296,7 @@ namespace Bot.Services
 
 				if (arg is IGuildChannel currentIguildChannel)
 				{
-					var guild = guildData.GetGuildAccount(currentIguildChannel.Guild);
+					var guild = GuildData.GetGuildAccount(currentIguildChannel.Guild);
 					if (guild.LoggingChannel != 0)
 					{
 						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
@@ -326,7 +317,7 @@ namespace Bot.Services
 				if (after == null || before == after || before.IsBot)
 					return;
 
-				var guild = guildData.GetGuildAccount(before.Guild);
+				var guild = GuildData.GetGuildAccount(before.Guild);
 
 				#region Different Messages 
 				if (before.Nickname != after.Nickname)
@@ -427,7 +418,7 @@ namespace Bot.Services
 			{
 				if (arg3 is IGuildChannel currentIGuildChannel)
 				{
-					var guild = guildData.GetGuildAccount(currentIGuildChannel.Guild);
+					var guild = GuildData.GetGuildAccount(currentIGuildChannel.Guild);
 					if (messageAfter.Author.IsBot)
 						return;
 
@@ -522,7 +513,7 @@ namespace Bot.Services
 					return;
 				if (messageBefore.Value.Channel is ITextChannel textChannel)
 				{
-					var guild = guildData.GetGuildAccount(textChannel.Guild);
+					var guild = GuildData.GetGuildAccount(textChannel.Guild);
 
 					var log = await textChannel.Guild.GetAuditLogsAsync(1);
 					var audit = log.ToList();
@@ -603,7 +594,7 @@ namespace Bot.Services
 				embed.WithFooter($"Кто создавал: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 				#endregion
 
-				var guild = guildData.GetGuildAccount(role.Guild);
+				var guild = GuildData.GetGuildAccount(role.Guild);
 
 				if (guild.LoggingChannel != 0)
 				{
@@ -640,7 +631,7 @@ namespace Bot.Services
 				embed.WithFooter($"Кто удалял: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 				#endregion
 
-				var guild = guildData.GetGuildAccount(role.Guild);
+				var guild = GuildData.GetGuildAccount(role.Guild);
 
 				if (guild.LoggingChannel != 0)
 				{
@@ -661,7 +652,7 @@ namespace Bot.Services
 				#region Checks
 				if (user == null || user.IsBot) return;
 
-				var guild = guildData.GetGuildAccount(user.Guild);
+				var guild = GuildData.GetGuildAccount(user.Guild);
 				if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
 				#endregion
 
@@ -679,7 +670,7 @@ namespace Bot.Services
 		{
 			try
 			{
-				var guild = guildData.GetGuildAccount(user.Guild.Id);
+				var guild = GuildData.GetGuildAccount(user.Guild.Id);
 				if (guild.WelcomeChannel == 0) return;
 				if (!(discord.GetChannel(guild.WelcomeChannel) is SocketTextChannel channel)) return;
 				string[] randomWelcome =
@@ -711,8 +702,10 @@ namespace Bot.Services
 					"Так я прав... или я прав? ©Кейд-6",
 					"Сколько раз стиралась моя система? 41,42,43? ©Банши-44" };
 
-				string welcomeMessage = randomWelcome[ConstVariables.GetRandom.Next(randomWelcome.Length)];
-				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{ConstVariables.GetRandom.Next(1, 31)}.jpg");
+				var rand = new Random();
+
+				string welcomeMessage = randomWelcome[rand.Next(randomWelcome.Length)];
+				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{rand.Next(1, 31)}.jpg");
 
 				using var image = new MagickImage(background, 512, 200);
 				var readSettings = new MagickReadSettings
@@ -767,8 +760,7 @@ namespace Bot.Services
 				embed.WithTimestamp(DateTimeOffset.UtcNow);
 				embed.WithTitle("💢 Страж покинул сервер");
 				embed.WithThumbnailUrl($"{user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()}");
-				embed.AddField(ConstVariables.InvisibleString,
-					$"На корабле был известен как:\n**{user.Nickname ?? user.Username}**\n" +
+				embed.WithDescription($"На корабле был известен как:\n**{user.Nickname ?? user.Username}**\n" +
 					$"Discord имя стража\n**{user.Username}#{user.Discriminator}**");
 				embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", user.Mention);
 				if (audit[0].Action == ActionType.Kick)
@@ -798,7 +790,7 @@ namespace Bot.Services
 				embed.WithFooter($"Если ссылка на профиль некорректно отображается то просто скопируй <@{user.Id}> вместе с <> и отправь в любой чат сообщением.");
 				#endregion
 
-				var guild = guildData.GetGuildAccount(user.Guild);
+				var guild = GuildData.GetGuildAccount(user.Guild);
 				if (guild.LoggingChannel != 0)
 				{
 					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)

@@ -39,7 +39,6 @@ namespace Bot.Services
 				Arc = HomeGuild.Emotes.First(e => e.Name == "arc");
 				Solar = HomeGuild.Emotes.First(e => e.Name == "solar");
 				Void = HomeGuild.Emotes.First(e => e.Name == "void");
-				logger.LogInformation("Капитан, реакции Черного Исхода были успешно загружены.");
 			}
 			catch (Exception ex)
 			{

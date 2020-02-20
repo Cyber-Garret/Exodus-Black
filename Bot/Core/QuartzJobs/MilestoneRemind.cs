@@ -1,11 +1,12 @@
-﻿using Bot.Services;
-using Bot.Services.Data;
+﻿using Bot.Core.Data;
+using Bot.Services;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Quartz;
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bot.Core.QuartzJobs
@@ -14,19 +15,17 @@ namespace Bot.Core.QuartzJobs
 	public class MilestoneRemind : IJob
 	{
 		private readonly ILogger _logger;
-		private readonly MilestoneDataService milestoneData;
-		private readonly MilestoneHandlerService milestoneHandler;
+		private readonly MilestoneService milestoneHandler;
 		public MilestoneRemind(IServiceProvider service)
 		{
 			_logger = service.GetRequiredService<ILogger<MilestoneRemind>>();
-			milestoneData = service.GetRequiredService<MilestoneDataService>();
-			milestoneHandler = service.GetRequiredService<MilestoneHandlerService>();
+			milestoneHandler = service.GetRequiredService<MilestoneService>();
 		}
 		public Task Execute(IJobExecutionContext context)
 		{
 			var timer = DateTime.Now.AddMinutes(15);
 
-			var query = milestoneData.GetAllMilestones();
+			var query = ActiveMilestoneData.GetAllMilestones();
 
 			if (query.Count > 0)
 			{

@@ -1,6 +1,6 @@
 ﻿using Bot.Models;
 using Bot.Preconditions;
-using Bot.Services.Data;
+using Bot.Core.Data;
 using Discord;
 using Discord.Addons.Interactive;
 using Discord.Commands;
@@ -20,12 +20,6 @@ namespace Bot.Modules
 	[Cooldown(5)]
 	public class SelfRoleModule : BaseModule
 	{
-		private readonly GuildDataService guildData;
-
-		public SelfRoleModule(IServiceProvider service)
-		{
-			guildData = service.GetRequiredService<GuildDataService>();
-		}
 
 		[Command("ДобавитьРоль"), Alias("др")]
 		[Summary("Роль должна быть с возможностью @упоминания. Эмодзи можно использовать только серверные.")]
@@ -48,7 +42,7 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync(@"Капитан, ты не указал роль и\\или эмодзи.");
 				return;
 			}
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			if (!guild.GuildSelfRoles.Any(r => r.RoleID == role.Id || r.EmoteID == emote.Id))
 			{
@@ -58,7 +52,7 @@ namespace Bot.Modules
 					RoleID = role.Id
 				};
 				guild.GuildSelfRoles.Add(selfrole);
-				guildData.SaveAccounts(Context.Guild);
+				GuildData.SaveAccounts(Context.Guild);
 
 				await ReplyAndDeleteAsync($"Успех! Капитан я сохранила данную связку роли {role.Mention} и {emote} в своей базе данных.", timeout: TimeSpan.FromSeconds(30));
 			}
@@ -72,13 +66,13 @@ namespace Bot.Modules
 		public async Task ClearGuildSelfRoles()
 		{
 			//Clear SelfRole Message ID and save default value
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			guild.SelfRoleMessageId = 0;
 			guild.GuildSelfRoles.Clear();
 
 			//Clear all self role associated with guild and save
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 
 			await ReplyAndDeleteAsync("Капитан, я удалила все записанные в моей базе роли для твоего корабля.");
 		}
@@ -87,7 +81,7 @@ namespace Bot.Modules
 		[Summary("Отображает список авторолей и привязанные к ним эмодзи.")]
 		public async Task ListGuildRole()
 		{
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 			if (guild.GuildSelfRoles.Count > 0)
 			{
 				var message = "В моей базе записанны такие автороли и эмодзи привязанные к ним:\n";
@@ -112,7 +106,7 @@ namespace Bot.Modules
 		{
 			if (string.IsNullOrWhiteSpace(text)) return;
 
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 			if (guild.GuildSelfRoles.Count < 2)
 			{
 				await ReplyAndDeleteAsync($"Капитан, добавь больше авторолей чтобы я могла разместить сообщение.");
@@ -122,7 +116,7 @@ namespace Bot.Modules
 			var message = await ReplyAsync(embed: await SelfRoleMessageAsync(Context, guild.GuildSelfRoles, text));
 
 			guild.SelfRoleMessageId = message.Id;
-			guildData.SaveAccounts(Context.Guild);
+			GuildData.SaveAccounts(Context.Guild);
 
 			foreach (var role in guild.GuildSelfRoles)
 			{

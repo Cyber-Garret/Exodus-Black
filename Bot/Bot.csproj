@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="resources\milestones_info\**" />
+    <Content Remove="resources\milestones_info\**" />
+    <EmbeddedResource Remove="resources\milestones_info\**" />
+    <None Remove="resources\milestones_info\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Discord.Addons.PassiveInteractive" Version="2.0.4" />
     <PackageReference Include="Discord.Net" Version="2.2.0-dev-20191226.1" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.15.1" />
@@ -21,7 +28,6 @@
   <ItemGroup>
     <Folder Include="resources\exotics\" />
     <Folder Include="resources\catalysts\" />
-    <Folder Include="resources\milestones_info\" />
     <Folder Include="resources\milestones\" />
   </ItemGroup>
 </Project>

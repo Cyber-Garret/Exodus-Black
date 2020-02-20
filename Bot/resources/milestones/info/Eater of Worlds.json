@@ -1,8 +1,8 @@
-﻿{
+{
 	"Name": "Пожиратель миров",
 	"Alias": "пм",
-	"DisplayType": "Рейд-логово",
-	"Type": 0,
+	"Type": "Рейд-логово",
 	"Icon": "http://neira.su/img/milestones/eater_of_worlds.jpg",
-	"MaxSpace": 6
+	"MaxSpace": 6,
+	"MilestoneType": 0
 }

@@ -1,0 +1,8 @@
+{
+	"Name": "Сад",
+	"Alias": "сад",
+	"Type": "Сумрачный налет",
+	"Icon": "http://neira.su/img/milestones/strikes/a_garden_world.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1
+}

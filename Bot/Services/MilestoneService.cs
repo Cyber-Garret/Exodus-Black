@@ -1,5 +1,5 @@
 ﻿using Bot.Models;
-using Bot.Services.Data;
+using Bot.Core.Data;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,19 +12,17 @@ using System.Threading.Tasks;
 
 namespace Bot.Services
 {
-	public class MilestoneHandlerService
+	public class MilestoneService
 	{
 		private readonly ILogger _logger;
 		private readonly DiscordSocketClient _discord;
 		private readonly EmoteService _emote;
-		private readonly MilestoneDataService milestoneData;
 
-		public MilestoneHandlerService(IServiceProvider service)
+		public MilestoneService(IServiceProvider service)
 		{
-			_logger = service.GetRequiredService<ILogger<MilestoneHandlerService>>();
+			_logger = service.GetRequiredService<ILogger<MilestoneService>>();
 			_discord = service.GetRequiredService<DiscordSocketClient>();
 			_emote = service.GetRequiredService<EmoteService>();
-			milestoneData = service.GetRequiredService<MilestoneDataService>();
 		}
 
 		public async Task MilestoneReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
@@ -33,23 +31,19 @@ namespace Bot.Services
 			{
 				var msg = await cache.GetOrDownloadAsync();
 				//get milestone
-				var milestone = milestoneData.GetMilestone(msg.Id);
+				var milestone = ActiveMilestoneData.GetMilestone(msg.Id);
 
 				if (milestone == null) return;
 
 				if (reaction.Emote.Equals(_emote.Raid))
 				{
 					//check reaction
-					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId);
+					var UserExist = milestone.MilestoneUsers.Any(u => u == reaction.UserId);
 
 					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count + 1 < milestone.MilestoneInfo.MaxSpace)
 					{
-						var user = new MilestoneUser
-						{
-							UserId = reaction.UserId
-						};
-						milestone.MilestoneUsers.Add(user);
-						milestoneData.SaveMilestones(milestone.MessageId);
+						milestone.MilestoneUsers.Add(reaction.UserId);
+						ActiveMilestoneData.SaveMilestones(milestone.MessageId);
 
 						HandleReaction(msg, milestone);
 					}
@@ -72,20 +66,19 @@ namespace Bot.Services
 			{
 				var msg = await cache.GetOrDownloadAsync();
 				//get milestone
-				var milestone = milestoneData.GetMilestone(msg.Id);
+				var milestone = ActiveMilestoneData.GetMilestone(msg.Id);
 
 				if (milestone == null) return;
 
 				if (reaction.Emote.Equals(_emote.Raid))
 				{
 					//check reaction
-					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId);
+					var UserExist = milestone.MilestoneUsers.Any(u => u == reaction.UserId);
 
 					if (reaction.UserId != milestone.Leader && UserExist)
 					{
-						var user = new MilestoneUser { UserId = reaction.UserId };
-						milestone.MilestoneUsers.Remove(user);
-						milestoneData.SaveMilestones(milestone.MessageId);
+						milestone.MilestoneUsers.Remove(reaction.UserId);
+						ActiveMilestoneData.SaveMilestones(milestone.MessageId);
 						HandleReaction(msg, milestone);
 					}
 					else
@@ -125,7 +118,7 @@ namespace Bot.Services
 				{
 					try
 					{
-						var LoadedUser = _discord.GetUser(user.UserId);
+						var LoadedUser = _discord.GetUser(user);
 
 						var DM = await LoadedUser.GetOrCreateDMChannelAsync();
 						await DM.SendMessageAsync(embed: RemindEmbed);
@@ -148,9 +141,9 @@ namespace Bot.Services
 
 			var embed = new EmbedBuilder
 			{
-				Title = $"{milestone.DateExpire.ToString("dd.MM.yyyy")}, в {milestone.DateExpire.ToString("HH:mm")} по {milestone.DateExpire.Kind}. {milestone.MilestoneInfo.Type}: {milestone.MilestoneInfo.Name}",
+				Title = $"{milestone.DateExpire.ToString("dd.MM.yyyy")}, в {milestone.DateExpire.ToString("HH:mm")} по Москве. {milestone.MilestoneInfo.Type}: {milestone.MilestoneInfo.Name}",
 				ThumbnailUrl = milestone.MilestoneInfo.Icon,
-				Color = Color.DarkMagenta
+				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType)
 
 			};
 			if (milestone.Note != null)
@@ -162,19 +155,22 @@ namespace Bot.Services
 			$"- Лидер боевой группы: **#1 {leader.Mention} - {leader.Username}**\n" +
 			$"- Чтобы за вами закрепилось место нажмите на реакцию {_emote.Raid}");
 
-			var embedFieldUsers = new EmbedFieldBuilder
+			if (milestone.MilestoneUsers.Count > 0)
 			{
-				Name = $"В боевую группу записались"
-			};
-			int count = 2;
-			foreach (var user in milestone.MilestoneUsers)
-			{
-				var discordUser = _discord.GetUser(user.UserId);
-				embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
-				count++;
-			}
-			if (embedFieldUsers.Value != null)
+				var embedFieldUsers = new EmbedFieldBuilder
+				{
+					Name = $"В боевую группу записались"
+				};
+				int count = 2;
+				foreach (var user in milestone.MilestoneUsers)
+				{
+					var discordUser = _discord.GetUser(user);
+					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+					count++;
+				}
+
 				embed.AddField(embedFieldUsers);
+			}
 
 			return embed.Build();
 		}
@@ -193,7 +189,7 @@ namespace Bot.Services
 			{
 				Title = $"Хочу вам напомнить, что у вас через 15 минут начнется **{milestone.MilestoneInfo.Type}**.",
 				Author = authorBuilder,
-				Color = Color.DarkMagenta,
+				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType),
 				ThumbnailUrl = milestone.MilestoneInfo.Icon
 			};
 			if (milestone.Note != null)
@@ -209,7 +205,7 @@ namespace Bot.Services
 			foreach (var user in milestone.MilestoneUsers)
 			{
 
-				var discordUser = _discord.GetUser(user.UserId);
+				var discordUser = _discord.GetUser(user);
 				embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
 
 				count++;
@@ -221,6 +217,17 @@ namespace Bot.Services
 			embed.WithCurrentTimestamp();
 
 			return embed.Build();
+		}
+
+		private Color GetColorByType(MilestoneType type)
+		{
+			return type switch
+			{
+				MilestoneType.Raid => Color.DarkMagenta,
+				MilestoneType.Strike => Color.DarkGreen,
+				MilestoneType.Other => Color.DarkBlue,
+				_ => Color.Magenta,
+			};
 		}
 	}
 }

@@ -6,7 +6,6 @@ namespace Bot.Models
 {
 	public class MilestoneInfo
 	{
-		public byte Id { get; set; }
 		public string Name { get; set; }
 		public string Alias { get; set; }
 		public string Type { get; set; }

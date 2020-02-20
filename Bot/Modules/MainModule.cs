@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Bot.Services.Data;
+using Bot.Core.Data;
 using System.Linq;
 using Discord;
 using Bot.Models;
@@ -20,17 +20,11 @@ namespace Bot.Modules
 
 		private readonly DiscordSocketClient discord;
 		private readonly CommandService command;
-		private readonly GuildDataService guildData;
-		private readonly ExoticDataService exoticData;
-		private readonly CatalystDataService catalystData;
 		private readonly EmoteService emote;
 		public MainModule(IServiceProvider service)
 		{
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			command = service.GetRequiredService<CommandService>();
-			guildData = service.GetRequiredService<GuildDataService>();
-			exoticData = service.GetRequiredService<ExoticDataService>();
-			catalystData = service.GetRequiredService<CatalystDataService>();
 			emote = service.GetRequiredService<EmoteService>();
 		}
 
@@ -54,7 +48,7 @@ namespace Bot.Modules
 				return;
 			}
 
-			var exotic = exoticData.SearchExotic(Input);
+			var exotic = ExoticData.SearchExotic(Input);
 			//If not found gear by user input
 			if (exotic == null)
 			{
@@ -77,7 +71,7 @@ namespace Bot.Modules
 				return;
 			}
 
-			var catalyst = catalystData.SearchCatalyst(Input);
+			var catalyst = CatalystData.SearchCatalyst(Input);
 
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
 			if (catalyst == null)
@@ -130,7 +124,7 @@ namespace Bot.Modules
 			var adminCommands = string.Empty;
 			var selfRoleCommands = string.Empty;
 
-			var guild = guildData.GetGuildAccount(Context.Guild);
+			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			foreach (var command in command.Commands.ToList())
 			{

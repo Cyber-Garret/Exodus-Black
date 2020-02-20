@@ -1,8 +1,8 @@
-﻿{
+{
 	"Name": "Левиафан",
 	"Alias": "левик",
-	"DisplayType": "Рейд",
-	"Type": 0,
+	"Type": "Рейд",
 	"Icon": "http://neira.su/img/milestones/leviathan.jpg",
-	"MaxSpace": 6
+	"MaxSpace": 6,
+	"MilestoneType": 0
 }

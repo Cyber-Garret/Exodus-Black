@@ -1,5 +1,5 @@
 using Bot.Services;
-using Bot.Services.Data;
+using Bot.Core.Data;
 
 using Discord;
 using Discord.WebSocket;
@@ -21,36 +21,19 @@ namespace Bot
 		private readonly IServiceProvider service;
 		private readonly ILogger<Neira> logger;
 		private readonly DiscordSocketClient discord;
-		private readonly ExoticDataService exoticData;
-		private readonly CatalystDataService catalystData;
-		private readonly GuildDataService guildData;
-		private readonly MilestoneInfoDataService milestoneInfoData;
-		private readonly MilestoneDataService milestoneData;
 
 		public Neira(IServiceProvider service)
 		{
 			this.service = service;
 			logger = service.GetRequiredService<ILogger<Neira>>();
 			config = service.GetRequiredService<IConfiguration>();
-			exoticData = service.GetRequiredService<ExoticDataService>();
-			catalystData = service.GetRequiredService<CatalystDataService>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
-			guildData = service.GetRequiredService<GuildDataService>();
-			milestoneInfoData = service.GetRequiredService<MilestoneInfoDataService>();
-			milestoneData = service.GetRequiredService<MilestoneDataService>();
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
 		{
 			try
 			{
-				// Load data from local json files to in memory dictionaries.
-				exoticData.LoadData();
-				catalystData.LoadData();
-				guildData.LoadData();
-				milestoneInfoData.LoadData();
-				milestoneData.LoadData();
-
 				var token = config["Bot:Token"];
 
 				service.GetRequiredService<LoggingService>().Configure();
@@ -79,9 +62,9 @@ namespace Bot
 			await discord.StopAsync();
 
 			// save all guild accounts
-			guildData.SaveAccounts();
+			GuildData.SaveAccounts();
 			logger.LogInformation("Аккаунты успешно сохранены.");
-			milestoneData.SaveMilestones();
+			ActiveMilestoneData.SaveMilestones();
 			logger.LogInformation("Активности успешно сохранены.");
 			
 			discord.Dispose();

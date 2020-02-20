@@ -14,6 +14,7 @@ namespace Bot.Models
 		public string LeaveMessage { get; set; } = null;
 		public ulong AutoroleID { get; set; } = 0;
 		public string CommandPrefix { get; set; } = null;
+		public string TimeZone { get; set; } = "+3";
 		public string GlobalMention { get; set; } = "@here";
 		public ulong SelfRoleMessageId { get; set; } = 0;
 		public List<GuildSelfRole> GuildSelfRoles { get; set; } = new List<GuildSelfRole>();
