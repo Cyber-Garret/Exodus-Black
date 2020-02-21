@@ -40,7 +40,8 @@ namespace Bot.Core.Data
 
 		internal static void AddMilestone(Milestone milestone)
 		{
-			ActiveMilestones.TryAdd(milestone.MessageId, milestone);
+			if (ActiveMilestones.TryAdd(milestone.MessageId, milestone))
+				DataStorage.SaveObject(milestone, Path.Combine(DataStorage.MilestonesFolder, $"{milestone.MessageId}.json"), true);
 		}
 
 		internal static void RemoveMilestone(ulong MessageId)
@@ -55,7 +56,7 @@ namespace Bot.Core.Data
 		{
 			foreach (var id in ids)
 			{
-				DataStorage.SaveObject(GetMilestone(id), Path.Combine(DataStorage.MilestonesFolder, $"{id}.json"), useIndentations: true);
+				DataStorage.SaveObject(GetMilestone(id), Path.Combine(DataStorage.MilestonesFolder, $"{id}.json"), true);
 			}
 		}
 

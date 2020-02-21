@@ -23,7 +23,7 @@ namespace Bot.Core.QuartzJobs
 		}
 		public Task Execute(IJobExecutionContext context)
 		{
-			var timer = DateTime.Now.AddMinutes(15);
+			var timer = DateTime.UtcNow.AddMinutes(15);
 
 			var query = ActiveMilestoneData.GetAllMilestones();
 
@@ -33,7 +33,11 @@ namespace Bot.Core.QuartzJobs
 				{
 					try
 					{
-						if (timer.Date == milestone.DateExpire.Date && timer.Hour == milestone.DateExpire.Hour && timer.Minute == milestone.DateExpire.Minute && timer.Second < 10)
+						var guild = GuildData.GetGuildAccount(milestone.GuildId);
+						var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
+						var now = TimeZoneInfo.ConvertTimeFromUtc(timer, guildTimeZone);
+
+						if (now.Date == milestone.DateExpire.Date && now.Hour == milestone.DateExpire.Hour && now.Minute == milestone.DateExpire.Minute && now.Second < 10)
 						{
 							await milestoneHandler.RaidNotificationAsync(milestone);
 						}

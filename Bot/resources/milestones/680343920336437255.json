@@ -1,0 +1,18 @@
+﻿{
+  "MessageId": 680343920336437255,
+  "GuildId": 521689023962415104,
+  "MilestoneInfo": {
+    "Name": "Сад спасения",
+    "Alias": "сс",
+    "Type": "Рейд",
+    "Icon": "http://neira.su/img/milestones/garden_of_salvation.jpg",
+    "MaxSpace": 6,
+    "MilestoneType": 0
+  },
+  "Note": null,
+  "Leader": 316272461291192322,
+  "DateExpire": "2020-02-21T14:35:00+03:00",
+  "MilestoneUsers": [
+    549903850543251485
+  ]
+}

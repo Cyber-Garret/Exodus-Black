@@ -10,25 +10,28 @@ using System.Threading.Tasks;
 using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Discord;
+using Discord.WebSocket;
 
 namespace Bot.Modules
 {
 	public class MilestoneModule : BaseModule
 	{
 		private readonly ILogger logger;
+		private readonly DiscordSocketClient discord;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 
 		public MilestoneModule(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<MilestoneModule>>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
 		}
 
+		#region Commands
 		[Command("рейд")]
-		[Summary("Команда для анонса сбора в рейд.")]
-		[Remarks("Пример: !рейд <Название> <Дата> <Заметка лидера(Не обязательно)>, например !рейд сс 20.02.20:00 Тестовая заметка.\nВведите любой параметр команды неверно, и я отображу по нему справку.")]
+		[Summary("Анонс сбора боевой группы в рейд.")]
 		public async Task RegisterRaid(string raidName, string raidTime, [Remainder]string leaderNote = null)
 		{
 			try
@@ -43,38 +46,52 @@ namespace Bot.Modules
 					return;
 				}
 
-				string[] formats = { "dd.MM-HH:mm:z", "dd,MM-HH,mm:z", "dd.MM.HH.mm:z", "dd,MM,HH,mm:z" };
+				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
 
-				DateTimeOffset.TryParseExact($"{raidTime}:{guild.TimeZone}", formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateTimeOffset);
-				DateTime.TryParseExact($"{raidTime}:{guild.TimeZone}", formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+				DateTime.TryParseExact(raidTime, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+
+				var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
+				var raidTimeOffset = new DateTimeOffset(dateTime, guildTimeZone.BaseUtcOffset);
 
 				if (dateTime == new DateTime())
 				{
 					await ReplyAndDeleteAsync("Страж, ты указал неизвестный мне формат времени.");
 					return;
 				}
-				if (dateTime < DateTime.Now)
+
+				var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone);
+
+				if (raidTimeOffset < now)
 				{
 
 					await ReplyAndDeleteAsync("Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
 					return;
 				}
 
+				var msg = await ReplyAsync("Подготавливаю сбор.");
+
 				var newMilestone = new Milestone
 				{
+					MessageId = msg.Id,
+					ChannelId = Context.Channel.Id,
 					GuildId = Context.Guild.Id,
 					MilestoneInfo = milestoneInfo,
 					Note = leaderNote,
 					Leader = Context.User.Id,
-					DateExpire = dateTime
+					DateExpire = raidTimeOffset
 				};
-				var embed = milestoneHandler.MilestoneEmbed(newMilestone);
-
-				var msg = await ReplyAsync(message: guild.GlobalMention, embed: embed);
-
-				newMilestone.MessageId = msg.Id;
 
 				ActiveMilestoneData.AddMilestone(newMilestone);
+
+				var embed = milestoneHandler.MilestoneEmbed(newMilestone);
+
+				await msg.ModifyAsync(a =>
+				{
+					a.Content = guild.GlobalMention;
+					a.Embed = embed;
+				});
+
+				//var msg = await ReplyAsync(message: guild.GlobalMention, embed: embed);
 
 				//Slots
 				await msg.AddReactionAsync(emote.Raid);
@@ -85,9 +102,9 @@ namespace Bot.Modules
 				logger.LogError(ex, "Raid command");
 			}
 		}
-		// TODO: Strike command
+
 		[Command("налёт")]
-		[Summary("Команда для анонса сбора в сумрачный налёт.")]
+		[Summary("Aнонс сбора боевой группы в сумрачный налёт.")]
 		public async Task RegisterStrike(string strikeName, string strikeTime, [Remainder]string leaderNote = null)
 		{
 			try
@@ -143,7 +160,162 @@ namespace Bot.Modules
 				logger.LogError(ex, "Strike command");
 			}
 		}
-		// TODO: Other command
-		//[Command("активность")]
+		
+		//TODO: Ordeal nightfall
+		//[Command("побоище")]
+		//[Summary("Анонс сбора боевой группы в активный сумрачный налет: побоище")]
+		//public async Task RegisterOrdeal(string strikeTime,[Remainder]string leaderNote = null)
+		//{
+
+		//}
+
+		[Command("сбор")]
+		[Summary("Анонс сбора боевой группы в активности типа Паноптикум, Яма, Трон и тд и тп.")]
+		public async Task RegisterOther(string otherName, string otherTime, [Remainder]string leaderNote = null)
+		{
+			try
+			{
+				var guild = GuildData.GetGuildAccount(Context.Guild);
+
+				var milestoneInfo = MilestoneInfoData.SearchMilestoneData(otherName, MilestoneType.Other);
+
+				if (milestoneInfo == null)
+				{
+					await ReplyAndDeleteAsync("Страж, я не разобрала в какую активность ты хочешь собрать боевую группу.");
+					return;
+				}
+
+				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
+
+				DateTime.TryParseExact(otherTime, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+
+				var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
+				var raidTimeOffset = new DateTimeOffset(dateTime, guildTimeZone.BaseUtcOffset);
+
+				if (dateTime == new DateTime())
+				{
+					await ReplyAndDeleteAsync("Страж, ты указал неизвестный мне формат времени.");
+					return;
+				}
+
+				var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone);
+
+				if (raidTimeOffset < now)
+				{
+
+					await ReplyAndDeleteAsync("Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
+					return;
+				}
+
+				var newMilestone = new Milestone
+				{
+					GuildId = Context.Guild.Id,
+					MilestoneInfo = milestoneInfo,
+					Note = leaderNote,
+					Leader = Context.User.Id,
+					DateExpire = raidTimeOffset
+				};
+				var embed = milestoneHandler.MilestoneEmbed(newMilestone);
+
+				var msg = await ReplyAsync(message: guild.GlobalMention, embed: embed);
+
+				newMilestone.MessageId = msg.Id;
+
+				ActiveMilestoneData.AddMilestone(newMilestone);
+
+				//Slots
+				await msg.AddReactionAsync(emote.Raid);
+			}
+			catch (Exception ex)
+			{
+				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nУже пишу моему создателю, он сейчас все поправит.");
+				logger.LogError(ex, "Other milestone command");
+			}
+		}
+
+		// TODO: User defined milestone
+
+		[Command("заметка")]
+		[Summary("Позволяет удалить или изменить заметку активности.")]
+		public async Task ChangeNote(ulong milestoneId, [Remainder]string note = null)
+		{
+			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
+			if (milestone.Leader == Context.User.Id)
+			{
+				milestone.Note = note;
+				ActiveMilestoneData.SaveMilestones(milestone.MessageId);
+
+				var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
+				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+				await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+
+				await ReplyAndDeleteAsync($"Заметка исправлена. {msg.GetJumpUrl()}");
+			}
+			else
+				await ReplyAndDeleteAsync("Ты не лидер активности.");
+		}
+
+		[Command("отмена")]
+		[Summary("Позволяет отменить активность.")]
+		public async Task CloseMilestone(ulong milestoneId, [Remainder]string reason = null)
+		{
+			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
+			if (milestone.Leader == Context.User.Id)
+			{
+				if (reason == null)
+				{
+					await ReplyAndDeleteAsync("для отмены нужно написать причину.");
+					return;
+				}
+				ActiveMilestoneData.RemoveMilestone(milestone.MessageId);
+
+				var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
+				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+				await msg.ModifyAsync(m =>
+				{
+					m.Content = string.Empty;
+					m.Embed = DeleteMilestone(milestone, reason);
+				});
+
+				await ReplyAndDeleteAsync($"Активность отменена. {msg.GetJumpUrl()}");
+			}
+			else
+				await ReplyAndDeleteAsync("Ты не лидер активности.");
+		}
+		#endregion
+
+		#region Methods
+		private Embed DeleteMilestone(Milestone milestone, string reason)
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = $"{milestone.MilestoneInfo.Type }: { milestone.MilestoneInfo.Name}",
+				Description = $"Отменен по причине: {reason}"
+			};
+			var embedFieldUsers = new EmbedFieldBuilder
+			{
+				Name = $"Состав боевой группы"
+			};
+			var leader = discord.GetUser(milestone.Leader);
+			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
+			if (milestone.MilestoneUsers.Count > 0)
+			{
+				int count = 2;
+				foreach (var user in milestone.MilestoneUsers)
+				{
+
+					var discordUser = discord.GetUser(user);
+					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+
+					count++;
+				}
+			}
+			embed.AddField(embedFieldUsers);
+
+			return embed.Build();
+		}
+		#endregion
 	}
 }

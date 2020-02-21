@@ -7,6 +7,7 @@
   "LeaveMessage": null,
   "AutoroleID": 0,
   "CommandPrefix": null,
+  "TimeZone": "Russian Standard Time",
   "GlobalMention": "@here",
   "SelfRoleMessageId": 0,
   "GuildSelfRoles": []

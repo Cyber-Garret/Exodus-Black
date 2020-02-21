@@ -141,7 +141,7 @@ namespace Bot.Services
 
 			var embed = new EmbedBuilder
 			{
-				Title = $"{milestone.DateExpire.ToString("dd.MM.yyyy")}, в {milestone.DateExpire.ToString("HH:mm")} по Москве. {milestone.MilestoneInfo.Type}: {milestone.MilestoneInfo.Name}",
+				Title = $"{milestone.DateExpire.ToString("dd.MM.yyyy")}, в {milestone.DateExpire.ToString("HH:mm")} по {GetCityForMilestoneEmbed(milestone.DateExpire.Offset)}. {milestone.MilestoneInfo.Type}: {milestone.MilestoneInfo.Name}",
 				ThumbnailUrl = milestone.MilestoneInfo.Icon,
 				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType)
 
@@ -171,6 +171,7 @@ namespace Bot.Services
 
 				embed.AddField(embedFieldUsers);
 			}
+			embed.WithFooter($"ID: {milestone.MessageId}");
 
 			return embed.Build();
 		}
@@ -200,7 +201,7 @@ namespace Bot.Services
 				Name = $"Состав боевой группы"
 			};
 			var leader = _discord.GetUser(milestone.Leader);
-			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}";
+			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
 			int count = 2;
 			foreach (var user in milestone.MilestoneUsers)
 			{
@@ -227,6 +228,16 @@ namespace Bot.Services
 				MilestoneType.Strike => Color.DarkGreen,
 				MilestoneType.Other => Color.DarkBlue,
 				_ => Color.Magenta,
+			};
+		}
+
+		private string GetCityForMilestoneEmbed(TimeSpan Offset)
+		{
+			return Offset.Hours switch
+			{
+				3 => "Москве",
+				2 => "Киеву",
+				_ => "Москве",
 			};
 		}
 	}
