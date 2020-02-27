@@ -11,18 +11,22 @@ using System.Linq;
 using Discord;
 using Bot.Models;
 using Bot.Services;
+using Microsoft.Extensions.Logging;
+using Bot.Properties;
+using Bot.Preconditions;
 
 namespace Bot.Modules
 {
+	[Cooldown(5)]
 	public class MainModule : BaseModule
 	{
-		private const string FooterTextAboutException = "Если нашли какие либо неточности, сообщите моему создателю: Cyber_Garret#5898";
-
+		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
 		private readonly CommandService command;
 		private readonly EmoteService emote;
-		public MainModule(IServiceProvider service)
+		public MainModule(IServiceProvider service, ILogger<MainModule> logger)
 		{
+			this.logger = logger;
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			command = service.GetRequiredService<CommandService>();
 			emote = service.GetRequiredService<EmoteService>();
@@ -30,11 +34,19 @@ namespace Bot.Modules
 
 		#region Commands
 		[Command("справка")]
-		[Summary("Основная справочная команда.")]
 		public async Task MainHelp()
 		{
-			var embed = await HelpEmbedAsync();
-			await ReplyAsync(embed: embed);
+			try
+			{
+				var guild = GuildData.GetGuildAccount(Context.Guild);
+
+				var embed = await HelpEmbedAsync(guild);
+				await ReplyAsync(embed: embed);
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Help command");
+			}
 		}
 
 		[Command("экзот")]
@@ -60,7 +72,7 @@ namespace Bot.Modules
 			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", embed: embed);
 		}
 
-		[Command("каталик"), Alias("катализатор")]
+		[Command("каталик")]
 		[Summary("Отображает информацию о катализаторе для оружия.")]
 		[Remarks("Пример: !катализатор мида или !каталик туз")]
 		public async Task GetCatalyst([Remainder]string Input = null)
@@ -93,8 +105,6 @@ namespace Bot.Modules
 			await ReplyAsync(embed: embed);
 		}
 
-		//TODO: Clan command
-
 		[Command("опрос")]
 		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
 		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
@@ -116,24 +126,27 @@ namespace Bot.Modules
 		#endregion
 
 		#region Embeds
-		private async Task<Embed> HelpEmbedAsync()
+		private async Task<Embed> HelpEmbedAsync(Guild guild)
 		{
 			var app = await discord.GetApplicationInfoAsync();
 
 			var mainCommands = string.Empty;
+			var milestoneCommands = string.Empty;
 			var adminCommands = string.Empty;
 			var selfRoleCommands = string.Empty;
 
-			var guild = GuildData.GetGuildAccount(Context.Guild);
+			var commands = command.Commands.ToList();
 
-			foreach (var command in command.Commands.ToList())
+			foreach (var command in commands)
 			{
 				if (command.Module.Name == typeof(MainModule).Name)
-					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
+					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+				else if (command.Module.Name == typeof(MilestoneModule).Name)
+					milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
-					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
+					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
 				else if (command.Module.Name == typeof(SelfRoleModule).Name)
-					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Name}, ";
+					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
 
 			}
 
@@ -143,10 +156,10 @@ namespace Bot.Modules
 				.WithDescription(
 				"Моя основная цель - своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
 				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n" +
-				"Больше информации ты можешь найти в моей [группе ВК](https://vk.com/failsafe_bot)\n" +
-				"и в [документации](https://docs.neira.su/)")
+				"Больше информации ты можешь найти в моей [документации](https://docs.neira.su/)")
 				.AddField("Основные команды", mainCommands[0..^2])
-				.AddField("Команды администраторов сервера", adminCommands[0..^2])
+				.AddField("Команды активностей", milestoneCommands[0..^2])
+				.AddField("Команды администраторов", adminCommands[0..^2])
 				.AddField("Команды настройки Автороли", selfRoleCommands[0..^2]);
 
 			return embed.Build();
@@ -164,7 +177,7 @@ namespace Bot.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = @"https://www.bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png",
-					Text = FooterTextAboutException
+					Text = Resources.EmbFooterAboutMyMistake
 				}
 
 			};
@@ -193,7 +206,7 @@ namespace Bot.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = @"https://www.bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg",
-					Text = FooterTextAboutException
+					Text = Resources.EmbFooterAboutMyMistake
 				}
 			}
 			.AddField("Как получить катализатор", catalyst.DropLocation)

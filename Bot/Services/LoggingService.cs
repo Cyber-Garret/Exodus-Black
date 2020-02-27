@@ -44,8 +44,8 @@ namespace Bot.Services
 		{
 			Task.Run(() =>
 			{
-				logger.LogWarning($"Капитан, я подключилась под аккаунтом -> [{discord.CurrentUser}] :)");
-				logger.LogInformation($"В данный момент я на {discord.Guilds.Count} серверах. ");
+				logger.LogError($"Connected as -> [{discord.CurrentUser}]");
+				logger.LogError($"Connected to {discord.Guilds.Count} servers.");
 
 				if (emote.Raid == null)
 					emote.Configure();
@@ -57,7 +57,7 @@ namespace Bot.Services
 		// this method executes on the bot being disconnected from Discord API
 		public Task OnDisconnectedAsync(Exception ex)
 		{
-			logger.LogInformation($"Нейра отключена. [{ex.Message}]");
+			logger.LogInformation($"Bot disconnected. [{ex.Message}]");
 			return Task.CompletedTask;
 		}
 

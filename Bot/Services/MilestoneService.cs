@@ -1,13 +1,15 @@
-﻿using Bot.Models;
-using Bot.Core.Data;
+﻿using Bot.Core.Data;
+using Bot.Models;
+using Bot.Properties;
+
 using Discord;
 using Discord.WebSocket;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bot.Services
@@ -138,28 +140,31 @@ namespace Bot.Services
 
 		public Embed MilestoneEmbed(Milestone milestone)
 		{
-
 			var embed = new EmbedBuilder
 			{
-				Title = $"{milestone.DateExpire.ToString("dd.MM.yyyy")}, в {milestone.DateExpire.ToString("HH:mm")} по {GetCityForMilestoneEmbed(milestone.DateExpire.Offset)}. {milestone.MilestoneInfo.Type}: {milestone.MilestoneInfo.Name}",
+				Title = string.Format(Resources.MilEmbTitle,
+						  milestone.DateExpire.ToString("dd.MM.yyyy"),
+						  milestone.DateExpire.ToString("HH:MM"),
+						  GetCityForMilestoneEmbed(milestone.DateExpire.Offset),
+						  milestone.MilestoneInfo.Type,
+						  milestone.MilestoneInfo.Name),
+				Author = GetGame(milestone.MilestoneInfo.Game),
 				ThumbnailUrl = milestone.MilestoneInfo.Icon,
 				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType)
 
 			};
 			if (milestone.Note != null)
-				embed.WithDescription($"**Заметка от лидера:** {milestone.Note}");
+				embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
 
 			var leader = _discord.GetUser(milestone.Leader);
 
-			embed.AddField("Информация",
-			$"- Лидер боевой группы: **#1 {leader.Mention} - {leader.Username}**\n" +
-			$"- Чтобы за вами закрепилось место нажмите на реакцию {_emote.Raid}");
+			embed.AddField(Resources.MilEmbInfTitleField, string.Format(Resources.MilEmbInfDescField, leader.Mention, leader.Username, _emote.Raid));
 
 			if (milestone.MilestoneUsers.Count > 0)
 			{
 				var embedFieldUsers = new EmbedFieldBuilder
 				{
-					Name = $"В боевую группу записались"
+					Name = Resources.MilEmbMemTitleField
 				};
 				int count = 2;
 				foreach (var user in milestone.MilestoneUsers)
@@ -176,29 +181,59 @@ namespace Bot.Services
 			return embed.Build();
 		}
 
+		public Embed GetMilestonesNameEmbed(MilestoneType type)
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = string.Format(Resources.MilInfEmbTitle, GetNameForMilestoneType(type)),
+				Color = GetColorByType(type)
+			};
+			if (type == MilestoneType.Raid)
+			{
+				var Des2names = string.Empty;
+				var Div2names = string.Empty;
+				foreach (var item in MilestoneInfoData.GetMilestonesByType(type))
+				{
+					if (item.Game == GameName.Destiny)
+						Des2names += $"**{item.Alias}** - {item.Name}";
+					else
+						Div2names += $"**{item.Alias}** - {item.Name}";
+
+				}
+				embed.AddField("Destiny 2", Des2names);
+				embed.AddField("The Division 2", Div2names);
+			}
+			else
+			{
+				var text = string.Empty;
+				foreach (var milestone in MilestoneInfoData.GetMilestonesByType(type))
+				{
+					text += $"**{milestone.Alias}** - {milestone.Name}\n";
+				}
+				embed.Description = text;
+			}
+			embed.WithFooter(Resources.EmbFooterAboutDel);
+
+			return embed.Build();
+		}
+
 		private Embed MilestoneRemindEmbed(Milestone milestone)
 		{
 			var guild = _discord.GetGuild(milestone.GuildId);
 
-			var authorBuilder = new EmbedAuthorBuilder
-			{
-				Name = $"Доброго времени суток, страж.",
-				IconUrl = _discord.CurrentUser.GetAvatarUrl()
-			};
-
 			var embed = new EmbedBuilder()
 			{
-				Title = $"Хочу вам напомнить, что у вас через 15 минут начнется **{milestone.MilestoneInfo.Type}**.",
-				Author = authorBuilder,
+				Title = string.Format(Resources.MilRemEmbTitle, milestone.MilestoneInfo.Type),
+				Author = GetGame(milestone.MilestoneInfo.Game),
 				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType),
 				ThumbnailUrl = milestone.MilestoneInfo.Icon
 			};
 			if (milestone.Note != null)
-				embed.WithDescription($"**Заметка:** {milestone.Note}");
+				embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
 
 			var embedFieldUsers = new EmbedFieldBuilder
 			{
-				Name = $"Состав боевой группы"
+				Name = Resources.MilEmbMemTitleField
 			};
 			var leader = _discord.GetUser(milestone.Leader);
 			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
@@ -214,7 +249,7 @@ namespace Bot.Services
 			if (embedFieldUsers.Value != null)
 				embed.AddField(embedFieldUsers);
 
-			embed.WithFooter($"{milestone.MilestoneInfo.Type}: {milestone.MilestoneInfo.Name}. Сервер: {guild.Name}", guild.IconUrl);
+			embed.WithFooter(string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name), guild.IconUrl);
 			embed.WithCurrentTimestamp();
 
 			return embed.Build();
@@ -231,13 +266,47 @@ namespace Bot.Services
 			};
 		}
 
+		private string GetNameForMilestoneType(MilestoneType type)
+		{
+			return type switch
+			{
+				MilestoneType.Raid => "Рейд",
+				MilestoneType.Strike => "Сумрачный налет",
+				MilestoneType.Other => "Прочие активноcти",
+				_ => "Неизвестно",
+			};
+		}
+
+		private EmbedAuthorBuilder GetGame(GameName game)
+		{
+			var author = new EmbedAuthorBuilder();
+			if (game == GameName.Destiny)
+			{
+				author.Name = "Destiny 2";
+				author.IconUrl = @"https://neira.su/img/Destiny2.png";
+				author.Url = @"https://www.bungie.net/";
+			}
+			else if (game == GameName.Division)
+			{
+				author.Name = "The Division 2";
+				author.IconUrl = @"https://neira.su/img/Division2.png";
+				author.Url = @"https://tomclancy-thedivision.ubisoft.com/game/";
+			}
+			else
+			{
+				author.Name = "Unknown";
+			}
+			return author;
+		}
+
+
 		private string GetCityForMilestoneEmbed(TimeSpan Offset)
 		{
 			return Offset.Hours switch
 			{
 				3 => "Москве",
 				2 => "Киеву",
-				_ => "Москве",
+				_ => "Unknown",
 			};
 		}
 	}

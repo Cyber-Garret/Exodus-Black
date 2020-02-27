@@ -1,0 +1,18 @@
+﻿{
+  "MessageId": 681480442268090369,
+  "ChannelId": 587895810977693706,
+  "GuildId": 521689023962415104,
+  "MilestoneInfo": {
+    "Name": "\"Tяжeлыe вpемена\"",
+    "Alias": "тв",
+    "Type": "Операция",
+    "Icon": "https://neira.su/img/milestones/Dark_hours.jpg",
+    "MaxSpace": 8,
+    "MilestoneType": 0,
+    "Game": 1
+  },
+  "Note": null,
+  "Leader": 316272461291192322,
+  "DateExpire": "2020-02-24T20:00:00+03:00",
+  "MilestoneUsers": []
+}

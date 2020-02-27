@@ -1,5 +1,6 @@
-using Bot.Services;
 using Bot.Core.Data;
+using Bot.Properties;
+using Bot.Services;
 
 using Discord;
 using Discord.WebSocket;
@@ -38,12 +39,12 @@ namespace Bot
 
 				service.GetRequiredService<LoggingService>().Configure();
 				service.GetRequiredService<DiscordEventHandlerService>().Configure();
-				await service.GetRequiredService<CommandHandlerService>().ConfigureAsync();
+				await service.GetRequiredService<CommandHandlerService>().InstallCommandsAsync();
 
 				await discord.LoginAsync(TokenType.Bot, token);
 				await discord.StartAsync();
 				await discord.SetStatusAsync(UserStatus.Online);
-				await discord.SetGameAsync(@"http://neira.su/");
+				await discord.SetGameAsync(Resources.WebSite);
 
 				await Task.Delay(-1, cancellationToken);
 
@@ -61,12 +62,10 @@ namespace Bot
 			await discord.SetStatusAsync(UserStatus.Offline);
 			await discord.StopAsync();
 
-			// save all guild accounts
+			// save all data to hdd
 			GuildData.SaveAccounts();
-			logger.LogInformation("Аккаунты успешно сохранены.");
 			ActiveMilestoneData.SaveMilestones();
-			logger.LogInformation("Активности успешно сохранены.");
-			
+
 			discord.Dispose();
 		}
 	}

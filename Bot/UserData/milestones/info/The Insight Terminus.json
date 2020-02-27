@@ -1,0 +1,9 @@
+{
+	"Name": "Терминал знаний",
+	"Alias": "тз",
+	"Type": "Сумрачный налет",
+	"Icon": "http://neira.su/img/milestones/strikes/the_insight_terminus.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}

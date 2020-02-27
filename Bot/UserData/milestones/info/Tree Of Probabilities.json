@@ -1,0 +1,9 @@
+{
+	"Name": "Древо вероятностей",
+	"Alias": "дв",
+	"Type": "Сумрачный налет",
+	"Icon": "http://neira.su/img/milestones/strikes/tree_of_probabilities.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}

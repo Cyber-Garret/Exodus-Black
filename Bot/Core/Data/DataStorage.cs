@@ -18,7 +18,7 @@ namespace Bot.Core.Data
 		internal static readonly string MilestonesFolder;
 		internal static readonly string MilestonesInfoFolder;
 
-		private const string res = "resources";
+		private const string res = "UserData";
 		private const string backgrounds = "backgrounds";
 		private const string catalyst = "catalysts";
 		private const string exotics = "exotics";

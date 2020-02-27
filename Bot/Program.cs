@@ -61,7 +61,12 @@ namespace Bot
 							DefaultRetryMode = RetryMode.AlwaysRetry,
 							MessageCacheSize = 300
 						}))
-						.AddSingleton<CommandService>()
+						.AddSingleton(new CommandService(new CommandServiceConfig
+						{
+							CaseSensitiveCommands = false,
+							DefaultRunMode = RunMode.Async,
+							LogLevel = discordSeverity
+						}))
 						.AddSingleton<InteractiveService>()
 						.AddSingleton<LoggingService>()
 						.AddSingleton<DiscordEventHandlerService>()

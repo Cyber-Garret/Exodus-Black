@@ -1,8 +1,9 @@
-﻿using Discord.Commands;
+﻿using Bot.Properties;
+
+using Discord.Commands;
+
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bot.Preconditions
@@ -32,7 +33,7 @@ namespace Bot.Preconditions
 				// Сообщение если команда все еще в откате.
 				if (difference.Ticks > 0)
 				{
-					return Task.FromResult(PreconditionResult.FromError($"Ты сможешь использовать эту команду через {difference:%s} сек."));
+					return Task.FromResult(PreconditionResult.FromError(string.Format(Resources.CooldownMessage, $"{difference:%s}")));
 				}
 				// Обновляет время отката.
 				var time = DateTime.UtcNow.Add(CooldownLength);

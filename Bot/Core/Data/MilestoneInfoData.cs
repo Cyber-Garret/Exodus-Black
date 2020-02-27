@@ -19,20 +19,11 @@ namespace Bot.Core.Data
 			else
 				MilestonesData = new ConcurrentDictionary<string, MilestoneInfo>();
 		}
-		internal static List<MilestoneInfo> GetAllRaids()
+		internal static List<MilestoneInfo> GetMilestonesByType(MilestoneType milestoneType)
 		{
-			return MilestonesData.Values.Where(m => m.MilestoneType == MilestoneType.Raid).ToList();
+			return MilestonesData.Values.Where(m => m.MilestoneType == milestoneType).ToList();
 		}
 
-		internal static List<MilestoneInfo> GetAllStrikes()
-		{
-			return MilestonesData.Values.Where(m => m.MilestoneType == MilestoneType.Strike).ToList();
-		}
-
-		internal static List<MilestoneInfo> GetAllOther()
-		{
-			return MilestonesData.Values.Where(m => m.MilestoneType == MilestoneType.Other).ToList();
-		}
 		internal static MilestoneInfo SearchMilestoneData(string name, MilestoneType type)
 		{
 			var searchName = MilestonesData.Keys.FirstOrDefault(key => key.Contains(name, StringComparison.InvariantCultureIgnoreCase));

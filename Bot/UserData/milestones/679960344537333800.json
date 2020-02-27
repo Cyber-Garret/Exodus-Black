@@ -1,0 +1,18 @@
+﻿{
+  "MessageId": 679960344537333800,
+  "ChannelId": 0,
+  "GuildId": 521689023962415104,
+  "MilestoneInfo": {
+    "Name": "Левиафан",
+    "Alias": "левик",
+    "Type": "Рейд",
+    "Icon": "http://neira.su/img/milestones/leviathan.jpg",
+    "MaxSpace": 6,
+    "MilestoneType": 0,
+    "Game": 0
+  },
+  "Note": null,
+  "Leader": 316272461291192322,
+  "DateExpire": "2020-02-20T20:00:00+02:00",
+  "MilestoneUsers": []
+}

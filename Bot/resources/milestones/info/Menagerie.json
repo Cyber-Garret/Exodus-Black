@@ -1,8 +1,0 @@
-{
-	"Name": "Паноптикум",
-	"Alias": "пн",
-	"Type": "Лабиринт",
-	"Icon": "http://neira.su/img/milestones/menagerie.jpg",
-	"MaxSpace": 6,
-	"MilestoneType": 2
-}

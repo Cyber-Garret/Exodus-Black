@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Bot.Properties;
+using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -44,7 +45,6 @@ namespace Bot.Services
 
 			discord.GuildMemberUpdated += Discord_GuildMemberUpdated;
 
-			discord.MessageReceived += Discord_MessageReceived;
 			discord.MessageUpdated += Discord_MessageUpdated;
 			discord.MessageDeleted += Discord_MessageDeleted;
 
@@ -100,19 +100,6 @@ namespace Bot.Services
 			Task.Run(async () =>
 			{
 				await GuildMemberUpdated(userBefore, userAfter);
-			});
-			return Task.CompletedTask;
-		}
-
-		private Task Discord_MessageReceived(SocketMessage message)
-		{
-			//Ignore messages from bots
-			if (message.Author.IsBot) return Task.CompletedTask;
-
-			//New Task for fix disconeting from Discord WebSockets by 1001 if current Task not completed.
-			Task.Run(async () =>
-			{
-				await commandHandler.HandleCommandAsync(message);
 			});
 			return Task.CompletedTask;
 		}
@@ -225,35 +212,31 @@ namespace Bot.Services
 		#region Methods
 		private async Task ChannelCreated(IChannel arg)
 		{
+			if (!(arg is ITextChannel channel)) return;
 			try
 			{
-				#region Checks
-				if (!(arg is ITextChannel channel))
-					return;
-				#endregion
-
-				#region Data
 				var log = await channel.Guild.GetAuditLogsAsync(1);
 				var audit = log.ToList();
-				var name = audit[0].Action == ActionType.ChannelCreated ? audit[0].User.Username : "Неизвестно";
+				var name = audit[0].Action == ActionType.ChannelCreated ? audit[0].User.Username : Resources.Unknown;
 				var auditLogData = audit[0].Data as ChannelCreateAuditLogData;
-				var embed = new EmbedBuilder();
-				#endregion
 
-				#region Message
-				embed.WithColor(Color.Orange);
-				embed.WithTimestamp(DateTimeOffset.UtcNow);
-				embed.AddField("📖 Создан канал",
-					$"Название: **{arg.Name}**\n" +
-					$"Тип канала: **{auditLogData?.ChannelType.ToString()}**\n" +
-					$"NSFW **{channel.IsNsfw}**");
-				//$"Категория: {channel.GetCategoryAsync().Result.Name}\n" +
-				embed.WithFooter($"Кто создавал: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
-				#endregion
+				var embed = new EmbedBuilder
+				{
+					Color = Color.Orange,
+					Footer = new EmbedFooterBuilder
+					{
+						IconUrl = audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl(),
+						Text = string.Format(Resources.DiEvnEmbFooter, name)
+					},
+				};
+				embed.AddField(Resources.ChanCreEmbFieldTitle, string.Format(Resources.ChanEmbFieldDesc,
+					arg.Name,
+					channel.IsNsfw,
+					channel.GetCategoryAsync().Result.Name));
 
-				var currentIGuildChannel = (IGuildChannel)arg;
+				var guildChannel = (IGuildChannel)arg;
 
-				var guild = GuildData.GetGuildAccount(currentIGuildChannel.Guild);
+				var guild = GuildData.GetGuildAccount(guildChannel.Guild);
 				if (guild.LoggingChannel != 0)
 				{
 					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
@@ -268,42 +251,37 @@ namespace Bot.Services
 		}
 		private async Task ChannelDestroyed(IChannel arg)
 		{
+			if (!(arg is ITextChannel channel)) return;
 			try
 			{
-				#region Checks
-				if (!(arg is ITextChannel channel))
-					return;
-				#endregion
-
-				#region Data
 				var log = await channel.Guild.GetAuditLogsAsync(1);
 				var audit = log.ToList();
-				var name = audit[0].Action == ActionType.ChannelDeleted ? audit[0].User.Username : "Неизвестно";
+				var name = audit[0].Action == ActionType.ChannelDeleted ? audit[0].User.Username : Resources.Unknown;
 				var auditLogData = audit[0].Data as ChannelDeleteAuditLogData;
-				var embed = new EmbedBuilder();
-				#endregion
 
-				#region Message
-				embed.WithColor(Color.Red);
-				embed.WithTimestamp(DateTimeOffset.UtcNow);
-				embed.AddField("❌ Удален канал",
-					$"Название канала: **{arg.Name}**\n" +
-					$"Тип: **{auditLogData?.ChannelType}**\n" +
-					$"NSFW: **{channel.IsNsfw}**");
-				//$"Категория: {channel.GetCategoryAsync().Result.Name}\n" +
-				embed.WithFooter($"Кто удалял: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
-				#endregion
-
-				if (arg is IGuildChannel currentIguildChannel)
+				var embed = new EmbedBuilder
 				{
-					var guild = GuildData.GetGuildAccount(currentIguildChannel.Guild);
-					if (guild.LoggingChannel != 0)
+					Color = Color.Red,
+					Footer = new EmbedFooterBuilder
 					{
-						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-							.SendMessageAsync(null, false, embed.Build());
+						IconUrl = audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl(),
+						Text = string.Format(Resources.DiEvnEmbFooter, name)
 					}
-				}
+				};
+				embed.AddField(Resources.ChanDelEmbFieldTitle, string.Format(
+					Resources.ChanEmbFieldDesc,
+					arg.Name,
+					channel.IsNsfw,
+					channel.GetCategoryAsync().Result.Name));
 
+				var guildChannel = (IGuildChannel)arg;
+
+				var guild = GuildData.GetGuildAccount(guildChannel.Guild);
+				if (guild.LoggingChannel != 0)
+				{
+					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						.SendMessageAsync(null, false, embed.Build());
+				}
 			}
 			catch (Exception ex)
 			{
@@ -312,39 +290,30 @@ namespace Bot.Services
 		}
 		private async Task GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
 		{
+			if (after == null || before == after || before.IsBot) return;
 			try
 			{
-				if (after == null || before == after || before.IsBot)
-					return;
-
 				var guild = GuildData.GetGuildAccount(before.Guild);
 
-				#region Different Messages 
+
 				if (before.Nickname != after.Nickname)
 				{
-					#region Data
 					var log = await before.Guild.GetAuditLogsAsync(1).FlattenAsync();
 					var audit = log.ToList();
 					var beforeName = before.Nickname ?? before.Username;
 					var afterName = after.Nickname ?? after.Username;
-					var embed = new EmbedBuilder();
-					#endregion
+					var embed = new EmbedBuilder
+					{
+						Color = Color.Gold,
+						ThumbnailUrl = after.GetAvatarUrl() ?? after.GetDefaultAvatarUrl()
+					};
+					embed.AddField(Resources.GuMemUpdEmbFieldTitle, string.Format(Resources.GuMemUpdEmbFieldDesc, beforeName, afterName));
 
-					#region Message
-					embed.WithColor(Color.Orange);
-					embed.WithTimestamp(DateTimeOffset.UtcNow);
-					embed.WithThumbnailUrl($"{after.GetAvatarUrl() ?? after.GetDefaultAvatarUrl()}");
-					embed.AddField("💢 Имя стража изменено:",
-						$"Предыдущее имя:\n" +
-						$"**{beforeName}**\n" +
-						$"Новое имя:\n" +
-						$"**{afterName}**");
 					if (audit[0].Action == ActionType.MemberUpdated)
 					{
-						var name = audit[0].User.Username ?? "Неизвестно";
-						embed.WithFooter($"Кем изменено: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
+						var name = audit[0].User.Username ?? Resources.Unknown;
+						embed.WithFooter(string.Format(Resources.DiEvnEmbFooter, name), audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 					}
-					#endregion
 
 					if (guild.LoggingChannel != 0)
 					{
@@ -355,26 +324,29 @@ namespace Bot.Services
 
 				if (before.Roles.Count != after.Roles.Count)
 				{
-					#region Data
 					string roleString;
-					var list1 = before.Roles.ToList();
-					var list2 = after.Roles.ToList();
-					var role = "";
-					var embed = new EmbedBuilder();
+					var beforeRoles = before.Roles.ToList();
+					var afterRoles = after.Roles.ToList();
+					var role = string.Empty;
+
+					var embed = new EmbedBuilder
+					{
+						ThumbnailUrl = after.GetAvatarUrl() ?? after.GetDefaultAvatarUrl()
+					};
 					if (before.Roles.Count > after.Roles.Count)
 					{
 						embed.WithColor(Color.Red);
-						roleString = "Убрана";
-						var differenceQuery = list1.Except(list2);
+						roleString = Resources.GuMemRemRole;
+						var differenceQuery = beforeRoles.Except(afterRoles);
 						var socketRoles = differenceQuery as SocketRole[] ?? differenceQuery.ToArray();
 						for (var i = 0; i < socketRoles.Count(); i++)
 							role += socketRoles[i];
 					}
 					else
 					{
-						embed.WithColor(Color.Orange);
-						roleString = "Добавлена";
-						var differenceQuery = list2.Except(list1);
+						embed.WithColor(Color.Green);
+						roleString = Resources.GuMemAddRole;
+						var differenceQuery = afterRoles.Except(beforeRoles);
 						var socketRoles = differenceQuery as SocketRole[] ?? differenceQuery.ToArray();
 						for (var i = 0; i < socketRoles.Count(); i++)
 							role += socketRoles[i];
@@ -382,20 +354,14 @@ namespace Bot.Services
 
 					var log = await before.Guild.GetAuditLogsAsync(1).FlattenAsync();
 					var audit = log.ToList();
-					#endregion
 
-					#region Message
-					embed.WithTimestamp(DateTimeOffset.UtcNow);
-					embed.WithThumbnailUrl($"{after.GetAvatarUrl() ?? after.GetDefaultAvatarUrl()}");
-					embed.AddField($"🔑 Обновлена роль стража:",
-						$"Имя: **{before.Nickname ?? before.Username}**\n" +
-						$"{roleString} роль: **{role}**");
+					embed.AddField(Resources.GuMemRolEmbFieldTitle, string.Format(Resources.GuMemRolEmbFieldDesc, before.Nickname ?? before.Username, roleString, role));
 					if (audit[0].Action == ActionType.MemberRoleUpdated)
 					{
-						var name = audit[0].User.Username ?? "Неизвестно";
-						embed.WithFooter($"Кто обновлял: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
+						var name = audit[0].User.Username ?? Resources.Unknown;
+						embed.WithFooter(string.Format(Resources.DiEvnEmbFooter, name), audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 					}
-					#endregion
+
 
 					if (guild.LoggingChannel != 0)
 					{
@@ -403,7 +369,6 @@ namespace Bot.Services
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
-				#endregion
 
 			}
 			catch (Exception ex)
@@ -412,15 +377,16 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore, SocketMessage messageAfter, ISocketMessageChannel arg3)
+		private async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
 		{
+			if (messageAfter.Author.IsBot) return;
+
 			try
 			{
-				if (arg3 is IGuildChannel currentIGuildChannel)
+				if (channel is IGuildChannel currentIGuildChannel)
 				{
 					var guild = GuildData.GetGuildAccount(currentIGuildChannel.Guild);
-					if (messageAfter.Author.IsBot)
-						return;
+
 
 					var after = messageAfter as IUserMessage;
 
@@ -458,8 +424,8 @@ namespace Bot.Services
 						if (messageBefore.Value.Content.Length <= 2000)
 						{
 
-							var string2 =
-								messageBefore.Value.Content[1000..];
+							var string2 = messageBefore.Value.Content[1000..];
+
 							embed.AddField("Предыдущий текст: Далее", $"...{string2}");
 
 						}

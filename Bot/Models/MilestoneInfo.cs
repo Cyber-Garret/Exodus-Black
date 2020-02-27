@@ -12,6 +12,7 @@ namespace Bot.Models
 		public string Icon { get; set; }
 		public byte MaxSpace { get; set; }
 		public MilestoneType MilestoneType { get; set; }
+		public GameName Game { get; set; }
 	}
 
 	public enum MilestoneType
@@ -19,5 +20,11 @@ namespace Bot.Models
 		Raid,
 		Strike,
 		Other
+	}
+
+	public enum GameName
+	{
+		Destiny,
+		Division
 	}
 }
