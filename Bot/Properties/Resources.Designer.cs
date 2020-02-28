@@ -61,6 +61,51 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Бип....
+        /// </summary>
+        internal static string Bip {
+            get {
+                return ResourceManager.GetString("Bip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Бонус катализатор.
+        /// </summary>
+        internal static string CatEmbBnsFieldTitle {
+            get {
+                return ResourceManager.GetString("CatEmbBnsFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Как получить катализатор.
+        /// </summary>
+        internal static string CatEmbDrpFieldTitle {
+            get {
+                return ResourceManager.GetString("CatEmbDrpFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Задание катализатора.
+        /// </summary>
+        internal static string CatEmbQueFieldTitle {
+            get {
+                return ResourceManager.GetString("CatEmbQueFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Информация о катализаторе для оружия {0}.
+        /// </summary>
+        internal static string CatEmbTitle {
+            get {
+                return ResourceManager.GetString("CatEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 📖 Создан канал.
         /// </summary>
         internal static string ChanCreEmbFieldTitle {
@@ -124,6 +169,51 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ошибка:.
+        /// </summary>
+        internal static string ErrorHndlCom {
+            get {
+                return ResourceManager.GetString("ErrorHndlCom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to **Отсутствует**.
+        /// </summary>
+        internal static string ExoEmbCatFieldDescNo {
+            get {
+                return ResourceManager.GetString("ExoEmbCatFieldDescNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to **Есть**.
+        /// </summary>
+        internal static string ExoEmbCatFieldDescYes {
+            get {
+                return ResourceManager.GetString("ExoEmbCatFieldDescYes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Катализатор.
+        /// </summary>
+        internal static string ExoEmbCatFieldTitle {
+            get {
+                return ResourceManager.GetString("ExoEmbCatFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Как получить:.
+        /// </summary>
+        internal static string ExoEmbHowFieldTitle {
+            get {
+                return ResourceManager.GetString("ExoEmbHowFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Добавлена.
         /// </summary>
         internal static string GuMemAddRole {
@@ -174,6 +264,78 @@ namespace Bot.Properties {
         internal static string GuMemUpdEmbFieldTitle {
             get {
                 return ResourceManager.GetString("GuMemUpdEmbFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страж {0} приземлился, а это значит что:.
+        /// </summary>
+        internal static string Hellotxt {
+            get {
+                return ResourceManager.GetString("Hellotxt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Команды администраторов.
+        /// </summary>
+        internal static string HelpEmbAdmFieldTitle {
+            get {
+                return ResourceManager.GetString("HelpEmbAdmFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Моя основная цель - помогать Стражам собирать боевые группы, своевременно сообщать, когда прибывает или улетает посланник девяти Зур.\nТакже я могу предоставить информацию о экзотическом снаряжении, катализаторах и много чего еще.\nБольше информации ты можешь найти в разделе документация на моем [сайте]({0}).
+        /// </summary>
+        internal static string HelpEmbDesc {
+            get {
+                return ResourceManager.GetString("HelpEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Основные команды.
+        /// </summary>
+        internal static string HelpEmbMainFieldTitle {
+            get {
+                return ResourceManager.GetString("HelpEmbMainFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Команды активностей.
+        /// </summary>
+        internal static string HelpEmbMilFieldTitle {
+            get {
+                return ResourceManager.GetString("HelpEmbMilFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Команды настройки Автороли.
+        /// </summary>
+        internal static string HelpEmbSRolFieldTitle {
+            get {
+                return ResourceManager.GetString("HelpEmbSRolFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Доброго времени суток. Меня зовут Нейроматрица, я ИИ &quot;Черного исхода&quot; адаптированный для Discord. Успешно функционирую с {0}.
+        /// </summary>
+        internal static string HelpEmbTitle {
+            get {
+                return ResourceManager.GetString("HelpEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to \u200b.
+        /// </summary>
+        internal static string InvisibleString {
+            get {
+                return ResourceManager.GetString("InvisibleString", resourceCulture);
             }
         }
         
@@ -250,6 +412,132 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Где: &lt;#{0}&gt;\nАвтор сообщения: **{1}**.
+        /// </summary>
+        internal static string MsgDelEmbDesc {
+            get {
+                return ResourceManager.GetString("MsgDelEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 🗑 Удалено сообщение.
+        /// </summary>
+        internal static string MsgDelEmbTitle {
+            get {
+                return ResourceManager.GetString("MsgDelEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Где: &lt;#{0}&gt;.
+        /// </summary>
+        internal static string MsgUpdEmbDesc {
+            get {
+                return ResourceManager.GetString("MsgUpdEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Новый текст:.
+        /// </summary>
+        internal static string MsgUpdEmbNewFieldTitle {
+            get {
+                return ResourceManager.GetString("MsgUpdEmbNewFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Предыдущий текст:.
+        /// </summary>
+        internal static string MsgUpdEmbOldFieldTitle {
+            get {
+                return ResourceManager.GetString("MsgUpdEmbOldFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 📝 Обновлено сообщение.
+        /// </summary>
+        internal static string MsgUpdEmbTitle {
+            get {
+                return ResourceManager.GetString("MsgUpdEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сумрачный налет.
+        /// </summary>
+        internal static string Nightfall {
+            get {
+                return ResourceManager.GetString("Nightfall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :x: | Эта команда не доступна в личных сообщениях..
+        /// </summary>
+        internal static string NotInGuildText {
+            get {
+                return ResourceManager.GetString("NotInGuildText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прочие активноcти.
+        /// </summary>
+        internal static string Other {
+            get {
+                return ResourceManager.GetString("Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} начал голосование..
+        /// </summary>
+        internal static string PollEmbAuthorName {
+            get {
+                return ResourceManager.GetString("PollEmbAuthorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Тема голосования.
+        /// </summary>
+        internal static string PollEmbTpcFieldTitle {
+            get {
+                return ResourceManager.GetString("PollEmbTpcFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Рейд.
+        /// </summary>
+        internal static string Raid {
+            get {
+                return ResourceManager.GetString("Raid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Название: **{0}**\nЦвет: **{1}**.
+        /// </summary>
+        internal static string RolDelEmbDesc {
+            get {
+                return ResourceManager.GetString("RolDelEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ❌ Удалена роль.
+        /// </summary>
+        internal static string RolDelEmbTitle {
+            get {
+                return ResourceManager.GetString("RolDelEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Неизвестно.
         /// </summary>
         internal static string Unknown {
@@ -259,7 +547,52 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://neira.su/.
+        ///   Looks up a localized string similar to 🔨 Страж был забанен.
+        /// </summary>
+        internal static string UsrBanEmbTitle {
+            get {
+                return ResourceManager.GetString("UsrBanEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 🦶 Страж был выгнан.
+        /// </summary>
+        internal static string UsrKicEmbTitle {
+            get {
+                return ResourceManager.GetString("UsrKicEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to На сервере был известен как:\n**{0}**\nDiscord имя стража\n**{1}**.
+        /// </summary>
+        internal static string UsrLefEmbDesc {
+            get {
+                return ResourceManager.GetString("UsrLefEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Причина:.
+        /// </summary>
+        internal static string UsrLefEmbFieldTitle {
+            get {
+                return ResourceManager.GetString("UsrLefEmbFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 💢 Страж покинул сервер.
+        /// </summary>
+        internal static string UsrLefEmbTitle {
+            get {
+                return ResourceManager.GetString("UsrLefEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://neira.su/.
         /// </summary>
         internal static string WebSite {
             get {

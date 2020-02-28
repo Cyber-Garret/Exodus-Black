@@ -45,7 +45,7 @@ namespace Bot.Modules
 			{
 				var guild = GuildData.GetGuildAccount(Context.Guild);
 
-				var milestoneInfo = MilestoneInfoData.SearchMilestoneData(strikeName, MilestoneType.Strike);
+				var milestoneInfo = MilestoneInfoData.SearchMilestoneData(strikeName, MilestoneType.Nightfall);
 
 				if (milestoneInfo == null)
 				{

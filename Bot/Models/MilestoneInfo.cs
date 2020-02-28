@@ -18,7 +18,7 @@ namespace Bot.Models
 	public enum MilestoneType
 	{
 		Raid,
-		Strike,
+		Nightfall,
 		Other
 	}
 

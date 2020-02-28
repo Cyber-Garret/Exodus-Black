@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bot.Properties;
+using Bot.Core.Data;
 
 namespace Bot.Services
 {
@@ -49,10 +51,10 @@ namespace Bot.Services
 			Task.Run(async () =>
 			 {
 				 var context = new SocketCommandContext(discord, msg);
-
+				 var guild = GuildData.GetGuildAccount(context.Guild);
 				 var argPos = 0;
 				 // ignore if command not start from prefix
-				 if (!msg.HasStringPrefix(config["Bot:Prefix"], ref argPos)) return;
+				 if (!msg.HasStringPrefix(config["Bot:Prefix"], ref argPos) || !msg.HasStringPrefix(guild.CommandPrefix, ref argPos)) return;
 
 				 // search command
 				 var cmdSearchResult = commands.Search(context, argPos);
@@ -66,7 +68,8 @@ namespace Bot.Services
 					 // if Success or command unknown just finish Task
 					 if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
 
-					 context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
+					 var errorText = string.Format("{0}, {1} {2}", context.User.Mention, Resources.ErrorHndlCom, task.Result.ErrorReason);
+					 context.Channel.SendMessageAsync(errorText);
 				 });
 			 });
 			return Task.CompletedTask;

@@ -96,15 +96,6 @@ namespace Bot.Modules
 			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", embed: embed);
 		}
 
-		[Command("моды")]
-		[Summary("Подсказка о модификаторах в броню 2.0")]
-		public async Task ModsInfo()
-		{
-			var embed = ModsEmbed();
-
-			await ReplyAsync(embed: embed);
-		}
-
 		[Command("опрос")]
 		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
 		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
@@ -150,17 +141,16 @@ namespace Bot.Modules
 
 			}
 
-			var embed = new EmbedBuilder()
-				.WithColor(Color.Gold)
-				.WithTitle($"Доброго времени суток. Меня зовут Нейроматрица, я ИИ \"Черного исхода\" адаптированный для Discord. Успешно функционирую с {app.CreatedAt.ToString("dd.MM.yyyy")}")
-				.WithDescription(
-				"Моя основная цель - своевременно сообщать когда прибывает или улетает посланник девяти Зур.\n" +
-				"Также я могу предоставить информацию о экзотическом снаряжении,катализаторах.\n" +
-				"Больше информации ты можешь найти в моей [документации](https://docs.neira.su/)")
-				.AddField("Основные команды", mainCommands[0..^2])
-				.AddField("Команды активностей", milestoneCommands[0..^2])
-				.AddField("Команды администраторов", adminCommands[0..^2])
-				.AddField("Команды настройки Автороли", selfRoleCommands[0..^2]);
+			var embed = new EmbedBuilder
+			{
+				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date),
+				Color = Color.Gold,
+				Description = string.Format(Resources.HelpEmbDesc, Resources.WebSite)
+			}
+			.AddField(Resources.HelpEmbMainFieldTitle, mainCommands[0..^2])
+			.AddField(Resources.HelpEmbMilFieldTitle, milestoneCommands[0..^2])
+			.AddField(Resources.HelpEmbAdmFieldTitle, adminCommands[0..^2])
+			.AddField(Resources.HelpEmbSRolFieldTitle, selfRoleCommands[0..^2]);
 
 			return embed.Build();
 		}
@@ -183,14 +173,14 @@ namespace Bot.Modules
 			};
 			if (exotic.isWeapon)//Only weapon can have catalyst field
 			{
-				embed.AddField("Катализатор", exotic.isHaveCatalyst == true ? "**Есть**" : "**Отсутствует**");
+				embed.AddField(Resources.ExoEmbCatFieldTitle, exotic.isHaveCatalyst == true ? Resources.ExoEmbCatFieldDescYes : Resources.ExoEmbCatFieldDescNo);
 			}
 			embed.AddField(exotic.Perk, exotic.PerkDescription);//Main Exotic perk
 
 			if (exotic.SecondPerk != null && exotic.SecondPerkDescription != null)//Second perk if have.
 				embed.AddField(exotic.SecondPerk, exotic.SecondPerkDescription);
 
-			embed.AddField("Как получить:", exotic.DropLocation);
+			embed.AddField(Resources.ExoEmbHowFieldTitle, exotic.DropLocation);
 
 			return embed.Build();
 		}
@@ -199,7 +189,7 @@ namespace Bot.Modules
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = "Информация о катализаторе для оружия " + $"{catalyst.WeaponName}",
+				Title = string.Format(Resources.CatEmbTitle, catalyst.WeaponName),
 				Color = Color.Gold,
 				ThumbnailUrl = catalyst.Icon,
 				Description = catalyst.Description,
@@ -209,34 +199,9 @@ namespace Bot.Modules
 					Text = Resources.EmbFooterAboutMyMistake
 				}
 			}
-			.AddField("Как получить катализатор", catalyst.DropLocation)
-			.AddField("Задание катализатора", catalyst.Masterwork)
-			.AddField("Бонус катализатор", catalyst.Bonus)
-			.Build();
-
-			return embed;
-		}
-
-		private Embed ModsEmbed()
-		{
-			var embed = new EmbedBuilder
-			{
-				Title = "Модификаторы брони 2.0",
-				Color = Color.Gold,
-				Footer = new EmbedFooterBuilder { Text = "neira.su", IconUrl = "http://neira.su/img/neira.png" }
-			}
-			//Elemens
-			.AddField("Тип энергии к которому привязан тип оружия:", InvisibleString)
-			.AddField($"{emote.Arc} Молния", "Импульсные винтовки, пулемёты, дробовики, мечи, луки.")
-			.AddField($"{emote.Solar} Солнце", "Ракетные установки, автоматы, пистолеты-пулеметы, плазменные винтовки, линейно-плазменные винтовки.")
-			.AddField($"{emote.Void} Пустота", "Револьверы, снайперские винтовки, гранатомёты, винтовки разведчиков, пистолеты")
-			.AddField("Тип модификатора в доспехах", InvisibleString)
-			//Armor Type
-			.AddField("Шлем", "Прицельность, локаторы боеприпасов.")
-			.AddField("Рукавицы", "Скорость перезарядки, откат гранат и ближнего боя.")
-			.AddField("Нагрудник", "Резервный боезапас, стойкий прицел.")
-			.AddField("Броня для ног", "Сборщик боеприпасов, легкость оружия.")
-			.AddField("Классовый предмет", "Добивающий прием, восстановление способностей.")
+			.AddField(Resources.CatEmbDrpFieldTitle, catalyst.DropLocation)
+			.AddField(Resources.CatEmbQueFieldTitle, catalyst.Masterwork)
+			.AddField(Resources.CatEmbBnsFieldTitle, catalyst.Bonus)
 			.Build();
 
 			return embed;
@@ -248,12 +213,12 @@ namespace Bot.Modules
 			{
 				Author = new EmbedAuthorBuilder
 				{
-					Name = $"Голосование от {user.Nickname ?? user.Username}",
+					Name = string.Format(Resources.PollEmbAuthorName, user.Nickname ?? user.Username),
 					IconUrl = user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()
 				},
 				Color = Color.Green
 			}
-			.AddField($"Тема голосования", text)
+			.AddField(Resources.PollEmbTpcFieldTitle, text)
 			.Build();
 
 			return embed;

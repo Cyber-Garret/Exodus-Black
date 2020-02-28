@@ -33,7 +33,7 @@ namespace Bot.Preconditions
 				// Сообщение если команда все еще в откате.
 				if (difference.Ticks > 0)
 				{
-					return Task.FromResult(PreconditionResult.FromError(string.Format(Resources.CooldownMessage, $"{difference:%s}")));
+					return Task.FromResult(PreconditionResult.FromError(string.Format(Resources.CooldownMessage, difference.Seconds)));
 				}
 				// Обновляет время отката.
 				var time = DateTime.UtcNow.Add(CooldownLength);

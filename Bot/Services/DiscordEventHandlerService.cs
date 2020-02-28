@@ -21,7 +21,6 @@ namespace Bot.Services
 		// declare the fields used later in this class
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
-		private readonly CommandHandlerService commandHandler;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 		private readonly SelfRoleService roleService;
@@ -29,7 +28,6 @@ namespace Bot.Services
 		{
 			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
-			commandHandler = service.GetRequiredService<CommandHandlerService>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
 			roleService = service.GetRequiredService<SelfRoleService>();
@@ -48,7 +46,6 @@ namespace Bot.Services
 			discord.MessageUpdated += Discord_MessageUpdated;
 			discord.MessageDeleted += Discord_MessageDeleted;
 
-			discord.RoleCreated += Discord_RoleCreated;
 			discord.RoleDeleted += Discord_RoleDeleted;
 
 			discord.UserJoined += Discord_UserJoined;
@@ -124,15 +121,6 @@ namespace Bot.Services
 			Task.Run(async () =>
 			{
 				await MessageDeleted(cacheMessage);
-			});
-			return Task.CompletedTask;
-		}
-
-		private Task Discord_RoleCreated(SocketRole role)
-		{
-			Task.Run(async () =>
-			{
-				await RoleCreated(role);
 			});
 			return Task.CompletedTask;
 		}
@@ -377,9 +365,9 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task MessageUpdated(Cacheable<IMessage, ulong> messageBefore, SocketMessage messageAfter, ISocketMessageChannel channel)
+		private async Task MessageUpdated(Cacheable<IMessage, ulong> msgBefore, SocketMessage msgAfter, ISocketMessageChannel channel)
 		{
-			if (messageAfter.Author.IsBot) return;
+			if (msgAfter.Author.IsBot) return;
 
 			try
 			{
@@ -388,72 +376,49 @@ namespace Bot.Services
 					var guild = GuildData.GetGuildAccount(currentIGuildChannel.Guild);
 
 
-					var after = messageAfter as IUserMessage;
+					var after = msgAfter as IUserMessage;
 
-					if (messageAfter.Content == null)
+					if (msgAfter.Content == null) return;
+
+					if (!((msgBefore.HasValue ? msgBefore.Value : null) is IUserMessage before)) return;
+
+					if (before.Content == after?.Content) return;
+
+
+					var embed = new EmbedBuilder
 					{
-						return;
-					}
-
-					if (!((messageBefore.HasValue ? messageBefore.Value : null) is IUserMessage before))
-						return;
-
-
-					if (before.Content == after?.Content)
-						return;
-
-
-					var embed = new EmbedBuilder();
-					embed.WithColor(Color.Green);
-					embed.WithFooter($"ID сообщения: {messageBefore.Id}");
-					embed.WithThumbnailUrl($"{messageBefore.Value.Author.GetAvatarUrl()}");
-					embed.WithTimestamp(DateTimeOffset.UtcNow);
-					embed.WithTitle($"📝 Обновлено сообщение");
-					embed.WithDescription($"Где: <#{before.Channel.Id}>" +
-										  $"\nАвтор сообщения: **{after?.Author}**\n");
-
-
-
-
-					if (messageBefore.Value.Content.Length > 1000)
-					{
-						var string1 = messageBefore.Value.Content.Substring(0, 1000);
-
-						embed.AddField("Предыдущий текст:", $"{string1}");
-
-						if (messageBefore.Value.Content.Length <= 2000)
+						Title = Resources.MsgUpdEmbTitle,
+						Color = Color.Gold,
+						Description = string.Format(Resources.MsgUpdEmbDesc, before.Channel.Id),
+						Footer = new EmbedFooterBuilder
 						{
-
-							var string2 = messageBefore.Value.Content[1000..];
-
-							embed.AddField("Предыдущий текст: Далее", $"...{string2}");
-
-						}
-					}
-					else if (messageBefore.Value.Content.Length != 0)
+							IconUrl = msgBefore.Value.Author.GetAvatarUrl() ?? msgBefore.Value.Author.GetDefaultAvatarUrl(),
+							Text = string.Format(Resources.DiEvnEmbFooter, after?.Author)
+						},
+					};
+					//old text
+					if (msgBefore.Value.Content.Length > 1000)
 					{
-						embed.AddField("Предыдущий текст:", $"{messageBefore.Value.Content}");
+						var textBefore = msgBefore.Value.Content.Substring(0, 1000);
+
+						embed.AddField(Resources.MsgUpdEmbOldFieldTitle, $"{textBefore}...");
+					}
+					else if (msgBefore.Value.Content.Length != 0)
+					{
+						embed.AddField(Resources.MsgUpdEmbOldFieldTitle, msgBefore.Value.Content);
 					}
 
-
-					if (messageAfter.Content.Length > 1000)
+					//new text
+					if (msgAfter.Content.Length > 1000)
 					{
-						var string1 = messageAfter.Content.Substring(0, 1000);
+						var textAfter = msgAfter.Content.Substring(0, 1000);
 
-						embed.AddField("Новый текст:", $"{string1}");
+						embed.AddField(Resources.MsgUpdEmbNewFieldTitle, $"{textAfter}...");
 
-						if (messageAfter.Content.Length <= 2000)
-						{
-
-							var string2 =
-								messageAfter.Content[1000..];
-							embed.AddField("Новый текст: Далее", $"...{string2}");
-
-						}
 					}
-					else if (messageAfter.Content.Length != 0)
+					else if (msgAfter.Content.Length != 0)
 					{
-						embed.AddField("Новый текст:", $"{messageAfter.Content}");
+						embed.AddField(Resources.MsgUpdEmbNewFieldTitle, msgAfter.Content);
 					}
 
 
@@ -471,58 +436,49 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task MessageDeleted(Cacheable<IMessage, ulong> messageBefore)
+		private async Task MessageDeleted(Cacheable<IMessage, ulong> msg)
 		{
+			if (msg.Value.Author.IsBot) return;
 			try
 			{
-				if (messageBefore.Value.Author.IsBot)
-					return;
-				if (messageBefore.Value.Channel is ITextChannel textChannel)
+				if (msg.Value.Channel is ITextChannel textChannel)
 				{
 					var guild = GuildData.GetGuildAccount(textChannel.Guild);
 
 					var log = await textChannel.Guild.GetAuditLogsAsync(1);
 					var audit = log.ToList();
 
-					var name = $"{messageBefore.Value.Author.Mention}";
+					var name = msg.Value.Author.Mention;
 					var check = audit[0].Data as MessageDeleteAuditLogData;
 
 					//if message deleted by bot finish Task.
 					if (audit[0].User.IsBot) return;
 
-					if (check?.ChannelId == messageBefore.Value.Channel.Id && audit[0].Action == ActionType.MessageDeleted)
-						name = $"{audit[0].User.Mention}";
+					if (check?.ChannelId == msg.Value.Channel.Id && audit[0].Action == ActionType.MessageDeleted)
+						name = audit[0].User.Mention;
 
-					var embedDel = new EmbedBuilder();
-
-					embedDel.WithFooter($"ID сообщения: {messageBefore.Id}");
-					embedDel.WithTimestamp(DateTimeOffset.UtcNow);
-					embedDel.WithThumbnailUrl($"{messageBefore.Value.Author.GetAvatarUrl()}");
-
-					embedDel.WithColor(Color.Red);
-					embedDel.WithTitle($"🗑 Удалено сообщение");
-					embedDel.WithDescription($"Где: <#{messageBefore.Value.Channel.Id}>\n" +
-											 $"Кем: **{name}** (Не всегда корректно показывает)\n" +
-											 $"Автор сообщения: **{messageBefore.Value.Author}**\n");
-
-					if (messageBefore.Value.Content.Length > 1000)
+					var embedDel = new EmbedBuilder
 					{
-						var string1 = messageBefore.Value.Content.Substring(0, 1000);
-
-						embedDel.AddField("Текст сообщения", $"{string1}");
-
-						if (messageBefore.Value.Content.Length <= 2000)
+						Title = Resources.MsgDelEmbTitle,
+						Color = Color.Red,
+						Description = string.Format(Resources.MsgDelEmbDesc, msg.Value.Channel.Id, msg.Value.Author),
+						Footer = new EmbedFooterBuilder
 						{
-
-							var string2 =
-								messageBefore.Value.Content[1000..];
-							embedDel.AddField("Далее", $"...{string2}");
-
+							IconUrl = msg.Value.Author.GetAvatarUrl() ?? msg.Value.Author.GetDefaultAvatarUrl(),
+							Text = string.Format(Resources.DiEvnEmbFooter, name)
 						}
-					}
-					else if (messageBefore.Value.Content.Length != 0)
+					};
+
+					//deleted text message
+					if (msg.Value.Content.Length > 1000)
 					{
-						embedDel.AddField("Текст сообщения", $"{messageBefore.Value.Content}");
+						var string1 = msg.Value.Content.Substring(0, 1000);
+
+						embedDel.AddField(Resources.InvisibleString, $"{string1}...");
+					}
+					else if (msg.Value.Content.Length != 0)
+					{
+						embedDel.AddField(Resources.InvisibleString, $"{msg.Value.Content}");
 					}
 
 					if (guild.LoggingChannel != 0)
@@ -539,63 +495,30 @@ namespace Bot.Services
 			}
 
 		}
-		private async Task RoleCreated(SocketRole role)
-		{
-			try
-			{
-				#region Data
-				var log = await role.Guild.GetAuditLogsAsync(1).FlattenAsync();
-				var audit = log.ToList();
-				var check = audit[0].Data as RoleCreateAuditLogData;
-				var name = "Неизвестно";
-				var embed = new EmbedBuilder();
-				if (check?.RoleId == role.Id)
-					name = audit[0].User.Username;
-				#endregion
-
-				#region Message
-				embed.WithColor(Color.Orange);
-				embed.WithTimestamp(DateTimeOffset.UtcNow);
-				embed.AddField("🔑 Создана роль", $"Название: **{role.Name}**");
-				embed.WithFooter($"Кто создавал: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
-				#endregion
-
-				var guild = GuildData.GetGuildAccount(role.Guild);
-
-				if (guild.LoggingChannel != 0)
-				{
-					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
-						.SendMessageAsync(null, false, embed.Build());
-				}
-			}
-			catch (Exception ex)
-			{
-				logger.LogWarning(ex, "RoleCreated");
-			}
-
-		}
 		private async Task RoleDeleted(SocketRole role)
 		{
 			try
 			{
-				#region Data
+
 				var log = await role.Guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
 				var check = audit[0].Data as RoleDeleteAuditLogData;
-				var name = "Неизвестно";
-				var embed = new EmbedBuilder();
+				var name = Resources.Unknown;
+
 				if (check?.RoleId == role.Id)
 					name = audit[0].User.Username;
-				#endregion
 
-				#region Message
-				embed.WithColor(Color.Red);
-				embed.WithTimestamp(DateTimeOffset.UtcNow);
-				embed.AddField("❌ Удалена роль",
-					$"Название: **{role.Name}**\n" +
-					$"Цвет: **{role.Color}**");
-				embed.WithFooter($"Кто удалял: {name}", audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
-				#endregion
+				var embed = new EmbedBuilder
+				{
+					Title = Resources.RolDelEmbTitle,
+					Color = Color.Red,
+					Description = string.Format(Resources.RolDelEmbDesc, role.Name, role.Color),
+					Footer = new EmbedFooterBuilder
+					{
+						IconUrl = audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl(),
+						Text = string.Format(Resources.DiEvnEmbFooter, name)
+					}
+				};
 
 				var guild = GuildData.GetGuildAccount(role.Guild);
 
@@ -615,12 +538,10 @@ namespace Bot.Services
 		{
 			try
 			{
-				#region Checks
 				if (user == null || user.IsBot) return;
 
 				var guild = GuildData.GetGuildAccount(user.Guild);
 				if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
-				#endregion
 
 				IDMChannel dM = await user.GetOrCreateDMChannelAsync();
 				//TODO: Welcome embed
@@ -698,7 +619,7 @@ namespace Bot.Services
 				image.Composite(avatar, 40, 33, CompositeOperator.Over);
 
 				image.Composite(label, 251, 5, CompositeOperator.Over);
-				await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", $"Страж {user.Mention} приземлился, а это значит что:");
+				await channel.SendFileAsync(new MemoryStream(image.ToByteArray()), "Hello from Neira.jpg", string.Format(Resources.Hellotxt, user.Mention));
 			}
 			catch (Exception ex)
 			{
@@ -708,53 +629,52 @@ namespace Bot.Services
 		}
 		private async Task UserLeft(SocketGuildUser user)
 		{
+			if (user == null || user.IsBot) return;
 			try
 			{
-				#region Checks
-				if (user == null || user.IsBot)
-					return;
-				#endregion
-
-				#region Data
 				var log = await user.Guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
-				var embed = new EmbedBuilder();
-				#endregion
+				var embed = new EmbedBuilder
+				{
+					Title = Resources.UsrLefEmbTitle,
+					Color = Color.Red,
+					ThumbnailUrl = user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl(),
+					Description = string.Format(Resources.UsrLefEmbDesc, user.Nickname ?? user.Username, user),
 
-				#region Message
-				embed.WithColor(Color.Red);
-				embed.WithTimestamp(DateTimeOffset.UtcNow);
-				embed.WithTitle("💢 Страж покинул сервер");
-				embed.WithThumbnailUrl($"{user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()}");
-				embed.WithDescription($"На корабле был известен как:\n**{user.Nickname ?? user.Username}**\n" +
-					$"Discord имя стража\n**{user.Username}#{user.Discriminator}**");
-				embed.AddField("Ссылка на профиль(Не всегда корректно отображает)", user.Mention);
+				};
 				if (audit[0].Action == ActionType.Kick)
 				{
-					var test = audit[0].Data as KickAuditLogData;
-					if (test.Target.Id == user.Id)
+					var kick = audit[0].Data as KickAuditLogData;
+					if (kick.Target.Id == user.Id)
 					{
-						embed.WithTitle("🦶 Страж был выгнан");
-						var name = audit[0].User.Username ?? "Неизвестно";
-						embed.AddField("Причина изгнания:",
-							 $"{audit[0].Reason ?? "Не указана."}\n\n" +
-							 $"Кто выгнал: {name}");
+						var who = audit[0].User;
+
+						embed.Title = Resources.UsrKicEmbTitle;
+						embed.AddField(Resources.UsrLefEmbFieldTitle, audit[0].Reason ?? Resources.Unknown);
+						embed.Footer = new EmbedFooterBuilder
+						{
+							IconUrl = who.GetAvatarUrl() ?? who.GetDefaultAvatarUrl(),
+							Text = string.Format(Resources.DiEvnEmbFooter, who.Username)
+						};
 					}
 				}
-				if (audit[0].Action == ActionType.Ban)
+				else if (audit[0].Action == ActionType.Ban)
 				{
-					var test = audit[0].Data as BanAuditLogData;
-					if (test.Target.Id == user.Id)
+					var ban = audit[0].Data as BanAuditLogData;
+					if (ban.Target.Id == user.Id)
 					{
-						embed.WithTitle("🔨 Страж был забанен");
-						var name = audit[0].User.Username ?? "Неизвестно";
-						embed.AddField("Причина бана:",
-							 $"{audit[0].Reason ?? "Не указана."}\n\n" +
-							 $"Кто забанил: {name}");
+						var who = audit[0].User;
+
+						embed.Title = Resources.UsrBanEmbTitle;
+						embed.AddField(Resources.UsrLefEmbFieldTitle, audit[0].Reason ?? Resources.Unknown);
+						embed.Footer = new EmbedFooterBuilder
+						{
+							IconUrl = who.GetAvatarUrl() ?? who.GetDefaultAvatarUrl(),
+							Text = string.Format(Resources.DiEvnEmbFooter, who.Username)
+						};
 					}
 				}
-				embed.WithFooter($"Если ссылка на профиль некорректно отображается то просто скопируй <@{user.Id}> вместе с <> и отправь в любой чат сообщением.");
-				#endregion
+
 
 				var guild = GuildData.GetGuildAccount(user.Guild);
 				if (guild.LoggingChannel != 0)

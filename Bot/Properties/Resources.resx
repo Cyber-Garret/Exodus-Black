@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Bip" xml:space="preserve">
+    <value>Бип...</value>
+  </data>
+  <data name="CatEmbBnsFieldTitle" xml:space="preserve">
+    <value>Бонус катализатор</value>
+  </data>
+  <data name="CatEmbDrpFieldTitle" xml:space="preserve">
+    <value>Как получить катализатор</value>
+  </data>
+  <data name="CatEmbQueFieldTitle" xml:space="preserve">
+    <value>Задание катализатора</value>
+  </data>
+  <data name="CatEmbTitle" xml:space="preserve">
+    <value>Информация о катализаторе для оружия {0}</value>
+  </data>
   <data name="ChanCreEmbFieldTitle" xml:space="preserve">
     <value>📖 Создан канал</value>
   </data>
@@ -138,6 +153,21 @@
   <data name="EmbFooterAboutMyMistake" xml:space="preserve">
     <value>Если нашли какие либо неточности, сообщите моему создателю: Cyber_Garret#5898</value>
   </data>
+  <data name="ErrorHndlCom" xml:space="preserve">
+    <value>Ошибка:</value>
+  </data>
+  <data name="ExoEmbCatFieldDescNo" xml:space="preserve">
+    <value>**Отсутствует**</value>
+  </data>
+  <data name="ExoEmbCatFieldDescYes" xml:space="preserve">
+    <value>**Есть**</value>
+  </data>
+  <data name="ExoEmbCatFieldTitle" xml:space="preserve">
+    <value>Катализатор</value>
+  </data>
+  <data name="ExoEmbHowFieldTitle" xml:space="preserve">
+    <value>Как получить:</value>
+  </data>
   <data name="GuMemAddRole" xml:space="preserve">
     <value>Добавлена</value>
   </data>
@@ -155,6 +185,30 @@
   </data>
   <data name="GuMemUpdEmbFieldTitle" xml:space="preserve">
     <value>💢 Имя стража изменено:</value>
+  </data>
+  <data name="Hellotxt" xml:space="preserve">
+    <value>Страж {0} приземлился, а это значит что:</value>
+  </data>
+  <data name="HelpEmbAdmFieldTitle" xml:space="preserve">
+    <value>Команды администраторов</value>
+  </data>
+  <data name="HelpEmbDesc" xml:space="preserve">
+    <value>Моя основная цель - помогать Стражам собирать боевые группы, своевременно сообщать, когда прибывает или улетает посланник девяти Зур.\nТакже я могу предоставить информацию о экзотическом снаряжении, катализаторах и много чего еще.\nБольше информации ты можешь найти в разделе документация на моем [сайте]({0})</value>
+  </data>
+  <data name="HelpEmbMainFieldTitle" xml:space="preserve">
+    <value>Основные команды</value>
+  </data>
+  <data name="HelpEmbMilFieldTitle" xml:space="preserve">
+    <value>Команды активностей</value>
+  </data>
+  <data name="HelpEmbSRolFieldTitle" xml:space="preserve">
+    <value>Команды настройки Автороли</value>
+  </data>
+  <data name="HelpEmbTitle" xml:space="preserve">
+    <value>Доброго времени суток. Меня зовут Нейроматрица, я ИИ "Черного исхода" адаптированный для Discord. Успешно функционирую с {0}</value>
+  </data>
+  <data name="InvisibleString" xml:space="preserve">
+    <value>\u200b</value>
   </data>
   <data name="MilEmbDesc" xml:space="preserve">
     <value>**Заметка от лидера:** {0}</value>
@@ -181,10 +235,67 @@
   <data name="MilRemEmbTitle" xml:space="preserve">
     <value>Хочу вам напомнить, что у вас через 15 минут начнется **{0}**.</value>
   </data>
+  <data name="MsgDelEmbDesc" xml:space="preserve">
+    <value>Где: &lt;#{0}&gt;\nАвтор сообщения: **{1}**</value>
+  </data>
+  <data name="MsgDelEmbTitle" xml:space="preserve">
+    <value>🗑 Удалено сообщение</value>
+  </data>
+  <data name="MsgUpdEmbDesc" xml:space="preserve">
+    <value>Где: &lt;#{0}&gt;</value>
+  </data>
+  <data name="MsgUpdEmbNewFieldTitle" xml:space="preserve">
+    <value>Новый текст:</value>
+  </data>
+  <data name="MsgUpdEmbOldFieldTitle" xml:space="preserve">
+    <value>Предыдущий текст:</value>
+  </data>
+  <data name="MsgUpdEmbTitle" xml:space="preserve">
+    <value>📝 Обновлено сообщение</value>
+  </data>
+  <data name="Nightfall" xml:space="preserve">
+    <value>Сумрачный налет</value>
+  </data>
+  <data name="NotInGuildText" xml:space="preserve">
+    <value>:x: | Эта команда не доступна в личных сообщениях.</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Прочие активноcти</value>
+  </data>
+  <data name="PollEmbAuthorName" xml:space="preserve">
+    <value>{0} начал голосование.</value>
+  </data>
+  <data name="PollEmbTpcFieldTitle" xml:space="preserve">
+    <value>Тема голосования</value>
+  </data>
+  <data name="Raid" xml:space="preserve">
+    <value>Рейд</value>
+  </data>
+  <data name="RolDelEmbDesc" xml:space="preserve">
+    <value>Название: **{0}**\nЦвет: **{1}**</value>
+  </data>
+  <data name="RolDelEmbTitle" xml:space="preserve">
+    <value>❌ Удалена роль</value>
+  </data>
   <data name="Unknown" xml:space="preserve">
     <value>Неизвестно</value>
   </data>
+  <data name="UsrBanEmbTitle" xml:space="preserve">
+    <value>🔨 Страж был забанен</value>
+  </data>
+  <data name="UsrKicEmbTitle" xml:space="preserve">
+    <value>🦶 Страж был выгнан</value>
+  </data>
+  <data name="UsrLefEmbDesc" xml:space="preserve">
+    <value>На сервере был известен как:\n**{0}**\nDiscord имя стража\n**{1}**</value>
+  </data>
+  <data name="UsrLefEmbFieldTitle" xml:space="preserve">
+    <value>Причина:</value>
+  </data>
+  <data name="UsrLefEmbTitle" xml:space="preserve">
+    <value>💢 Страж покинул сервер</value>
+  </data>
   <data name="WebSite" xml:space="preserve">
-    <value>http://neira.su/</value>
+    <value>https://neira.su/</value>
   </data>
 </root>

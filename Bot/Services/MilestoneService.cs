@@ -260,7 +260,7 @@ namespace Bot.Services
 			return type switch
 			{
 				MilestoneType.Raid => Color.DarkMagenta,
-				MilestoneType.Strike => Color.DarkGreen,
+				MilestoneType.Nightfall => Color.DarkGreen,
 				MilestoneType.Other => Color.DarkBlue,
 				_ => Color.Magenta,
 			};
@@ -270,10 +270,10 @@ namespace Bot.Services
 		{
 			return type switch
 			{
-				MilestoneType.Raid => "Рейд",
-				MilestoneType.Strike => "Сумрачный налет",
-				MilestoneType.Other => "Прочие активноcти",
-				_ => "Неизвестно",
+				MilestoneType.Raid => Resources.Raid,
+				MilestoneType.Nightfall => Resources.Nightfall,
+				MilestoneType.Other => Resources.Other,
+				_ => Resources.Unknown,
 			};
 		}
 
