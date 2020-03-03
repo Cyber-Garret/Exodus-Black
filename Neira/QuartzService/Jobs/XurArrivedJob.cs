@@ -37,7 +37,7 @@ namespace Neira.QuartzService
 					if (guild == null || guild.NotificationChannel == 0) return;
 
 					await _discord.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-				   .SendMessageAsync(text: guild.GlobalMention, embed: EmbedsHelper.XurArrived());
+				   .SendMessageAsync(embed: EmbedsHelper.XurArrived());
 				}
 				catch (Exception ex) { _logger.LogError(ex, "XurArrived"); }
 			});

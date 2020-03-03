@@ -15,7 +15,7 @@ namespace Neira.Database
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer("Server=localhost;Database=NeiraLink;User Id=Neira;Password=PRu7bvfLTgGXcsTpoUQ7;MultipleActiveResultSets=true;");
+			optionsBuilder.UseSqlServer("Server=localhost,60096;Database=NeiraLink;User Id=Neira;Password=PRu7bvfLTgGXcsTpoUQ7;MultipleActiveResultSets=true;");
 		}
 
 		protected override void OnModelCreating(ModelBuilder model)
