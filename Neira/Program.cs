@@ -48,6 +48,7 @@ namespace Neira
 			.UseSerilog()
 			.ConfigureWebHostDefaults(webBuilder =>
 			{
+				webBuilder.UseUrls("http://localhost:5050");
 				webBuilder.UseStartup<Startup>();
 			})
 			.ConfigureServices(service =>
