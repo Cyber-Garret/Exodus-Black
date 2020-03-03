@@ -120,6 +120,9 @@
   <data name="Bip" xml:space="preserve">
     <value>Бип...</value>
   </data>
+  <data name="BipCommSummary" xml:space="preserve">
+    <value>Простая команда проверки моей работоспособности.</value>
+  </data>
   <data name="CatEmbBnsFieldTitle" xml:space="preserve">
     <value>Бонус катализатор</value>
   </data>
@@ -131,6 +134,12 @@
   </data>
   <data name="CatEmbTitle" xml:space="preserve">
     <value>Информация о катализаторе для оружия {0}</value>
+  </data>
+  <data name="CatFound" xml:space="preserve">
+    <value>Итак, {0} вот что мне известно про этот катализатор.</value>
+  </data>
+  <data name="CatInputIsNull" xml:space="preserve">
+    <value>:x: Пожалуйста, введите полное или частичное название экзотического оружия.</value>
   </data>
   <data name="ChanCreEmbFieldTitle" xml:space="preserve">
     <value>📖 Создан канал</value>
@@ -167,6 +176,12 @@
   </data>
   <data name="ExoEmbHowFieldTitle" xml:space="preserve">
     <value>Как получить:</value>
+  </data>
+  <data name="ExoFound" xml:space="preserve">
+    <value>Итак, {0} вот что мне известно про это снаряжение.</value>
+  </data>
+  <data name="ExoInputIsNull" xml:space="preserve">
+    <value>:x: Пожалуйста, введите полное или частичное название экзотического снаряжения.</value>
   </data>
   <data name="GuMemAddRole" xml:space="preserve">
     <value>Добавлена</value>
@@ -255,6 +270,9 @@
   </data>
   <data name="Nightfall" xml:space="preserve">
     <value>Сумрачный налет</value>
+  </data>
+  <data name="NotFoundInDB" xml:space="preserve">
+    <value>:x: Этой информации в моей базе данных нет. :frowning:</value>
   </data>
   <data name="NotInGuildText" xml:space="preserve">
     <value>:x: | Эта команда не доступна в личных сообщениях.</value>

@@ -1,19 +1,19 @@
-﻿using Discord.Addons.Interactive;
+﻿using Bot.Core.Data;
+using Bot.Models;
+using Bot.Preconditions;
+using Bot.Properties;
+using Bot.Services;
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+
 using Microsoft.Extensions.DependencyInjection;
-using Bot.Core.Data;
-using System.Linq;
-using Discord;
-using Bot.Models;
-using Bot.Services;
 using Microsoft.Extensions.Logging;
-using Bot.Properties;
-using Bot.Preconditions;
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
@@ -56,7 +56,7 @@ namespace Bot.Modules
 		{
 			if (Input == null)
 			{
-				await ReplyAndDeleteAsync(":x: Пожалуйста, введите полное или частичное название экзотического снаряжения.");
+				await ReplyAndDeleteAsync(Resources.ExoInputIsNull);
 				return;
 			}
 
@@ -64,12 +64,12 @@ namespace Bot.Modules
 			//If not found gear by user input
 			if (exotic == null)
 			{
-				await ReplyAndDeleteAsync(":x: Этой информации в моей базе данных нет. :frowning:");
+				await ReplyAndDeleteAsync(Resources.NotFoundInDB);
 				return;
 			}
 			var embed = ExoticEmbed(exotic);
 
-			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про это снаряжение.", embed: embed);
+			await ReplyAsync(string.Format(Resources.ExoFound, Context.User.Username), embed: embed);
 		}
 
 		[Command("каталик")]
@@ -79,7 +79,7 @@ namespace Bot.Modules
 		{
 			if (Input == null)
 			{
-				await ReplyAndDeleteAsync(":x: Пожалуйста, введите полное или частичное название экзотического оружия.");
+				await ReplyAndDeleteAsync(Resources.CatInputIsNull);
 				return;
 			}
 
@@ -88,12 +88,12 @@ namespace Bot.Modules
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
 			if (catalyst == null)
 			{
-				await ReplyAndDeleteAsync(":x: Этой информации в моей базе данных нет. :frowning:");
+				await ReplyAndDeleteAsync(Resources.NotFoundInDB);
 				return;
 			}
 			var embed = CatalystEmbed(catalyst);
 
-			await ReplyAsync($"Итак, {Context.User.Username}, вот что мне известно про этот катализатор.", embed: embed);
+			await ReplyAsync(string.Format(Resources.CatFound, Context.User.Username), embed: embed);
 		}
 
 		[Command("опрос")]
@@ -112,7 +112,7 @@ namespace Bot.Modules
 		[Summary("Простая команда проверки моей работоспособности.")]
 		public async Task Bip()
 		{
-			await ReplyAsync("Бип...");
+			await ReplyAsync(Resources.Bip);
 		}
 		#endregion
 

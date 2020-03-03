@@ -70,6 +70,15 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Простая команда проверки моей работоспособности..
+        /// </summary>
+        internal static string BipCommSummary {
+            get {
+                return ResourceManager.GetString("BipCommSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Бонус катализатор.
         /// </summary>
         internal static string CatEmbBnsFieldTitle {
@@ -102,6 +111,24 @@ namespace Bot.Properties {
         internal static string CatEmbTitle {
             get {
                 return ResourceManager.GetString("CatEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Итак, {0} вот что мне известно про этот катализатор..
+        /// </summary>
+        internal static string CatFound {
+            get {
+                return ResourceManager.GetString("CatFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :x: Пожалуйста, введите полное или частичное название экзотического оружия..
+        /// </summary>
+        internal static string CatInputIsNull {
+            get {
+                return ResourceManager.GetString("CatInputIsNull", resourceCulture);
             }
         }
         
@@ -210,6 +237,24 @@ namespace Bot.Properties {
         internal static string ExoEmbHowFieldTitle {
             get {
                 return ResourceManager.GetString("ExoEmbHowFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Итак, {0} вот что мне известно про это снаряжение..
+        /// </summary>
+        internal static string ExoFound {
+            get {
+                return ResourceManager.GetString("ExoFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :x: Пожалуйста, введите полное или частичное название экзотического снаряжения..
+        /// </summary>
+        internal static string ExoInputIsNull {
+            get {
+                return ResourceManager.GetString("ExoInputIsNull", resourceCulture);
             }
         }
         
@@ -471,6 +516,15 @@ namespace Bot.Properties {
         internal static string Nightfall {
             get {
                 return ResourceManager.GetString("Nightfall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :x: Этой информации в моей базе данных нет. :frowning:.
+        /// </summary>
+        internal static string NotFoundInDB {
+            get {
+                return ResourceManager.GetString("NotFoundInDB", resourceCulture);
             }
         }
         
