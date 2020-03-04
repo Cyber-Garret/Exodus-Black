@@ -196,6 +196,15 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ошибка: {0}.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ошибка:.
         /// </summary>
         internal static string ErrorHndlCom {
@@ -255,6 +264,168 @@ namespace Bot.Properties {
         internal static string ExoInputIsNull {
             get {
                 return ResourceManager.GetString("ExoInputIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to - Всего каналов: **{0}**\n- Стражей на сервере: **{1}**\n- Оповещения о Зуре я присылаю в **&lt;#{2}&gt;**\n- Логи сервера я пишу в **&lt;#{3}&gt;**\n- Оповещения о новых стражах я присылаю в **&lt;#{4}&gt;**\n- При сборах в активность я буду упоминать: **{5}**.
+        /// </summary>
+        internal static string GuCoEmbDescField {
+            get {
+                return ResourceManager.GetString("GuCoEmbDescField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Мои настройки на этом сервере..
+        /// </summary>
+        internal static string GuCoEmbTitle {
+            get {
+                return ResourceManager.GetString("GuCoEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Основная информация:.
+        /// </summary>
+        internal static string GuCoEmbTitleField {
+            get {
+                return ResourceManager.GetString("GuCoEmbTitleField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Функционал автороли отключен..
+        /// </summary>
+        internal static string GuildAutoroleOff {
+            get {
+                return ResourceManager.GetString("GuildAutoroleOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер..
+        /// </summary>
+        internal static string GuildAutoroleOn {
+            get {
+                return ResourceManager.GetString("GuildAutoroleOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Я выключила оповещения об изменениях на сервере..
+        /// </summary>
+        internal static string GuildLogsOff {
+            get {
+                return ResourceManager.GetString("GuildLogsOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Теперь большинство изменений на сервере, если у меня конечно есть права, я буду оповещать в канал {0}.
+        /// </summary>
+        internal static string GuildLogsOn {
+            get {
+                return ResourceManager.GetString("GuildLogsOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, теперь в сообщениях при сборе на активность я буду упоминать: {0}.
+        /// </summary>
+        internal static string GuildMilMention {
+            get {
+                return ResourceManager.GetString("GuildMilMention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to **Без упоминания**.
+        /// </summary>
+        internal static string GuildNoMention {
+            get {
+                return ResourceManager.GetString("GuildNoMention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Для команд установлен префикс `{0}`.
+        /// </summary>
+        internal static string GuildPrefixCustom {
+            get {
+                return ResourceManager.GetString("GuildPrefixCustom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Для команд установлен префикс по умолчанию `!`.
+        /// </summary>
+        internal static string GuildPrefixDefault {
+            get {
+                return ResourceManager.GetString("GuildPrefixDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :x: | В данный момент я не отправляю какое либо сообщение новоприбывшим..
+        /// </summary>
+        internal static string GuildPrivateWelcomeIsNull {
+            get {
+                return ResourceManager.GetString("GuildPrivateWelcomeIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Приветственное сообщение успешно удалено..
+        /// </summary>
+        internal static string GuildPrivateWelcomeRemove {
+            get {
+                return ResourceManager.GetString("GuildPrivateWelcomeRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :smiley: Приветственное сообщение сохранено..
+        /// </summary>
+        internal static string GuildPrivateWelcomeSave {
+            get {
+                return ResourceManager.GetString("GuildPrivateWelcomeSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Я выключила красочные оповещения о новых участниках на сервере..
+        /// </summary>
+        internal static string GuildWelcomeOff {
+            get {
+                return ResourceManager.GetString("GuildWelcomeOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Теперь я буду оповещать о новых участниках в канал {0}.
+        /// </summary>
+        internal static string GuildWelcomeOn {
+            get {
+                return ResourceManager.GetString("GuildWelcomeOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Я выключила оповещения о Зуре..
+        /// </summary>
+        internal static string GuildXurOff {
+            get {
+                return ResourceManager.GetString("GuildXurOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Теперь новости о Зуре я буду присылать в канал {0}.
+        /// </summary>
+        internal static string GuildXurOn {
+            get {
+                return ResourceManager.GetString("GuildXurOn", resourceCulture);
             }
         }
         
@@ -385,11 +556,38 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Подготавливаю сбор боевой группы..
+        /// </summary>
+        internal static string MilBake {
+            get {
+                return ResourceManager.GetString("MilBake", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Активность отменена.\n{0}.
+        /// </summary>
+        internal static string MilCanceled {
+            get {
+                return ResourceManager.GetString("MilCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to **Заметка от лидера:** {0}.
         /// </summary>
         internal static string MilEmbDesc {
             get {
                 return ResourceManager.GetString("MilEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отменен по причине: {0}.
+        /// </summary>
+        internal static string MilEmbDescCanceled {
+            get {
+                return ResourceManager.GetString("MilEmbDescCanceled", resourceCulture);
             }
         }
         
@@ -430,11 +628,65 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Страж, произошла критическая ошибка. Попробуй через пару минут снова, если ошибка будет снова напиши моему создателю - Cyber_Garret#5898\nОшибка: {0}.
+        /// </summary>
+        internal static string MilError {
+            get {
+                return ResourceManager.GetString("MilError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Доступные активности {0}..
         /// </summary>
         internal static string MilInfEmbTitle {
             get {
                 return ResourceManager.GetString("MilInfEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страж, нельзя отменить активность не указав причину..
+        /// </summary>
+        internal static string MilNoReason {
+            get {
+                return ResourceManager.GetString("MilNoReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заметка активности исправлена.\n{0}.
+        /// </summary>
+        internal static string MilNoteEdited {
+            get {
+                return ResourceManager.GetString("MilNoteEdited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, я не разобрала в какую активность ты хочешь собрать боевую группу..
+        /// </summary>
+        internal static string MilNotFound {
+            get {
+                return ResourceManager.GetString("MilNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страж, ты не можешь выполнить данное действие, так как оно доступно только лидеру активности..
+        /// </summary>
+        internal static string MilNotLeader {
+            get {
+                return ResourceManager.GetString("MilNotLeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Собрался в прошлое? Тебя ждет увлекательное шоу &quot;остаться в живых&quot; в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану..
+        /// </summary>
+        internal static string MilPastTime {
+            get {
+                return ResourceManager.GetString("MilPastTime", resourceCulture);
             }
         }
         
@@ -453,6 +705,15 @@ namespace Bot.Properties {
         internal static string MilRemEmbTitle {
             get {
                 return ResourceManager.GetString("MilRemEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страж, ты указал неизвестный мне формат времени..
+        /// </summary>
+        internal static string MilTimeError {
+            get {
+                return ResourceManager.GetString("MilTimeError", resourceCulture);
             }
         }
         
@@ -588,6 +849,78 @@ namespace Bot.Properties {
         internal static string RolDelEmbTitle {
             get {
                 return ResourceManager.GetString("RolDelEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, я удалила все записанные роли в моей базе данных..
+        /// </summary>
+        internal static string SlfRolClear {
+            get {
+                return ResourceManager.GetString("SlfRolClear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нажми на {0} что бы получить роль {1}\n.
+        /// </summary>
+        internal static string SlfRolEmbDescField {
+            get {
+                return ResourceManager.GetString("SlfRolEmbDescField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, в мой базе не записанно ни одной автороли..
+        /// </summary>
+        internal static string SlfRolEmpty {
+            get {
+                return ResourceManager.GetString("SlfRolEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, я не смогла сохранить эмодзи. Ты уверен что используешь серверный эмодзи?.
+        /// </summary>
+        internal static string SlfRolErrorEmoji {
+            get {
+                return ResourceManager.GetString("SlfRolErrorEmoji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В моей базе записанны такие автороли и эмодзи привязанные к ним:\n.
+        /// </summary>
+        internal static string SlfRolList {
+            get {
+                return ResourceManager.GetString("SlfRolList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей..
+        /// </summary>
+        internal static string SlfRolRoleOrEmojiExist {
+            get {
+                return ResourceManager.GetString("SlfRolRoleOrEmojiExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, ты не указал роль и\\или эмодзи..
+        /// </summary>
+        internal static string SlfRolRoleOrEmojIsNull {
+            get {
+                return ResourceManager.GetString("SlfRolRoleOrEmojIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Успех! Капитан я сохранила данную связку роли {0} и {1} в своей базе данных..
+        /// </summary>
+        internal static string SlfRolSucAdd {
+            get {
+                return ResourceManager.GetString("SlfRolSucAdd", resourceCulture);
             }
         }
         

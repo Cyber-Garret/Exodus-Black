@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bot.Properties;
 
 namespace Bot.Modules
 {
@@ -33,13 +34,13 @@ namespace Bot.Modules
 			}
 			catch
 			{
-				await ReplyAndDeleteAsync("Капитан, я не смогла проиндексировать эмодзи. Ты уверен что используешь серверный эмодзи?");
+				await ReplyAndDeleteAsync(Resources.SlfRolErrorEmoji);
 				return;
 			}
 
 			if (role == null || emote == null)
 			{
-				await ReplyAndDeleteAsync(@"Капитан, ты не указал роль и\\или эмодзи.");
+				await ReplyAndDeleteAsync(Resources.SlfRolRoleOrEmojIsNull);
 				return;
 			}
 			var guild = GuildData.GetGuildAccount(Context.Guild);
@@ -54,10 +55,10 @@ namespace Bot.Modules
 				guild.GuildSelfRoles.Add(selfrole);
 				GuildData.SaveAccounts(Context.Guild);
 
-				await ReplyAndDeleteAsync($"Успех! Капитан я сохранила данную связку роли {role.Mention} и {emote} в своей базе данных.", timeout: TimeSpan.FromSeconds(30));
+				await ReplyAndDeleteAsync(string.Format(Resources.SlfRolSucAdd, role.Mention, emote), timeout: TimeSpan.FromSeconds(30));
 			}
 			else
-				await ReplyAndDeleteAsync(@"Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей.");
+				await ReplyAndDeleteAsync(Resources.SlfRolRoleOrEmojiExist);
 
 		}
 
@@ -65,16 +66,14 @@ namespace Bot.Modules
 		[Summary("Очищает список ролей для использования в сообщении автороли.")]
 		public async Task ClearGuildSelfRoles()
 		{
-			//Clear SelfRole Message ID and save default value
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
+			//Clear all self role associated with guild and save
 			guild.SelfRoleMessageId = 0;
 			guild.GuildSelfRoles.Clear();
-
-			//Clear all self role associated with guild and save
 			GuildData.SaveAccounts(Context.Guild);
 
-			await ReplyAndDeleteAsync("Капитан, я удалила все записанные в моей базе роли для твоего корабля.");
+			await ReplyAndDeleteAsync(Resources.SlfRolClear);
 		}
 
 		[Command("СписокРолей"), Alias("ср")]
@@ -84,7 +83,7 @@ namespace Bot.Modules
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 			if (guild.GuildSelfRoles.Count > 0)
 			{
-				var message = "В моей базе записанны такие автороли и эмодзи привязанные к ним:\n";
+				var message = Resources.SlfRolList;
 				foreach (var item in guild.GuildSelfRoles)
 				{
 					var emote = await Context.Guild.GetEmoteAsync(item.EmoteID);
@@ -94,7 +93,7 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync(message, timeout: TimeSpan.FromMinutes(1));
 			}
 			else
-				await ReplyAndDeleteAsync("Капитан, в мой базе не записанно ни одной автороли.");
+				await ReplyAndDeleteAsync(Resources.SlfRolEmpty);
 		}
 
 		[Command("РазместитьРоли"), Alias("рр")]
@@ -107,22 +106,23 @@ namespace Bot.Modules
 			if (string.IsNullOrWhiteSpace(text)) return;
 
 			var guild = GuildData.GetGuildAccount(Context.Guild);
-			if (guild.GuildSelfRoles.Count < 2)
+			if (guild.GuildSelfRoles.Count > 0)
 			{
-				await ReplyAndDeleteAsync($"Капитан, добавь больше авторолей чтобы я могла разместить сообщение.");
-				return;
+				var message = await ReplyAsync(embed: await SelfRoleMessageAsync(Context, guild.GuildSelfRoles, text));
+
+				guild.SelfRoleMessageId = message.Id;
+				GuildData.SaveAccounts(Context.Guild);
+
+				foreach (var role in guild.GuildSelfRoles)
+				{
+					var emote = await Context.Guild.GetEmoteAsync(role.EmoteID);
+					await message.AddReactionAsync(emote);
+				}
 			}
+			else
+				await ReplyAndDeleteAsync(Resources.SlfRolEmpty);
 
-			var message = await ReplyAsync(embed: await SelfRoleMessageAsync(Context, guild.GuildSelfRoles, text));
 
-			guild.SelfRoleMessageId = message.Id;
-			GuildData.SaveAccounts(Context.Guild);
-
-			foreach (var role in guild.GuildSelfRoles)
-			{
-				var emote = await Context.Guild.GetEmoteAsync(role.EmoteID);
-				await message.AddReactionAsync(emote);
-			}
 		}
 
 		#region Methods
@@ -131,21 +131,25 @@ namespace Bot.Modules
 			//Initial Embed
 			var embed = new EmbedBuilder
 			{
+				Author = new EmbedAuthorBuilder
+				{
+					IconUrl = Context.Guild.IconUrl,
+					Name = Context.Guild.Name
+				},
 				Color = Color.Gold,
 				Description = text
 			};
-			//Add guild as Author
-			embed.WithAuthor(Context.Guild.Name, Context.Guild.IconUrl);
+
 			//Create field with roles and associated emotes
 			var embedField = new EmbedFieldBuilder
 			{
-				Name = InvisibleString
+				Name = Resources.InvisibleString
 			};
 			foreach (var item in GuildRoles)
 			{
 				var emote = await Context.Guild.GetEmoteAsync(item.EmoteID);
 				var role = Context.Guild.GetRole(item.RoleID);
-				embedField.Value += $"Нажми на {emote} что бы получить роль {role.Mention}\n";
+				embedField.Value += string.Format(Resources.SlfRolEmbDescField, emote, role.Mention);
 			}
 			embed.AddField(embedField);
 

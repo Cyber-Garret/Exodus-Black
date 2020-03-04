@@ -13,6 +13,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Bot.Models;
 using System.Threading;
+using Bot.Properties;
 
 namespace Bot.Modules
 {
@@ -30,30 +31,16 @@ namespace Bot.Modules
 			discord = service.GetRequiredService<DiscordSocketClient>();
 		}
 
+		#region Commands
 		[Command("настройки")]
 		[Summary("Эта команда выводит мои настройки, так же содержит некоторую полезную и не очень информацию.")]
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
+			var embed = GuildConfigEmbed(guild);
 
-			var OwnerName = Context.Guild.Owner.Nickname ?? Context.Guild.Owner.Username;
-			string FormattedCreatedAt = Context.Guild.CreatedAt.ToString("dd-MM-yyyy");
-
-			var embed = new EmbedBuilder()
-				.WithColor(Color.Orange)
-				.WithAuthor($"Мои настройки на этом сервере.", discord.CurrentUser.GetAvatarUrl() ?? discord.CurrentUser.GetDefaultAvatarUrl())
-				.WithThumbnailUrl(Context.Guild.IconUrl)
-				.WithDescription($"Сервер **{Context.Guild.Name}** зарегистрирован **{FormattedCreatedAt}**, владельцем сервера является **{OwnerName}**")
-				.AddField("Основная информация:",
-				$"- Всего каналов: **{Context.Guild.Channels.Count}**\n" +
-				$"- Стражей на корабле: **{Context.Guild.Users.Count}**\n" +
-				$"- Оповещения о Зуре я присылаю в **<#{guild.NotificationChannel}>**\n" +
-				$"- Логи сервера я пишу в **<#{guild.LoggingChannel}>**\n" +
-				$"- Оповещения о новых стражах я присылаю в **<#{guild.WelcomeChannel}>**\n" +
-				$"- Глобальное упоминание в некоторых сообщениях: **{guild.GlobalMention ?? "Без упоминания"}**");
-
-			await ReplyAsync(embed: embed.Build());
+			await ReplyAsync(embed: embed);
 		}
 
 		[Command("новости")]
@@ -64,24 +51,16 @@ namespace Bot.Modules
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
-			var embed = new EmbedBuilder()
-				.WithTitle("Новостной канал");
 			if (channel == null)
 			{
-				embed.WithColor(Color.Red)
-					.WithDescription("Я выключила оповещения о Зуре.")
-					.WithFooter($"Это сообщение будет автоматически удалено через 1 минуту.");
 				guild.NotificationChannel = 0;
+				await ReplyAndDeleteAsync(Resources.GuildXurOff);
 			}
 			else
 			{
-				embed.WithColor(Color.Gold)
-					.WithDescription($"Теперь новости о Зуре я буду присылать в канал {channel.Mention}")
-					.WithFooter($"Капитан, убедись пожалуйста, что в канале {channel.Name} у меня есть право [Отправлять сообщения].");
 				guild.NotificationChannel = channel.Id;
+				await ReplyAndDeleteAsync(string.Format(Resources.GuildXurOn, channel.Mention));
 			}
-
-			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
@@ -93,28 +72,20 @@ namespace Bot.Modules
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
-			var embed = new EmbedBuilder()
-				.WithTitle("Технический канал");
 			if (channel == null)
 			{
-				embed.WithColor(Color.Red)
-					.WithDescription("Я выключила оповещения об изменениях на сервере.")
-					.WithFooter($"Это сообщение будет автоматически удалено через 1 минуту.");
 				guild.LoggingChannel = 0;
+				await ReplyAndDeleteAsync(Resources.GuildLogsOff);
 			}
 			else
 			{
-				embed.WithColor(Color.Gold)
-					.WithDescription($"Теперь большинство изменений на сервере, если у меня конечно есть права, я буду оповещать в канал {channel.Mention}")
-					.WithFooter($"Капитан, убедись пожалуйста, что в канале {channel.Name} у меня есть право [Отправлять сообщения]. Это сообщение будет автоматически удалено через 1 минуту.");
 				guild.LoggingChannel = channel.Id;
+				await ReplyAndDeleteAsync(string.Format(Resources.GuildLogsOn, channel.Mention));
 			}
-
-			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("приветствие")]
+		[Command("приветствие"), RequireBotPermission(ChannelPermission.AttachFiles)]
 		[Summary("Команда позволяет включать или выключать оповещения о новых участниках сервера в стиле мира Destiny.")]
 		[Remarks("Для выключения оповещений напиши **!приветствие**. Для включения **!логи #флудилка**. ")]
 		public async Task SetWelcomeChannel(ITextChannel channel = null)
@@ -122,31 +93,23 @@ namespace Bot.Modules
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
-			var embed = new EmbedBuilder()
-				.WithTitle("Приветственный канал");
 			if (channel == null)
 			{
-				embed.WithColor(Color.Red)
-					.WithDescription("Я выключила оповещения о новых участниках на сервере.")
-					.WithFooter($"Это сообщение будет автоматически удалено через 1 минуту.");
 				guild.WelcomeChannel = 0;
+				await ReplyAndDeleteAsync(Resources.GuildWelcomeOff);
 			}
 			else
 			{
-				embed.WithColor(Color.Gold)
-					.WithDescription($"Теперь я буду оповещать о новых участниках в канал {channel.Mention}")
-					.WithFooter($"Капитан, убедись пожалуйста, что в канале {channel.Name} у меня есть право [Прикреплять файлы]. Это сообщение будет автоматически удалено через 1 минуту.");
 				guild.WelcomeChannel = channel.Id;
+				await ReplyAndDeleteAsync(string.Format(Resources.GuildWelcomeOn, channel.Mention));
 			}
-
-			await ReplyAndDeleteAsync(null, embed: embed.Build(), timeout: TimeSpan.FromMinutes(1));
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
 		[Command("сохранить приветствие")]
 		[Summary("Сохраняет сообщение-приветствие и включает механизм отправки сообщения всем новоприбывшим на сервер.\nПоддерживает синтаксис MarkDown для красивого оформления.")]
 		[Remarks("Пример: !сохранить приветствие <Сообщение>")]
-		public async Task SaveWelcomeMessage([Remainder]string message)
+		public async Task SaveWelcomeMessage([Remainder]string message = null)
 		{
 			//First check if welcome message represent ?
 			if (string.IsNullOrWhiteSpace(message)) return;
@@ -154,29 +117,35 @@ namespace Bot.Modules
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
-			guild.WelcomeMessage = message;
-
+			if (string.IsNullOrWhiteSpace(message))
+			{
+				guild.WelcomeMessage = null;
+				await ReplyAndDeleteAsync(Resources.GuildPrivateWelcomeRemove);
+			}
+			else
+			{
+				guild.WelcomeMessage = message;
+				await ReplyAndDeleteAsync(Resources.GuildPrivateWelcomeSave);
+				//TODO send example welcome
+			}
 			GuildData.SaveAccounts(Context.Guild);
-
-			await ReplyAsync(":smiley: Приветственное сообщение сохранено.");
 		}
 
 		[Command("посмотреть приветствие")]
 		[Summary("Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.")]
 		public async Task WelcomeMessagePreview()
 		{
+			// TODO: Welcome embed message.
+			//await ReplyAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.",
+			//				 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser, guild.WelcomeMessage).Build());
+
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
-			{
-				await ReplyAndDeleteAsync($":x: | В данный момент я не отправляю какое либо сообщение новоприбывшим. Для добавления или редактирования сообщения отправь команду **!сохранить приветствие <текст сообщения>**");
-				return;
-			}
-			// TODO: Welcome embed message.
-			//await ReplyAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.",
-			//				 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser, guild.WelcomeMessage).Build());
-			await ReplyAsync(guild.WelcomeMessage);
+				await ReplyAndDeleteAsync(Resources.GuildPrivateWelcomeIsNull);
+			else
+				await ReplyAsync(guild.WelcomeMessage);
 		}
 
 		[Command("префикс")]
@@ -185,46 +154,38 @@ namespace Bot.Modules
 		{
 			var config = GuildData.GetGuildAccount(Context.Guild);
 
-			string message;
 			if (prefix == null)
 			{
 				config.CommandPrefix = null;
-				GuildData.SaveAccounts(Context.Guild);
-
-				message = $"Для команд установлен префикс по умолчанию `!`";
+				await ReplyAsync(Resources.GuildPrefixDefault);
 			}
 			else
 			{
 				config.CommandPrefix = prefix;
-				GuildData.SaveAccounts(Context.Guild);
-
-				message = $"Для команд установлен префикс `{prefix}`";
+				await ReplyAsync(string.Format(Resources.GuildPrefixCustom, prefix));
 			}
-
-			await ReplyAsync(message);
+			GuildData.SaveAccounts(Context.Guild);
 		}
 
 		[Command("автороль")]
 		[Summary("Сохраняет роль, которую я буду выдавать всем новым пользователям, пришедшим на сервер.\n" +
 			"**Важно! Моя роль должна быть над ролью, которую я буду автоматически выдавать всем новоприбывшим. Имеется ввиду в списке Ваш сервер->Настройки сервера->Роли.**")]
 		[RequireBotPermission(GuildPermission.ManageRoles)]
-		public async Task AutoRoleRoleAdd(IRole _role)
+		public async Task AutoRoleRoleAdd(IRole role = null)
 		{
 			var guild = GuildData.GetGuildAccount(Context.Guild);
-			guild.AutoroleID = _role.Id;
-			GuildData.SaveAccounts(Context.Guild);
 
-			var embed = new EmbedBuilder
+			if (role == null)
 			{
-				Color = Color.Gold,
-				Description = $"Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим.",
-				Footer = new EmbedFooterBuilder
-				{
-					Text = "Пожалуйста, убедись, что моя роль выше авто роли и у меня есть права на выдачу ролей. Тогда я без проблем буду выдавать роль всем прибывшим на сервер и сообщать об этом в сервисных сообщениях."
-				}
-			};
-
-			await ReplyAsync(embed: embed.Build());
+				guild.AutoroleID = 0;
+				await ReplyAndDeleteAsync(Resources.GuildAutoroleOff);
+			}
+			else
+			{
+				guild.AutoroleID = role.Id;
+				await ReplyAndDeleteAsync(string.Format(Resources.GuildAutoroleOn, role.Name));
+			}
+			GuildData.SaveAccounts(Context.Guild);
 		}
 
 		[Command("упоминание")]
@@ -250,7 +211,7 @@ namespace Bot.Modules
 
 			GuildData.SaveAccounts(Context.Guild);
 
-			await ReplyAsync($"Капитан, теперь в некоторых сообщениях я буду использовать {guild.GlobalMention ?? "**Без упоминания**"}");
+			await ReplyAndDeleteAsync(string.Format(Resources.GuildMilMention, guild.GlobalMention ?? Resources.GuildNoMention));
 		}
 
 		[Command("рассылка")]
@@ -266,15 +227,7 @@ namespace Bot.Modules
 			int SucessCount = 0;
 			int FailCount = 0;
 
-			var embed = new EmbedBuilder
-			{
-				Title = $":mailbox_with_mail: Вам сообщение от {Context.User.Username} с сервера **`{Context.Guild.Name}`**",
-				Color = Color.LightOrange,
-				ThumbnailUrl = Context.Guild.IconUrl,
-				Description = message,
-			};
-			embed.WithFooter("Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su");
-			embed.WithCurrentTimestamp();
+		
 
 			foreach (var user in Context.Guild.Users)
 			{
@@ -451,5 +404,46 @@ namespace Bot.Modules
 				logger.LogWarning(ex, "Online command");
 			}
 		}
+		#endregion
+
+		#region Methods
+		private Embed GuildConfigEmbed(Guild guild)
+		{
+			var embed = new EmbedBuilder
+			{
+				Author = new EmbedAuthorBuilder
+				{
+					IconUrl = discord.CurrentUser.GetAvatarUrl(),
+					Name = Resources.GuCoEmbTitle
+				},
+				Color = Color.Orange,
+				ThumbnailUrl = Context.Guild.IconUrl,
+
+			}
+			.AddField(Resources.GuCoEmbTitleField,
+			string.Format(Resources.GuCoEmbDescField,
+				Context.Guild.Channels.Count,
+				Context.Guild.Users.Count,
+				guild.NotificationChannel,
+				guild.LoggingChannel,
+				guild.WelcomeChannel,
+				guild.GlobalMention ?? Resources.GuildNoMention));
+
+			return embed.Build();
+		}
+
+		private Embed MailingEmbed()
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = $":mailbox_with_mail: Вам сообщение от {Context.User.Username} с сервера **`{Context.Guild.Name}`**",
+				Color = Color.LightOrange,
+				ThumbnailUrl = Context.Guild.IconUrl,
+				Description = message,
+			};
+			embed.WithFooter("Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su");
+			embed.WithCurrentTimestamp();
+		}
+		#endregion
 	}
 }

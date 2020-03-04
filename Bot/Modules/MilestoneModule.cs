@@ -11,6 +11,7 @@ using System.Globalization;
 using Microsoft.Extensions.Logging;
 using Discord;
 using Discord.WebSocket;
+using Bot.Properties;
 
 namespace Bot.Modules
 {
@@ -30,69 +31,18 @@ namespace Bot.Modules
 		}
 
 		#region Commands
-		[Command("raid"), Alias("рейд", "рєйд")]
+		[Command("рейд")]
 		[Summary("Анонс сбора боевой группы в рейд.")]
 		public async Task RegisterRaid(string raidName, string raidTime, [Remainder]string leaderNote = null)
 		{
 			await GoMilestoneAsync(raidName, MilestoneType.Raid, raidTime, leaderNote);
 		}
 
-		[Command("strike"), Alias("налёт", "наліт")]
+		[Command("налёт")]
 		[Summary("Aнонс сбора боевой группы в сумрачный налёт.")]
-		public async Task RegisterStrike(string strikeName, string strikeTime, [Remainder]string leaderNote = null)
+		public async Task RegisterStrike(string nightfallName, string nightfallTime, [Remainder]string leaderNote = null)
 		{
-			try
-			{
-				var guild = GuildData.GetGuildAccount(Context.Guild);
-
-				var milestoneInfo = MilestoneInfoData.SearchMilestoneData(strikeName, MilestoneType.Nightfall);
-
-				if (milestoneInfo == null)
-				{
-					await ReplyAndDeleteAsync("Страж, я не разобрала в какой сумрачный налёт ты хочешь собрать боевую группу.");
-					return;
-				}
-
-				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
-
-				DateTime.TryParseExact(strikeTime, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
-
-				if (dateTime == new DateTime())
-				{
-					await ReplyAndDeleteAsync("Страж, ты указал неизвестный мне формат времени.");
-					return;
-				}
-				if (dateTime < DateTime.Now)
-				{
-
-					await ReplyAndDeleteAsync("Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
-					return;
-				}
-
-				var newMilestone = new Milestone
-				{
-					GuildId = Context.Guild.Id,
-					MilestoneInfo = milestoneInfo,
-					Note = leaderNote,
-					Leader = Context.User.Id,
-					DateExpire = dateTime
-				};
-				var embed = milestoneHandler.MilestoneEmbed(newMilestone);
-
-				var msg = await ReplyAsync(message: guild.GlobalMention, embed: embed);
-
-				newMilestone.MessageId = msg.Id;
-
-				ActiveMilestoneData.AddMilestone(newMilestone);
-
-				//Slots
-				await msg.AddReactionAsync(emote.Raid);
-			}
-			catch (Exception ex)
-			{
-				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nУже пишу моему создателю, он сейчас все поправит.");
-				logger.LogError(ex, "Strike command");
-			}
+			await GoMilestoneAsync(nightfallName, MilestoneType.Nightfall, nightfallTime, leaderNote);
 		}
 
 		//TODO: Ordeal nightfall
@@ -103,94 +53,45 @@ namespace Bot.Modules
 
 		//}
 
-		[Command("milestone"), Alias("сбор", "збір")]
+		[Command("сбор")]
 		[Summary("Анонс сбора боевой группы в активности типа Паноптикум, Яма, Трон и тд и тп.")]
 		public async Task RegisterOther(string otherName, string otherTime, [Remainder]string leaderNote = null)
 		{
-			try
-			{
-				var guild = GuildData.GetGuildAccount(Context.Guild);
-
-				var milestoneInfo = MilestoneInfoData.SearchMilestoneData(otherName, MilestoneType.Other);
-
-				if (milestoneInfo == null)
-				{
-					await ReplyAndDeleteAsync("Страж, я не разобрала в какую активность ты хочешь собрать боевую группу.");
-					return;
-				}
-
-				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
-
-				DateTime.TryParseExact(otherTime, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
-
-				var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
-				var raidTimeOffset = new DateTimeOffset(dateTime, guildTimeZone.BaseUtcOffset);
-
-				if (dateTime == new DateTime())
-				{
-					await ReplyAndDeleteAsync("Страж, ты указал неизвестный мне формат времени.");
-					return;
-				}
-
-				var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone);
-
-				if (raidTimeOffset < now)
-				{
-
-					await ReplyAndDeleteAsync("Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
-					return;
-				}
-
-				var newMilestone = new Milestone
-				{
-					GuildId = Context.Guild.Id,
-					MilestoneInfo = milestoneInfo,
-					Note = leaderNote,
-					Leader = Context.User.Id,
-					DateExpire = raidTimeOffset
-				};
-				var embed = milestoneHandler.MilestoneEmbed(newMilestone);
-
-				var msg = await ReplyAsync(message: guild.GlobalMention, embed: embed);
-
-				newMilestone.MessageId = msg.Id;
-
-				ActiveMilestoneData.AddMilestone(newMilestone);
-
-				//Slots
-				await msg.AddReactionAsync(emote.Raid);
-			}
-			catch (Exception ex)
-			{
-				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nУже пишу моему создателю, он сейчас все поправит.");
-				logger.LogError(ex, "Other milestone command");
-			}
+			await GoMilestoneAsync(otherName, MilestoneType.Other, otherTime, leaderNote)
 		}
 
 		// TODO: User defined milestone
 
-		[Command("note"), Alias("заметка", "замітка")]
+		[Command("заметка")]
 		[Summary("Позволяет удалить или изменить заметку активности.")]
 		public async Task ChangeNote(ulong milestoneId, [Remainder]string note = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
 			if (milestone.Leader == Context.User.Id)
 			{
-				milestone.Note = note;
-				ActiveMilestoneData.SaveMilestones(milestone.MessageId);
+				try
+				{
+					milestone.Note = note;
+					ActiveMilestoneData.SaveMilestones(milestone.MessageId);
 
-				var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
-				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+					var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
+					var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
 
-				await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+					await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
 
-				await ReplyAndDeleteAsync($"Заметка исправлена. {msg.GetJumpUrl()}");
+					await ReplyAndDeleteAsync(string.Format(Resources.MilNoteEdited, msg.GetJumpUrl()));
+				}
+				catch (Exception ex)
+				{
+					await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
+					logger.LogError(ex, "Milestone note command");
+				}
 			}
 			else
-				await ReplyAndDeleteAsync("Ты не лидер активности.");
+				await ReplyAndDeleteAsync(Resources.MilNotLeader);
 		}
 
-		[Command("cancel"), Alias("отмена", "скасувати")]
+		[Command("отмена")]
 		[Summary("Позволяет отменить активность.")]
 		public async Task CloseMilestone(ulong milestoneId, [Remainder]string reason = null)
 		{
@@ -199,24 +100,32 @@ namespace Bot.Modules
 			{
 				if (reason == null)
 				{
-					await ReplyAndDeleteAsync("для отмены нужно написать причину.");
+					await ReplyAndDeleteAsync(Resources.MilNoReason);
 					return;
 				}
 				ActiveMilestoneData.RemoveMilestone(milestone.MessageId);
 
-				var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
-				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
-
-				await msg.ModifyAsync(m =>
+				try
 				{
-					m.Content = string.Empty;
-					m.Embed = DeleteMilestone(milestone, reason);
-				});
+					var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
+					var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
 
-				await ReplyAndDeleteAsync($"Активность отменена. {msg.GetJumpUrl()}");
+					await msg.ModifyAsync(m =>
+					{
+						m.Content = string.Empty;
+						m.Embed = DeleteMilestone(milestone, reason);
+					});
+
+					await ReplyAndDeleteAsync(string.Format(Resources.MilCanceled, msg.GetJumpUrl()));
+				}
+				catch (Exception ex)
+				{
+					await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
+					logger.LogError(ex, "Canceling milestone");
+				}
 			}
 			else
-				await ReplyAndDeleteAsync("Ты не лидер активности.");
+				await ReplyAndDeleteAsync(Resources.MilNotLeader);
 		}
 		#endregion
 
@@ -232,7 +141,7 @@ namespace Bot.Modules
 				if (milestoneInfo == null)
 				{
 					embed = milestoneHandler.GetMilestonesNameEmbed(type);
-					await ReplyAndDeleteAsync($"{Context.User.Mention}, я не разобрала в какую активность ты хочешь собрать боевую группу.", embed: embed, timeout: TimeSpan.FromMinutes(1));
+					await ReplyAndDeleteAsync(string.Format(Resources.MilNotFound, Context.User.Mention), embed: embed, timeout: TimeSpan.FromMinutes(1));
 					return;
 				}
 
@@ -250,11 +159,11 @@ namespace Bot.Modules
 					if (raidTimeOffset < now)
 					{
 
-						await ReplyAndDeleteAsync("Собрался в прошлое? Тебя ждет увлекательное шоу \"остаться в живых\" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.");
+						await ReplyAndDeleteAsync(Resources.MilPastTime);
 						return;
 					}
 
-					var msg = await ReplyAsync("Подготавливаю сбор боевой группы.");
+					var msg = await ReplyAsync(Resources.MilBake);
 
 					var newMilestone = new Milestone
 					{
@@ -280,13 +189,13 @@ namespace Bot.Modules
 					await msg.AddReactionAsync(emote.Raid);
 				}
 				else
-					await ReplyAndDeleteAsync("Страж, ты указал неизвестный мне формат времени.");
+					await ReplyAndDeleteAsync(Resources.MilTimeError);
 
 			}
 			catch (Exception ex)
 			{
-				await ReplyAndDeleteAsync("Страж, произошла критическая ошибка, я не могу в данный момент выполнить команду.\nУже пишу моему создателю, он сейчас все поправит.");
-				logger.LogError(ex, "Raid command");
+				await ReplyAndDeleteAsync(string.Format(Resources.MilError, ex.Message));
+				logger.LogError(ex, "Milestone method");
 			}
 		}
 
@@ -296,11 +205,11 @@ namespace Bot.Modules
 			var embed = new EmbedBuilder
 			{
 				Title = $"{milestone.MilestoneInfo.Type }: { milestone.MilestoneInfo.Name}",
-				Description = $"Отменен по причине: {reason}"
+				Description = string.Format(Resources.MilEmbDescCanceled, reason)
 			};
 			var embedFieldUsers = new EmbedFieldBuilder
 			{
-				Name = $"Состав боевой группы"
+				Name = Resources.MilEmbMemTitleField
 			};
 			var leader = discord.GetUser(milestone.Leader);
 			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";

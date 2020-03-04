@@ -162,6 +162,9 @@
   <data name="EmbFooterAboutMyMistake" xml:space="preserve">
     <value>Если нашли какие либо неточности, сообщите моему создателю: Cyber_Garret#5898</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Ошибка: {0}</value>
+  </data>
   <data name="ErrorHndlCom" xml:space="preserve">
     <value>Ошибка:</value>
   </data>
@@ -182,6 +185,60 @@
   </data>
   <data name="ExoInputIsNull" xml:space="preserve">
     <value>:x: Пожалуйста, введите полное или частичное название экзотического снаряжения.</value>
+  </data>
+  <data name="GuCoEmbDescField" xml:space="preserve">
+    <value>- Всего каналов: **{0}**\n- Стражей на сервере: **{1}**\n- Оповещения о Зуре я присылаю в **&lt;#{2}&gt;**\n- Логи сервера я пишу в **&lt;#{3}&gt;**\n- Оповещения о новых стражах я присылаю в **&lt;#{4}&gt;**\n- При сборах в активность я буду упоминать: **{5}**</value>
+  </data>
+  <data name="GuCoEmbTitle" xml:space="preserve">
+    <value>Мои настройки на этом сервере.</value>
+  </data>
+  <data name="GuCoEmbTitleField" xml:space="preserve">
+    <value>Основная информация:</value>
+  </data>
+  <data name="GuildAutoroleOff" xml:space="preserve">
+    <value>Функционал автороли отключен.</value>
+  </data>
+  <data name="GuildAutoroleOn" xml:space="preserve">
+    <value>Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер.</value>
+  </data>
+  <data name="GuildLogsOff" xml:space="preserve">
+    <value>Я выключила оповещения об изменениях на сервере.</value>
+  </data>
+  <data name="GuildLogsOn" xml:space="preserve">
+    <value>Теперь большинство изменений на сервере, если у меня конечно есть права, я буду оповещать в канал {0}</value>
+  </data>
+  <data name="GuildMilMention" xml:space="preserve">
+    <value>Капитан, теперь в сообщениях при сборе на активность я буду упоминать: {0}</value>
+  </data>
+  <data name="GuildNoMention" xml:space="preserve">
+    <value>**Без упоминания**</value>
+  </data>
+  <data name="GuildPrefixCustom" xml:space="preserve">
+    <value>Для команд установлен префикс `{0}`</value>
+  </data>
+  <data name="GuildPrefixDefault" xml:space="preserve">
+    <value>Для команд установлен префикс по умолчанию `!`</value>
+  </data>
+  <data name="GuildPrivateWelcomeIsNull" xml:space="preserve">
+    <value>:x: | В данный момент я не отправляю какое либо сообщение новоприбывшим.</value>
+  </data>
+  <data name="GuildPrivateWelcomeRemove" xml:space="preserve">
+    <value>Приветственное сообщение успешно удалено.</value>
+  </data>
+  <data name="GuildPrivateWelcomeSave" xml:space="preserve">
+    <value>:smiley: Приветственное сообщение сохранено.</value>
+  </data>
+  <data name="GuildWelcomeOff" xml:space="preserve">
+    <value>Я выключила красочные оповещения о новых участниках на сервере.</value>
+  </data>
+  <data name="GuildWelcomeOn" xml:space="preserve">
+    <value>Теперь я буду оповещать о новых участниках в канал {0}</value>
+  </data>
+  <data name="GuildXurOff" xml:space="preserve">
+    <value>Я выключила оповещения о Зуре.</value>
+  </data>
+  <data name="GuildXurOn" xml:space="preserve">
+    <value>Теперь новости о Зуре я буду присылать в канал {0}</value>
   </data>
   <data name="GuMemAddRole" xml:space="preserve">
     <value>Добавлена</value>
@@ -225,8 +282,17 @@
   <data name="InvisibleString" xml:space="preserve">
     <value>\u200b</value>
   </data>
+  <data name="MilBake" xml:space="preserve">
+    <value>Подготавливаю сбор боевой группы.</value>
+  </data>
+  <data name="MilCanceled" xml:space="preserve">
+    <value>Активность отменена.\n{0}</value>
+  </data>
   <data name="MilEmbDesc" xml:space="preserve">
     <value>**Заметка от лидера:** {0}</value>
+  </data>
+  <data name="MilEmbDescCanceled" xml:space="preserve">
+    <value>Отменен по причине: {0}</value>
   </data>
   <data name="MilEmbInfDescField" xml:space="preserve">
     <value>- Лидер боевой группы: **#1 {0} - {1}**\n- Чтобы за вами закрепилось место нажмите на реакцию {2}</value>
@@ -241,14 +307,35 @@
     <value>{0}, в {1} по {2}. {3}: {4}</value>
     <comment>Пример: 20.02.2020, в 20:00 по Москве. Сумрачный налет: Сад</comment>
   </data>
+  <data name="MilError" xml:space="preserve">
+    <value>Страж, произошла критическая ошибка. Попробуй через пару минут снова, если ошибка будет снова напиши моему создателю - Cyber_Garret#5898\nОшибка: {0}</value>
+  </data>
   <data name="MilInfEmbTitle" xml:space="preserve">
     <value>Доступные активности {0}.</value>
+  </data>
+  <data name="MilNoReason" xml:space="preserve">
+    <value>Страж, нельзя отменить активность не указав причину.</value>
+  </data>
+  <data name="MilNoteEdited" xml:space="preserve">
+    <value>Заметка активности исправлена.\n{0}</value>
+  </data>
+  <data name="MilNotFound" xml:space="preserve">
+    <value>{0}, я не разобрала в какую активность ты хочешь собрать боевую группу.</value>
+  </data>
+  <data name="MilNotLeader" xml:space="preserve">
+    <value>Страж, ты не можешь выполнить данное действие, так как оно доступно только лидеру активности.</value>
+  </data>
+  <data name="MilPastTime" xml:space="preserve">
+    <value>Собрался в прошлое? Тебя ждет увлекательное шоу "остаться в живых" в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану.</value>
   </data>
   <data name="MilRemEmbFooter" xml:space="preserve">
     <value>{0}: {1}. Сервер: {2}</value>
   </data>
   <data name="MilRemEmbTitle" xml:space="preserve">
     <value>Хочу вам напомнить, что у вас через 15 минут начнется **{0}**.</value>
+  </data>
+  <data name="MilTimeError" xml:space="preserve">
+    <value>Страж, ты указал неизвестный мне формат времени.</value>
   </data>
   <data name="MsgDelEmbDesc" xml:space="preserve">
     <value>Где: &lt;#{0}&gt;\nАвтор сообщения: **{1}**</value>
@@ -294,6 +381,30 @@
   </data>
   <data name="RolDelEmbTitle" xml:space="preserve">
     <value>❌ Удалена роль</value>
+  </data>
+  <data name="SlfRolClear" xml:space="preserve">
+    <value>Капитан, я удалила все записанные роли в моей базе данных.</value>
+  </data>
+  <data name="SlfRolEmbDescField" xml:space="preserve">
+    <value>Нажми на {0} что бы получить роль {1}\n</value>
+  </data>
+  <data name="SlfRolEmpty" xml:space="preserve">
+    <value>Капитан, в мой базе не записанно ни одной автороли.</value>
+  </data>
+  <data name="SlfRolErrorEmoji" xml:space="preserve">
+    <value>Капитан, я не смогла сохранить эмодзи. Ты уверен что используешь серверный эмодзи?</value>
+  </data>
+  <data name="SlfRolList" xml:space="preserve">
+    <value>В моей базе записанны такие автороли и эмодзи привязанные к ним:\n</value>
+  </data>
+  <data name="SlfRolRoleOrEmojiExist" xml:space="preserve">
+    <value>Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей.</value>
+  </data>
+  <data name="SlfRolRoleOrEmojIsNull" xml:space="preserve">
+    <value>Капитан, ты не указал роль и\\или эмодзи.</value>
+  </data>
+  <data name="SlfRolSucAdd" xml:space="preserve">
+    <value>Успех! Капитан я сохранила данную связку роли {0} и {1} в своей базе данных.</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Неизвестно</value>
