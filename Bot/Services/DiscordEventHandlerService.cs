@@ -543,9 +543,10 @@ namespace Bot.Services
 				var guild = GuildData.GetGuildAccount(user.Guild);
 				if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
 
-				IDMChannel dM = await user.GetOrCreateDMChannelAsync();
-				//TODO: Welcome embed
-				//await dM.SendMessageAsync(null, false, MiscHelpers.WelcomeEmbed(user, guild.WelcomeMessage).Build());
+				var dM = await user.GetOrCreateDMChannelAsync();
+				var embed = WelcomeEmbed(user, guild.WelcomeMessage);
+
+				await dM.SendMessageAsync(embed: embed);
 			}
 			catch (Exception ex)
 			{
@@ -687,6 +688,18 @@ namespace Bot.Services
 			{
 				logger.LogWarning(ex, "UserLeft");
 			}
+		}
+
+		public Embed WelcomeEmbed(SocketGuildUser user, string text)
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = string.Format(Resources.WlcmEmbTitle, user.Guild.Name),
+				Color = Color.Orange,
+				ThumbnailUrl = user.Guild.IconUrl,
+				Description = text
+			};
+			return embed.Build();
 		}
 		#endregion
 	}

@@ -145,7 +145,7 @@ namespace Bot.Modules
 			{
 				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date),
 				Color = Color.Gold,
-				Description = string.Format(Resources.HelpEmbDesc, Resources.WebSite)
+				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite)
 			}
 			.AddField(Resources.HelpEmbMainFieldTitle, mainCommands[0..^2])
 			.AddField(Resources.HelpEmbMilFieldTitle, milestoneCommands[0..^2])

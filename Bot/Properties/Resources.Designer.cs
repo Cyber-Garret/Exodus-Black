@@ -556,6 +556,42 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Готово. Я разослала сообщением всем у кого есть роль **{0}**.\n- Всего получателей: **{1}**\n- Успешно доставлено: **{2}**\n- Не удалось отправить: **{3}**.
+        /// </summary>
+        internal static string MailDone {
+            get {
+                return ResourceManager.GetString("MailDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su.
+        /// </summary>
+        internal static string MailEmbFooterDesc {
+            get {
+                return ResourceManager.GetString("MailEmbFooterDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :mailbox_with_mail: Вам сообщение от {0} с сервера **`{1}`**.
+        /// </summary>
+        internal static string MailEmbTitle {
+            get {
+                return ResourceManager.GetString("MailEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Приступаю к рассылке сообщений. Всем стражам с ролью **{0}**.
+        /// </summary>
+        internal static string MailStart {
+            get {
+                return ResourceManager.GetString("MailStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Подготавливаю сбор боевой группы..
         /// </summary>
         internal static string MilBake {
@@ -772,6 +808,24 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://neira.su/img/neira.png.
+        /// </summary>
+        internal static string NeiraFooterIcon {
+            get {
+                return ResourceManager.GetString("NeiraFooterIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://neira.su/.
+        /// </summary>
+        internal static string NeiraWebSite {
+            get {
+                return ResourceManager.GetString("NeiraWebSite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Сумрачный налет.
         /// </summary>
         internal static string Nightfall {
@@ -795,6 +849,15 @@ namespace Bot.Properties {
         internal static string NotInGuildText {
             get {
                 return ResourceManager.GetString("NotInGuildText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to :x: | Прошу прощения страж, но эта команда доступна только владельцу сервера!.
+        /// </summary>
+        internal static string OnlyForGuildOwner {
+            get {
+                return ResourceManager.GetString("OnlyForGuildOwner", resourceCulture);
             }
         }
         
@@ -826,11 +889,47 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Задание успешно выполнено. Удалено {0} сообщений. _Это сообщение будет автоматически удалено._.
+        /// </summary>
+        internal static string PurgeDone {
+            get {
+                return ResourceManager.GetString("PurgeDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Начинаю чистку канала..
+        /// </summary>
+        internal static string PurgeStart {
+            get {
+                return ResourceManager.GetString("PurgeStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Рейд.
         /// </summary>
         internal static string Raid {
             get {
                 return ResourceManager.GetString("Raid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, генератор псевдослучайных чисел Вексов отобразил:.
+        /// </summary>
+        internal static string RndEmbFieldTitle {
+            get {
+                return ResourceManager.GetString("RndEmbFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы не указали Роль или указали меньше 1 или больше 10 рандомов..
+        /// </summary>
+        internal static string RndErrorStart {
+            get {
+                return ResourceManager.GetString("RndErrorStart", resourceCulture);
             }
         }
         
@@ -979,11 +1078,11 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://neira.su/.
+        ///   Looks up a localized string similar to Добро пожаловать на сервер {0}.
         /// </summary>
-        internal static string WebSite {
+        internal static string WlcmEmbTitle {
             get {
-                return ResourceManager.GetString("WebSite", resourceCulture);
+                return ResourceManager.GetString("WlcmEmbTitle", resourceCulture);
             }
         }
     }

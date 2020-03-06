@@ -282,6 +282,18 @@
   <data name="InvisibleString" xml:space="preserve">
     <value>\u200b</value>
   </data>
+  <data name="MailDone" xml:space="preserve">
+    <value>Готово. Я разослала сообщением всем у кого есть роль **{0}**.\n- Всего получателей: **{1}**\n- Успешно доставлено: **{2}**\n- Не удалось отправить: **{3}**</value>
+  </data>
+  <data name="MailEmbFooterDesc" xml:space="preserve">
+    <value>Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su</value>
+  </data>
+  <data name="MailEmbTitle" xml:space="preserve">
+    <value>:mailbox_with_mail: Вам сообщение от {0} с сервера **`{1}`**</value>
+  </data>
+  <data name="MailStart" xml:space="preserve">
+    <value>Приступаю к рассылке сообщений. Всем стражам с ролью **{0}**</value>
+  </data>
   <data name="MilBake" xml:space="preserve">
     <value>Подготавливаю сбор боевой группы.</value>
   </data>
@@ -355,6 +367,12 @@
   <data name="MsgUpdEmbTitle" xml:space="preserve">
     <value>📝 Обновлено сообщение</value>
   </data>
+  <data name="NeiraFooterIcon" xml:space="preserve">
+    <value>https://neira.su/img/neira.png</value>
+  </data>
+  <data name="NeiraWebSite" xml:space="preserve">
+    <value>https://neira.su/</value>
+  </data>
   <data name="Nightfall" xml:space="preserve">
     <value>Сумрачный налет</value>
   </data>
@@ -363,6 +381,9 @@
   </data>
   <data name="NotInGuildText" xml:space="preserve">
     <value>:x: | Эта команда не доступна в личных сообщениях.</value>
+  </data>
+  <data name="OnlyForGuildOwner" xml:space="preserve">
+    <value>:x: | Прошу прощения страж, но эта команда доступна только владельцу сервера!</value>
   </data>
   <data name="Other" xml:space="preserve">
     <value>Прочие активноcти</value>
@@ -373,8 +394,20 @@
   <data name="PollEmbTpcFieldTitle" xml:space="preserve">
     <value>Тема голосования</value>
   </data>
+  <data name="PurgeDone" xml:space="preserve">
+    <value>Задание успешно выполнено. Удалено {0} сообщений. _Это сообщение будет автоматически удалено._</value>
+  </data>
+  <data name="PurgeStart" xml:space="preserve">
+    <value>Начинаю чистку канала.</value>
+  </data>
   <data name="Raid" xml:space="preserve">
     <value>Рейд</value>
+  </data>
+  <data name="RndEmbFieldTitle" xml:space="preserve">
+    <value>Капитан, генератор псевдослучайных чисел Вексов отобразил:</value>
+  </data>
+  <data name="RndErrorStart" xml:space="preserve">
+    <value>Вы не указали Роль или указали меньше 1 или больше 10 рандомов.</value>
   </data>
   <data name="RolDelEmbDesc" xml:space="preserve">
     <value>Название: **{0}**\nЦвет: **{1}**</value>
@@ -424,7 +457,7 @@
   <data name="UsrLefEmbTitle" xml:space="preserve">
     <value>💢 Страж покинул сервер</value>
   </data>
-  <data name="WebSite" xml:space="preserve">
-    <value>https://neira.su/</value>
+  <data name="WlcmEmbTitle" xml:space="preserve">
+    <value>Добро пожаловать на сервер {0}</value>
   </data>
 </root>

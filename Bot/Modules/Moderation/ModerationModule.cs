@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Bot.Models;
 using System.Threading;
 using Bot.Properties;
+using Bot.Services;
 
 namespace Bot.Modules
 {
@@ -25,10 +26,12 @@ namespace Bot.Modules
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
+		private readonly DiscordEventHandlerService discordEvent;
 		public ModerationModule(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<ModerationModule>>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
+			discordEvent = service.GetRequiredService<DiscordEventHandlerService>();
 		}
 
 		#region Commands
@@ -135,17 +138,13 @@ namespace Bot.Modules
 		[Summary("Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.")]
 		public async Task WelcomeMessagePreview()
 		{
-			// TODO: Welcome embed message.
-			//await ReplyAsync($"{Context.User.Mention} вот так выглядит сообщение для новоприбывших в Discord.",
-			//				 embed: MiscHelpers.WelcomeEmbed(Context.Guild.CurrentUser, guild.WelcomeMessage).Build());
-
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
 				await ReplyAndDeleteAsync(Resources.GuildPrivateWelcomeIsNull);
 			else
-				await ReplyAsync(guild.WelcomeMessage);
+				await ReplyAsync(embed: discordEvent.WelcomeEmbed((SocketGuildUser)Context.User, guild.WelcomeMessage));
 		}
 
 		[Command("префикс")]
@@ -217,17 +216,13 @@ namespace Bot.Modules
 		[Command("рассылка")]
 		[Summary("Рассылает личные сообщения стражам указанной роли. По окончании работы я предоставлю небольшую статистику кому я смогла отправить, а кому нет.")]
 		[Remarks("Пример: **!рассылка <Роль> <Текст сообщения>**\n!рассылка @Тест Привет, завтра у нас клановый сбор в дискорде.")]
-		public async Task SendMessage(IRole _role, [Remainder] string message)
+		public async Task SendMessage(IRole role, [Remainder] string message)
 		{
-
-			var workMessage = await Context.Channel.SendMessageAsync($"Приступаю к рассылке сообщений. Всем стражам с ролью **{_role.Name}**");
-
-			var role = Context.Guild.Roles.FirstOrDefault(r => r.Id == _role.Id);
+			var workMessage = await Context.Channel.SendMessageAsync(string.Format(Resources.MailStart, role.Name));
 
 			int SucessCount = 0;
 			int FailCount = 0;
-
-		
+			var embed = MailingEmbed(message);
 
 			foreach (var user in Context.Guild.Users)
 			{
@@ -237,7 +232,7 @@ namespace Bot.Modules
 					{
 						var DM = await user.GetOrCreateDMChannelAsync();
 
-						await DM.SendMessageAsync(embed: embed.Build());
+						await DM.SendMessageAsync(embed: embed);
 						SucessCount++;
 					}
 					catch (Exception ex)
@@ -247,11 +242,7 @@ namespace Bot.Modules
 					}
 				}
 			}
-			await workMessage.ModifyAsync(m => m.Content =
-			$"Готово. Я разослала сообщением всем у кого есть роль **{role.Name}**.\n" +
-			$"- Всего получателей: **{SucessCount + FailCount}**\n" +
-			$"- Успешно доставлено: **{SucessCount}**\n" +
-			$"- Не удалось отправить: **{FailCount}**");
+			await workMessage.ModifyAsync(m => m.Content = string.Format(Resources.MailDone, role.Name, SucessCount + FailCount, SucessCount, FailCount));
 		}
 
 		[Command("чистка")]
@@ -263,13 +254,13 @@ namespace Bot.Modules
 			var GuildOwner = Context.Guild.OwnerId;
 			if (Context.User.Id != GuildOwner)
 			{
-				await ReplyAndDeleteAsync(":x: | Прошу прощения страж, но эта команда доступна только капитану корабля!");
+				await ReplyAndDeleteAsync(Resources.OnlyForGuildOwner);
 				return;
 			}
 
 			try
 			{
-				await ReplyAsync("Начинаю очистку канала.");
+				await ReplyAsync(Resources.PurgeStart);
 				var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
 				if (messages.Count() < 1)
 					return;
@@ -288,120 +279,36 @@ namespace Bot.Modules
 					//Clean amount of messages in current channel
 					await (Context.Channel as ITextChannel).DeleteMessagesAsync(messages);
 
-					await ReplyAndDeleteAsync($"Задание успешно выполнено. Удалено {messages.Count()} сообщений. _Это сообщение будет автоматически удалено._");
+					await ReplyAndDeleteAsync(string.Format(Resources.PurgeDone, messages.Count()));
 				}
 
 			}
 			catch (Exception ex)
 			{
-				await ReplyAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
+				await ReplyAsync(string.Format(Resources.Error, ex.Message));
 				logger.LogWarning(ex, "PurgeChat");
 			}
 		}
 
 		[Command("рандом")]
-		[Alias("ранд")]
 		[Summary("Случайным образом выбирает от 1 до 10 Стражей из указаной роли. Если не указано количество, по умолчанию выбирает одного.")]
 		[Remarks("Синтаксис: !ранд @Роль <1-10> Пример: !рандом ")]
 		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
 		{
 			if (mentionedRole == null || (count >= 10 && count <= 1))
 			{
-				await ReplyAndDeleteAsync("Вы не указали Роль или указали меньше 1 или больше 10 рандомов.");
+				await ReplyAndDeleteAsync(Resources.RndErrorStart);
 				return;
 			}
 			try
 			{
-				//Get list of SocketGuildUser's from current context
-				var users = Context.Guild.Users.ToList();
-				//Get mentioned SocketRole
-				var role = Context.Guild.Roles.First(r => r.Id == mentionedRole.Id);
-
-				//Predicate for filtering users with mentioned role
-				bool isHaveRole(SocketGuildUser x) { return x.Roles.Contains(mentionedRole); }
-				//Filter users from context who have mentioned role and not a Bot
-				var filteredusers = users.FindAll(isHaveRole).Where(u => u.IsBot == false);
-
-				var embed = new EmbedBuilder()
-					.WithColor(Color.Gold);
-				var field = new EmbedFieldBuilder();
-				var random = new Random();
-				//Chose right field name by count
-				if (count == 1)
-					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этого стража:";
-				else
-					field.Name = "Капитан, генератор псевдослучайных чисел Вексов отобразил имя этих стражей:";
-				for (int i = 0; i < count; i++)
-				{
-					var num = random.Next(0, filteredusers.Count());
-					//Pick random user
-					var user = filteredusers.ElementAt(num);
-
-					field.Value += $"#{i + 1} {user.Mention} - {user.Nickname ?? user.Username}\n";
-				}
-				embed.AddField(field);
-
-				await ReplyAsync(embed: embed.Build());
+				var embed = RandomGuardian(mentionedRole, count);
+				await ReplyAsync(embed: embed);
 			}
 			catch (Exception ex)
 			{
-				await ReplyAndDeleteAsync($"Ошибка генератора псевдослучайных чисел Вексов: {ex.Message}");
+				await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
 				logger.LogWarning(ex, "GetRandomUser command");
-			}
-		}
-
-		[Command("онлайн")]
-		[Summary("Отображает некоторую информацию о дискорд сервере.")]
-		public async Task ServerInfoAsync()
-		{
-			try
-			{
-				var guild = Context.Guild;
-				await guild.DownloadUsersAsync();
-
-
-				var stat = new UsersInStatuses
-				{
-					TotalUsers = guild.Users.Count,
-					UsersAFK = 0,
-					UsersDnD = 0,
-					UsersInvoice = 0,
-					UsersOffline = 0,
-					UsersOnline = 0,
-					UsersPlaying = 0,
-					UsersInDestiny = 0
-				};
-
-				var options = new ParallelOptions() { MaxDegreeOfParallelism = 10 };
-				Parallel.ForEach(guild.Users, options, user =>
-				{
-					//Playing game?
-					if (user.Activity != null)
-						Interlocked.Increment(ref stat.UsersPlaying);
-					//User playing Destiny 2?
-					if (user.Activity?.Name == "Destiny 2")
-						Interlocked.Increment(ref stat.UsersInDestiny);
-					//Sit in voice channel of current guild?
-					if (user.VoiceState.HasValue)
-						Interlocked.Increment(ref stat.UsersInvoice);
-					//User current status
-					if (user.Status == UserStatus.Online)
-						Interlocked.Increment(ref stat.UsersOnline);
-					else if (user.Status == UserStatus.Offline || user.Status == UserStatus.Invisible)
-						Interlocked.Increment(ref stat.UsersOffline);
-					else if (user.Status == UserStatus.Idle || user.Status == UserStatus.AFK)
-						Interlocked.Increment(ref stat.UsersAFK);
-					else if (user.Status == UserStatus.DoNotDisturb)
-						Interlocked.Increment(ref stat.UsersDnD);
-				});
-
-				// TODO: GuildInfo Embed
-				//await ReplyAsync(embed: EmbedsHelper.GuildInfo(Context, stat, NeiraWebsite));
-			}
-			catch (Exception ex)
-			{
-				await ReplyAsync($"Ошибка: {ex.Message}");
-				logger.LogWarning(ex, "Online command");
 			}
 		}
 		#endregion
@@ -432,17 +339,55 @@ namespace Bot.Modules
 			return embed.Build();
 		}
 
-		private Embed MailingEmbed()
+		private Embed MailingEmbed(string message)
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = $":mailbox_with_mail: Вам сообщение от {Context.User.Username} с сервера **`{Context.Guild.Name}`**",
+				Title = string.Format(Resources.MailEmbTitle, Context.User.Username, Context.Guild.Name),
 				Color = Color.LightOrange,
 				ThumbnailUrl = Context.Guild.IconUrl,
 				Description = message,
+				Timestamp = DateTimeOffset.Now,
+				Footer = new EmbedFooterBuilder
+				{
+					IconUrl = Resources.NeiraFooterIcon,
+					Text = Resources.MailEmbFooterDesc
+				}
 			};
-			embed.WithFooter("Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su");
-			embed.WithCurrentTimestamp();
+			return embed.Build();
+		}
+
+		private Embed RandomGuardian(IRole mentionedRole, int count)
+		{
+			//Get list of SocketGuildUser's from current context
+			var users = Context.Guild.Users.ToList();
+
+			//Predicate for filtering users with mentioned role
+			bool isHaveRole(SocketGuildUser x) { return x.Roles.Contains(mentionedRole); }
+			//Filter users from context who have mentioned role and not a Bot
+			var filteredusers = users.FindAll(isHaveRole).Where(u => u.IsBot == false);
+
+			var embed = new EmbedBuilder()
+			{
+				Color = Color.Gold
+			};
+			var field = new EmbedFieldBuilder
+			{
+				Name = Resources.RndEmbFieldTitle
+			};
+			var random = new Random();
+
+			for (int i = 0; i < count; i++)
+			{
+				var num = random.Next(0, filteredusers.Count());
+				//Pick random user
+				var user = filteredusers.ElementAt(num);
+
+				field.Value += $"#{i + 1} {user.Mention} - {user.Nickname ?? user.Username}\n";
+			}
+			embed.AddField(field);
+
+			return embed.Build()
 		}
 		#endregion
 	}

@@ -44,7 +44,7 @@ namespace Bot
 				await discord.LoginAsync(TokenType.Bot, token);
 				await discord.StartAsync();
 				await discord.SetStatusAsync(UserStatus.Online);
-				await discord.SetGameAsync(Resources.WebSite);
+				await discord.SetGameAsync(Resources.NeiraWebSite);
 
 				await Task.Delay(-1, cancellationToken);
 
