@@ -46,18 +46,12 @@ namespace Bot.Modules
 		}
 
 		//TODO: Ordeal nightfall
-		//[Command("побоище")]
-		//[Summary("Анонс сбора боевой группы в активный сумрачный налет: побоище")]
-		//public async Task RegisterOrdeal(string strikeTime,[Remainder]string leaderNote = null)
-		//{
-
-		//}
 
 		[Command("сбор")]
 		[Summary("Анонс сбора боевой группы в активности типа Паноптикум, Яма, Трон и тд и тп.")]
 		public async Task RegisterOther(string otherName, string otherTime, [Remainder]string leaderNote = null)
 		{
-			await GoMilestoneAsync(otherName, MilestoneType.Other, otherTime, leaderNote)
+			await GoMilestoneAsync(otherName, MilestoneType.Other, otherTime, leaderNote);
 		}
 
 		// TODO: User defined milestone
@@ -86,6 +80,28 @@ namespace Bot.Modules
 					await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
 					logger.LogError(ex, "Milestone note command");
 				}
+			}
+			else
+				await ReplyAndDeleteAsync(Resources.MilNotLeader);
+		}
+
+		[Command("передать")]
+		[Summary("Позволяет передать лидерство над активностью.")]
+		public async Task ChangeLeader(ulong milestoneId, SocketGuildUser newLeader)
+		{
+			//TODO: change leader
+			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
+
+			if (milestone.Leader == Context.User.Id)
+			{
+				if (milestone.MilestoneUsers.Contains(newLeader.Id))
+				{
+					milestone.MilestoneUsers.Remove(newLeader.Id);
+					milestone.Leader = newLeader.Id;
+				}
+				else
+					milestone.Leader = newLeader.Id;
+				ActiveMilestoneData.SaveMilestones(milestoneId);
 			}
 			else
 				await ReplyAndDeleteAsync(Resources.MilNotLeader);
