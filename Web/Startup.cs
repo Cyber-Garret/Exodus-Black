@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using Web.Models;
 
 namespace Web
 {
@@ -28,7 +26,8 @@ namespace Web
 				options.ForwardedHeaders =
 					ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 			});
-
+			var conn = Configuration.GetConnectionString("DefaultConnection");
+			services.AddTransient<IBotRepository, BotRepository>(provider => new BotRepository(conn));
 			services.AddRazorPages();
 		}
 

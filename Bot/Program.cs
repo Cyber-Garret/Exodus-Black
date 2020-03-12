@@ -1,4 +1,5 @@
 using Bot.Core.QuartzJobs;
+using Bot.Models;
 using Bot.Services;
 
 using Discord;
@@ -82,8 +83,11 @@ namespace Bot
 						var hour = hostContext.Configuration.GetSection("Bot:XurHour").Get<int>();
 						services.AddSingleton(new JobSchedule(typeof(XurArrive), $"0 0 {hour} ? * FRI")); // run every Friday in 20:00
 						services.AddSingleton(new JobSchedule(typeof(XurLeave), $"0 0 {hour} ? * TUE")); // run every Tuesday in 20:00
-
 						services.AddSingleton(new JobSchedule(typeof(MilestoneRemind), "0/10 * * * * ?")); // run every 10 seconds.
+						
+						//SQL data service
+						var conn = builtConfig.GetConnectionString("DefaultConnection");
+						services.AddTransient<IDataRepository, DataRepository>(provider => new DataRepository(conn));
 					})
 					.ConfigureAppConfiguration((hostingContext, config) =>
 					{

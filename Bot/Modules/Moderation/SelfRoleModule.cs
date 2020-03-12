@@ -1,17 +1,16 @@
-﻿using Bot.Models;
+﻿using Bot.Core.Data;
+using Bot.Models;
 using Bot.Preconditions;
-using Bot.Core.Data;
+using Bot.Properties;
+
 using Discord;
-using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Bot.Properties;
 
 namespace Bot.Modules
 {

@@ -21,12 +21,14 @@ namespace Bot.Modules
 	public class MainModule : BaseModule
 	{
 		private readonly ILogger logger;
+		private readonly IDataRepository data;
 		private readonly DiscordSocketClient discord;
 		private readonly CommandService command;
 		private readonly EmoteService emote;
 		public MainModule(IServiceProvider service, ILogger<MainModule> logger)
 		{
 			this.logger = logger;
+			data = service.GetRequiredService<IDataRepository>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			command = service.GetRequiredService<CommandService>();
 			emote = service.GetRequiredService<EmoteService>();
@@ -60,7 +62,7 @@ namespace Bot.Modules
 				return;
 			}
 
-			var exotic = ExoticData.SearchExotic(Input);
+			var exotic = data.GetExotic(Input);
 			//If not found gear by user input
 			if (exotic == null)
 			{
@@ -83,7 +85,7 @@ namespace Bot.Modules
 				return;
 			}
 
-			var catalyst = CatalystData.SearchCatalyst(Input);
+			var catalyst = data.GetCatalyst(Input);
 
 			//Если бд вернула null сообщаем пользователю что ничего не нашли.
 			if (catalyst == null)

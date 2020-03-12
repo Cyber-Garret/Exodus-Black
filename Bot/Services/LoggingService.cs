@@ -44,8 +44,8 @@ namespace Bot.Services
 		{
 			Task.Run(() =>
 			{
-				logger.LogError($"Connected as -> [{discord.CurrentUser}]");
-				logger.LogError($"Connected to {discord.Guilds.Count} servers.");
+				logger.LogWarning($"Connected as -> [{discord.CurrentUser}]");
+				logger.LogWarning($"Connected to {discord.Guilds.Count} servers.");
 
 				if (emote.Raid == null)
 					emote.Configure();

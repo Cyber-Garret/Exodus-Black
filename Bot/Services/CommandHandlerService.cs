@@ -1,4 +1,7 @@
-﻿using Discord.Commands;
+﻿using Bot.Core.Data;
+using Bot.Properties;
+
+using Discord.Commands;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.Configuration;
@@ -7,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Bot.Properties;
-using Bot.Core.Data;
 
 namespace Bot.Services
 {
@@ -54,23 +55,26 @@ namespace Bot.Services
 				 var guild = GuildData.GetGuildAccount(context.Guild);
 				 var argPos = 0;
 				 // ignore if command not start from prefix
-				 if (!msg.HasStringPrefix(config["Bot:Prefix"], ref argPos) || !msg.HasStringPrefix(guild.CommandPrefix, ref argPos)) return;
-
-				 // search command
-				 var cmdSearchResult = commands.Search(context, argPos);
-				 // if command not found just finish Task
-				 if (cmdSearchResult.Commands == null) return;
-				 //Execute command in current discord context
-				 var executionTask = commands.ExecuteAsync(context, argPos, service);
-
-				 await executionTask.ContinueWith(task =>
+				 var prefix = guild.CommandPrefix ?? config["Bot:Prefix"];
+				 if (msg.HasStringPrefix(prefix, ref argPos))
 				 {
-					 // if Success or command unknown just finish Task
-					 if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
+					 // search command
+					 var cmdSearchResult = commands.Search(context, argPos);
+					 // if command not found just finish Task
+					 if (cmdSearchResult.Commands == null) return;
+					 //Execute command in current discord context
+					 var executionTask = commands.ExecuteAsync(context, argPos, service);
 
-					 var errorText = string.Format("{0}, {1} {2}", context.User.Mention, Resources.ErrorHndlCom, task.Result.ErrorReason);
-					 context.Channel.SendMessageAsync(errorText);
-				 });
+					 await executionTask.ContinueWith(task =>
+					 {
+						 // if Success or command unknown just finish Task
+						 if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
+
+						 var errorText = string.Format("{0}, {1} {2}", context.User.Mention, Resources.ErrorHndlCom, task.Result.ErrorReason);
+						 context.Channel.SendMessageAsync(errorText);
+					 });
+				 }
+				 else return;
 			 });
 			return Task.CompletedTask;
 		}

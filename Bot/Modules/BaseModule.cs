@@ -1,5 +1,4 @@
-﻿using Bot.Properties;
-using Discord;
+﻿using Discord;
 using Discord.Addons.Interactive;
 
 namespace Bot.Modules

@@ -1,17 +1,18 @@
-﻿using Bot.Models;
-using Bot.Services;
-using Bot.Core.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.DependencyInjection;
-using Discord.Commands;
-using System.Threading.Tasks;
-using System.Globalization;
-using Microsoft.Extensions.Logging;
-using Discord;
-using Discord.WebSocket;
+﻿using Bot.Core.Data;
+using Bot.Models;
 using Bot.Properties;
+using Bot.Services;
+
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using System;
+using System.Globalization;
+using System.Threading.Tasks;
 
 namespace Bot.Modules
 {

@@ -1,18 +1,20 @@
-﻿using Bot.Properties;
-using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Bot.Core.Data;
+using Bot.Properties;
+
 using Discord;
 using Discord.Rest;
-using System.Linq;
-using System.IO;
+using Discord.WebSocket;
+
 using ImageMagick;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using System;
+using System.IO;
+using System.Linq;
 using System.Net;
-using Bot.Core.Data;
+using System.Threading.Tasks;
 
 namespace Bot.Services
 {

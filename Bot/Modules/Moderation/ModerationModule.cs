@@ -1,20 +1,19 @@
-﻿using Bot.Preconditions;
-using Discord;
-using Discord.Addons.Interactive;
-using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Bot.Core.Data;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
-using Discord.WebSocket;
-using System.Linq;
-using Microsoft.Extensions.Logging;
+﻿using Bot.Core.Data;
 using Bot.Models;
-using System.Threading;
+using Bot.Preconditions;
 using Bot.Properties;
 using Bot.Services;
+
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
@@ -387,7 +386,7 @@ namespace Bot.Modules
 			}
 			embed.AddField(field);
 
-			return embed.Build()
+			return embed.Build();
 		}
 		#endregion
 	}
