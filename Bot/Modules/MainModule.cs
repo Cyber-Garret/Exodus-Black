@@ -78,7 +78,7 @@ namespace Bot.Modules
 		[Summary("Отображает информацию о катализаторе для оружия.")]
 		[Remarks("Пример: !катализатор мида или !каталик туз")]
 		public async Task GetCatalyst([Remainder]string Input = null)
-		{
+		{// TODO: Fix case insensitive
 			if (Input == null)
 			{
 				await ReplyAndDeleteAsync(Resources.CatInputIsNull);

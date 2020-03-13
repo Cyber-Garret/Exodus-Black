@@ -47,7 +47,6 @@ namespace Bot.Modules
 
 		[Command("новости")]
 		[Summary("Команда позволяет включать или выключать оповещения о Зуре в определенный текстовый канал.")]
-		[Remarks("Для выключения оповещений напиши **!новости**. Для включения **!новости #новостной-канал**. ")]
 		public async Task SetNotificationChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -68,7 +67,6 @@ namespace Bot.Modules
 
 		[Command("логи")]
 		[Summary("Команда позволяет включать или выключать оповещения об изменениях на сервер, например, когда кто-то покинул сервер.")]
-		[Remarks("Для выключения оповещений напиши **!логи**. Для включения **!логи #нейра-логи**. ")]
 		public async Task SetLogChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -89,7 +87,6 @@ namespace Bot.Modules
 
 		[Command("приветствие"), RequireBotPermission(ChannelPermission.AttachFiles)]
 		[Summary("Команда позволяет включать или выключать оповещения о новых участниках сервера в стиле мира Destiny.")]
-		[Remarks("Для выключения оповещений напиши **!приветствие**. Для включения **!логи #флудилка**. ")]
 		public async Task SetWelcomeChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -110,7 +107,6 @@ namespace Bot.Modules
 
 		[Command("сохранить приветствие")]
 		[Summary("Сохраняет сообщение-приветствие и включает механизм отправки сообщения всем новоприбывшим на сервер.\nПоддерживает синтаксис MarkDown для красивого оформления.")]
-		[Remarks("Пример: !сохранить приветствие <Сообщение>")]
 		public async Task SaveWelcomeMessage([Remainder]string message = null)
 		{
 			//First check if welcome message represent ?
@@ -214,7 +210,6 @@ namespace Bot.Modules
 
 		[Command("рассылка")]
 		[Summary("Рассылает личные сообщения стражам указанной роли. По окончании работы я предоставлю небольшую статистику кому я смогла отправить, а кому нет.")]
-		[Remarks("Пример: **!рассылка <Роль> <Текст сообщения>**\n!рассылка @Тест Привет, завтра у нас клановый сбор в дискорде.")]
 		public async Task SendMessage(IRole role, [Remainder] string message)
 		{
 			var workMessage = await Context.Channel.SendMessageAsync(string.Format(Resources.MailStart, role.Name));
@@ -246,7 +241,6 @@ namespace Bot.Modules
 
 		[Command("чистка")]
 		[Summary("Удаляет заданное количество сообщений где была вызвана команда.")]
-		[Remarks("Синтаксис: !чистка <число> Пример: !чистка 10")]
 		[RequireBotPermission(ChannelPermission.ManageMessages)]
 		public async Task PurgeChat(int amount = 1)
 		{
@@ -291,7 +285,6 @@ namespace Bot.Modules
 
 		[Command("рандом")]
 		[Summary("Случайным образом выбирает от 1 до 10 Стражей из указаной роли. Если не указано количество, по умолчанию выбирает одного.")]
-		[Remarks("Синтаксис: !ранд @Роль <1-10> Пример: !рандом ")]
 		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
 		{
 			if (mentionedRole == null || (count >= 10 && count <= 1))

@@ -195,9 +195,9 @@ namespace Bot.Services
 				foreach (var item in MilestoneInfoData.GetMilestonesByType(type))
 				{
 					if (item.Game == GameName.Destiny)
-						Des2names += $"**{item.Alias}** - {item.Name}";
+						Des2names += $"**{item.Alias}** - {item.Name}\n";
 					else
-						Div2names += $"**{item.Alias}** - {item.Name}";
+						Div2names += $"**{item.Alias}** - {item.Name}\n";
 
 				}
 				embed.AddField("Destiny 2", Des2names);

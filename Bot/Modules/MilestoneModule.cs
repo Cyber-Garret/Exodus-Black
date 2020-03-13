@@ -103,6 +103,13 @@ namespace Bot.Modules
 				else
 					milestone.Leader = newLeader.Id;
 				ActiveMilestoneData.SaveMilestones(milestoneId);
+
+				var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
+				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+				await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+
+				await ReplyAndDeleteAsync(string.Format(Resources.MilChangeLeader, msg.GetJumpUrl()));
 			}
 			else
 				await ReplyAndDeleteAsync(Resources.MilNotLeader);
@@ -216,7 +223,6 @@ namespace Bot.Modules
 			}
 		}
 
-
 		private Embed DeleteMilestone(Milestone milestone, string reason)
 		{
 			var embed = new EmbedBuilder
@@ -246,8 +252,6 @@ namespace Bot.Modules
 
 			return embed.Build();
 		}
-
-
 		#endregion
 	}
 }

@@ -151,7 +151,9 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Название: **{0}**\nNSFW **{2}**\nКатегория: {3}.
+        ///   Looks up a localized string similar to Название: **{0}**
+        ///NSFW **{2}**
+        ///Категория: {3}.
         /// </summary>
         internal static string ChanEmbFieldDesc {
             get {
@@ -268,7 +270,12 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to - Всего каналов: **{0}**\n- Стражей на сервере: **{1}**\n- Оповещения о Зуре я присылаю в **&lt;#{2}&gt;**\n- Логи сервера я пишу в **&lt;#{3}&gt;**\n- Оповещения о новых стражах я присылаю в **&lt;#{4}&gt;**\n- При сборах в активность я буду упоминать: **{5}**.
+        ///   Looks up a localized string similar to - Всего каналов: **{0}**
+        ///- Стражей на сервере: **{1}**
+        ///- Оповещения о Зуре я присылаю в **&lt;#{2}&gt;**
+        ///- Логи сервера я пишу в **&lt;#{3}&gt;**
+        ///- Оповещения о новых стражах я присылаю в **&lt;#{4}&gt;**
+        ///- При сборах в активность я буду упоминать: **{5}**.
         /// </summary>
         internal static string GuCoEmbDescField {
             get {
@@ -448,7 +455,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Имя: **{0}**\n{1} роль: **{2}**.
+        ///   Looks up a localized string similar to Имя: **{0}**
+        ///{1} роль: **{2}**.
         /// </summary>
         internal static string GuMemRolEmbFieldDesc {
             get {
@@ -466,7 +474,10 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Предыдущее имя:\n**{0}**\nНовое имя:\n**{1}**.
+        ///   Looks up a localized string similar to Предыдущее имя:
+        ///**{0}**
+        ///Новое имя:
+        ///**{1}**.
         /// </summary>
         internal static string GuMemUpdEmbFieldDesc {
             get {
@@ -502,7 +513,9 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Моя основная цель - помогать Стражам собирать боевые группы, своевременно сообщать, когда прибывает или улетает посланник девяти Зур.\nТакже я могу предоставить информацию о экзотическом снаряжении, катализаторах и много чего еще.\nБольше информации ты можешь найти в разделе документация на моем [сайте]({0}).
+        ///   Looks up a localized string similar to Моя основная цель - помогать Стражам собирать боевые группы, своевременно сообщать, когда прибывает или улетает посланник девяти Зур.
+        ///Также я могу предоставить информацию о экзотическом снаряжении, катализаторах и много чего еще.
+        ///Больше информации ты можешь найти в разделе документация на моем [сайте]({0}).
         /// </summary>
         internal static string HelpEmbDesc {
             get {
@@ -556,7 +569,10 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Готово. Я разослала сообщением всем у кого есть роль **{0}**.\n- Всего получателей: **{1}**\n- Успешно доставлено: **{2}**\n- Не удалось отправить: **{3}**.
+        ///   Looks up a localized string similar to Готово. Я разослала сообщением всем у кого есть роль **{0}**.
+        ///- Всего получателей: **{1}**
+        ///- Успешно доставлено: **{2}**
+        ///- Не удалось отправить: **{3}**.
         /// </summary>
         internal static string MailDone {
             get {
@@ -601,11 +617,21 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Активность отменена.\n{0}.
+        ///   Looks up a localized string similar to Активность отменена.
+        ///{0}.
         /// </summary>
         internal static string MilCanceled {
             get {
                 return ResourceManager.GetString("MilCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Права на лидерство были переданы другому стражу. {0}.
+        /// </summary>
+        internal static string MilChangeLeader {
+            get {
+                return ResourceManager.GetString("MilChangeLeader", resourceCulture);
             }
         }
         
@@ -628,7 +654,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to - Лидер боевой группы: **#1 {0} - {1}**\n- Чтобы за вами закрепилось место нажмите на реакцию {2}.
+        ///   Looks up a localized string similar to - Лидер боевой группы: **#1 {0} - {1}**
+        ///- Чтобы за вами закрепилось место нажмите на реакцию {2}.
         /// </summary>
         internal static string MilEmbInfDescField {
             get {
@@ -664,7 +691,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж, произошла критическая ошибка. Попробуй через пару минут снова, если ошибка будет снова напиши моему создателю - Cyber_Garret#5898\nОшибка: {0}.
+        ///   Looks up a localized string similar to Страж, произошла критическая ошибка. Попробуй через пару минут снова, если ошибка будет снова напиши моему создателю - Cyber_Garret#5898
+        ///Ошибка: {0}.
         /// </summary>
         internal static string MilError {
             get {
@@ -691,7 +719,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заметка активности исправлена.\n{0}.
+        ///   Looks up a localized string similar to Заметка активности исправлена. {0}.
         /// </summary>
         internal static string MilNoteEdited {
             get {
@@ -718,7 +746,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Собрался в прошлое? Тебя ждет увлекательное шоу &quot;остаться в живых&quot; в исполнении моей команды Золотого Века. Не забудь попкорн\nБип...Удачи и передай привет моему капитану..
+        ///   Looks up a localized string similar to Собрался в прошлое? Тебя ждет увлекательное шоу &quot;остаться в живых&quot; в исполнении моей команды Золотого Века. Не забудь попкорн
+        ///Бип...Удачи и передай привет моему капитану..
         /// </summary>
         internal static string MilPastTime {
             get {
@@ -754,7 +783,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Где: &lt;#{0}&gt;\nАвтор сообщения: **{1}**.
+        ///   Looks up a localized string similar to Где: &lt;#{0}&gt;
+        ///Автор сообщения: **{1}**.
         /// </summary>
         internal static string MsgDelEmbDesc {
             get {
@@ -934,7 +964,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Название: **{0}**\nЦвет: **{1}**.
+        ///   Looks up a localized string similar to Название: **{0}**
+        ///Цвет: **{1}**.
         /// </summary>
         internal static string RolDelEmbDesc {
             get {
@@ -961,7 +992,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Нажми на {0} что бы получить роль {1}\n.
+        ///   Looks up a localized string similar to Нажми на {0} что бы получить роль {1}
+        ///.
         /// </summary>
         internal static string SlfRolEmbDescField {
             get {
@@ -988,7 +1020,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В моей базе записанны такие автороли и эмодзи привязанные к ним:\n.
+        ///   Looks up a localized string similar to В моей базе записанны такие автороли и эмодзи привязанные к ним:
+        ///.
         /// </summary>
         internal static string SlfRolList {
             get {
@@ -1051,7 +1084,10 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На сервере был известен как:\n**{0}**\nDiscord имя стража\n**{1}**.
+        ///   Looks up a localized string similar to На сервере был известен как:
+        ///**{0}**
+        ///Discord имя стража
+        ///**{1}**.
         /// </summary>
         internal static string UsrLefEmbDesc {
             get {
