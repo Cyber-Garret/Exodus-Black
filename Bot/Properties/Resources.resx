@@ -149,8 +149,8 @@
   </data>
   <data name="ChanEmbFieldDesc" xml:space="preserve">
     <value>Название: **{0}**
-NSFW **{2}**
-Категория: {3}</value>
+NSFW **{1}**
+Категория: {2}</value>
   </data>
   <data name="CooldownMessage" xml:space="preserve">
     <value>Ты сможешь использовать эту команду через {0} сек.</value>
@@ -292,9 +292,6 @@ NSFW **{2}**
   <data name="HelpEmbTitle" xml:space="preserve">
     <value>Доброго времени суток. Меня зовут Нейроматрица, я ИИ "Черного исхода" адаптированный для Discord. Успешно функционирую с {0}</value>
   </data>
-  <data name="InvisibleString" xml:space="preserve">
-    <value>\u200b</value>
-  </data>
   <data name="MailDone" xml:space="preserve">
     <value>Готово. Я разослала сообщением всем у кого есть роль **{0}**.
 - Всего получателей: **{1}**
@@ -375,6 +372,9 @@ NSFW **{2}**
   <data name="MsgDelEmbDesc" xml:space="preserve">
     <value>Где: &lt;#{0}&gt;
 Автор сообщения: **{1}**</value>
+  </data>
+  <data name="MsgDelEmbFieldTitle" xml:space="preserve">
+    <value>Текст сообщения:</value>
   </data>
   <data name="MsgDelEmbTitle" xml:space="preserve">
     <value>🗑 Удалено сообщение</value>

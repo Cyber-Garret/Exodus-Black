@@ -109,9 +109,6 @@ namespace Bot.Modules
 		[Summary("Сохраняет сообщение-приветствие и включает механизм отправки сообщения всем новоприбывшим на сервер.\nПоддерживает синтаксис MarkDown для красивого оформления.")]
 		public async Task SaveWelcomeMessage([Remainder]string message = null)
 		{
-			//First check if welcome message represent ?
-			if (string.IsNullOrWhiteSpace(message)) return;
-
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 

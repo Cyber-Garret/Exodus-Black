@@ -142,7 +142,7 @@ namespace Bot.Modules
 			//Create field with roles and associated emotes
 			var embedField = new EmbedFieldBuilder
 			{
-				Name = Resources.InvisibleString
+				Name = "\u200b"
 			};
 			foreach (var item in GuildRoles)
 			{

@@ -1,0 +1,18 @@
+﻿{
+  "MessageId": 687938564364697631,
+  "ChannelId": 587895810977693706,
+  "GuildId": 521689023962415104,
+  "MilestoneInfo": {
+    "Name": "Паноптикум",
+    "Alias": "пн",
+    "Type": "Лабиринт",
+    "Icon": "http://neira.su/img/milestones/menagerie.jpg",
+    "MaxSpace": 6,
+    "MilestoneType": 2,
+    "Game": 0
+  },
+  "Note": null,
+  "Leader": 316272461291192322,
+  "DateExpire": "2020-03-13T20:00:00+03:00",
+  "MilestoneUsers": []
+}

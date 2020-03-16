@@ -219,6 +219,7 @@ namespace Bot.Services
 						Text = string.Format(Resources.DiEvnEmbFooter, name)
 					},
 				};
+
 				embed.AddField(Resources.ChanCreEmbFieldTitle, string.Format(Resources.ChanEmbFieldDesc,
 					arg.Name,
 					channel.IsNsfw,
@@ -450,14 +451,14 @@ namespace Bot.Services
 					var log = await textChannel.Guild.GetAuditLogsAsync(1);
 					var audit = log.ToList();
 
-					var name = msg.Value.Author.Mention;
+					var name = msg.Value.Author;
 					var check = audit[0].Data as MessageDeleteAuditLogData;
 
 					//if message deleted by bot finish Task.
 					if (audit[0].User.IsBot) return;
 
 					if (check?.ChannelId == msg.Value.Channel.Id && audit[0].Action == ActionType.MessageDeleted)
-						name = audit[0].User.Mention;
+						name = audit[0].User;
 
 					var embedDel = new EmbedBuilder
 					{
@@ -465,8 +466,8 @@ namespace Bot.Services
 						Color = Color.Red,
 						Description = string.Format(Resources.MsgDelEmbDesc, msg.Value.Channel.Id, msg.Value.Author),
 						Footer = new EmbedFooterBuilder
-						{
-							IconUrl = msg.Value.Author.GetAvatarUrl() ?? msg.Value.Author.GetDefaultAvatarUrl(),
+						{//TODO FIX coorect name and avatar
+							IconUrl = name.GetAvatarUrl() ?? name.GetDefaultAvatarUrl(),
 							Text = string.Format(Resources.DiEvnEmbFooter, name)
 						}
 					};
@@ -476,11 +477,11 @@ namespace Bot.Services
 					{
 						var string1 = msg.Value.Content.Substring(0, 1000);
 
-						embedDel.AddField(Resources.InvisibleString, $"{string1}...");
+						embedDel.AddField(Resources.MsgDelEmbFieldTitle, $"{string1}...");
 					}
 					else if (msg.Value.Content.Length != 0)
 					{
-						embedDel.AddField(Resources.InvisibleString, $"{msg.Value.Content}");
+						embedDel.AddField(Resources.MsgDelEmbFieldTitle, $"{msg.Value.Content}");
 					}
 
 					if (guild.LoggingChannel != 0)
@@ -595,7 +596,7 @@ namespace Bot.Services
 				var rand = new Random();
 
 				string welcomeMessage = randomWelcome[rand.Next(randomWelcome.Length)];
-				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "WelcomeBg", $"bg{rand.Next(1, 31)}.jpg");
+				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "welcome-bg", $"bg{rand.Next(1, 31)}.jpg");
 
 				using var image = new MagickImage(background, 512, 200);
 				var readSettings = new MagickReadSettings

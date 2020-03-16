@@ -44,4 +44,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UserData\welcome-bg\" />
+  </ItemGroup>
 </Project>

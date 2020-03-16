@@ -152,8 +152,8 @@ namespace Bot.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to Название: **{0}**
-        ///NSFW **{2}**
-        ///Категория: {3}.
+        ///NSFW **{1}**
+        ///Категория: {2}.
         /// </summary>
         internal static string ChanEmbFieldDesc {
             get {
@@ -560,15 +560,6 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \u200b.
-        /// </summary>
-        internal static string InvisibleString {
-            get {
-                return ResourceManager.GetString("InvisibleString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Готово. Я разослала сообщением всем у кого есть роль **{0}**.
         ///- Всего получателей: **{1}**
         ///- Успешно доставлено: **{2}**
@@ -789,6 +780,15 @@ namespace Bot.Properties {
         internal static string MsgDelEmbDesc {
             get {
                 return ResourceManager.GetString("MsgDelEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Текст сообщения:.
+        /// </summary>
+        internal static string MsgDelEmbFieldTitle {
+            get {
+                return ResourceManager.GetString("MsgDelEmbFieldTitle", resourceCulture);
             }
         }
         
