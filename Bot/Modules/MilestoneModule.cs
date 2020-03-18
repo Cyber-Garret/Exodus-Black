@@ -90,7 +90,6 @@ namespace Bot.Modules
 		[Summary("Позволяет передать лидерство над активностью.")]
 		public async Task ChangeLeader(ulong milestoneId, SocketGuildUser newLeader)
 		{
-			//TODO: change leader
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
 
 			if (milestone.Leader == Context.User.Id)

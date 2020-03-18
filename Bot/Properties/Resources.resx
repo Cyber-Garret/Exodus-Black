@@ -206,7 +206,7 @@ NSFW **{1}**
     <value>Функционал автороли отключен.</value>
   </data>
   <data name="GuildAutoroleOn" xml:space="preserve">
-    <value>Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер.</value>
+    <value>Сохранена роль **{0}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер.</value>
   </data>
   <data name="GuildLogsOff" xml:space="preserve">
     <value>Я выключила оповещения об изменениях на сервере.</value>
@@ -456,6 +456,9 @@ NSFW **{1}**
   <data name="SlfRolList" xml:space="preserve">
     <value>В моей базе записанны такие автороли и эмодзи привязанные к ним:
 </value>
+  </data>
+  <data name="SlfRolNoText" xml:space="preserve">
+    <value>Капитан, ты не указал текст сообщения.</value>
   </data>
   <data name="SlfRolRoleOrEmojiExist" xml:space="preserve">
     <value>Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей.</value>

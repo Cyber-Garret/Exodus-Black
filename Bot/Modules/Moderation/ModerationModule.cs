@@ -260,7 +260,7 @@ namespace Bot.Modules
 				{
 					foreach (var message in messages)
 					{
-						await Task.Delay(500);
+						await Task.Delay(1000);
 						await (Context.Channel as ITextChannel).DeleteMessageAsync(message.Id);
 					}
 				}

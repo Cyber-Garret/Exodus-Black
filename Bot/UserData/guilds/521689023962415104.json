@@ -3,13 +3,13 @@
   "NotificationChannel": 638720432228270080,
   "LoggingChannel": 689065107527172202,
   "WelcomeChannel": 638720432228270080,
-  "WelcomeMessage": "тест сообщения, сорри если бета нейра написала. %$^#@!&*()!@#$!@#$%^&*()",
+  "WelcomeMessage": null,
   "LeaveMessage": null,
   "AutoroleID": 0,
   "CommandPrefix": null,
   "Language": "ru-RU",
   "TimeZone": "Russian Standard Time",
-  "GlobalMention": "@here",
+  "GlobalMention": null,
   "SelfRoleMessageId": 0,
   "GuildSelfRoles": []
 }

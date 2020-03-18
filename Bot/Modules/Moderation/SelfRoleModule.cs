@@ -23,9 +23,14 @@ namespace Bot.Modules
 
 		[Command("ДобавитьРоль"), Alias("др")]
 		[Summary("Роль должна быть с возможностью @упоминания. Эмодзи можно использовать только серверные.")]
-		[Remarks("Синтаксис: !др <@роль> <Эмодзи сервера>")]
 		public async Task SaveGuildRole(SocketRole role = null, [Remainder] string text = null)
 		{
+			if (role == null || text == null)
+			{
+				await ReplyAndDeleteAsync(Resources.SlfRolRoleOrEmojIsNull);
+				return;
+			}
+
 			Emote emote;
 			try
 			{
@@ -37,11 +42,6 @@ namespace Bot.Modules
 				return;
 			}
 
-			if (role == null || emote == null)
-			{
-				await ReplyAndDeleteAsync(Resources.SlfRolRoleOrEmojIsNull);
-				return;
-			}
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
 			if (!guild.GuildSelfRoles.Any(r => r.RoleID == role.Id || r.EmoteID == emote.Id))
@@ -97,12 +97,15 @@ namespace Bot.Modules
 
 		[Command("РазместитьРоли"), Alias("рр")]
 		[Summary("Размещает сообщение с доступными авторолями, автоматическим заголовком сервера и любым сообщением с поддержкой discord синтаксиса(можно даже ссылки)")]
-		[Remarks("Синтаксис: !рр <сообщение>")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.ReadMessageHistory | ChannelPermission.ManageRoles,
 			ErrorMessage = "Капитан, у меня нет прав на [Добавлять реакции]и\\или[Читать историю сообщений]и\\или[Управлять ролями]")]
 		public async Task DeploySelfRoleMessage([Remainder]string text = null)
 		{
-			if (string.IsNullOrWhiteSpace(text)) return;
+			if (string.IsNullOrWhiteSpace(text))
+			{
+				await ReplyAndDeleteAsync(Resources.SlfRolNoText);
+				return;
+			}
 
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 			if (guild.GuildSelfRoles.Count > 0)

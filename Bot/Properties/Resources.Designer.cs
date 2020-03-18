@@ -311,7 +311,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Сохранена роль **{_role.Name}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер..
+        ///   Looks up a localized string similar to Сохранена роль **{0}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер..
         /// </summary>
         internal static string GuildAutoroleOn {
             get {
@@ -1026,6 +1026,15 @@ namespace Bot.Properties {
         internal static string SlfRolList {
             get {
                 return ResourceManager.GetString("SlfRolList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, ты не указал текст сообщения..
+        /// </summary>
+        internal static string SlfRolNoText {
+            get {
+                return ResourceManager.GetString("SlfRolNoText", resourceCulture);
             }
         }
         

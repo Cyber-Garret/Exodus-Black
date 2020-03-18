@@ -79,12 +79,14 @@ namespace Bot
 						services.AddSingleton<XurArrive>();
 						services.AddSingleton<XurLeave>();
 						services.AddSingleton<MilestoneRemind>();
+						services.AddSingleton<MilestoneClean>();
 						// Quartz triggers
 						var hour = hostContext.Configuration.GetSection("Bot:XurHour").Get<int>();
 						services.AddSingleton(new JobSchedule(typeof(XurArrive), $"0 0 {hour} ? * FRI")); // run every Friday in 20:00
 						services.AddSingleton(new JobSchedule(typeof(XurLeave), $"0 0 {hour} ? * TUE")); // run every Tuesday in 20:00
 						services.AddSingleton(new JobSchedule(typeof(MilestoneRemind), "0/10 * * * * ?")); // run every 10 seconds.
-						
+						services.AddSingleton(new JobSchedule(typeof(MilestoneClean), "0 0/15 * * * ?")); // run every 15 minute.
+
 						//SQL data service
 						var conn = builtConfig.GetConnectionString("DefaultConnection");
 						services.AddTransient<IDataRepository, DataRepository>(provider => new DataRepository(conn));

@@ -466,7 +466,7 @@ namespace Bot.Services
 						Color = Color.Red,
 						Description = string.Format(Resources.MsgDelEmbDesc, msg.Value.Channel.Id, msg.Value.Author),
 						Footer = new EmbedFooterBuilder
-						{//TODO FIX coorect name and avatar
+						{//TODO FIX corect name and avatar if in log last action delete message
 							IconUrl = name.GetAvatarUrl() ?? name.GetDefaultAvatarUrl(),
 							Text = string.Format(Resources.DiEvnEmbFooter, name)
 						}
