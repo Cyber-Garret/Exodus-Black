@@ -54,24 +54,22 @@ namespace Neira.Bot.Services
 			var argPos = 0;
 			// Ignore if not mention this bot or command not start from prefix
 			if (!(msg.HasMentionPrefix(Client.CurrentUser, ref argPos) || msg.HasStringPrefix(prefix, ref argPos))) return;
+
+			//search command
+			var cmdSearchResult = Commands.Search(context, argPos);
+			//If command not found just finish Task
+			if (cmdSearchResult.Commands == null) return;
+			//Execute command in current discord context
+			var executionTask = Commands.ExecuteAsync(context, argPos, Services);
+
+			await executionTask.ContinueWith(task =>
 			{
-				//search command
-				var cmdSearchResult = Commands.Search(context, argPos);
-				//If command not found just finish Task
-				if (cmdSearchResult.Commands == null) return;
-				//Execute command in current discord context
-				var executionTask = Commands.ExecuteAsync(context, argPos, Services);
-
-				await msg.DeleteAsync();
-
-				await executionTask.ContinueWith(task =>
-				{
 					// If Success or command unknown just finish Task
 					if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
 
-					context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
-				});
-			}
+				context.Channel.SendMessageAsync($"{context.User.Mention} Ошибка: {task.Result.ErrorReason}");
+			});
+
 			await Task.Run(async () =>
 			{
 				await leveling.GlobalLevel((SocketGuildUser)context.User);

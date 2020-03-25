@@ -24,6 +24,16 @@
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav text-uppercase ml-auto">
+						@if (User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item">
+								<a class="nav-link font-weight-bold" asp-area="" asp-action="Logout" asp-controller="Account">Выйти</a>
+							</li>
+						}
+					</ul>
+				</div>
 			</div>
 		</nav>
 	</header>

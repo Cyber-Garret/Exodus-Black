@@ -53,7 +53,7 @@ namespace Neira.Bot.Services
 					//check reaction
 					var UserExist = milestone.MilestoneUsers.Any(u => u.UserId == reaction.UserId && u.ActiveMilestoneMessageId == milestone.MessageId);
 
-					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count < 5)
+					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count + 1 < milestone.Milestone.MaxSpace)
 					{
 						Db.MilestoneUsers.Add(new MilestoneUser
 						{
@@ -154,7 +154,11 @@ namespace Neira.Bot.Services
 
 				using var Db = new NeiraLinkContext();
 				//get milestone
-				var milestone = await Db.ActiveMilestones.Include(r => r.Milestone).Include(mu => mu.MilestoneUsers).Where(r => r.MessageId == cache.Id).FirstOrDefaultAsync();
+				var milestone = await Db.ActiveMilestones
+					.Include(r => r.Milestone)
+					.Include(mu => mu.MilestoneUsers)
+					.Where(r => r.MessageId == cache.Id)
+					.FirstOrDefaultAsync();
 
 				if (milestone == null) return;
 
@@ -240,12 +244,12 @@ namespace Neira.Bot.Services
 			var newEmbed = EmbedsHelper.MilestoneRebuild(_discord, activeMilestone, _emote.Raid);
 			if (newEmbed.Length != 0)
 				await message.ModifyAsync(m => m.Embed = newEmbed);
-			if (activeMilestone.Milestone.MaxSpace == activeMilestone.MilestoneUsers.Count + 1)
+			if (activeMilestone.Milestone.MaxSpace == activeMilestone.MilestoneUsers.Count + 1 && activeMilestone.DateExpire < DateTime.Now.AddMinutes(15))
 			{
 				await message.RemoveAllReactionsAsync();
 				await message.ModifyAsync(c => c.Embed = EmbedsHelper.MilestoneEnd(_discord, activeMilestone));
 
-				await RaidNotificationAsync(activeMilestone);
+				await RaidNotificationAsync(activeMilestone, RemindType.FullCount);
 			}
 		}
 
@@ -261,7 +265,7 @@ namespace Neira.Bot.Services
 			await Db.SaveChangesAsync();
 		}
 
-		public async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, MilestoneType type, byte raidInfoId, string userMemo)
+		public async Task RegisterMilestoneAsync(ulong msgId, SocketCommandContext context, DateTime dateExpire, MilestoneType type, byte raidInfoId, string userMemo)
 		{
 			try
 			{
@@ -272,7 +276,7 @@ namespace Neira.Bot.Services
 					GuildId = context.Guild.Id,
 					MilestoneId = raidInfoId,
 					Memo = userMemo,
-					CreateDate = DateTime.Now,
+					DateExpire = dateExpire,
 					Leader = context.User.Id,
 					MilestoneType = type
 				};
@@ -289,7 +293,7 @@ namespace Neira.Bot.Services
 
 		}
 
-		public async Task RaidNotificationAsync(ActiveMilestone milestone)
+		public async Task RaidNotificationAsync(ActiveMilestone milestone, RemindType type)
 		{
 			try
 			{
@@ -297,7 +301,14 @@ namespace Neira.Bot.Services
 				var Leader = _discord.GetUser(milestone.Leader);
 				var LeaderDM = await Leader.GetOrCreateDMChannelAsync();
 
-				await LeaderDM.SendMessageAsync(embed: EmbedsHelper.MilestoneRemindInDM(_discord, milestone, Guild));
+				Embed BakedEmbed = null;
+				if (type == RemindType.FullCount)
+					BakedEmbed = EmbedsHelper.MilestoneRemindByFullCount(_discord, milestone, Guild);
+				else
+					BakedEmbed = EmbedsHelper.MilestoneRemindByTimer(_discord, milestone, Guild);
+
+
+				await LeaderDM.SendMessageAsync(embed: BakedEmbed);
 
 				foreach (var user in milestone.MilestoneUsers)
 				{
@@ -307,24 +318,25 @@ namespace Neira.Bot.Services
 						var LoadedUser = _discord.GetUser(user.UserId);
 
 						var DM = await LoadedUser.GetOrCreateDMChannelAsync();
-						await DM.SendMessageAsync(embed: EmbedsHelper.MilestoneRemindInDM(_discord, milestone, Guild));
+						await DM.SendMessageAsync(embed: BakedEmbed);
 					}
 					catch (Exception ex)
 					{
 						_logger.LogWarning(ex, "RaidNotification in DM of user");
 					}
 				}
-
-				using var Db = new NeiraLinkContext();
-				var expiredMilestone = Db.ActiveMilestones.Include(m => m.MilestoneUsers).First(m => m.MessageId == milestone.MessageId);
-				Db.ActiveMilestones.Remove(expiredMilestone);
-				Db.SaveChanges();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogWarning(ex, "RaidNotification Global");
 			}
 
+		}
+
+		public enum RemindType
+		{
+			FullCount,
+			ByTimer
 		}
 	}
 }

@@ -29,15 +29,15 @@ namespace Neira.QuartzService
 		{
 			Parallel.ForEach(_discord.Guilds, async SocketGuild =>
 			{
-				using var Db = new NeiraLinkContext();
-
-				var guild = Db.Guilds.FirstOrDefault(g => g.Id == SocketGuild.Id);
-				if (guild == null || guild.NotificationChannel == 0) return;
-
 				try
 				{
+					using var Db = new NeiraLinkContext();
+
+					var guild = Db.Guilds.FirstOrDefault(g => g.Id == SocketGuild.Id);
+					if (guild == null || guild.NotificationChannel == 0) return;
+
 					await _discord.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-				   .SendMessageAsync(text: guild.GlobalMention, embed: EmbedsHelper.XurLeave());
+				   .SendMessageAsync(embed: EmbedsHelper.XurLeave());
 				}
 				catch (Exception ex) { _logger.LogError(ex, "XurLeave"); }
 			});

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Discord.WebSocket.SocketGuild>
+@{
+	ViewData["Title"] = "Нейроматрица | Топ серверов";
+	Layout = "~/Views/Shared/Layouts/_ClanLayout.cshtml";
+}
+
+<div class="container text-center">
+	<h2>Топ 50 серверов</h2>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th></th>
+				<th></th>
+				<th></th>
+				<th>Стражей</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{int place = 1;}
+			@foreach (var guild in Model)
+			{
+				<tr>
+					<td>#@place</td>
+					<td><img class="img-thumbnail" src="@Html.Raw(guild.IconUrl)" style="max-height:4rem;" /></td>
+					<td>@guild.Name</td>
+					<td>@guild.MemberCount</td>
+				</tr>
+				place++;
+			}
+		</tbody>
+	</table>
+
+</div>

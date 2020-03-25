@@ -6,6 +6,7 @@ using Neira.Database;
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
 
 namespace Neira.Bot.Helpers
@@ -126,11 +127,11 @@ namespace Neira.Bot.Helpers
 		#endregion
 
 		#region Milestone
-		public static Embed MilestoneNew(SocketUser leader, Milestone milestone, MilestoneType type, string userMemo, IEmote raidEmote = null)
+		public static Embed MilestoneNew(SocketUser leader, Milestone milestone, DateTime dateExpire, MilestoneType type, string userMemo, IEmote raidEmote = null)
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = $"{milestone.Type}: {milestone.Name}",
+				Title = $"{dateExpire.Date.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(dateExpire.DayOfWeek)} в {dateExpire.ToString("HH:mm")} по МСК. {milestone.Type}: {milestone.Name}",
 				ThumbnailUrl = milestone.Icon
 			};
 			//Add milestone leader memo if represent
@@ -165,7 +166,7 @@ namespace Neira.Bot.Helpers
 
 			var embed = new EmbedBuilder
 			{
-				Title = $"{activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
+				Title = $"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
 				ThumbnailUrl = activeMilestone.Milestone.Icon
 
 			};
@@ -225,7 +226,7 @@ namespace Neira.Bot.Helpers
 			return embed.Build();
 		}
 
-		public static Embed MilestoneRemindInDM(DiscordSocketClient Client, ActiveMilestone milestone, SocketGuild socketGuild)
+		public static Embed MilestoneRemindByFullCount(DiscordSocketClient Client, ActiveMilestone milestone, SocketGuild socketGuild)
 		{
 			var authorBuilder = new EmbedAuthorBuilder
 			{
@@ -272,12 +273,59 @@ namespace Neira.Bot.Helpers
 
 			return embed.Build();
 		}
+		public static Embed MilestoneRemindByTimer(DiscordSocketClient Client, ActiveMilestone milestone, SocketGuild socketGuild)
+		{
+			var authorBuilder = new EmbedAuthorBuilder
+			{
+				Name = $"Доброго времени суток, страж."
+			};
+
+			var embed = new EmbedBuilder()
+			{
+				Title = $"Хочу вам напомнить, что у вас через 15 минут начнется {milestone.Milestone.Type.ToLower()}.",
+				Author = authorBuilder,
+				Color = Color.DarkMagenta,
+				ThumbnailUrl = milestone.Milestone.Icon
+			};
+			if (milestone.Memo != null)
+				embed.WithDescription($"**Заметка от лидера:** {milestone.Memo}");
+
+			var embedFieldUsers = new EmbedFieldBuilder
+			{
+				Name = $"В боевую группу записались"
+			};
+
+			var leader = Client.GetUser(milestone.Leader);
+			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
+
+			int count = 2;
+			foreach (var user in milestone.MilestoneUsers)
+			{
+				if (user.UserId == milestone.Leader)
+				{
+					embedFieldUsers.Value += $"#{count} **Зарезервировано лидером.**\n";
+				}
+				else
+				{
+					var discordUser = Client.GetUser(user.UserId);
+					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+				}
+				count++;
+			}
+			if (embedFieldUsers.Value != null)
+				embed.AddField(embedFieldUsers);
+
+			embed.WithFooter($"{milestone.Milestone.Type}: {milestone.Milestone.Name}. Сервер: {socketGuild.Name}", socketGuild.IconUrl);
+			embed.WithCurrentTimestamp();
+
+			return embed.Build();
+		}
 
 		public static Embed MilestoneEnd(DiscordSocketClient Client, ActiveMilestone activeMilestone)
 		{
 			var embed = new EmbedBuilder
 			{
-				Title = $"{activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
+				Title = $"{activeMilestone.DateExpire.ToString("dd.MM.yyyy")}, {GlobalVariables.culture.DateTimeFormat.GetDayName(activeMilestone.DateExpire.DayOfWeek)} в {activeMilestone.DateExpire.ToString("HH:mm")} по МСК. {activeMilestone.Milestone.Type}: {activeMilestone.Milestone.Name}",
 				Color = Color.Red,
 				Description = "**Ваш постоянный успех дал сбой, сбор закончен. Бип...**",
 				Timestamp = DateTimeOffset.Now
@@ -360,6 +408,32 @@ namespace Neira.Bot.Helpers
 
 			if (footer != null)
 				embed.WithFooter(footer);
+
+			return embed.Build();
+		}
+
+		public static async Task<Embed> SelfRoleMessageAsync(SocketCommandContext Context, List<GuildSelfRole> GuildRoles, string text)
+		{
+			//Initial Embed
+			var embed = new EmbedBuilder
+			{
+				Color = Color.Gold,
+				Description = text
+			};
+			//Add guild as Author
+			embed.WithAuthor(Context.Guild.Name, Context.Guild.IconUrl);
+			//Create field with roles and associated emotes
+			var embedField = new EmbedFieldBuilder
+			{
+				Name = GlobalVariables.InvisibleString
+			};
+			foreach (var item in GuildRoles)
+			{
+				var emote = await Context.Guild.GetEmoteAsync(item.EmoteID);
+				var role = Context.Guild.GetRole(item.RoleID);
+				embedField.Value += $"Нажми на {emote} что бы получить роль {role.Mention}\n";
+			}
+			embed.AddField(embedField);
 
 			return embed.Build();
 		}

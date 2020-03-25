@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>dotnet-Bot-B00C16D8-1285-48E1-8589-8D3BE70509AB</UserSecretsId>
+    <StartupObject>Bot.Program</StartupObject>
+    <Authors>Cyber_Garret</Authors>
+    <Product>Neira</Product>
+    <Description>Discord bot in Destiny 2 world</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Cyber-Garret/Failsafe</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.Addons.PassiveInteractive" Version="2.0.4" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.Core" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
+    <PackageReference Include="Quartz" Version="3.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="resources\backgrounds\" />
+  </ItemGroup>
+</Project>

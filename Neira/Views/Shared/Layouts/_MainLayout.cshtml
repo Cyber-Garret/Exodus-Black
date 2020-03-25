@@ -14,8 +14,8 @@
 <body id="page-top">
 	<!--Navigation-->
 	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-		<div class="container">
-			<a class="navbar-brand js-scroll-trigger" href="#page-top">Нейроматрица</a>
+		<div class="container-fluid">
+			<a class="navbar-brand js-scroll-trigger font-weight-bold" href="#page-top">Нейроматрица</a>
 			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				Меню
 				<i class="fas fa-bars"></i>
@@ -23,14 +23,29 @@
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav text-uppercase ml-auto">
 					<li class="nav-item">
-						<a class="nav-link js-scroll-trigger" href="#stat">Статистика</a>
+						<a class="nav-link js-scroll-trigger font-weight-bold" href="#stat">Статистика</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="http://docs.neira.su/" target="_blank">Документация</a>
+						<a class="nav-link font-weight-bold" href="http://docs.neira.su/" target="_blank">Документация</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link js-scroll-trigger" href="#donate">Поддержите нас</a>
+						<a class="nav-link font-weight-bold" asp-controller="Home" asp-action="TopServers">Топ серверов</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link js-scroll-trigger font-weight-bold" href="#donate">Поддержите нас</a>
+					</li>
+					@if (User.Identity.IsAuthenticated)
+					{
+						<li class="nav-item">
+							<a class="nav-link font-weight-bold" asp-area="" asp-action="Index" asp-controller="Account">Кабинет</a>
+						</li>
+					}
+					else
+					{
+						<li class="nav-item">
+							<a class="nav-link font-weight-bold" asp-area="" asp-action="Login" asp-controller="Account" asp-route-returnUrl="/Account">Войти</a>
+						</li>
+					}
 				</ul>
 			</div>
 		</div>

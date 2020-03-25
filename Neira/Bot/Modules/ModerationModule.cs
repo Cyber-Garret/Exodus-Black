@@ -223,15 +223,24 @@ namespace Neira.Bot.Modules
 
 		[Command("упоминание")]
 		[Summary("Изменяет упоминания в сборах и уведомлениях о Зуре here->everyone->Без упоминания и наоборот.")]
-		public async Task SetGuildMention()
+		public async Task SetGuildMention(SocketRole role = null)
 		{
 			var guild = await DatabaseHelper.GetGuildAccountAsync(Context.Guild.Id);
-			if (guild.GlobalMention == "@here")
-				guild.GlobalMention = "@everyone";
-			else if (guild.GlobalMention == "@everyone")
-				guild.GlobalMention = null;
-			else if (guild.GlobalMention == null)
-				guild.GlobalMention = "@here";
+			if (role == null)
+			{
+				if (guild.GlobalMention == "@here")
+					guild.GlobalMention = "@everyone";
+				else if (guild.GlobalMention == "@everyone")
+					guild.GlobalMention = null;
+				else if (guild.GlobalMention == null)
+					guild.GlobalMention = "@here";
+				else
+					guild.GlobalMention = null;
+			}
+			else
+			{
+				guild.GlobalMention = $"<@&{role.Id}>";
+			}
 
 			await DatabaseHelper.SaveGuildAccountAsync(guild);
 
@@ -349,21 +358,6 @@ namespace Neira.Bot.Modules
 				await ReplyAsync($"Ошибка очистки канала от {amount} сообщений. {ex.Message}.");
 				_logger.LogWarning(ex, "PurgeChat");
 			}
-		}
-
-		[Command("опрос")]
-		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
-		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
-		public async Task StartPoll([Remainder] string input)
-		{
-			var embed = new EmbedBuilder()
-				.WithAuthor($"Голосование от {Context.User.Username}", Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl())
-				.WithColor(Color.Green)
-				.AddField($"Тема голосования", input);
-
-			var msg = await ReplyAsync(embed: embed.Build());
-
-			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
 		}
 
 		[Command("рандом")]

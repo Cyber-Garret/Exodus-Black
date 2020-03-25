@@ -15,12 +15,18 @@ namespace Neira.Database
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer("Server=78.47.220.185;Database=NeiraLink;User Id=Neira;Password=PRu7bvfLTgGXcsTpoUQ7;MultipleActiveResultSets=true;");
+			optionsBuilder.UseSqlServer("Server=localhost,60096;Database=NeiraLink;User Id=Neira;Password=PRu7bvfLTgGXcsTpoUQ7;MultipleActiveResultSets=true;");
+		}
+
+		protected override void OnModelCreating(ModelBuilder model)
+		{
+			//model.Entity<GuildSelfRole>().HasNoKey();
 		}
 		//Web
 		public virtual DbSet<BotInfo> BotInfos { get; set; }
 		//Discord
 		public virtual DbSet<Guild> Guilds { get; set; }
+		public virtual DbSet<GuildSelfRole> GuildSelfRoles { get; set; }
 		public virtual DbSet<UserAccount> UserAccounts { get; set; }
 		public virtual DbSet<GuildUserAccount> GuildUserAccounts { get; set; }
 		public virtual DbSet<ADOnline> ADOnlines { get; set; }
@@ -30,7 +36,6 @@ namespace Neira.Database
 		public virtual DbSet<Catalyst> Catalysts { get; set; }
 		public virtual DbSet<Clan> Clans { get; set; }
 		public virtual DbSet<Clan_Member> Clan_Members { get; set; }
-		public virtual DbSet<Clan_Member_Stat> Clan_Member_Stats { get; set; }
 		//Milestones
 		public virtual DbSet<Milestone> Milestones { get; set; }
 		public virtual DbSet<ActiveMilestone> ActiveMilestones { get; set; }
