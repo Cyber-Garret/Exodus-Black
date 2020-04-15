@@ -1,0 +1,9 @@
+{
+	"Name": "Торговец оружием",
+	"Alias": "то",
+	"Type": "Сумрачный налет",
+	"Icon": "http://neira.su/img/milestones/strikes/the_arms_dealer.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}

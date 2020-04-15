@@ -1,7 +1,0 @@
-{
-	"bungieconfig": {
-		"baseurl": "https://www.bungie.net/Platform",
-		"keyname": "X-API-Key",
-		"apikey": "Place_Api_Key_Here"
-	}
-}

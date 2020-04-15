@@ -1,0 +1,15 @@
+﻿{
+  "Id": 521689023962415104,
+  "NotificationChannel": 638720432228270080,
+  "LoggingChannel": 689065107527172202,
+  "WelcomeChannel": 638720432228270080,
+  "WelcomeMessage": null,
+  "LeaveMessage": null,
+  "AutoroleID": 0,
+  "CommandPrefix": null,
+  "Language": "ru-RU",
+  "TimeZone": "Russian Standard Time",
+  "GlobalMention": null,
+  "SelfRoleMessageId": 0,
+  "GuildSelfRoles": []
+}

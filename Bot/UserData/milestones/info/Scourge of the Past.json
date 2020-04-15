@@ -1,0 +1,9 @@
+{
+	"Name": "Истребители прошлого",
+	"Alias": "ип",
+	"Type": "Рейд",
+	"Icon": "http://neira.su/img/milestones/scourge_of_the_past.jpg",
+	"MaxSpace": 6,
+	"MilestoneType": 0,
+	"Game": 0
+}

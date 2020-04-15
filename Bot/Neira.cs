@@ -1,50 +1,72 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Bot.Entity;
+using Bot.Core.Data;
+using Bot.Properties;
 using Bot.Services;
+
 using Discord;
 using Discord.WebSocket;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Bot
 {
 	public class Neira : BackgroundService
 	{
-		private readonly IServiceProvider _service;
-		private readonly ILogger<Neira> _logger;
-		private readonly DiscordSocketClient _discord;
-		private readonly BotConfig _config;
+		private readonly IConfiguration config;
+		private readonly IServiceProvider service;
+		private readonly ILogger<Neira> logger;
+		private readonly DiscordSocketClient discord;
 
 		public Neira(IServiceProvider service)
 		{
-			_service = service;
-			_logger = service.GetRequiredService<ILogger<Neira>>();
-			_discord = service.GetRequiredService<DiscordSocketClient>();
-			_config = service.GetRequiredService<IOptions<BotConfig>>().Value;
+			this.service = service;
+			logger = service.GetRequiredService<ILogger<Neira>>();
+			config = service.GetRequiredService<IConfiguration>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 		}
 
-		protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
 		{
-			//Initialize service
-			_service.GetRequiredService<DiscordLogging>().Configure();
-			_service.GetRequiredService<GuildEventHandler>().InitDiscordEvents();
-			await _service.GetRequiredService<CommandHandler>().ConfigureAsync();
+			try
+			{
+				var token = config["Bot:Token"];
 
-			await _discord.LoginAsync(TokenType.Bot, _config.Token);
-			await _discord.StartAsync();
-			await _discord.SetStatusAsync(UserStatus.Online);
-			await Task.Delay(-1, stoppingToken);
+				service.GetRequiredService<LoggingService>().Configure();
+				service.GetRequiredService<DiscordEventHandlerService>().Configure();
+				await service.GetRequiredService<CommandHandlerService>().InstallCommandsAsync();
+
+				await discord.LoginAsync(TokenType.Bot, token);
+				await discord.StartAsync();
+				await discord.SetStatusAsync(UserStatus.Online);
+				await discord.SetGameAsync(Resources.NeiraWebSite);
+
+				await Task.Delay(-1, cancellationToken);
+
+			}
+			catch (TaskCanceledException) {/*We expect app throw TaskCanceledException if correct shutting down bot, anyway ignore this exception.*/ }
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Neira Start");
+				throw;
+			}
 		}
+
 		public override async Task StopAsync(CancellationToken cancellationToken)
 		{
-			await _discord.SetStatusAsync(UserStatus.Offline);
-			await _discord.LogoutAsync();
+			await discord.SetStatusAsync(UserStatus.Offline);
+			await discord.StopAsync();
+
+			// save all data to hdd
+			GuildData.SaveAccounts();
+			ActiveMilestoneData.SaveMilestones();
+
+			discord.Dispose();
 		}
 	}
 }
