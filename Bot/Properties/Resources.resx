@@ -334,8 +334,8 @@ NSFW **{1}**
     <value>В боевую группу записались</value>
   </data>
   <data name="MilEmbTitle" xml:space="preserve">
-    <value>{0}, в {1} по {2}. {3}: {4}</value>
-    <comment>Пример: 20.02.2020, в 20:00 по Москве. Сумрачный налет: Сад</comment>
+    <value>{0}, в {1}. {2}: {3}</value>
+    <comment>Пример: 20.02.2020, в 20:00(+03:00). Сумрачный налет: Сад</comment>
   </data>
   <data name="MilError" xml:space="preserve">
     <value>Страж, произошла критическая ошибка. Попробуй через пару минут снова, если ошибка будет снова напиши моему создателю - Cyber_Garret#5898

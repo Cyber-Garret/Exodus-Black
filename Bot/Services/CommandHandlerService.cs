@@ -56,7 +56,7 @@ namespace Bot.Services
 				 var argPos = 0;
 				 // ignore if command not start from prefix
 				 var prefix = guild.CommandPrefix ?? config["Bot:Prefix"];
-				 if (msg.HasStringPrefix(prefix, ref argPos))
+				 if (msg.HasStringPrefix(prefix, ref argPos) || msg.HasMentionPrefix(discord.CurrentUser, ref argPos))
 				 {
 					 // search command
 					 var cmdSearchResult = commands.Search(context, argPos);

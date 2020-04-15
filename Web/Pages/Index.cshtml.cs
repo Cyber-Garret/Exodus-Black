@@ -20,7 +20,7 @@ namespace Web.Pages
 
 		public void OnGet()
 		{
-			var stat = bot.GetBotStat(1);
+			var stat = bot.GetBotStat();
 			if (stat == null)
 				logger.LogWarning("Bot stat empty");
 			botStat = stat;

@@ -8,7 +8,7 @@ namespace Web.Models
 {
 	public interface IBotRepository
 	{
-		BotStat GetBotStat(int id);
+		BotStat GetBotStat(int id = 1);
 	}
 
 	public class BotRepository : IBotRepository
@@ -20,10 +20,10 @@ namespace Web.Models
 			connectionString = conn;
 		}
 
-		public BotStat GetBotStat(int id)
+		public BotStat GetBotStat(int id = 1)
 		{
 			using var db = new SqlConnection(connectionString);
-			var sql = $"SELECT * FROM BotInfos WITH(NOLOCK) WHERE Id = {id}";
+			var sql = $"SELECT * FROM BotStat WITH(NOLOCK) WHERE Id = {id}";
 			return db.Query<BotStat>(sql).FirstOrDefault();
 		}
 	}

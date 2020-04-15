@@ -14,7 +14,7 @@ namespace Bot.Models
 		public ulong AutoroleID { get; set; } = 0;
 		public string CommandPrefix { get; set; } = null;
 		public CultureInfo Language { get; set; } = new CultureInfo("ru-RU");
-		public string TimeZone { get; set; } = "Russian Standard Time";
+		public string TimeZone { get; set; } = "Europe/Moscow";
 		public string GlobalMention { get; set; } = "@here";
 		public ulong SelfRoleMessageId { get; set; } = 0;
 		public List<GuildSelfRole> GuildSelfRoles { get; set; } = new List<GuildSelfRole>();

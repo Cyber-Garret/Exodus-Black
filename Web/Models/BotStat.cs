@@ -2,7 +2,7 @@
 {
 	public class BotStat
 	{
-		public int Id { get; set; } = 0;
+		public int Id { get; set; } = 1;
 		/// <summary>
 		/// Bot discord servers count
 		/// </summary>

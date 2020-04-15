@@ -144,8 +144,7 @@ namespace Bot.Services
 			{
 				Title = string.Format(Resources.MilEmbTitle,
 						  milestone.DateExpire.ToString("dd.MM.yyyy"),
-						  milestone.DateExpire.ToString("HH:MM"),
-						  GetCityForMilestoneEmbed(milestone.DateExpire.Offset),
+						  milestone.DateExpire.ToString("HH:mm(zzz)"),
 						  milestone.MilestoneInfo.Type,
 						  milestone.MilestoneInfo.Name),
 				Author = GetGame(milestone.MilestoneInfo.Game),
@@ -297,17 +296,6 @@ namespace Bot.Services
 				author.Name = "Unknown";
 			}
 			return author;
-		}
-
-
-		private string GetCityForMilestoneEmbed(TimeSpan Offset)
-		{
-			return Offset.Hours switch
-			{
-				3 => "Москве",
-				2 => "Киеву",
-				_ => "Unknown",
-			};
 		}
 	}
 }

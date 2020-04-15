@@ -673,7 +673,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, в {1} по {2}. {3}: {4}.
+        ///   Looks up a localized string similar to {0}, в {1}. {2}: {3}.
         /// </summary>
         internal static string MilEmbTitle {
             get {
