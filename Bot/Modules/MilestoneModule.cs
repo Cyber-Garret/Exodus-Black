@@ -97,10 +97,12 @@ namespace Bot.Modules
 
 			if (milestone.Leader == Context.User.Id)
 			{
+				var IsReacted = false;
 				if (milestone.MilestoneUsers.Contains(newLeader.Id))
 				{
 					milestone.MilestoneUsers.Remove(newLeader.Id);
 					milestone.Leader = newLeader.Id;
+					IsReacted = true;
 				}
 				else
 					milestone.Leader = newLeader.Id;
@@ -108,6 +110,9 @@ namespace Bot.Modules
 
 				var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
 				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+				if (IsReacted)
+					await msg.RemoveReactionAsync(emote.Raid, newLeader);
 
 				await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
 
