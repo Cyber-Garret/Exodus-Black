@@ -1,0 +1,9 @@
+{
+	"Name": "Эскалационный протокол",
+	"Alias": "эп",
+	"Type": "Открытое мероприятие",
+	"Icon": "http://neira.su/img/milestones/other/escalation_protocol.jpg",
+	"MaxSpace": 6,
+	"MilestoneType": 2,
+	"Game": 0
+}

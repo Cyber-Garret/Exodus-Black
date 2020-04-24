@@ -147,6 +147,8 @@ namespace Bot.Modules
 						m.Embed = DeleteMilestone(milestone, reason);
 					});
 
+					await msg.RemoveAllReactionsAsync();
+
 					await ReplyAndDeleteAsync(string.Format(Resources.MilCanceled, msg.GetJumpUrl()));
 				}
 				catch (Exception ex)

@@ -2,7 +2,7 @@
 	"Name": "Звездный шпиль",
 	"Alias": "зш",
 	"Type": "Рейд-логово",
-	"Icon": "http://neira.su/img/milestones/spire_of_stars.jpg",
+	"Icon": "http://neira.su/img/milestones/raids/spire_of_stars.jpg",
 	"MaxSpace": 6,
 	"MilestoneType": 0,
 	"Game": 0

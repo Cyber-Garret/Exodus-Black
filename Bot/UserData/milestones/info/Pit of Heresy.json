@@ -1,0 +1,9 @@
+{
+	"Name": "Яма Ереси",
+	"Alias": "яе",
+	"Type": "Подземелье",
+	"Icon": "http://neira.su/img/milestones/other/pit_of_heresy.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 2,
+	"Game": 0
+}
