@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Обожествляющая вуаль",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/08499ab51485915702b192a9d97d17b0.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3897389303.jpg",
+  "Description": "Шлемы созданы, чтобы защищать нас от внешнего мира. Но только не этот.",
+  "Perk": "Ненасытность",
+  "PerkDescription": "Вы мгновенно восстанавливаете здоровье, способность ближнего боя, гранаты и энергию Раскола при активации суперспособности. У ближайших союзников быстрее восстанавливаются классовые способности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

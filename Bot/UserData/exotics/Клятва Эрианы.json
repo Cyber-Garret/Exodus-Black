@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Клятва Эрианы",
+  "Type": "Энергетический револьвер",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/a518194a470b5a5f4a9fbfbc28a8e0de.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3524313097.jpg",
+  "Description": "\"Это будет последний луч Света, что они увидят\", – Эриана-3",
+  "Perk": "Убивающий взглядом",
+  "PerkDescription": "Это оружие выпускает особые бронебойные пули. В комплекте идет прицел.",
+  "SecondPerk": "Погибель с первого взгляда",
+  "SecondPerkDescription": "При прицеливании во время первого выстрела атаки наносит дополнительный урон, который сохраняется при точном попадании или попадании по стихийному щиту.",
+  "DropLocation": "Награда за сезонный абонемент.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

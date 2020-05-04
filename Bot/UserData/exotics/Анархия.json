@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Анархия",
+  "Type": "Силовой гранатомет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/474558c3e58e56b9a351c4064a74c5ca.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2376481550.jpg",
+  "Description": "\"Жмись к стене, к земле, человек... а потом ГОРИ-И-И! Хе-хе-хе-хе\". – Сивикс Безродный",
+  "Perk": "Электрические ловушки",
+  "PerkDescription": "Гранаты прилипают к поверхностям и создает цепочку из электрических взрывов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Рейд \"Истребители прошлого\".",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

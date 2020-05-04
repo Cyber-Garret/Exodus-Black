@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Хранитель клятвы",
+  "Type": "Перчатки охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/a6bd52988830638884359318110d3c34.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1098931324.jpg",
+  "Description": "\"Я еще не встречала свою истинную смерть\". — Сйор Эйдо, первая Ярость королевы",
+  "Perk": "Алмазные скобы",
+  "PerkDescription": "Заряд луков держится бесконечно.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

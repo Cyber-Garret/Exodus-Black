@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Скобы Заклинателя бури",
+  "Type": "Нагрудник варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/ebd4d08a87bbae109989757f440ca9f9.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1996008488.jpg",
+  "Description": "Молнию не загнать в силки.",
+  "Perk": "Широкий размах",
+  "PerkDescription": "Каждый враг, убитый Штормовым трансом, повышает урон Штормового транса.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

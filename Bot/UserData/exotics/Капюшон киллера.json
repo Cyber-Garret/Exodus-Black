@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Капюшон киллера",
+  "Type": "Шлем охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/1605080d03d473c20f3938d92fe15bdf.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2203146422.jpg",
+  "Description": "Сейчас меня видно, а теперь – нет.",
+  "Perk": "Невидимый палач",
+  "PerkDescription": "Сокрушив Стража в ближнем бою, либо убив противника добивающим приемом, вы обретете невидимость и восстановите часть здоровья и щитов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

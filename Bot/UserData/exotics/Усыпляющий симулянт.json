@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Усыпляющий симулянт",
+  "Type": "Силовая линейно-плазменная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/f480df924893cf9549223289512996ae.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/4036115577.jpg",
+  "Description": "Подпрограмма ИКЕЛ: Статус=выполнена. ПОЛНОЧНАЯ ДИРЕКТИВА: Статус=выполняется.",
+  "Perk": "Спящая красавица",
+  "PerkDescription": "Лазерный луч этого оружия проходит сквозь врагов и отражается от твердых поверхностей.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение на Марсе или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

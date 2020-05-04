@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Божественность",
+  "Type": "Энергетическиая лучевая винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/9fca585b5cc85e25f99d4cc9bee58db5.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/4103414242.jpg",
+  "Description": "рост рост рост рост сад рост рост рост рост",
+  "Perk": "Правосудие",
+  "PerkDescription": "При получении урона с этим оружием цель попадает в поле, ослабляющее и дестабилизирующее ее.",
+  "SecondPerk": "Покаяние",
+  "SecondPerkDescription": "Цели, достаточно долго находящиеся под воздействием \"Правосудия\", получают залповый урон.",
+  "DropLocation": "Экзотическое поручение **Неизвестно** или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

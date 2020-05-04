@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Старатель",
+  "Type": "Силовой гранатомет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/73db7a5de6458e360fdec3160ff09dbe.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3549153979.jpg",
+  "Description": "\"Некоторые вещи лучше пусть остаются под землей\".",
+  "Perk": "Раскопки",
+  "PerkDescription": "Удерживайте , чтобы выстрелить гранатой. Отпустите кнопку, чтобы подорвать все гранаты одновременно. Гранаты прилипают к поверхностям и поджигают врагов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

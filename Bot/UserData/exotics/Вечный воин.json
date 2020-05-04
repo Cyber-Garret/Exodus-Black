@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Вечный воин",
+  "Type": "Шлем титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/16b0bfda40a7a13465943b707b28c308.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1643575148.jpg",
+  "Description": "Абсолютная непоколебимость.",
+  "Perk": "Решимость",
+  "PerkDescription": "Создает щит при активации Кулаков опустошения.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

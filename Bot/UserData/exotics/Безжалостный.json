@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Безжалостный",
+  "Type": "Энергетическая плазменная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/67fa7a1a1535515ccc482da4d30a08c9.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/4190156464.jpg",
+  "Description": "Энтропия неизбежна.",
+  "Perk": "Рекуперация энергии",
+  "PerkDescription": "Несмертельные ранения от вражеских выстрелов ускоряют зарядку этого оружия до тех пор, пока враг не умрет.",
+  "SecondPerk": "Инерция",
+  "SecondPerkDescription": "Перезарядка оружия сразу же после убийства ненадолго увеличивает урон.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

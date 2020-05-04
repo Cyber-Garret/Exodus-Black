@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Солнечный выстрел",
+  "Type": "Энергетический револьвер",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/cb5729ee25c2ab5fee5e80b6523cef6a.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2907129557.jpg",
+  "Description": "\"От рассвета не убежишь\", — Лю Фэн",
+  "Perk": "Солнечный ожог",
+  "PerkDescription": "Это оружие стреляет разрывными патронами и подсвечивает цели, получившие урон от \"Солнечного выстрела\".",
+  "SecondPerk": "Солнечный взрыв",
+  "SecondPerkDescription": "Враги, убитые \"Солнечным выстрелом\", взрываются, превращаясь в солнечную энергию.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

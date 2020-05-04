@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Перчи обшитой Ахамкары",
+  "Type": "Перчатки охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/ba56587f1d2ad646ff862f663a7263b0.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2166230715.jpg",
+  "Description": "Обшивка костей Ахамкары серебром помогает успокоить слуховые галлюцинации... о, мой носитель.",
+  "Perk": "Кошмарный боезапас",
+  "PerkDescription": "При нанесении урона в ближнем бою используемое оружие автоматически перезаряжается.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

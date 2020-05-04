@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Браслеты Карнштейна",
+  "Type": "Перчатки варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/7a37bd1dc75bd0848d8c7afa25570763.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1862800746.jpg",
+  "Description": "\"Ты мой, ты станешь моим, мы с тобой будем вместе навеки\".",
+  "Perk": "Объятия вампира",
+  "PerkDescription": "Убийства в ближнем бою восстанавливают большое количество здоровья и продолжают восстанавливать его в течение короткого времени после атаки.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

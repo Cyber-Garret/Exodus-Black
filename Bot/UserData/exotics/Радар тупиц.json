@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Радар тупиц",
+  "Type": "Шлем охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/5c085a24228eff7815014f82a6caeadf.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1667080811.jpg",
+  "Description": "Ты же понимаешь, о чем я, верно? Кому нужны такие в команде?",
+  "Perk": "Набор улучшенных сенсоров",
+  "PerkDescription": "Показывает радар во время прицеливания. Улучшает радар при приседании.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

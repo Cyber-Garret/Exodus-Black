@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Корона Бурь",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/afd0a0e6f206d9518e56e7d7a148a50d.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2523259395.jpg",
+  "Description": "Могучи те, кто сидит на грозовых тронах, и жестоки в гневе, но и щедры к тем, кого любят.",
+  "Perk": "Проводящие зубья",
+  "PerkDescription": "Убийства электрическими способностями ускоряют их восстановление, а также продлевают время действия Штормового транса.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

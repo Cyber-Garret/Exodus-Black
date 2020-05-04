@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Шип",
+  "Type": "Кинетический револьвер",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/3e518a2eb8ba6888ba723866af55ce8b.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3973202132.jpg",
+  "Description": "\"Уничтожая врагов, вы не считаете их равными. Вы считаете их объектами, лишенными души и мыслей\". — 9-е понимание, 7-я Книга печалей",
+  "Perk": "Метка пожирателя",
+  "PerkDescription": "Снаряды пробивают цели насквозь и наносят продолжительный урон. Убийства этим оружием оставляют Сущности.",
+  "SecondPerk": "Поглотитель душ",
+  "SecondPerkDescription": "Поглощение Сущности усиливает действие Метки пожирателя и заполняет часть магазина.",
+  "DropLocation": "Экзотическое поручение на ЕМЗ или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

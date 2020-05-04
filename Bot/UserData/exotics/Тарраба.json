@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Тарраба",
+  "Type": "Энергетический пистолет-пулемет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/ce6bd07715a082bad0ba946f5f8dca5e.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3110698812.jpg",
+  "Description": "Мы идем там, где когда-то шли наши предки",
+  "Perk": "Алчный зверь",
+  "PerkDescription": "Это оружие запасает энергию при нанесении или получении урона. После накопления удерживайте кнопку перезарядки, чтобы выпустить зверя.",
+  "SecondPerk": "Непомерный аппетит",
+  "SecondPerkDescription": "Продолжайте наносить урон, чтобы продлить действие \"Алчного зверя\".",
+  "DropLocation": "Рейд \"Корона скорби\".",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

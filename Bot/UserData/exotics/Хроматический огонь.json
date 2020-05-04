@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Хроматический огонь",
+  "Type": "Нагрудник варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/3a7532224ab161c33d423555636266bc.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3488362706.jpg",
+  "Description": "…нашли их… Хрустальные сады Дионы… вызываем подкрепление... принимайте координаты…\" — последняя радиограмма боевой группы \"Пергам",
+  "Perk": "Кристаллизованный транзистор",
+  "PerkDescription": "Убийства прицельными выстрелами из кинетического оружия создают стихийные взрывы, соответствующие стихии вашего подкласса.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

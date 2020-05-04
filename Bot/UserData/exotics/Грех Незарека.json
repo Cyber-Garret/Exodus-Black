@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Грех Незарека",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/67f7bbf158f84c33802b178e463b7037.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2523259393.jpg",
+  "Description": "\"Он — конец всего. И он восстанет вновь\", — отрывок из текста \"О презренном Назареке\", написанного до Золотого века.",
+  "Perk": "Пустотные извлекатели",
+  "PerkDescription": "Убийства пустотным уроном увеличивают скорость восстановления способностей.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Истина",
+  "Type": "Силовая ракетная установка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/dadddaaa66c1dd3d450dd758345af389.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1201830623.jpg",
+  "Description": "\"...там, где ты это ищешь\", — Ломар",
+  "Perk": "Прототип правдоискателя",
+  "PerkDescription": "Его ракеты преследуют цели. Захват цели осуществляется при прицеливании.",
+  "SecondPerk": "Гранаты и подковы",
+  "SecondPerkDescription": "Снаряды детонируют, когда находятся в непосредственной близости от своих целей.",
+  "DropLocation": "Экзотическое поручение **Неизвестно** или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Телесто",
+  "Type": "Энергетическая плазменная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/9fa2bd9ae2f05b9baf7f74247a74cf41.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2208405142.jpg",
+  "Description": "Тени королевских гонцов по-прежнему витают у лун Сатурна.",
+  "Perk": "Незапланированная отсрочка",
+  "PerkDescription": "Плазменные снаряды прикрепляются к противнику, после чего происходит затяжной Пустотный взрыв.",
+  "SecondPerk": "Пульс посланника",
+  "SecondPerkDescription": "Множественные убийства из этого оружия мгновенно перезаряжают используемое кинетическое или энергетическое оружие из резерва.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

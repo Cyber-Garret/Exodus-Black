@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Наплечник с клыками погибели",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/1e6af1d4e6ec8568434b1c8f8604b122.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1035680665.jpg",
+  "Description": "Никто его так не называет.",
+  "Perk": "Сирены рока",
+  "PerkDescription": "Убийства пустотной способностью ближнего боя восстанавливают суперспособность. Пока активен Щит покровителя, убийства в ближнем бою восстанавливают \"Бросок щита\", а попадания щитом продлевают действие суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

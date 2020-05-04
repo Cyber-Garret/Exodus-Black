@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Хребет молодой Ахамкары",
+  "Type": "Перчатки охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/e7ccbff166a5a543df4f475f69f3ebf8.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/4284305242.jpg",
+  "Description": "Протяни ко мне руку, о, мой носитель. Дай я помогу тебе заполонить мир зубами.",
+  "Perk": "Зубы Дракона Желаний",
+  "PerkDescription": "Продлевает действие гранаты-ловушки и увеличивает радиус взрыва. Нанесение урона способностями восстанавливает энергию гранаты-ловушки.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Губитель королев",
+  "Type": "Силовая линейно-плазменная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/e228bd964b8943a2796bef50d69c8ab5.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2044500762.jpg",
+  "Description": "Несмотря на коварство изменников, Ее величество все еще держится.",
+  "Perk": "Проводная винтовка",
+  "PerkDescription": "Испускает точный дальнобойный электроразряд, ослепляющий врагов при попадании.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

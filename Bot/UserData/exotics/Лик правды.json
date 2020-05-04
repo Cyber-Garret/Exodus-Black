@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Лик правды",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/5d81c1e1972734a15dfcf36c9bd4dc22.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2897117448.jpg",
+  "Description": "\"Улей видит мир не так, как мы. Они смотрят за горизонт, в бесконечность. В абсолютную тьму\". — Эрис Морн",
+  "Perk": "Четвертая школа магии",
+  "PerkDescription": "Убийства энергетическим оружием ускоряют восстановление гранат у вас и у ближайших союзников.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

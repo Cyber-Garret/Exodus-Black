@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Полярное копье",
+  "Type": "Энергетическая винтовка разведчика",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/a90dd6fcfdd3c8e9cfeb77eb7a4b40a0.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3413074534.jpg",
+  "Description": "\"Я уже многое забыла о своей прежней жизни и о семье. Но когда я держу в руках эту винтовку, все возвращается. Мне кажется, будто я… дома\". — Ана Брей",
+  "Perk": "Идеальная пятерка",
+  "PerkDescription": "Прицельные выстрелы возвращают патроны в магазин. После 4 прицельных попаданий вы заряжаете солнечный патрон замедленного действия для следующего выстрела.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение на Марсе или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

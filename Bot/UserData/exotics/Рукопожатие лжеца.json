@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Рукопожатие лжеца",
+  "Type": "Перчатки охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/b5fbeba99d92f2102d010bc4ff5829d4.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3295711091.jpg",
+  "Description": "Взгляни им в глаза.",
+  "Perk": "Перекрестный удар",
+  "PerkDescription": "Использование электрической способности ближнего боя или полученный урон в ближнем бою усиливают контратаку ближнего боя, которая также восстанавливает ваше здоровье.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

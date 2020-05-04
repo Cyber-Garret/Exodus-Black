@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Колония",
+  "Type": "Силовой гранатомет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/dadeb1f4484ffdaec2420240700dc637.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3899270607.jpg",
+  "Description": "Нас намного больше. Мы тебя найдем. Ты всего один, а нас целая колония.",
+  "Perk": "Насекомообразные умные гранаты",
+  "PerkDescription": "Гранаты, выпускаемые из этого оружия, - насекомоподобные роботы, которые преследуют цель и взрываются вблизи от нее.",
+  "SecondPerk": "Служим колонии",
+  "SecondPerkDescription": "Магазин быстро пополняется из резерва, когда \"Колония\" не используется.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

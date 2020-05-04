@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Выходное пособие",
+  "Type": "Нагрудник титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/68ee77c487d0175b464819f730d727da.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2326396534.jpg",
+  "Description": "Петля создана. Все будет повторяться до столкновения. А за ним последует расщепление.",
+  "Perk": "Сфероматический спуск",
+  "PerkDescription": "После победы над Стражем в ближнем бою либо убийства противника добивающим приемом происходит взрыв.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Пиковый туз",
+  "Type": "Кинетический револьвер",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/29c46cd83dec7bd9363d1a6731a6ee17.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/347366834.jpg",
+  "Description": "\"У меня всегда есть козырь в рукаве\". — Кейд-6",
+  "Perk": "Мементо мори",
+  "PerkDescription": "Перезарядка после убийства пополняет магазин пулями, которые наносят дополнительный урон. Включает радар во время прицеливания.",
+  "SecondPerk": "Светлячок",
+  "SecondPerkDescription": "Убийства прицельными выстрелами из этого оружия ускоряют его перезарядку и взрывают жертву, нанося солнечный урон ближайшим противникам.",
+  "DropLocation": "Экзотическое поручение в Башне или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

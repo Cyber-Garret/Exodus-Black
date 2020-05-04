@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Когти Ахамкары",
+  "Type": "Перчатки варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/90163a71e18aad4eab02ae6ea7f7042c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2970800254.jpg",
+  "Description": "Разум изменчив. Он переполнен мимолетными мыслями и пустыми идеями. Позволь нам придать ему верную форму, и ты увидишь бесконечную красоту вселенной.",
+  "Perk": "Шепот",
+  "PerkDescription": "Вы получаете дополнительный заряд способности ближнего боя.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

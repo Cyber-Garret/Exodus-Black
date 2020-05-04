@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Потеря гравитонов",
+  "Type": "Шлем охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/2600250b4ea61d338feda47cf44ba0b5.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3926392527.jpg",
+  "Description": "\"Твоя сила не имеет никакого значения - если ты задержишься там надолго, обратно ты не вернешься. А если и вернешься, то свое прежнее \"я\" можешь забыть\". - Тевис",
+  "Perk": "Исчезающая тень",
+  "PerkDescription": "Увеличивает продолжительность эффекта невидимости. Ближний бой восстанавливается быстрее, когда вы невидимы.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

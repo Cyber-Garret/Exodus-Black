@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Сапоги лунофракции",
+  "Type": "Броня для ног варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/4d1cf89d08b11bd87c8944ecddbbfffe.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2954558332.jpg",
+  "Description": "\"Благодарю тебя за эти подаренные атомы. Я не потрачу их впустую\", — Стоик.",
+  "Perk": "Алхимическая гравировка",
+  "PerkDescription": "Ваши расколы увеличивают скорость перезарядки оружия. Усиливающий раскол делает оружие более эффективным на дальних дистанциях.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

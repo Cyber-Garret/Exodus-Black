@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Осколки Галанора",
+  "Type": "Перчатки охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/e8163ebe9c08bd2b777fbc536b55deb4.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1098931325.jpg",
+  "Description": "\"У меня не хватит мастерства починить Галанор\". \"…Я что-нибудь придумаю\".",
+  "Perk": "Острые края",
+  "PerkDescription": "Попадания и убийства способностью Шквал клинков восстанавливают суперспособность после ее дезактивации.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

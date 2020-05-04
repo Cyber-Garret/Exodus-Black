@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Знаки Антея",
+  "Type": "Броня для ног титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/709e26d636ae9c9f5740af685501c1db.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1315823811.jpg",
+  "Description": "Вы верите в геоморфов — энергетических духов планет?",
+  "Perk": "Отражающие клапаны",
+  "PerkDescription": "Улучшенное скольжение. При скольжении вы отражаете летящие в вас снаряды. Каждый отраженный снаряд восстанавливает энергию суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

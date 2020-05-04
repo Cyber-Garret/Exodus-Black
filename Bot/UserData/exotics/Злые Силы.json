@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Злые Силы",
+  "Type": "Кинетическая импульсная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/8387c3324f5ebfcf0eab66a94d782e06.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2816212794.jpg",
+  "Description": "\"Если веришь, что твое оружие хочет убить все сущее – так и будет\", — Толанд Раздробленный",
+  "Perk": "Вереница проклятий",
+  "PerkDescription": "Убийства из этого оружия перезаряжают магазин, увеличивают урон на короткое время и восстанавливают энергию суперспособности в зависимости от силы \"Вереницы проклятий\". Стреляет в полностью автоматическом режиме",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение на Несс-e или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

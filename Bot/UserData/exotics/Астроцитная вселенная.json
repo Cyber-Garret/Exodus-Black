@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Астроцитная вселенная",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/7467a8006d1a7792e5f9cb5a211499a6.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/866590993.jpg",
+  "Description": "Идеокосм, находящийся внутри этого шлема, превращает голову владельца из органики и/или экзонейронов в чистую мысль.",
+  "Perk": "Движение — жизнь",
+  "PerkDescription": "Прыгайте дальше и чаще. После выхода из прыжка оружие готовится быстрее, а радар не выключается.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

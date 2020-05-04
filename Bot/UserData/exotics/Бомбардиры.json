@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Бомбардиры",
+  "Type": "Броня для ног охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/f901c3e81801f8d4102cc0b816c8dab1.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1219761634.jpg",
+  "Description": "«Таллула Фэйрвинд никогда не отказывается от вызова», – Таллула Фэйрвинд",
+  "Perk": "Прощальный подарок",
+  "PerkDescription": "При уклонении за вами остается взрывное устройство, детонирующее через несколько секунд и наносящее урон ближайшим врагам.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

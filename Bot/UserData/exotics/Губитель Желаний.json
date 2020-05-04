@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Губитель Желаний",
+  "Type": "Кинетический боевой лук",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/1ba5d953e30fd1dfdf1d33c98c95c3e0.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/814876684.jpg",
+  "Description": "\"Не волнуйся. Это простая экспедиция. Мы вернемся к обеду\". — Сйор Эйдо, первая Ярость королевы",
+  "Perk": "Ярость королевы",
+  "PerkDescription": "Во время прицеливания с полностью натянутой тетивой лук подсвечивает врагов, находящихся за стенами.",
+  "SecondPerk": "Широкий наконечник",
+  "SecondPerkDescription": "Наконечник стрелы наносит урон дважды, пробивая цель насквозь. Один выстрел может поразить несколько целей, стоящих в ряд.",
+  "DropLocation": "Экзотическое поручение в Городе Грез или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

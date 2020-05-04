@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Установка \"Орфей\"",
+  "Type": "Броня для ног охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/0d6ae4296f1435209070142cf26dfd37.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1245809813.jpg",
+  "Description": "Никогда, никогда не оглядывайся.",
+  "Perk": "Невероятные стрелы",
+  "PerkDescription": "Дает энергию за каждого врага, отмеченного якорем Западни. Добавляет больше стрел в Колчан Мебиуса.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

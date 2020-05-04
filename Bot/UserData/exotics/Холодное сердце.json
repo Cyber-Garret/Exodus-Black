@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Холодное сердце",
+  "Type": "Энергетическая лучевая винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/f73c7ce62b58ca3ae8847b2dcc53074b.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1345867571.jpg",
+  "Description": "Новейшие технологии Omolon позволяют использовать жидкое топливо в качестве хладагента, обеспечивая оружейным системам минусовую температуру.",
+  "Perk": "Холодный синтез",
+  "PerkDescription": "Это оружие оснащено лазером с термоядерной накачкой, испускающим непрерывный луч.",
+  "SecondPerk": "Самая долгая зима",
+  "SecondPerkDescription": "Чем дольше лазер Холодного сердца наведен на цель, тем больший урон он наносит.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

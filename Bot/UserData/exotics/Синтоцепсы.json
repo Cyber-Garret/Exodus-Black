@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Синтоцепсы",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/21d1f1aaf807996e1cfff5fc283fb59e.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1035680666.jpg",
+  "Description": "Осторожно: у этих организмов может развиться сознание. Если это произошло, рекомендуем немедленно их уничтожить.",
+  "Perk": "Биотические модификации",
+  "PerkDescription": "Увеличение дальности выпада в ближнем бою. Увеличение урона суперспособности и урона в ближнем бою в окружении врагов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

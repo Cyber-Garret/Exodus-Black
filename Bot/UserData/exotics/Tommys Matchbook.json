@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Спички Томми",
+  "Type": "Энергетический автомат",
+  "IconUrl": "https://www.bungie.net/common/destiny2_content/icons/e313d9937daf592dd3330284ed02a5ba.jpg",
+  "ImageUrl": "https://www.bungie.net/common/destiny2_content/screenshots/776191470.jpg",
+  "Description": "«Становится жарко».",
+  "Perk": "Причина возгорания",
+  "PerkDescription": "Это оружие начинает перегреваться от длительной стрельбы, нанося больше урона, но обжигая стрелка.",
+  "SecondPerk": "Теплоотвод",
+  "SecondPerkDescription": "Урон от перегрева снижен, если вы не ведете прицельную стрельбу.",
+  "DropLocation": "Награда за сезонный абонемент",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

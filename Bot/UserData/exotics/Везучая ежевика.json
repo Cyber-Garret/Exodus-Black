@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Везучая ежевика",
+  "Type": "Нагрудник охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/710504ae0aedfaa671f29e37dd041a4b.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/419976111.jpg",
+  "Description": "> Со мной еще никто не умер. # Верно. Она покидает недостойных еще до их гибели.",
+  "Perk": "Матрица вероятности",
+  "PerkDescription": "Увеличивает цепь, создаваемую электрической гранатой, и добавляет вероятность перезарядки каждый раз, когда она наносит урон. Создание максимальной цепи всегда перезаряжает гранату.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

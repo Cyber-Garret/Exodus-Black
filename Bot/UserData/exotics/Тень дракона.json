@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Тень дракона",
+  "Type": "Нагрудник охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/5501d47a7916022c737494682c0c73ec.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/419976108.jpg",
+  "Description": "\"Это честь для меня.\" — Чалко Йонг — Икоре Рей",
+  "Perk": "Кольчуга из призрачного металла",
+  "PerkDescription": "Уклонение перезаряжает все оружие и ненадолго повышает скорость перемещения и удобство оружия.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

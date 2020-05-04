@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Идущие по дюнам",
+  "Type": "Броня для ног титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/a2e2f285d70d2fe23511278c071666f6.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3790373072.jpg",
+  "Description": "Неумолимые Пожиратели песка никогда не сбавляют темп, ни на твердой породе, ни на зыбучих песчаных дюнах.",
+  "Perk": "Линейные приводы",
+  "PerkDescription": "Увеличивает скорость бега. При беге накапливается статический заряд. Чем больше заряда вы накопили, тем выше шанс того, что, ударив врага в ближнем бою, вы поразите этим зарядом находящихся поблизости врагов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

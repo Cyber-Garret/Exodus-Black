@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Урса Фьюриоса",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/bd53cdb95b609fb2bfb9a6f653f9eaf5.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1484674161.jpg",
+  "Description": "\"Не подходи. Повторять не буду\". — Бьорна-3",
+  "Perk": "Медвежья гарда",
+  "PerkDescription": "Увеличенная скорость передвижения с активным Щитом покровителя. Отраженный щитом урон преобразуется в энергию суперспособности после ее дезактивации.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

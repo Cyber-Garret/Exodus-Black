@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Колыбель Феникса",
+  "Type": "Броня для ног титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/1d45c4450eaa79c7f79b2e99f0bd1376.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1537074069.jpg",
+  "Description": "Для одних – гнездо. Для других – Горнило.",
+  "Perk": "Маяки поддержки",
+  "PerkDescription": "\"Воина Солнца\" длится в два раза дольше. Союзники также получают бонусы \"Воина Солнца\", проходя через ваши солнечные пятна.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

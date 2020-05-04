@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Bot.Modules
@@ -20,7 +19,6 @@ namespace Bot.Modules
 	public class MilestoneModule : BaseModule
 	{
 		private readonly ILogger logger;
-		private readonly IDataRepository db;
 		private readonly DiscordSocketClient discord;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
@@ -28,7 +26,6 @@ namespace Bot.Modules
 		public MilestoneModule(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<MilestoneModule>>();
-			db = service.GetRequiredService<IDataRepository>();
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
@@ -223,9 +220,6 @@ namespace Bot.Modules
 				}
 				else
 					await ReplyAndDeleteAsync(Resources.MilTimeError);
-
-
-				UpdateBotStat();
 			}
 			catch (Exception ex)
 			{
@@ -262,21 +256,6 @@ namespace Bot.Modules
 			embed.AddField(embedFieldUsers);
 
 			return embed.Build();
-		}
-
-		/// <summary>
-		/// Update bot servers, users count and +1 to milestones for website
-		/// </summary>
-		private void UpdateBotStat()
-		{
-			//get stat
-			var stat = db.GetBotStat();
-			//change stat
-			stat.Servers = discord.Guilds.Count;
-			stat.Users = discord.Guilds.Sum(u => u.Users.Count);
-			stat.Milestones++;
-			//update stat
-			db.UpdateBotStat(stat);
 		}
 		#endregion
 	}

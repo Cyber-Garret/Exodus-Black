@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Поперечные шаги",
+  "Type": "Броня для ног варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/78874c268891725a68bdcc35432fec9e.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2954558333.jpg",
+  "Description": "Ваше отношение с последовательным пространством-временем… мягко говоря, натянутое.",
+  "Perk": "Необычная разгибательная мышца",
+  "PerkDescription": "Увеличивает скорость бега. После небольшого разбега экипированное оружие перезаряжается.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

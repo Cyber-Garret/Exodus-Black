@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Багрец",
+  "Type": "Кинетический револьвер",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/b6d2218e8c4a0933203eb21f948e11e8.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3437746471.jpg",
+  "Description": "Согласно официальным данным \"Авангарда\", этого оружия не существует.",
+  "Perk": "Запрещенное оружие",
+  "PerkDescription": "Это оружие выпускает очередь из трех выстрелов.",
+  "SecondPerk": "Горькая пилюля",
+  "SecondPerkDescription": "Убийства из этого оружия восстанавливают здоровье его владельца. Убийства прицельным выстрелом добавляют патроны в магазин.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

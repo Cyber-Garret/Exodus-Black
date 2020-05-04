@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Шут под знаком близнецов",
+  "Type": "Броня для ног охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/4e995d7c727fc033bc28cfd35c334378.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1488061763.jpg",
+  "Description": "Я люблю смешить людей. А под \"людьми\" я подразумеваю себя. Ха-ха!\" \"Ха-ха! Себя!",
+  "Perk": "Замешательство",
+  "PerkDescription": "Уклонение дезориентирует ближайших врагов и временно глушит их радары.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

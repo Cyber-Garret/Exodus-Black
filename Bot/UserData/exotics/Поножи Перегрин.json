@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Поножи \"Перегрин\"",
+  "Type": "Броня для ног титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/000853ba6d5725e8be6fb3489de08804.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3257252969.jpg",
+  "Description": "Победа спускается с небес.",
+  "Perk": "Удар сапсана",
+  "PerkDescription": "Все способности, связанные с ударом плечом (сейсмический удар, удар молота, удар щитом), наносят дополнительный урон, если их активировать в полете.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Четвертый всадник",
+  "Type": "Энергетический дробовик",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/eb07cff0b9ad578a6c95491117ac7e0c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1665952087.jpg",
+  "Description": "Это не просто оружие, а то, что проложит путь.",
+  "Perk": "Громовержец",
+  "PerkDescription": "Стрельба из этого оружия значительно ускоряется и становится полностью автоматической.",
+  "SecondPerk": "Залп",
+  "SecondPerkDescription": "С каждым следующим выстрелом повышается урон и снижается кучность стрельбы.",
+  "DropLocation": "Экзотическое поручение Завалы.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

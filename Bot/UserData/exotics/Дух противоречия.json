@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Дух противоречия",
+  "Type": "Перчатки варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/1405aeaa14f6faf46c44f317d1d2fb63.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2389062558.jpg",
+  "Description": "\"Ничто не дается просто так. Я это знаю. Значит, и он это знает. На моем месте он бы поступил так же\". — Томек I",
+  "Perk": "Хаотичный преобразователь",
+  "PerkDescription": "Заряд гранат Катализатором хаоса, Пожирающей пустотой или Ручной сверхновой увеличивает устойчивость к урону. Попадания заряженной пустотной гранатой восстанавливают случайное количество энергии гранат.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

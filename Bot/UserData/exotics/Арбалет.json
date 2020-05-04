@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Арбалет",
+  "Type": "Кинетическая линейно-плазменная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/0d2cd6937227874d0dcfd9d959219df8.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2130065553.jpg",
+  "Description": "\"В Темную эпоху у нас не было линейно-плазменных винтовок. Но мы справлялись\". — Скиталец",
+  "Perk": "Совокупная сила",
+  "PerkDescription": "Стреляет снарядами, наносящими высокий урон вражеским стихийным щитам.",
+  "SecondPerk": "Дестабилизатор",
+  "SecondPerkDescription": "Пробив вражеский щит этим оружием, вы некоторое время сможете наносить ему увеличенный кинетический урон.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

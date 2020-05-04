@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Жилет гвисина",
+  "Type": "Нагрудник охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/759650fa39e285b46f9e3f409aee2282.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/4070560770.jpg",
+  "Description": "\"Меня вернул Странник. Он сказал, что мой труд здесь еще не окончен\". — Сеон-До Белый Коготь",
+  "Perk": "Бродячий ассасин",
+  "PerkDescription": "Станьте невидимым после убийства способностью Призрачные клинки, чтобы восстановить часть энергии суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

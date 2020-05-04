@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Приносящая смерть",
+  "Type": "Силовая ракетная установка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/a9ea468e3864cd24dcf0653562ec51bb.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2232171099.jpg",
+  "Description": "\"Спой для них колыбельную смерти\".",
+  "Perk": "Темный приговор",
+  "PerkDescription": "Выпускает снаряды с дистанционным подрывом, которые сбрасывают на противников сферы Пустоты. Удерживайте для выстрела. Отпустите кнопку, чтобы подорвать заряд.",
+  "SecondPerk": "Темный спуск",
+  "SecondPerkDescription": "Чем дольше сфера падает, тем мощнее взрыв.",
+  "DropLocation": "Экзотическое поручение Эрис Морн или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Душа вечности",
+  "Type": "Перчатки варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/45a6c11f0ee9c12baebd68355e6d7eae.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2076339106.jpg",
+  "Description": "\"Все мы не похожие друг на друга лучи Света, принадлежащие одному источнику\". — Культ вечности",
+  "Perk": "Энергия вечности",
+  "PerkDescription": "Бросок гранаты дает следующие бонусы ближайшим союзникам Культа вечности: Варлокам — энергию гранат Титанам — энергию для ближнего боя Охотникам — энергию уклонения Другие союзники получают малую часть общей энергии.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

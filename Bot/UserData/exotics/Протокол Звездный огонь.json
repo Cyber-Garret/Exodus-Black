@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Протокол \"Звездный огонь\"",
+  "Type": "Нагрудник варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/fa2241f0aaad40cb5ecfe5b810eb5f64.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2782999717.jpg",
+  "Description": "13,4 млрд лет назад во тьме вспыхнули первые звезды, озарив будущее всех форм жизни.",
+  "Perk": "Плазменный ремень",
+  "PerkDescription": "Плазменные гранаты получают дополнительный заряд и восстанавливаются от урона, нанесенного усиленным от Раскола оружием. Убийства плазменными гранатами дают энергию Раскола.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Специалист по побегам",
+  "Type": "Перчатки варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/446bfc566e16f539c7b6b671c53f56d7.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3070357340.jpg",
+  "Description": "Пусть не заглохнет двигатель.",
+  "Perk": "Неразлучная парочка",
+  "PerkDescription": "Удерживайте , чтобы поглотить электрическую гранату и создать заряженную душу молнии. Душа молнии становится турелью.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

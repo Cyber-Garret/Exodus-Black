@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Реактивный барьер",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/51fd51c3b825f132198ccbf02b4de7d2.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1035680664.jpg",
+  "Description": "Система активной контактной защиты, созданная из обшивки военного спутника, накапливает ответный разряд.",
+  "Perk": "Проводники ярости",
+  "PerkDescription": "Убийства в ближнем бою накапливают энергию. При получении урона в ближнем бою весь получаемый вами урон уменьшается, и энергия высвобождается в виде мощного взрыва.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}
