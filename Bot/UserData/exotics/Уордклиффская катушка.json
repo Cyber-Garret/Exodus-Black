@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Уордклиффская катушка",
+  "Type": "Силовая ракетная установка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/5cefa0c5b68517dc08981da1d6bb4a73.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1508896098.jpg",
+  "Description": "Изобретательность. Отчаяние. Непродуманный прототип, обладающий чудовищной мощью. Таковы обстоятельства Уордклиффского инцидента.",
+  "Perk": "Безумный ученый",
+  "PerkDescription": "Это оружие производит ракетные залпы.",
+  "SecondPerk": "Механизм заряжания",
+  "SecondPerkDescription": "Это оружие автоматически перезаряжается при подборе боеприпасов.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Корона червеоболочки",
+  "Type": "Шлем охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/c5e4613c4a8129b5ba87ba326c9b0ad5.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2600992433.jpg",
+  "Description": "Мы стремимся познать бесконечность и отточить свой ум на шлифовальном бруске невозможного.",
+  "Perk": "Огненные души",
+  "PerkDescription": "Уклонение немного увеличивает здоровье и щит.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

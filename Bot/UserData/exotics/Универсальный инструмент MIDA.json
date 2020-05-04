@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Универсальный инструмент MIDA",
+  "Type": "Кинетическая винтовка разведчика",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/077e9577fb39cb521b49048db236e39d.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1331482397.jpg",
+  "Description": "Баллистическое взаимодействие. Шанцевый инструмент. Авиационный трал. Разрушитель троллей. Секстант. Другое.",
+  "Perk": "Универсальный инструмент MIDA",
+  "PerkDescription": "Это оружие повышает скорость перемещения.",
+  "SecondPerk": "Радар MIDA",
+  "SecondPerkDescription": "Радар продолжает работать во время прицеливания.",
+  "DropLocation": "Экзотическое поручение в ЕМЗ или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

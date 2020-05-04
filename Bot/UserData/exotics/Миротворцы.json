@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Миротворцы",
+  "Type": "Броня для ног титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/592dc38dd7a785ad28e83236559fc6ea.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3790373075.jpg",
+  "Description": "Позволяет быстро вершить правосудие в несправедливом мире.",
+  "Perk": "Механизированная кобура",
+  "PerkDescription": "Перезаряжает неиспользуемые пистолеты-пулеметы и позволяет мгновенно их достать. Повышает удобство пистолетов-пулеметов и скорость передвижения с ними.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

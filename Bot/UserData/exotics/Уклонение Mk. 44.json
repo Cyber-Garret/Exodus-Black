@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Уклонение Mk. 44",
+  "Type": "Броня для ног титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/d8c01cef98518dbab0d895fc7b23c092.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1902412292.jpg",
+  "Description": "Прошу прощения. Посторонитесь.",
+  "Perk": "Поберегись",
+  "PerkDescription": "Создает щит вокруг вас при беге с полным запасом здоровья при выбранном Сейсмическом ударе, Ударе молотом или Ударе щитом. Попадания этими способностями частично восстанавливают энергию ближнего боя.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

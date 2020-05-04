@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Инструментарий",
+  "Type": "Нагрудник титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/72654c9290bcefa04762ae6a7b66a22b.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2829609851.jpg",
+  "Description": "Всегда найдется подходящий инструмент.",
+  "Perk": "И еще кое-что",
+  "PerkDescription": "Вы получаете дополнительную гранату.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

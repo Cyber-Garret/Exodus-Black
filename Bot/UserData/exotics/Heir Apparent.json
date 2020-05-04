@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Наследник",
+  "Type": "Силовой пулемет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/45e39a0c4427754b5667c0cf1c24166c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2084878005.jpg",
+  "Description": "«Красный Легион восстанет вновь», – Каятль",
+  "Perk": "Тяжелая катапульта",
+  "PerkDescription": "Используйте ПКМ, чтобы подготовить оружие к спуску. Из этого оружия можно выстрелить только тогда, когда натяжение достигнет максимума.",
+  "SecondPerk": "Броня Колосса",
+  "SecondPerkDescription": "Если у вас полная шкала здоровья, взведение этого оружия даст вам электрический щит.",
+  "DropLocation": "Можно заработать во время Игр Стражей.",
+  "isWeapon": true,
+  "isHaveCatalyst": false
+}

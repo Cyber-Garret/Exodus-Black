@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Клятва Синобу",
+  "Type": "Перчатки охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/36a5b4f268fa43a0386daf7514e6aa5c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1786557270.jpg",
+  "Description": "\"Припасы на нуле. От брони — одни ошметки. Но беженцы попросили о помощи. И она дала им слово.\" — История о шести койотах",
+  "Perk": "Новый трюк",
+  "PerkDescription": "Улучшает рикошетную гранату и дает дополнительный заряд с рикошетной гранатой. При нанесении урона рикошетной гранатой восстанавливается энергия гранат.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Врагоискатель",
+  "Type": "Шлем охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/5e995f3d538bbfdc83f887b11a1f747c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1667080809.jpg",
+  "Description": "\"Я тебя вижу\".",
+  "Perk": "Неумолимый следопыт",
+  "PerkDescription": "Отмечает врагов при прицеливании. Наносит увеличенный урон отмеченным врагам с малым запасом здоровья.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

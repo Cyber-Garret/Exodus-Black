@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Жало Хепри",
+  "Type": "Перчатки охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/e02aa8339e1cb122a44331c8415e58fd.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/146629029.jpg",
+  "Description": "Рана неглубокая, но вы знаете, что она есть – и этого достаточно.",
+  "Perk": "Ядовитое касание",
+  "PerkDescription": "Если вы нанесете удар в ближнем бою энергетическим оружием, то сразу примените дымовую шашку. Пока вы находитесь в зоне действия своей шашки, у вас активирован эффект \"Верный глаз\".",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

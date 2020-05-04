@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Везучие штаны",
+  "Type": "Броня для ног охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/68dc68ed3ce3f9361460b7d4a69bd351.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1245809812.jpg",
+  "Description": "\"Что? Нет, я не ставил нелегальные моды на кобуру. У меня просто штаны везучие!\" — Кейд-6",
+  "Perk": "Сильно измененная кобура",
+  "PerkDescription": "Каждое точное попадание добавляет по одному патрону в барабан неиспользуемых револьверов. Сразу после смены оружия на револьверы они быстрее приходят в боеготовность и становятся более точными.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

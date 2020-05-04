@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Одноглазая маска",
+  "Type": "Шлем титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/08cf83be64d4583ab0400722c79b7659.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3918600864.jpg",
+  "Description": "Око за око.",
+  "Perk": "Месть",
+  "PerkDescription": "Отмечайте врагов, нанесших вам урон. Уничтожайте отмеченных врагов, чтобы увеличить урон и энергию щита.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

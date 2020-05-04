@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Око другого мира",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/e8afec0dbe1253087cb19242dd626305.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2523259392.jpg",
+  "Description": "Врагам не скрыться, когда против них восстает вся вселенная.",
+  "Perk": "Церебральная связь",
+  "PerkDescription": "Отмечает наиболее важные цели и ускоряет восстановление ваших способностей гранат, ближнего боя и Раскола.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

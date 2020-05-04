@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Сердце священного пламени",
+  "Type": "Нагрудник титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/9f337b76f1abf670fac270b272818c2f.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/458095282.jpg",
+  "Description": "\"Ищущий Кузницу, твой путь будет долгим, но цель путешествия ближе, чем ты думаешь\". — Урос",
+  "Perk": "Солнечная печь",
+  "PerkDescription": "Ускоряет восстановление ваших солнечных способностей. Существенно ускоряет восстановление при полностью заряженной суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Олень",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/fbc73f5f856c1d23607440c4f86d8059.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3008550972.jpg",
+  "Description": "Лишь кости утолят меня. Лишь смерть приведет к моей победе.",
+  "Perk": "Безвременный уход",
+  "PerkDescription": "Дает энергию Раскола при критическом ранении. Если вы умерли, над вашим телом возникает целебный Раскол.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

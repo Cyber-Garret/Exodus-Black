@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Йотун",
+  "Type": "Энергетическая плазменная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/d1557292804fa517f6298c00ccaed78e.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/417164956.jpg",
+  "Description": "\"Дикий. Склонный к разрушению. Напористый и хаотичный, как сам Имир\". – Ада-1",
+  "Perk": "Разрывной снаряд",
+  "PerkDescription": "Удерживайте, чтобы зарядить самонаводящийся снаряд, который взрывается и загорается при ударе.",
+  "SecondPerk": "Щитовая дезориентация",
+  "SecondPerkDescription": "Взорвав щит энергией того же цвета, вы дезориентируете ближайших врагов.",
+  "DropLocation": "Экзотическое поручение Черного Арсенала или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

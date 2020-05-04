@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Крыло бдительности",
+  "Type": "Кинетическая импульсная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/ccc33abaa83f13f08825116c7711890c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3628991659.jpg",
+  "Description": "\"Глаз по-прежнему открыт. В Маяке по-прежнему горит свет\". — брат Вэнс",
+  "Perk": "Суровые истины",
+  "PerkDescription": "Стрельба очередями по 5 патронов. Восстанавливает здоровье при убийстве союзников.",
+  "SecondPerk": "Последний герой",
+  "SecondPerkDescription": "Параметры оружия возрастают и ускоряется восстановление здоровья, если вы — единственный выживший член вашей боевой группы.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

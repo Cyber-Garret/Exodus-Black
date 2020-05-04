@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Пепельный обряд",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/16a053c5c9fcfc607b4664fa1f9c1d36.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/809007410.jpg",
+  "Description": "\"Пришел твой черед. Эти люди пойдут за тобой до конца. Помни, что всех нас выковал свет\". — Аодх, Второй Пламенный Магистрат Ордена солнцеломов",
+  "Perk": "Больше жара",
+  "PerkDescription": "Плазменные гранаты теперь быстрее летят и взрываются при ударе.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

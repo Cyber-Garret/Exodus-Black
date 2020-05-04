@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Шлем Фелвинтера",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://www.bungie.net/common/destiny2_content/icons/3378c254c41099fca053cd95888ab5c7.jpg",
+  "ImageUrl": "https://www.bungie.net/common/destiny2_content/screenshots/2822465023.jpg",
+  "Description": "\"Чтобы здесь выжить, нужны глаза на затылке\", – лорд Фелвинтер",
+  "Perk": "Погибель Полководца",
+  "PerkDescription": "Убийства электрическими, солнечными и пустотными способностями ближнего боя создают вспышку энергии, которая ослабляет находящихся рядом врагов. Добивающие приемы и убийства более мощных врагов увеличивают радиус взрыва и продолжительность действия ослабляющего эффекта.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

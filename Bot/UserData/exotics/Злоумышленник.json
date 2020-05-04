@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Злоумышленник",
+  "Type": "Кинетический револьвер",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/86ef7fd7c087c434a16089602e2c00de.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/204878059.jpg",
+  "Description": "\"Ничто не убивает Стража быстрее, чем другой Страж\". – Скиталец",
+  "Perk": "Взрывная тень",
+  "PerkDescription": "Стреляет оскверненными снарядами, которые зарываются в тело врага. Если цель поражена определенным числом снарядов, они все взрываются.",
+  "SecondPerk": "Одержимый хищник",
+  "SecondPerkDescription": "Дополнительный урон одержимым и захватчикам в Гамбите.",
+  "DropLocation": "Экзотическое поручение в Гамбите или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

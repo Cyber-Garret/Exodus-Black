@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Змеиная шкура",
+  "Type": "Нагрудник охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/7ea26c8b42eb474598e2335ff40cec8c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3392742912.jpg",
+  "Description": "Прислушайся к словам змея, ибо его язык раздвоен и все его слова обладают двойным смыслом.",
+  "Perk": "Пальцы-ножницы",
+  "PerkDescription": "Позволяет использовать по два ножа за атаку.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

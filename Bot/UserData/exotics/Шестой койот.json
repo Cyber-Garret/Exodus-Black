@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Шестой койот",
+  "Type": "Нагрудник охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/9c0c42cc31fed4d244793876a4fc5ddf.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/4070560771.jpg",
+  "Description": "\"Хочешь воспользоваться старым именем? Я не против. Только никому не говори\". — Мика-10 Химуре Синобу",
+  "Perk": "Двойное уклонение",
+  "PerkDescription": "Вы получаете второй заряд уклонения.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

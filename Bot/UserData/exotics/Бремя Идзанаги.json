@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Бремя Идзанаги",
+  "Type": "Кинетическая снайперская винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/e799303d622fd31d2a553c1346d593cd.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3211806999.jpg",
+  "Description": "\"Стыд. Вина. Страх. У кого из нас их нет. Соберите все свои сожаления и избавьтесь от них. Переложите свое бремя на врагов\". – Ада-1",
+  "Perk": "Отточенная кромка",
+  "PerkDescription": "При удержании кнопки перезарядки в оружие из магазина помещаются более мощные и дальнобойные патроны.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение Черного Арсенала или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

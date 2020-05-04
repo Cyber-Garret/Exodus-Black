@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Протокол \"Феникс\"",
+  "Type": "Нагрудник варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/02849d16afc2cf5aa1e75cdbcfd97c9a.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3488362707.jpg",
+  "Description": "Не горюй об умирающей звезде. Ее смерть даст начало новой жизни и повернет колесо мироздания.",
+  "Perk": "Очаг войны",
+  "PerkDescription": "Убийства и поддержки при нахождении в ауре способности Кладезь Света восстанавливают энергию суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

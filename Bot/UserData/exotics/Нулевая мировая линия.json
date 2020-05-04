@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Нулевая мировая линия",
+  "Type": "Силовой меч",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/d22f9f5b89b9f163cb5aa58849ad3fe4.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1864563948.jpg",
+  "Description": "Один-единственный удар может изменить ход истории.",
+  "Perk": "Тессеракт",
+  "PerkDescription": "Нажмите во время бега, чтобы нанести удар по площади. Разбежавшись и сделав прыжок, нажмите , находясь в воздухе, чтобы телепортироваться вперед.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение или испытание на Марсе.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Двухвостый лис",
+  "Type": "Силовая ракетная установка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/9c6fd39517e8a6d7289b5da42530bcc8.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2694576561.jpg",
+  "Description": "Восхитительно смертоносный.",
+  "Perk": "Двухвостый",
+  "PerkDescription": "Выпускает две ракеты, пустотную и солнечную, которые могут навестись на одну и ту же цель.",
+  "SecondPerk": "Игра с добычей",
+  "SecondPerkDescription": "Пустотная ракета подавляет врагов. Солнечная ракета наносит продолжительный урон.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

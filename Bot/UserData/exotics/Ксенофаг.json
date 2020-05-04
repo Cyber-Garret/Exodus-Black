@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Ксенофаг",
+  "Type": "Силовой пулемет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/4689fb76483b6d2679a0bd70b48b7d7f.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1395261499.jpg",
+  "Description": "Осторожно – кусается.",
+  "Perk": "Пиротоксиновые патроны",
+  "PerkDescription": "Выпускает мощные разрывные снаряды.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение Эрис Морн или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

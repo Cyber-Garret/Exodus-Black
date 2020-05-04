@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Тройственный гуль",
+  "Type": "Энергетический боевой лук",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/98f66e3c016ddb6e22909fb39f98ffb5.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/814876685.jpg",
+  "Description": "\"Я не могла промахнуться, ведь от этого зависела его жизнь\". — Марин Мансанас, дозорная со Спутанных берегов",
+  "Perk": "Рассеченный электрон",
+  "PerkDescription": "Выпускает стрелу, которая расщепляется в полете. Прицеливание и полное натяжение тетивы делают разброс кучнее.",
+  "SecondPerk": "Громоотвод",
+  "SecondPerkDescription": "Убийства прицельными выстрелами наделяют следующий выстрел цепными разрядами.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

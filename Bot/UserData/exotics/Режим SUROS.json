@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Режим SUROS",
+  "Type": "Кинетический автомат",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/c97c701eda0c95dfd3484c8a25595f73.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2856683562.jpg",
+  "Description": "Ностальгия — орудие войны. Стиль — важная составляющая победы.",
+  "Perk": "Наследие SUROS",
+  "PerkDescription": "Патроны из второй половины каждого магазина наносят больше урона и иногда восстанавливают здоровье за убийство.",
+  "SecondPerk": "Раскрутка",
+  "SecondPerkDescription": "Удерживайте спуск, чтобы увеличить скорострельность.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

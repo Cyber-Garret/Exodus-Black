@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Владыка грома",
+  "Type": "Силовой пулемет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/1e462b9c959a13b270e8bef3f307a0d4.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3325463374.jpg",
+  "Description": "Они возвращаются из далеких полей. Око миновало, конец уже близок. Не исчезай тихо. Пусть снова гремит гром.",
+  "Perk": "Царство хаоса",
+  "PerkDescription": "Убийства из этого оружия создают молнии, бьющие сверху.",
+  "SecondPerk": "Грозовые патроны",
+  "SecondPerkDescription": "Чем дольше зажат курок, тем быстрее и точнее выстрелы из этого оружия. При продолжительном нанесении урона врагам создается цепная молния.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

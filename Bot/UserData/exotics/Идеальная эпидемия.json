@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Идеальная эпидемия",
+  "Type": "Кинетическая импульсная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/aaf735125499d47af36c5f4028ead11c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/400096939.jpg",
+  "Description": "~директива = УБИТЬ пока они враги = ЗАПРОС: начать выполнение (директивы)~",
+  "Perk": "Рост скверны",
+  "PerkDescription": "Это оружие создает нано-рой из снарядов SIVA с каждым прицельным убийством или серией попаданий.",
+  "SecondPerk": "Паразитизм",
+  "SecondPerkDescription": "Это оружие наносит увеличенный урон врагам в зависимости от количества нано-снарядов SIVA, прикрепленных к ним.",
+  "DropLocation": "Экзотическое поручение на Титане или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

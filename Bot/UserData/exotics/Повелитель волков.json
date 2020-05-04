@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Повелитель волков",
+  "Type": "Энергетический дробовик",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/ade766d43e020a1c4a379be4da0b63d9.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3413860063.jpg",
+  "Description": "Я властвую лишь по этому праву.",
+  "Perk": "Шрапнельная установка",
+  "PerkDescription": "Испускает мощный залп солнечной энергии, поражающей цели на короткой дистанции.",
+  "SecondPerk": "Выпускайте волков",
+  "SecondPerkDescription": "Убийство врага ненадолго удваивает количество снарядов в каждом залпе.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

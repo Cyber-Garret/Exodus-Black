@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Сердце внутреннего Света",
+  "Type": "Нагрудник титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/42d7143d2067db40e4f9413225cce731.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1462291111.jpg",
+  "Description": "На грани света и жизни, смерти и разрушения.",
+  "Perk": "Переполнение Светом",
+  "PerkDescription": "Использование способности (гранаты, ближнего боя или Баррикады) усиливает другие способности. Усиленные способности восстанавливаются быстрее; гранаты и способности ближнего боя наносят увеличенный урон, а Баррикада становится прочнее.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

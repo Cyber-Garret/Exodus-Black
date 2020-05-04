@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Звездный полуночник",
+  "Type": "Шлем охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/fa668959fe0812f22f277ac17d819747.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1667080810.jpg",
+  "Description": "Тебя ведет звездный свет. Никакой вакуум тебе не помеха.",
+  "Perk": "Орлиный глаз",
+  "PerkDescription": "Модифицирует Золотой пистолет так, чтобы он делал мощный одиночный выстрел. Враги, уничтоженные выстрелом, взрываются и восстанавливают энергию суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

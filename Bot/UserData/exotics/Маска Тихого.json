@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Маска Тихого",
+  "Type": "Шлем титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/cd76e4a21cb89cd5b850eba34a8df41c.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/197761152.jpg",
+  "Description": "...",
+  "Perk": "Страшный облик",
+  "PerkDescription": "Восстанавливает способности при получении урона. При убийстве врагов во время критического ранения полностью восстанавливает здоровье.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

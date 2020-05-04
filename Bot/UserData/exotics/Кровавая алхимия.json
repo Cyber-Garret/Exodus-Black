@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Кровавая алхимия",
+  "Type": "Нагрудник варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/674edbf753cf87c0f551efd91488ef78.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2422973183.jpg",
+  "Description": "Сила таится в крови.",
+  "Perk": "Обостренные чувства",
+  "PerkDescription": "Пока вы и ваши союзники стоите в Расколе, радар продолжает работать во время прицеливания. Также отмечает находящихся рядом сильных врагов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

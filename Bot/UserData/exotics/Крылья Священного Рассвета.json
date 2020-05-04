@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Крылья Священного Рассвета",
+  "Type": "Нагрудник варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/eb1c6215d4997aaba5c0c10114ff65b6.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2782999716.jpg",
+  "Description": "Настанет день, когда свет никогда не угаснет.",
+  "Perk": "Фолиант рассвета",
+  "PerkDescription": "При использовании подкласса клинок зари вы ненадолго зависаете в воздухе, когда прицеливаетесь из оружия. Попадания из оружия продлевают этот эффект.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

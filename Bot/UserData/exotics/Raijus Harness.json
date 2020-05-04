@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Ремень Райдзю",
+  "Type": "Нагрудник охотника",
+  "IconUrl": "https://www.bungie.net/common/destiny2_content/icons/0aa0119cc36cb7c42b4dc0dc4552bb60.jpg",
+  "ImageUrl": "https://www.bungie.net/common/destiny2_content/screenshots/2268523867.jpg",
+  "Description": "Чтобы усмирить то, что не хочет подчиняться, нужно выдержать бурю.",
+  "Perk": "Проводник Мебиуса",
+  "PerkDescription": "Пока действует ваша Вихревая защита, вы расходуете меньше энергии суперспособности при блокировании. Вы можете нажать , чтобы выключить Вихревую защиту раньше и сэкономить энергию суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

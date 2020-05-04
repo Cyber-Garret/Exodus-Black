@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Легенда об Акрии",
+  "Type": "Силовой дробовик",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/004c2130748b20a282d837d14a3cb104.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3580904580.jpg",
+  "Description": "\"В легенде Кабал говорится о герое, стремящемся завладеть Cолнцем. Он добивается своей цели. А затем становится императором. Кабал... не ведают тонкостей\". — Тира Карн",
+  "Perk": "Шоковый разряд",
+  "PerkDescription": "Это оружие стреляет мощными электрическими разрядами, пробивающими цели насквозь.",
+  "SecondPerk": "Долгий марш",
+  "SecondPerkDescription": "Увеличение дистанции, на которой радар обнаруживает врагов.",
+  "DropLocation": "Экзотическое поручение на Нессе или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

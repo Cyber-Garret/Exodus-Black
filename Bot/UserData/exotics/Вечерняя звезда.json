@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Вечерняя звезда",
+  "Type": "Нагрудник варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/958ee3b300c663c28cf3aecb7ca0046f.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1799380614.jpg",
+  "Description": "При вызове Раскола таким образом, вы вбираете энергию планет и превращаете ее в разрушительную силу\" — Икора Рей, \"О кругах, том 12",
+  "Perk": "Планетарный поток",
+  "PerkDescription": "Раскол формирует разрушительную ударную волну из электричества. Энергия Раскола восстанавливается быстрее, если вблизи есть противники.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

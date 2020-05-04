@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Нефритовый кролик",
+  "Type": "Кинетическая винтовка разведчика",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/65a42d35f066e7c06861a1a416388f4b.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3844694310.jpg",
+  "Description": "Ну и какая глупость зародилась в твоей голове на этот раз?",
+  "Perk": "Участь глупцов",
+  "PerkDescription": "Выполните серию выстрелов по телу противника, чтобы нанести дополнительный урон при прицельных выстрелах и вернуть боезапасы в магазин.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

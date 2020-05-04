@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Нарукавники Солнца",
+  "Type": "Перчатки варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/17c01ac034a7194e2de22d1ac487bb70.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1862800747.jpg",
+  "Description": "Зачем нужны плоть и кости, когда ты повелеваешь звездным огнем?",
+  "Perk": "Гелиевые спирали",
+  "PerkDescription": "Продлевает действие солнечных гранат. Убийства солнечной способностью ближнего боя ненадолго дает неограниченную энергию гранат.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

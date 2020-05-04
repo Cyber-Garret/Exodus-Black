@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Череп лютой Ахамкары",
+  "Type": "Шлем варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/58c941539ffb843a5559a83c6f7cb579.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2523259394.jpg",
+  "Description": "Реальность – утонченная плоть, о мой носитель. Ты разве не… голоден?",
+  "Perk": "Подлинное величие",
+  "PerkDescription": "Повышает сопротивляемость урону во время действия Сверхновой. Убийства Сверхновой восстанавливают энергию суперспособности.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

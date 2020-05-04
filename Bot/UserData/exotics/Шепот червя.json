@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Шепот червя",
+  "Type": "Силовая снайперская винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/a8c172a3090a64463f482167cd467786.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1891561814.jpg",
+  "Description": "Сила Стража манит паразитов. Но не спеши их прогонять. Они могут быть тебе полезны... ведь их клыки в разы острее твоих зубов.",
+  "Perk": "Три в яблочко",
+  "PerkDescription": "Увеличенный базовый урон от прицельных попаданий. Три быстрых прицельных попадания добавляют патроны в магазин.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение на ИО или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

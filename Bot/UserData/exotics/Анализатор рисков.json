@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Анализатор рисков",
+  "Type": "Энергетический пистолет-пулемет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/97a3cc17cab25c15b51b1e268886e8d1.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3089417789.jpg",
+  "Description": "Зарядите свою душу, и пуcть электроны поют.",
+  "Perk": "Проводник",
+  "PerkDescription": "Когда игрок получает электрический урон, это оружие становится мощнее и ослабляет дальнейший урон того же типа. Убийства продлевают действия эффекта.",
+  "SecondPerk": "Сверхпроводник",
+  "SecondPerkDescription": "При стрельбе во время действия Проводника есть шанс вызвать цепной разряд и вернуть боеприпасы.",
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

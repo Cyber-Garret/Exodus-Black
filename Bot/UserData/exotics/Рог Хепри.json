@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Рог Хепри",
+  "Type": "Шлем титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/1d98a74b110187824aee329c4b7589d0.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/510504540.jpg",
+  "Description": "\"Я двигал солнце. Могу сдвинуть и тебя\". — Надпись внутри шлема",
+  "Perk": "Солнечный вал",
+  "PerkDescription": "Убийства солнечной энергией перезаряжают Баррикаду, при использовании которой высвобождается взрывная солнечная энергия.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Последнее слово",
+  "Type": "Кинетический револьвер",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/f7ca2e7dfde0f38ead5ce1c36176603f.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1364093401.jpg",
+  "Description": "\"Твой, покуда не угаснет последнее пламя и не отзвучат последние слова\". — Шин Мальфур, вам, по пути в неизведанное",
+  "Perk": "Быстрый огонь",
+  "PerkDescription": "Из этого оружия можно вести быстрый непрерывный огонь. Быстрая перезарядка и повышенная точность при нанесении урона неприцельными выстрелами.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение у Скитальца.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

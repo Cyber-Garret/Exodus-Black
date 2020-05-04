@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Змеевидный аспект",
+  "Type": "Перчатки варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/c99a390359136095aa96a2226c79cf24.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/68357813.jpg",
+  "Description": "На моих губах яд аспида?",
+  "Perk": "Тотемная кобра",
+  "PerkDescription": "Увеличивает скорость перезарядки и смены оружия. Увеличивает дистанцию ближнего боя.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

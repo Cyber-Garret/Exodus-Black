@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Геомагнитные стабилизаторы",
+  "Type": "Броня для ног варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/58e827d008619aa5fbffea8295817c27.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2808445048.jpg",
+  "Description": "\"Ураган обгонит вас. Этого не избежать. Наслаждайтесь стабильностью, пока можете\". — Икора Рей",
+  "Perk": "Завершение начатого",
+  "PerkDescription": "Когда суперспособность Луч хаоса почти заряжена, бег восстанавливает оставшуюся часть энергии. Нанесение урона Лучом хаоса продлевает его действие.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

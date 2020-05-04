@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Цитадель",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/65c01bc0032b23a282b295af31543a40.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/576499615.jpg",
+  "Description": "Мне не нужен щит. Я и есть щит.",
+  "Perk": "Сжатый кулак",
+  "PerkDescription": "Блокирование мечом увеличивает скорость передвижения и не использует боеприпасы. Отраженные в последний момент пули восстанавливают здоровье.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

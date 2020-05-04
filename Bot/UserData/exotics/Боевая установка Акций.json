@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Боевая установка \"Акций\"",
+  "Type": "Нагрудник титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/957eae3f0e2e00ee7f8dba4b1f03c1e7.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/458095281.jpg",
+  "Description": "Способ разрешения конфликта №3479: пусть они лежат там, где пали.",
+  "Perk": "Автозарядная связь",
+  "PerkDescription": "Постоянно дозаряжает магазин вашего автомата или пулемета, используя доступный резерв.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

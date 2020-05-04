@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Прометиевая шпора",
+  "Type": "Броня для ног варлока",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/930c178a74ebf19624d8b164489973c5.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/235591051.jpg",
+  "Description": "Передай факел. Разнеси огонь.",
+  "Perk": "Угольки Света",
+  "PerkDescription": "Убийство врага или Стража при активной «Заре» создает целебный и усиливающий раскол в том месте, где они находились.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

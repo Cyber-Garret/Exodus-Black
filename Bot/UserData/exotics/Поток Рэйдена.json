@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Поток Рэйдена",
+  "Type": "Нагрудник охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/e065a7ce827f8a1c624052595c4e7916.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/419976110.jpg",
+  "Description": "Интерфейсы с синапсами (или ближайшим их эквивалентом), необходимые для поглощения электрической энергии из тела человека.",
+  "Perk": "Синаптические узлы",
+  "PerkDescription": "Быстрые последовательные удары электрическим посохом увеличивают наносимый им урон и продлевают действие эффекта.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

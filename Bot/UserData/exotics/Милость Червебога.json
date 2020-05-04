@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Милость Червебога",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/546762c761b2e868a1b7ae0dc6b2d6ad.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/809007411.jpg",
+  "Description": "\"Приходилось ли тебе смотреть на зеленое пламя энергии душ? Оно повергает в ужас, но в нем есть… какая-то теплота\". — Эрис Морн",
+  "Perk": "Огненные кулаки",
+  "PerkDescription": "Убийства в ближнем бою ненадолго увеличивают урон, наносимый в ближнем бою. Последующие убийства усиливают эффект и увеличивают его длительность.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

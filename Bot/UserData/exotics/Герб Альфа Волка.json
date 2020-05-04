@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Герб Альфа Волка",
+  "Type": "Нагрудник титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/5d9110e516e5828d881ffe17e7c1482e.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/458095280.jpg",
+  "Description": "Пережить встречу с нами можно только если мы этого пожелаем.",
+  "Perk": "Кладезь выживания",
+  "PerkDescription": "Создает дополнительную сферу Света из суперспособности и исцеляющий импульс при активации Баррикады.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

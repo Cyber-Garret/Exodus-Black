@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Т0п0тунЬI",
+  "Type": "Броня для ног охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/8c7681f1e93ee996a724e55554e079e9.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1245809814.jpg",
+  "Description": "\"Я называю их топотунами! Они придают энергии твоим ногам\". — Маркус Рен",
+  "Perk": "Гидравлические ускорители",
+  "PerkDescription": "Увеличивает скорость бега и дальность скольжения. Улучшает высокий прыжок, прыжок в сторону и тройной прыжок.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

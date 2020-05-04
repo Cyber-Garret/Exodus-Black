@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Руины дьявола",
+  "Type": "Энергетический пистолет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/d3480323a180cef1db366f33f2d52f32.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3824106094.jpg",
+  "Description": "«Не останавливайся! Дьяволы будут сожалеть о дне, когда постучали в наши двери!» – лорд Шакс",
+  "Perk": "Еще чуть-чуть",
+  "PerkDescription": "Регулируемый спуск. Нажимайте и отпускайте, чтобы выпускать отдельные снаряды. Удерживайте, чтобы зарядить и выпустить мощный, оглушающий врагов лазерный снаряд.",
+  "SecondPerk": "Пирогенез",
+  "SecondPerkDescription": "Полная зарядка лазера перезаряжает магазин из резервов.",
+  "DropLocation": "Экзотическое поручение **Неизвестно** или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

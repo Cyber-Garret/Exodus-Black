@@ -1,0 +1,14 @@
+﻿{
+  "Name": "M0р03ники",
+  "Type": "Броня для ног охотника",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/d9c4deb948ccfa0da25e2baae42f66e0.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/574694189.jpg",
+  "Description": "\"Ну, раз это работает на компьютерах...\" — Маркус Рен",
+  "Perk": "Быстрое восстановление",
+  "PerkDescription": "Ускоряет восстановление гранат, приемов ближнего боя и уклонения во время бега. Уклонение увеличивает скорость бега.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

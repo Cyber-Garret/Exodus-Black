@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Неприступная черепокрепость",
+  "Type": "Шлем титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/c444f5213f554d715b0d7a9de1108e12.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/197761153.jpg",
+  "Description": "МОЗГОКАМЕРА Сигма-АКТИУМ-IX краниальный дредноут (неуязвимого типа)",
+  "Perk": "Матрица трансфузии",
+  "PerkDescription": "Убийства электрическими способностями ближнего боя включают восстановление здоровья и восполняют энергию ближнего боя.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

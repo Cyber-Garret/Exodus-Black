@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Гекльберри",
+  "Type": "Кинетический пистолет-пулемет",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/4ba2743b06a598040e5d346c3a49ea71.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2286143274.jpg",
+  "Description": "Нет ничего, что не решила бы очередь из 30 пуль.",
+  "Perk": "Быка за рога",
+  "PerkDescription": "Увеличенная скорострельность и отдача при удерживании спуска. Убийства этим оружием перезаряжают часть магазина.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

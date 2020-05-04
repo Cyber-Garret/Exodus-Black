@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Le Monarque",
+  "Type": "Энергетический боевой лук",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/4b66c583e88a316cc3b0cf017a3e9a7b.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3588934839.jpg",
+  "Description": "\"Крылья трепещут. Красота отвлекает. Яд проникает в кровь. Проклятье бабочки падет на головы ваших врагов. Короткая жизнь, оборвавшаяся благодаря тебе\". — Ада-1",
+  "Perk": "Отравленные стрелы",
+  "PerkDescription": "При полном натяжении тетивы и быстром выстреле стрелы становятся ядовитыми. Точные попадания ядовитыми стрелами отравляют находящихся поблизости врагов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотическое поручение Черного Арсенала или испытание.",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}

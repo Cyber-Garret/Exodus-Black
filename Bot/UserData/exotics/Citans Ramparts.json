@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Укрепления Сайтена",
+  "Type": "Перчатки титана",
+  "IconUrl": "https://www.bungie.net/common/destiny2_content/icons/a9467d0562e92cc21178d1bb8b40eef0.jpg",
+  "ImageUrl": "https://www.bungie.net/common/destiny2_content/screenshots/1190497097.jpg",
+  "Description": "«Пусть попробуют прорваться», – лорд Сайтен",
+  "Perk": "Штурмовая баррикада",
+  "PerkDescription": "Вы и ваши союзники можете стрелять сквозь созданную вами Высокую баррикаду. Ее прочность и время действия уменьшены.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

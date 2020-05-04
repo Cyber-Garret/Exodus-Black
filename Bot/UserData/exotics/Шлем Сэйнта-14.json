@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Шлем Сэйнта-14",
+  "Type": "Шлем титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/fe04c40c8eb6f9a55ec6500bd1515345.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/1362342075.jpg",
+  "Description": "\"Он пошел навстречу адскому свету, но все же его Свет был сильнее\". — панегирик Сэйнту-14",
+  "Perk": "Беззвездная ночь",
+  "PerkDescription": "Защита рассвета ослепляет находящихся в ней врагов и дает щит союзникам. Использование Щита покровителя ослепляет ближайших врагов.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Бешеный лев",
+  "Type": "Броня для ног титана",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/bd9977d2267655736adc7c72a8fb4659.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/3790373074.jpg",
+  "Description": "Все ждут, что ты покажешь себя — как в свое время это сделали твои предки.",
+  "Perk": "Прыжковые ускорители",
+  "PerkDescription": "Улучшает маневренность во время полета и точность неприцельного огня во время использования Подъема.",
+  "SecondPerk": null,
+  "SecondPerkDescription": null,
+  "DropLocation": "Экзотические энграммы, редкие выпадения в открытом мире.",
+  "isWeapon": false,
+  "isHaveCatalyst": false
+}

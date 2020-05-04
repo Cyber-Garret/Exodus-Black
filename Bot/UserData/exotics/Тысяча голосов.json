@@ -1,0 +1,14 @@
+﻿{
+  "Name": "Тысяча голосов",
+  "Type": "Силовая плазменная винтовка",
+  "IconUrl": "https://bungie.net/common/destiny2_content/icons/0421f2a3fdff6fd946f7e20951b08876.jpg",
+  "ImageUrl": "https://bungie.net/common/destiny2_content/screenshots/2069224589.jpg",
+  "Description": "Я могу быть тем, кем ты пожелаешь, о мой убийца.",
+  "Perk": "Око Ахамкары",
+  "PerkDescription": "В заряженном состоянии это оружие испускает мощный непрерывный луч смерти.",
+  "SecondPerk": "Непредвиденные последствия",
+  "SecondPerkDescription": "Луч этого оружия нагревает цель при попадании, вызывая замедленный взрыв.",
+  "DropLocation": "Рейд \"Последнее желание\".",
+  "isWeapon": true,
+  "isHaveCatalyst": true
+}
