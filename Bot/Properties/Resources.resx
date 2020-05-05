@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BanPermission" xml:space="preserve">
+    <value>Капитан, для доступа к разблокировке участников у меня нет права **Банить участников**.
+Советую включить право, а после того как я сообщу об окончании работ, выключить это право на всякий случай.</value>
+  </data>
   <data name="Bip" xml:space="preserve">
     <value>Бип...</value>
   </data>
@@ -468,6 +472,16 @@ NSFW **{1}**
   </data>
   <data name="SlfRolSucAdd" xml:space="preserve">
     <value>Успех! Капитан я сохранила данную связку роли {0} и {1} в своей базе данных.</value>
+  </data>
+  <data name="UnbanDone" xml:space="preserve">
+    <value>Готово. Я прошлась по списку из **{0}** заблокированных стражей. 
+- Успешно разблокировала: **{1}** 
+- Не удалось разблокировать: **{2}** 
+*Если слишком много неудачных попыток, попробуй через пару минут, так как Discord может блокировать такие массовые действия.*</value>
+  </data>
+  <data name="UnbanStart" xml:space="preserve">
+    <value>Капитан, в списке заблокированных я насчитала {0} стражей.
+Приступаю к массовой разблокировке всех стражей.</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Неизвестно</value>

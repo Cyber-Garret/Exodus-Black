@@ -61,6 +61,16 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Капитан, для доступа к разблокировке участников у меня нет права **Банить участников**.
+        ///Советую включить право, а после того как я сообщу об окончании работ, выключить это право на всякий случай..
+        /// </summary>
+        internal static string BanPermission {
+            get {
+                return ResourceManager.GetString("BanPermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Бип....
         /// </summary>
         internal static string Bip {
@@ -1062,6 +1072,28 @@ namespace Bot.Properties {
         internal static string SlfRolSucAdd {
             get {
                 return ResourceManager.GetString("SlfRolSucAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Готово. Я прошлась по списку из **{0}** заблокированных стражей. 
+        ///- Успешно разблокировала: **{1}** 
+        ///- Не удалось разблокировать: **{2}** 
+        ///*Если слишком много неудачных попыток, попробуй через пару минут, так как Discord может блокировать такие массовые действия.*.
+        /// </summary>
+        internal static string UnbanDone {
+            get {
+                return ResourceManager.GetString("UnbanDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Капитан, в списке заблокированных я насчитала {0} стражей.
+        ///Приступаю к массовой разблокировке всех стражей..
+        /// </summary>
+        internal static string UnbanStart {
+            get {
+                return ResourceManager.GetString("UnbanStart", resourceCulture);
             }
         }
         
