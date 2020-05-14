@@ -582,7 +582,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж, учти что я не имею отношения к содержимому данного сообщения. | neira.su.
+        ///   Looks up a localized string similar to Страж, учти что я не имею отношения к содержимому данного сообщения..
         /// </summary>
         internal static string MailEmbFooterDesc {
             get {
@@ -844,6 +844,15 @@ namespace Bot.Properties {
         internal static string MsgUpdEmbTitle {
             get {
                 return ResourceManager.GetString("MsgUpdEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Хочешь бота на заказ? Пиши моему создателю Cyber_Garret#5898.
+        /// </summary>
+        internal static string MyAd {
+            get {
+                return ResourceManager.GetString("MyAd", resourceCulture);
             }
         }
         

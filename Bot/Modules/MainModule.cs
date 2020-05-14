@@ -145,7 +145,12 @@ namespace Bot.Modules
 			{
 				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date),
 				Color = Color.Gold,
-				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite)
+				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite),
+				Footer = new EmbedFooterBuilder
+				{
+					IconUrl = Resources.NeiraFooterIcon,
+					Text = Resources.MyAd
+				}
 			}
 			.AddField(Resources.HelpEmbMainFieldTitle, mainCommands[0..^2])
 			.AddField(Resources.HelpEmbMilFieldTitle, milestoneCommands[0..^2])
@@ -167,7 +172,7 @@ namespace Bot.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = @"https://www.bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png",
-					Text = Resources.EmbFooterAboutMyMistake
+					Text = $"{Resources.EmbFooterAboutMyMistake}\n{Resources.MyAd}"
 				}
 
 			};
@@ -196,7 +201,7 @@ namespace Bot.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = @"https://www.bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg",
-					Text = Resources.EmbFooterAboutMyMistake
+					Text = $"{Resources.EmbFooterAboutMyMistake}\n{Resources.MyAd}"
 				}
 			}
 			.AddField(Resources.CatEmbDrpFieldTitle, catalyst.DropLocation)
@@ -216,7 +221,12 @@ namespace Bot.Modules
 					Name = string.Format(Resources.PollEmbAuthorName, user.Nickname ?? user.Username),
 					IconUrl = user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()
 				},
-				Color = Color.Green
+				Color = Color.Green,
+				Footer = new EmbedFooterBuilder
+				{
+					IconUrl = Resources.NeiraFooterIcon,
+					Text = Resources.MyAd
+				}
 			}
 			.AddField(Resources.PollEmbTpcFieldTitle, text)
 			.Build();

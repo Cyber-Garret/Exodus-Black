@@ -314,7 +314,11 @@ namespace Bot.Modules
 				},
 				Color = Color.Orange,
 				ThumbnailUrl = Context.Guild.IconUrl,
-
+				Footer = new EmbedFooterBuilder
+				{
+					IconUrl = Resources.NeiraFooterIcon,
+					Text = Resources.MyAd,
+				}
 			}
 			.AddField(Resources.GuCoEmbTitleField,
 			string.Format(Resources.GuCoEmbDescField,
@@ -340,7 +344,7 @@ namespace Bot.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = Resources.NeiraFooterIcon,
-					Text = Resources.MailEmbFooterDesc
+					Text = $"{Resources.MailEmbFooterDesc}\n{Resources.MyAd}"
 				}
 			};
 			return embed.Build();
