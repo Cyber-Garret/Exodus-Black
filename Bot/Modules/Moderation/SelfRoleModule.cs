@@ -139,7 +139,12 @@ namespace Bot.Modules
 					Name = Context.Guild.Name
 				},
 				Color = Color.Gold,
-				Description = text
+				Description = text,
+				Footer = new EmbedFooterBuilder
+				{
+					IconUrl = Resources.NeiraFooterIcon,
+					Text = Resources.MyAd
+				}
 			};
 
 			//Create field with roles and associated emotes

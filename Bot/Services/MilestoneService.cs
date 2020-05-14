@@ -175,7 +175,7 @@ namespace Bot.Services
 
 				embed.AddField(embedFieldUsers);
 			}
-			embed.WithFooter($"ID: {milestone.MessageId}");
+			embed.WithFooter($"ID: {milestone.MessageId}\n{Resources.MyAd}");
 
 			return embed.Build();
 		}
@@ -211,7 +211,7 @@ namespace Bot.Services
 				}
 				embed.Description = text;
 			}
-			embed.WithFooter(Resources.EmbFooterAboutDel);
+			embed.WithFooter($"{Resources.EmbFooterAboutDel}\n{Resources.MyAd}");
 
 			return embed.Build();
 		}
@@ -248,7 +248,7 @@ namespace Bot.Services
 			if (embedFieldUsers.Value != null)
 				embed.AddField(embedFieldUsers);
 
-			embed.WithFooter(string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name), guild.IconUrl);
+			embed.WithFooter($"{string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name)}\n{Resources.MyAd}", guild.IconUrl);
 			embed.WithCurrentTimestamp();
 
 			return embed.Build();
