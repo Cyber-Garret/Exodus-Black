@@ -56,6 +56,44 @@ namespace Bot.Modules
 		}
 
 		// TODO: User defined milestone
+		[Command("резерв")]
+		[Summary("Позволяет зарезирвировать места в активности.")]
+		public async Task Reserve(ulong milestoneId, int count)
+		{
+			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
+			if (milestone.Leader == Context.User.Id)
+			{
+				if (count < 1 || count > milestone.MilestoneInfo.MaxSpace + 1 || count > milestone.MilestoneUsers.Count + 1)
+				{
+					await ReplyAsync("no no no");
+				}
+				else
+				{
+					try
+					{
+						for (int i = 0; i < count; i++)
+						{
+							milestone.MilestoneUsers.Add(100500);
+						}
+						ActiveMilestoneData.SaveMilestones(milestone.MessageId);
+
+						var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
+						var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+						await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+
+						await ReplyAndDeleteAsync(string.Format("reserved\n{0}", msg.GetJumpUrl()));
+					}
+					catch (Exception ex)
+					{
+						await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
+						logger.LogError(ex, "Milestone reserve command");
+					}
+				}
+			}
+			else
+				await ReplyAsync(Resources.MilNotLeader);
+		}
 
 		[Command("заметка")]
 		[Summary("Позволяет удалить или изменить заметку активности.")]
@@ -246,10 +284,15 @@ namespace Bot.Modules
 				int count = 2;
 				foreach (var user in milestone.MilestoneUsers)
 				{
-
-					var discordUser = discord.GetUser(user);
-					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
-
+					if(user == 100500)
+					{
+						embedFieldUsers.Value += $"#{count} **Резерв**\n";
+					}
+					else
+					{
+						var discordUser = discord.GetUser(user);
+						embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+					}
 					count++;
 				}
 			}

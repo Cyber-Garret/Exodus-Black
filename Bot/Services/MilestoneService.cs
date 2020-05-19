@@ -168,8 +168,15 @@ namespace Bot.Services
 				int count = 2;
 				foreach (var user in milestone.MilestoneUsers)
 				{
-					var discordUser = _discord.GetUser(user);
-					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+					if(user == 100500)
+					{
+						embedFieldUsers.Value += $"#{count} **Резерв**\n";
+					}
+					else
+					{
+						var discordUser = _discord.GetUser(user);
+						embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+					}
 					count++;
 				}
 
