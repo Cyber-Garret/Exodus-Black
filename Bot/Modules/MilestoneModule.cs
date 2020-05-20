@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
+	[RequireContext(ContextType.Guild)]
 	public class MilestoneModule : BaseModule
 	{
 		private readonly ILogger logger;
@@ -34,32 +35,73 @@ namespace Bot.Modules
 		#region Commands
 		[Command("рейд")]
 		[Summary("Анонс сбора боевой группы в рейд.")]
-		public async Task RegisterRaid(string raidName, string raidTime, [Remainder]string leaderNote = null)
+		public async Task RegisterRaid(string raidName, string raidTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(raidName, MilestoneType.Raid, raidTime, leaderNote);
 		}
 
 		[Command("налет")]
 		[Summary("Aнонс сбора боевой группы в сумрачный налёт.")]
-		public async Task RegisterStrike(string nightfallName, string nightfallTime, [Remainder]string leaderNote = null)
+		public async Task RegisterStrike(string nightfallName, string nightfallTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(nightfallName, MilestoneType.Nightfall, nightfallTime, leaderNote);
 		}
 
-		//TODO: Ordeal nightfall
-
 		[Command("сбор")]
 		[Summary("Анонс сбора боевой группы в активности типа Паноптикум, Яма, Трон и тд и тп.")]
-		public async Task RegisterOther(string otherName, string otherTime, [Remainder]string leaderNote = null)
+		public async Task RegisterOther(string otherName, string otherTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(otherName, MilestoneType.Other, otherTime, leaderNote);
 		}
 
-		// TODO: User defined milestone
+		[Command("резерв")]
+		[Summary("Позволяет зарезирвировать места в активности.")]
+		public async Task Reserve(ulong milestoneId, int count)
+		{
+
+			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
+			if (milestone.Leader == Context.User.Id)
+			{
+				//calculate free space in milestone
+				var freeSpace = milestone.MilestoneInfo.MaxSpace - (milestone.MilestoneUsers.Count + 1);
+
+				//check count value is adequate?
+				if (count < 1 || count >= freeSpace)
+				{
+					await ReplyAsync(string.Format(Resources.MilReservedFail, count));
+				}
+				else
+				{
+					try
+					{
+						for (int i = 0; i < count; i++)
+						{
+							//100500 is reserved man
+							milestone.MilestoneUsers.Add(GlobalVariables.ReservedID);
+						}
+						ActiveMilestoneData.SaveMilestones(milestone.MessageId);
+
+						var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
+						var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+						await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+
+						await ReplyAndDeleteAsync(string.Format(Resources.MilReservedOk, count, msg.GetJumpUrl()));
+					}
+					catch (Exception ex)
+					{
+						await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
+						logger.LogError(ex, "Milestone reserve command");
+					}
+				}
+			}
+			else
+				await ReplyAsync(Resources.MilNotLeader);
+		}
 
 		[Command("заметка")]
 		[Summary("Позволяет удалить или изменить заметку активности.")]
-		public async Task ChangeNote(ulong milestoneId, [Remainder]string note = null)
+		public async Task ChangeNote(ulong milestoneId, [Remainder] string note = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
 			if (milestone.Leader == Context.User.Id)
@@ -121,7 +163,7 @@ namespace Bot.Modules
 
 		[Command("отмена")]
 		[Summary("Позволяет отменить активность.")]
-		public async Task CloseMilestone(ulong milestoneId, [Remainder]string reason = null)
+		public async Task CloseMilestone(ulong milestoneId, [Remainder] string reason = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
 			if (milestone.Leader == Context.User.Id)
@@ -246,10 +288,16 @@ namespace Bot.Modules
 				int count = 2;
 				foreach (var user in milestone.MilestoneUsers)
 				{
-
-					var discordUser = discord.GetUser(user);
-					embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
-
+					//100500 is reserved man
+					if (user == GlobalVariables.ReservedID)
+					{
+						embedFieldUsers.Value += $"#{count} {Resources.MilReserved}\n";
+					}
+					else
+					{
+						var discordUser = discord.GetUser(user);
+						embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+					}
 					count++;
 				}
 			}

@@ -775,6 +775,34 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to **Зарезервировано лидером**.
+        /// </summary>
+        internal static string MilReserved {
+            get {
+                return ResourceManager.GetString("MilReserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Невозможно зарезервировать {0}.
+        /// </summary>
+        internal static string MilReservedFail {
+            get {
+                return ResourceManager.GetString("MilReservedFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Зарезервированно: {0}
+        ///{1}.
+        /// </summary>
+        internal static string MilReservedOk {
+            get {
+                return ResourceManager.GetString("MilReservedOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Страж, ты указал неизвестный мне формат времени..
         /// </summary>
         internal static string MilTimeError {

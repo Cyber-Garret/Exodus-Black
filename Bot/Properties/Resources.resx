@@ -370,6 +370,16 @@ NSFW **{1}**
   <data name="MilRemEmbTitle" xml:space="preserve">
     <value>Хочу вам напомнить, что у вас через 15 минут начнется **{0}**.</value>
   </data>
+  <data name="MilReserved" xml:space="preserve">
+    <value>**Зарезервировано лидером**</value>
+  </data>
+  <data name="MilReservedFail" xml:space="preserve">
+    <value>Невозможно зарезервировать {0}</value>
+  </data>
+  <data name="MilReservedOk" xml:space="preserve">
+    <value>Зарезервированно: {0}
+{1}</value>
+  </data>
   <data name="MilTimeError" xml:space="preserve">
     <value>Страж, ты указал неизвестный мне формат времени.</value>
   </data>
