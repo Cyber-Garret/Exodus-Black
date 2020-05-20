@@ -6,7 +6,9 @@ using Bot.Properties;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+
 using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +16,7 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану и его избранным стражам.",
-			NotAGuildErrorMessage = NotInGuildText)]
+	[RequireUserPermission(GuildPermission.Administrator)]
 	[Cooldown(5)]
 	public class SelfRoleModule : BaseModule
 	{
@@ -27,8 +27,7 @@ namespace Bot.Modules
 			this.logger = logger;
 		}
 
-		[Command("ДобавитьРоль"), Alias("др")]
-		[Summary("Роль должна быть с возможностью @упоминания. Эмодзи можно использовать только серверные.")]
+		[Command("addrole"), Alias("ДобавитьРоль")]
 		public async Task SaveGuildRole(SocketRole role = null, [Remainder] string text = null)
 		{
 			try
@@ -74,8 +73,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("УдалитьРоли"), Alias("ур")]
-		[Summary("Очищает список ролей для использования в сообщении автороли.")]
+		[Command("clearroles"), Alias("УдалитьРоли")]
 		public async Task ClearGuildSelfRoles()
 		{
 			try
@@ -96,8 +94,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("СписокРолей"), Alias("ср")]
-		[Summary("Отображает список авторолей и привязанные к ним эмодзи.")]
+		[Command("rolelist"), Alias("СписокРолей")]
 		public async Task ListGuildRole()
 		{
 			try
@@ -124,11 +121,9 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("РазместитьРоли"), Alias("рр")]
-		[Summary("Размещает сообщение с доступными авторолями, автоматическим заголовком сервера и любым сообщением с поддержкой discord синтаксиса(можно даже ссылки)")]
-		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.ReadMessageHistory | ChannelPermission.ManageRoles,
-			ErrorMessage = "Капитан, у меня нет прав на [Добавлять реакции]и\\или[Читать историю сообщений]и\\или[Управлять ролями]")]
-		public async Task DeploySelfRoleMessage([Remainder]string text = null)
+		[Command("placeroles"), Alias("РазместитьРоли")]
+		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.ReadMessageHistory | ChannelPermission.ManageRoles)]
+		public async Task DeploySelfRoleMessage([Remainder] string text = null)
 		{
 			try
 			{

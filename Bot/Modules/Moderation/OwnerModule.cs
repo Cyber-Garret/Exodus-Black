@@ -18,7 +18,7 @@ namespace Bot.Modules
 			this.logger = logger;
 		}
 
-		[Command("разбан")]
+		[Command("unban"), Alias("разбан")]
 		public async Task MassUnban()
 		{
 			if (Context.User.Id != Context.Guild.OwnerId)

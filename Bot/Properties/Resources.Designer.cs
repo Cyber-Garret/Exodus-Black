@@ -683,11 +683,38 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [Нажав сюда ты перейдешь к активности в которой обновили время.]({0}).
+        /// </summary>
+        internal static string MilEmbTimeFieldDesc {
+            get {
+                return ResourceManager.GetString("MilEmbTimeFieldDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ссылка на активность.
+        /// </summary>
+        internal static string MilEmbTimeFieldTitle {
+            get {
+                return ResourceManager.GetString("MilEmbTimeFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}, в {1}. {2}: {3}.
         /// </summary>
         internal static string MilEmbTitle {
             get {
                 return ResourceManager.GetString("MilEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Приветствую, хочу сообщить что лидер активности сменил время начала мероприятия..
+        /// </summary>
+        internal static string MilEmbTitleChangeTime {
+            get {
+                return ResourceManager.GetString("MilEmbTitleChangeTime", resourceCulture);
             }
         }
         
@@ -799,6 +826,15 @@ namespace Bot.Properties {
         internal static string MilReservedOk {
             get {
                 return ResourceManager.GetString("MilReservedOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Время активности изменено. {0}.
+        /// </summary>
+        internal static string MilTimeChanged {
+            get {
+                return ResourceManager.GetString("MilTimeChanged", resourceCulture);
             }
         }
         

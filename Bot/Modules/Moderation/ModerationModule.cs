@@ -17,9 +17,7 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[RequireUserPermission(GuildPermission.Administrator,
-			ErrorMessage = ":x: | Прошу прощения страж, но эта команда доступна только капитану и его избранным стражам.",
-			NotAGuildErrorMessage = NotInGuildText)]
+	[RequireUserPermission(GuildPermission.Administrator)]
 	[Cooldown(5)]
 	public class ModerationModule : BaseModule
 	{
@@ -34,8 +32,7 @@ namespace Bot.Modules
 		}
 
 		#region Commands
-		[Command("настройки")]
-		[Summary("Эта команда выводит мои настройки, так же содержит некоторую полезную и не очень информацию.")]
+		[Command("settings"), Alias("настройки")]
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
@@ -45,8 +42,7 @@ namespace Bot.Modules
 			await ReplyAsync(embed: embed);
 		}
 
-		[Command("новости")]
-		[Summary("Команда позволяет включать или выключать оповещения о Зуре в определенный текстовый канал.")]
+		[Command("news"), Alias("новости")]
 		public async Task SetNotificationChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -65,8 +61,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("логи")]
-		[Summary("Команда позволяет включать или выключать оповещения об изменениях на сервер, например, когда кто-то покинул сервер.")]
+		[Command("logs"), Alias("логи")]
 		public async Task SetLogChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -85,8 +80,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("приветствие"), RequireBotPermission(ChannelPermission.AttachFiles)]
-		[Summary("Команда позволяет включать или выключать оповещения о новых участниках сервера в стиле мира Destiny.")]
+		[Command("welcome"), Alias("приветствие"), RequireBotPermission(ChannelPermission.AttachFiles)]
 		public async Task SetWelcomeChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -105,9 +99,8 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("сохранить приветствие")]
-		[Summary("Сохраняет сообщение-приветствие и включает механизм отправки сообщения всем новоприбывшим на сервер.\nПоддерживает синтаксис MarkDown для красивого оформления.")]
-		public async Task SaveWelcomeMessage([Remainder]string message = null)
+		[Command("save welcome"), Alias("сохранить приветствие")]
+		public async Task SaveWelcomeMessage([Remainder] string message = null)
 		{
 			// Get or create personal guild settings
 			var guild = GuildData.GetGuildAccount(Context.Guild);
@@ -126,8 +119,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("посмотреть приветствие")]
-		[Summary("Позволяет посмотреть, как будет выглядеть сообщение-приветствие новоприбывшему на сервер.")]
+		[Command("preview welcome"), Alias("посмотреть приветствие")]
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
@@ -139,8 +131,7 @@ namespace Bot.Modules
 				await ReplyAsync(embed: discordEvent.WelcomeEmbed((SocketGuildUser)Context.User, guild.WelcomeMessage));
 		}
 
-		[Command("префикс")]
-		[Summary("Позволяет изменить префикс команд для сервера.")]
+		[Command("prefix"), Alias("префикс")]
 		public async Task GuildPrefix(string prefix = null)
 		{
 			var config = GuildData.GetGuildAccount(Context.Guild);
@@ -158,9 +149,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("автороль")]
-		[Summary("Сохраняет роль, которую я буду выдавать всем новым пользователям, пришедшим на сервер.\n" +
-			"**Важно! Моя роль должна быть над ролью, которую я буду автоматически выдавать всем новоприбывшим. Имеется ввиду в списке Ваш сервер->Настройки сервера->Роли.**")]
+		[Command("autorole"), Alias("автороль")]
 		[RequireBotPermission(GuildPermission.ManageRoles)]
 		public async Task AutoRoleRoleAdd(IRole role = null)
 		{
@@ -179,8 +168,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("упоминание")]
-		[Summary("Изменяет упоминания в сборах и уведомлениях о Зуре here->everyone->Без упоминания и наоборот.")]
+		[Command("mention"), Alias("упоминание")]
 		public async Task SetGuildMention(SocketRole role = null)
 		{
 			var guild = GuildData.GetGuildAccount(Context.Guild);
@@ -205,8 +193,7 @@ namespace Bot.Modules
 			await ReplyAndDeleteAsync(string.Format(Resources.GuildMilMention, guild.GlobalMention ?? Resources.GuildNoMention));
 		}
 
-		[Command("рассылка")]
-		[Summary("Рассылает личные сообщения стражам указанной роли. По окончании работы я предоставлю небольшую статистику кому я смогла отправить, а кому нет.")]
+		[Command("mailing"), Alias("рассылка")]
 		public async Task SendMessage(IRole role, [Remainder] string message)
 		{
 			var workMessage = await Context.Channel.SendMessageAsync(string.Format(Resources.MailStart, role.Name));
@@ -236,8 +223,7 @@ namespace Bot.Modules
 			await workMessage.ModifyAsync(m => m.Content = string.Format(Resources.MailDone, role.Name, SucessCount + FailCount, SucessCount, FailCount));
 		}
 
-		[Command("чистка")]
-		[Summary("Удаляет заданное количество сообщений где была вызвана команда.")]
+		[Command("purge"), Alias("чистка")]
 		[RequireBotPermission(ChannelPermission.ManageMessages)]
 		public async Task PurgeChat(int amount = 1)
 		{
@@ -280,8 +266,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("рандом")]
-		[Summary("Случайным образом выбирает от 1 до 10 Стражей из указаной роли. Если не указано количество, по умолчанию выбирает одного.")]
+		[Command("random"), Alias("рандом")]
 		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
 		{
 			if (mentionedRole == null || (count >= 10 && count <= 1))

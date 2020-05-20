@@ -39,7 +39,7 @@ namespace Bot.Core.QuartzJobs
 
 						if (now.Date == milestone.DateExpire.Date && now.Hour == milestone.DateExpire.Hour && now.Minute == milestone.DateExpire.Minute && now.Second < 10)
 						{
-							await milestoneHandler.RaidNotificationAsync(milestone);
+							await milestoneHandler.MilestoneNotificationAsync(milestone);
 						}
 					}
 					catch (Exception ex)

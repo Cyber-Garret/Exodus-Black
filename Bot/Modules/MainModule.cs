@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Modules
@@ -33,7 +34,7 @@ namespace Bot.Modules
 		}
 
 		#region Commands
-		[Command("справка")]
+		[Command("help"), Alias("справка")]
 		public async Task MainHelp()
 		{
 			try
@@ -49,10 +50,8 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("экзот")]
-		[Summary("Отображает информацию о экзотическом снаряжении. Ищет как по полному названию, так и частичному.")]
-		[Remarks("Пример: !экзот буря")]
-		public async Task Exotic([Remainder]string Input = null)
+		[Command("exotic"), Alias("экзот")]
+		public async Task Exotic([Remainder] string Input = null)
 		{
 			if (Input == null)
 			{
@@ -72,10 +71,8 @@ namespace Bot.Modules
 			await ReplyAsync(string.Format(Resources.ExoFound, Context.User.Username), embed: embed);
 		}
 
-		[Command("каталик")]
-		[Summary("Отображает информацию о катализаторе для оружия.")]
-		[Remarks("Пример: !катализатор мида или !каталик туз")]
-		public async Task GetCatalyst([Remainder]string Input = null)
+		[Command("catalyst"), Alias("каталик")]
+		public async Task GetCatalyst([Remainder] string Input = null)
 		{
 			if (Input == null)
 			{
@@ -96,9 +93,7 @@ namespace Bot.Modules
 			await ReplyAsync(string.Format(Resources.CatFound, Context.User.Username), embed: embed);
 		}
 
-		[Command("опрос")]
-		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
-		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
+		[Command("poll"), Alias("опрос")]
 		public async Task StartPoll([Remainder] string input)
 		{
 			var embed = PollEmbed(input, (SocketGuildUser)Context.User);
@@ -108,8 +103,7 @@ namespace Bot.Modules
 			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
 		}
 
-		[Command("бип")]
-		[Summary("Простая команда проверки моей работоспособности.")]
+		[Command("bip"), Alias("бип")]
 		public async Task Bip()
 		{
 			await ReplyAsync(Resources.Bip);
@@ -131,19 +125,19 @@ namespace Bot.Modules
 			foreach (var command in commands)
 			{
 				if (command.Module.Name == typeof(MainModule).Name)
-					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
 				else if (command.Module.Name == typeof(MilestoneModule).Name)
-					milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
 				else if (command.Module.Name == typeof(ModerationModule).Name)
-					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
 				else if (command.Module.Name == typeof(SelfRoleModule).Name)
-					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
 
 			}
 
 			var embed = new EmbedBuilder
 			{
-				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date),
+				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date.ToShortDateString()),
 				Color = Color.Gold,
 				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite),
 				Footer = new EmbedFooterBuilder
