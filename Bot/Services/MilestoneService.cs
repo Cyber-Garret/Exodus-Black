@@ -168,9 +168,9 @@ namespace Bot.Services
 				int count = 2;
 				foreach (var user in milestone.MilestoneUsers)
 				{
-					if(user == 100500)
+					if (user == GlobalVariables.ReservedID)
 					{
-						embedFieldUsers.Value += $"#{count} **Резерв**\n";
+						embedFieldUsers.Value += $"#{count} {Resources.MilReserved}\n";
 					}
 					else
 					{
