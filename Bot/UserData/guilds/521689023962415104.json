@@ -7,8 +7,8 @@
   "LeaveMessage": null,
   "AutoroleID": 0,
   "CommandPrefix": null,
-  "Language": "uk-UA",
-  "TimeZone": "Russian Standard Time",
+  "Language": "ru-RU",
+  "TimeZone": "FLE Standard Time",
   "GlobalMention": null,
   "SelfRoleMessageId": 0,
   "GuildSelfRoles": []

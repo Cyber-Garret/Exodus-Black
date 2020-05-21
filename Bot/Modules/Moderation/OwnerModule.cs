@@ -1,4 +1,5 @@
-﻿using Bot.Properties;
+﻿using Bot.Preconditions;
+using Bot.Properties;
 
 using Discord.Commands;
 
@@ -9,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	public class GuildOwnerModule : BaseModule
+	[RequireContext(ContextType.Guild), Cooldown(5)]
+	public class GuildOwnerModule : RootModule
 	{
 		private readonly ILogger<GuildOwnerModule> logger;
 

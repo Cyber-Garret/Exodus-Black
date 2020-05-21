@@ -118,307 +118,307 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BanPermission" xml:space="preserve">
-    <value>Капитан, для доступа к разблокировке участников у меня нет права **Банить участников**.
-Советую включить право, а после того как я сообщу об окончании работ, выключить это право на всякий случай.</value>
+    <value>Captain, for access to unlock participants I do not have the right ** Ban members **.
+I advise you to enable the right, and after I inform about the completion of work, turn off this right just in case.</value>
   </data>
   <data name="Bip" xml:space="preserve">
     <value>Beep...</value>
   </data>
   <data name="BipCommSummary" xml:space="preserve">
-    <value>Простая команда проверки моей работоспособности.</value>
+    <value>A simple command to test my health.</value>
   </data>
   <data name="CatEmbBnsFieldTitle" xml:space="preserve">
-    <value>Бонус катализатор</value>
+    <value>Catalyst bonus</value>
   </data>
   <data name="CatEmbDrpFieldTitle" xml:space="preserve">
-    <value>Как получить катализатор</value>
+    <value>How to get a catalyst</value>
   </data>
   <data name="CatEmbQueFieldTitle" xml:space="preserve">
-    <value>Задание катализатора</value>
+    <value>Catalyst masterwork</value>
   </data>
   <data name="CatEmbTitle" xml:space="preserve">
-    <value>Информация о катализаторе для оружия {0}</value>
+    <value>Information about catalyst for weapon {0}</value>
   </data>
   <data name="CatFound" xml:space="preserve">
-    <value>Итак, {0} вот что мне известно про этот катализатор.</value>
+    <value>So, {0} is what I know about this catalyst.</value>
   </data>
   <data name="CatInputIsNull" xml:space="preserve">
-    <value>:x: Пожалуйста, введите полное или частичное название экзотического оружия.</value>
+    <value>: x: Please enter the full or partial name of the exotic weapon.</value>
   </data>
   <data name="ChanCreEmbFieldTitle" xml:space="preserve">
-    <value>📖 Создан канал</value>
+    <value>📖 Channel created</value>
   </data>
   <data name="ChanDelEmbFieldTitle" xml:space="preserve">
-    <value>❌ Удален канал</value>
+    <value>❌ Channel deleted</value>
   </data>
   <data name="ChanEmbFieldDesc" xml:space="preserve">
-    <value>Название: **{0}**
-NSFW **{1}**
-Категория: {2}</value>
+    <value>Name: ** {0} **
+NSFW ** {1} **
+Category: {2}</value>
   </data>
   <data name="CooldownMessage" xml:space="preserve">
-    <value>Ты сможешь использовать эту команду через {0} сек.</value>
+    <value>You can use this command in {0} seconds.</value>
   </data>
   <data name="DiEvnEmbFooter" xml:space="preserve">
-    <value>Кем: {0}</value>
+    <value>By: {0}</value>
   </data>
   <data name="EmbFooterAboutDel" xml:space="preserve">
-    <value>Сообщение будет автоматически удалено через одну минуту.</value>
+    <value>The message will be automatically deleted after one minute.</value>
   </data>
   <data name="EmbFooterAboutMyMistake" xml:space="preserve">
-    <value>Если нашли какие либо неточности, сообщите моему создателю: Cyber_Garret#5898</value>
+    <value>If you find any inaccuracies, please inform my creator: Cyber_Garret#5898</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Ошибка: {0}</value>
+    <value>Error: {0}</value>
   </data>
   <data name="ErrorHndlCom" xml:space="preserve">
-    <value>Ошибка:</value>
+    <value>Error:</value>
   </data>
   <data name="ExoEmbCatFieldDescNo" xml:space="preserve">
-    <value>**Отсутствует**</value>
+    <value>**Missing**</value>
   </data>
   <data name="ExoEmbCatFieldDescYes" xml:space="preserve">
-    <value>**Есть**</value>
+    <value>**There is**</value>
   </data>
   <data name="ExoEmbCatFieldTitle" xml:space="preserve">
-    <value>Катализатор</value>
+    <value>Catalyst</value>
   </data>
   <data name="ExoEmbHowFieldTitle" xml:space="preserve">
-    <value>Как получить:</value>
+    <value>How to obtain:</value>
   </data>
   <data name="ExoFound" xml:space="preserve">
-    <value>Итак, {0} вот что мне известно про это снаряжение.</value>
+    <value>So, {0} this is what I know about this equipment.</value>
   </data>
   <data name="ExoInputIsNull" xml:space="preserve">
-    <value>:x: Пожалуйста, введите полное или частичное название экзотического снаряжения.</value>
+    <value>: x: Please enter the full or partial name of the exotic equipment.</value>
   </data>
   <data name="GuCoEmbDescField" xml:space="preserve">
-    <value>- Всего каналов: **{0}**
-- Стражей на сервере: **{1}**
-- Оповещения о Зуре я присылаю в **&lt;#{2}&gt;**
-- Логи сервера я пишу в **&lt;#{3}&gt;**
-- Оповещения о новых стражах я присылаю в **&lt;#{4}&gt;**
-- При сборах в активность я буду упоминать: **{5}**</value>
+    <value>- Total channels: ** {0} **
+- Guardians on the server: ** {1} **
+- I send alerts about Xur to ** &lt;# {2}&gt; **
+- Server logs I write in ** &lt;# {3}&gt; **
+- I send notifications of new guardians to ** &lt;# {4}&gt; **
+- When collecting fees for activity, I will mention: ** {5} **</value>
   </data>
   <data name="GuCoEmbTitle" xml:space="preserve">
-    <value>Мои настройки на этом сервере.</value>
+    <value>My settings on this server.</value>
   </data>
   <data name="GuCoEmbTitleField" xml:space="preserve">
-    <value>Основная информация:</value>
+    <value>Basic information:</value>
   </data>
   <data name="GuildAutoroleOff" xml:space="preserve">
-    <value>Функционал автороли отключен.</value>
+    <value>Autorole functionality is disabled.</value>
   </data>
   <data name="GuildAutoroleOn" xml:space="preserve">
-    <value>Сохранена роль **{0}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер.</value>
+    <value>The role **{0}** has been saved, now I will automatically issue it to everyone who arrives at the server.</value>
   </data>
   <data name="GuildLogsOff" xml:space="preserve">
-    <value>Я выключила оповещения об изменениях на сервере.</value>
+    <value>I turned off alerts about changes on the server.</value>
   </data>
   <data name="GuildLogsOn" xml:space="preserve">
-    <value>Теперь большинство изменений на сервере, если у меня конечно есть права, я буду оповещать в канал {0}</value>
+    <value>Now most of the changes on the server, if of course I have rights, I will notify the channel {0}</value>
   </data>
   <data name="GuildMilMention" xml:space="preserve">
-    <value>Капитан, теперь в сообщениях при сборе на активность я буду упоминать: {0}</value>
+    <value>Captain, now in the messages when collecting for activity I will mention: {0}</value>
   </data>
   <data name="GuildNoMention" xml:space="preserve">
-    <value>**Без упоминания**</value>
+    <value>**No mention**</value>
   </data>
   <data name="GuildPrefixCustom" xml:space="preserve">
-    <value>Для команд установлен префикс `{0}`</value>
+    <value>The prefix `{0}` is set for commands</value>
   </data>
   <data name="GuildPrefixDefault" xml:space="preserve">
-    <value>Для команд установлен префикс по умолчанию `!`</value>
+    <value>For commands, the default prefix `!`</value>
   </data>
   <data name="GuildPrivateWelcomeIsNull" xml:space="preserve">
-    <value>:x: | В данный момент я не отправляю какое либо сообщение новоприбывшим.</value>
+    <value>: x: | At the moment I am not sending any message to new arrivals.</value>
   </data>
   <data name="GuildPrivateWelcomeRemove" xml:space="preserve">
-    <value>Приветственное сообщение успешно удалено.</value>
+    <value>The welcome message has been deleted successfully.</value>
   </data>
   <data name="GuildPrivateWelcomeSave" xml:space="preserve">
-    <value>:smiley: Приветственное сообщение сохранено.</value>
+    <value>: smiley: Welcome message saved.</value>
   </data>
   <data name="GuildWelcomeOff" xml:space="preserve">
-    <value>Я выключила красочные оповещения о новых участниках на сервере.</value>
+    <value>I turned off colorful alerts about new members on the server.</value>
   </data>
   <data name="GuildWelcomeOn" xml:space="preserve">
-    <value>Теперь я буду оповещать о новых участниках в канал {0}</value>
+    <value>Now I will notify about new members in the channel {0}</value>
   </data>
   <data name="GuildXurOff" xml:space="preserve">
-    <value>Я выключила оповещения о Зуре.</value>
+    <value>I turned off the Xur alerts.</value>
   </data>
   <data name="GuildXurOn" xml:space="preserve">
-    <value>Теперь новости о Зуре я буду присылать в канал {0}</value>
+    <value>Now I will send news about Xur to the channel {0}</value>
   </data>
   <data name="GuMemAddRole" xml:space="preserve">
-    <value>Добавлена</value>
+    <value>Added</value>
   </data>
   <data name="GuMemRemRole" xml:space="preserve">
-    <value>Убрана</value>
+    <value>Removed</value>
   </data>
   <data name="GuMemRolEmbFieldDesc" xml:space="preserve">
-    <value>Имя: **{0}**
-{1} роль: **{2}**</value>
+    <value>Name: ** {0} **
+{1} role: ** {2} **</value>
   </data>
   <data name="GuMemRolEmbFieldTitle" xml:space="preserve">
-    <value>🔑 Обновлена роль стража:</value>
+    <value>🔑 Updated guard role:</value>
   </data>
   <data name="GuMemUpdEmbFieldDesc" xml:space="preserve">
-    <value>Предыдущее имя:
-**{0}**
-Новое имя:
+    <value>Previous Name:
+** {0} **
+New name:
 **{1}**</value>
   </data>
   <data name="GuMemUpdEmbFieldTitle" xml:space="preserve">
-    <value>💢 Имя стража изменено:</value>
+    <value>💢 Guardian name changed:</value>
   </data>
   <data name="Hellotxt" xml:space="preserve">
-    <value>Страж {0} приземлился, а это значит что:</value>
+    <value>Sentinel {0} has landed, which means that:</value>
   </data>
   <data name="HelpEmbAdmFieldTitle" xml:space="preserve">
-    <value>Команды администраторов</value>
+    <value>Admin commands</value>
   </data>
   <data name="HelpEmbDesc" xml:space="preserve">
-    <value>Моя основная цель - помогать Стражам собирать боевые группы, своевременно сообщать, когда прибывает или улетает посланник девяти Зур.
-Также я могу предоставить информацию о экзотическом снаряжении, катализаторах и много чего еще.
-Больше информации ты можешь найти в разделе документация на моем [сайте]({0})</value>
+    <value>My main goal is to help the Guardians to gather battle groups, to inform in a timely manner when the messenger of nine Xur arrives or leaves.
+I can also provide information on exotic gear, catalysts, and much more.
+You can find more information in the documentation section on my [site] ({0})</value>
   </data>
   <data name="HelpEmbMainFieldTitle" xml:space="preserve">
-    <value>Основные команды</value>
+    <value>Main commands</value>
   </data>
   <data name="HelpEmbMilFieldTitle" xml:space="preserve">
-    <value>Команды активностей</value>
+    <value>Activity commands</value>
   </data>
   <data name="HelpEmbSRolFieldTitle" xml:space="preserve">
-    <value>Команды настройки Автороли</value>
+    <value>Autoroles Commands</value>
   </data>
   <data name="HelpEmbTitle" xml:space="preserve">
-    <value>Доброго времени суток. Меня зовут Нейроматрица, я ИИ "Черного исхода" адаптированный для Discord. Успешно функционирую с {0}</value>
+    <value>Good day. My name is Neuromatrix, I’m Black Exodus AI adapted for Discord. Successfully functioning with {0}</value>
   </data>
   <data name="MailDone" xml:space="preserve">
-    <value>Готово. Я разослала сообщением всем у кого есть роль **{0}**.
-- Всего получателей: **{1}**
-- Успешно доставлено: **{2}**
-- Не удалось отправить: **{3}**</value>
+    <value>Done. I sent out a message to everyone who has the role ** {0} **.
+- Total Recipients: ** {1} **
+- Successfully delivered: ** {2} **
+- Failed to send: ** {3} **</value>
   </data>
   <data name="MailEmbFooterDesc" xml:space="preserve">
-    <value>Страж, учти что я не имею отношения к содержимому данного сообщения.</value>
+    <value>Guard, keep in mind that I have no relation to the contents of this message.</value>
   </data>
   <data name="MailEmbTitle" xml:space="preserve">
-    <value>:mailbox_with_mail: Вам сообщение от {0} с сервера **`{1}`**</value>
+    <value>: mailbox_with_mail: You got a message from {0} from the server ** `{1}` **</value>
   </data>
   <data name="MailStart" xml:space="preserve">
-    <value>Приступаю к рассылке сообщений. Всем стражам с ролью **{0}**</value>
+    <value>I am starting to send out messages. To all guards with the role ** {0} **</value>
   </data>
   <data name="MilBake" xml:space="preserve">
-    <value>Подготавливаю сбор боевой группы.</value>
+    <value>I’m preparing the collection of the battle group.</value>
   </data>
   <data name="MilCanceled" xml:space="preserve">
-    <value>Активность отменена.
+    <value>Activity canceled.
 {0}</value>
   </data>
   <data name="MilChangeLeader" xml:space="preserve">
-    <value>Права на лидерство были переданы другому стражу. {0}</value>
+    <value>Leadership rights were transferred to another guard. {0}</value>
   </data>
   <data name="MilEmbDesc" xml:space="preserve">
-    <value>**Заметка от лидера:** {0}</value>
+    <value>**Note from the leader:** {0}</value>
   </data>
   <data name="MilEmbDescCanceled" xml:space="preserve">
-    <value>Отменен по причине: {0}</value>
+    <value>Canceled due to: {0}</value>
   </data>
   <data name="MilEmbInfDescField" xml:space="preserve">
-    <value>- Лидер боевой группы: **#1 {0} - {1}**
-- Чтобы за вами закрепилось место нажмите на реакцию {2}</value>
+    <value>- Leader of the battle group: ** # 1 {0} - {1} **
+- To fix your place, click on the reaction {2}</value>
   </data>
   <data name="MilEmbInfTitleField" xml:space="preserve">
-    <value>Информация</value>
+    <value>Information</value>
   </data>
   <data name="MilEmbMemTitleField" xml:space="preserve">
-    <value>В боевую группу записались</value>
+    <value>Signed up in a battle group</value>
   </data>
   <data name="MilEmbTimeFieldDesc" xml:space="preserve">
-    <value>[Нажав сюда ты перейдешь к активности в которой обновили время.]({0})</value>
+    <value>[By clicking here you will be transferred to the activity in which the time was updated.] ({0})</value>
   </data>
   <data name="MilEmbTimeFieldTitle" xml:space="preserve">
-    <value>Ссылка на активность</value>
+    <value>Link to milestone</value>
   </data>
   <data name="MilEmbTitle" xml:space="preserve">
-    <value>{0}, в {1}. {2}: {3}</value>
+    <value>{0}, in {1}. {2}: {3}</value>
     <comment>Пример: 20.02.2020, в 20:00(+03:00). Сумрачный налет: Сад</comment>
   </data>
   <data name="MilEmbTitleChangeTime" xml:space="preserve">
-    <value>Приветствую, хочу сообщить что лидер активности сменил время начала мероприятия.</value>
+    <value>Greetings, I want to inform you that the activity leader has changed the start time of the event.</value>
   </data>
   <data name="MilError" xml:space="preserve">
-    <value>Страж, произошла критическая ошибка. Попробуй через пару минут снова, если ошибка будет снова напиши моему создателю - Cyber_Garret#5898
-Ошибка: {0}</value>
+    <value>Guard, a critical error has occurred. Try again in a couple of minutes, if the error is again write to my creator - Cyber_Garret#5898
+Error: {0}</value>
   </data>
   <data name="MilInfEmbTitle" xml:space="preserve">
-    <value>Доступные активности {0}.</value>
+    <value>Available activities {0}.</value>
   </data>
   <data name="MilNoReason" xml:space="preserve">
-    <value>Страж, нельзя отменить активность не указав причину.</value>
+    <value>Guard, you cannot cancel an activity without specifying a reason.</value>
   </data>
   <data name="MilNoteEdited" xml:space="preserve">
-    <value>Заметка активности исправлена. {0}</value>
+    <value>Activity note changed. {0}</value>
   </data>
   <data name="MilNotFound" xml:space="preserve">
-    <value>{0}, я не разобрала в какую активность ты хочешь собрать боевую группу.</value>
+    <value>{0}, I did not understand what activity you want to assemble a battle group.</value>
   </data>
   <data name="MilNotLeader" xml:space="preserve">
-    <value>Страж, ты не можешь выполнить данное действие, так как оно доступно только лидеру активности.</value>
+    <value>Guard, you cannot complete this action, since it is available only to the activity leader.</value>
   </data>
   <data name="MilPastTime" xml:space="preserve">
-    <value>Собрался в прошлое? Тебя ждет увлекательное шоу "остаться в живых" в исполнении моей команды Золотого Века. Не забудь попкорн
-Бип...Удачи и передай привет моему капитану.</value>
+    <value>Gathered in the past? You are waiting for the fascinating show "stay alive" performed by my team of the Golden Age. Don't forget popcorn
+Beep ... Good luck and say hello to my captain.</value>
   </data>
   <data name="MilRemEmbFooter" xml:space="preserve">
-    <value>{0}: {1}. Сервер: {2}</value>
+    <value>{0}: {1}. Server: {2}</value>
   </data>
   <data name="MilRemEmbTitle" xml:space="preserve">
-    <value>Хочу вам напомнить, что у вас через 15 минут начнется **{0}**.</value>
+    <value>I want to remind you that you will start **{0}** in 15 minutes.</value>
   </data>
   <data name="MilReserved" xml:space="preserve">
-    <value>**Зарезервировано лидером**</value>
+    <value>**Reserved by the leader**</value>
   </data>
   <data name="MilReservedFail" xml:space="preserve">
-    <value>Невозможно зарезервировать {0}</value>
+    <value>Unable to reserve {0}</value>
   </data>
   <data name="MilReservedOk" xml:space="preserve">
-    <value>Зарезервированно: {0}
+    <value>Reserved: {0}
 {1}</value>
   </data>
   <data name="MilTimeChanged" xml:space="preserve">
-    <value>Время активности изменено. {0}</value>
+    <value>Activity time changed. {0}</value>
   </data>
   <data name="MilTimeError" xml:space="preserve">
-    <value>Страж, ты указал неизвестный мне формат времени.</value>
+    <value>Guard, you indicated an unknown time format for me.</value>
   </data>
   <data name="MsgDelEmbDesc" xml:space="preserve">
-    <value>Где: &lt;#{0}&gt;
-Автор сообщения: **{1}**</value>
+    <value>Where: &lt;# {0}&gt;
+Posted by ** {1} **</value>
   </data>
   <data name="MsgDelEmbFieldTitle" xml:space="preserve">
-    <value>Текст сообщения:</value>
+    <value>Message text:</value>
   </data>
   <data name="MsgDelEmbTitle" xml:space="preserve">
-    <value>🗑 Удалено сообщение</value>
+    <value>🗑 Message deleted</value>
   </data>
   <data name="MsgUpdEmbDesc" xml:space="preserve">
-    <value>Где: &lt;#{0}&gt;</value>
+    <value>Where: &lt;# {0}&gt;</value>
   </data>
   <data name="MsgUpdEmbNewFieldTitle" xml:space="preserve">
-    <value>Новый текст:</value>
+    <value>New text:</value>
   </data>
   <data name="MsgUpdEmbOldFieldTitle" xml:space="preserve">
-    <value>Предыдущий текст:</value>
+    <value>Old text:</value>
   </data>
   <data name="MsgUpdEmbTitle" xml:space="preserve">
-    <value>📝 Обновлено сообщение</value>
+    <value>📝 Updated message</value>
   </data>
   <data name="MyAd" xml:space="preserve">
-    <value>Хочешь бота на заказ? Пиши моему создателю Cyber_Garret#5898</value>
+    <value>Do you want a custom bot? Write to my creator Cyber_Garret#5898</value>
   </data>
   <data name="NeiraFooterIcon" xml:space="preserve">
     <value>https://neira.su/img/neira.png</value>
@@ -427,107 +427,105 @@ NSFW **{1}**
     <value>https://neira.su/</value>
   </data>
   <data name="Nightfall" xml:space="preserve">
-    <value>Сумрачный налет</value>
+    <value>Nightfall</value>
   </data>
   <data name="NotFoundInDB" xml:space="preserve">
-    <value>:x: Этой информации в моей базе данных нет. :frowning:</value>
+    <value>: x: This information is not in my database. : frowning:</value>
   </data>
   <data name="NotInGuildText" xml:space="preserve">
-    <value>:x: | Эта команда не доступна в личных сообщениях.</value>
+    <value>: x: | This command is not available in private messages.</value>
   </data>
   <data name="OnlyForGuildOwner" xml:space="preserve">
-    <value>:x: | Прошу прощения страж, но эта команда доступна только владельцу сервера!</value>
+    <value>: x: | This command is not available in private messages.</value>
   </data>
   <data name="Other" xml:space="preserve">
-    <value>Прочие активноcти</value>
+    <value>Other activities</value>
   </data>
   <data name="PollEmbAuthorName" xml:space="preserve">
-    <value>{0} начал голосование.</value>
+    <value>{0} started voting.</value>
   </data>
   <data name="PollEmbTpcFieldTitle" xml:space="preserve">
-    <value>Тема голосования</value>
+    <value>Voting topic</value>
   </data>
   <data name="PurgeDone" xml:space="preserve">
-    <value>Задание успешно выполнено. Удалено {0} сообщений. _Это сообщение будет автоматически удалено._</value>
+    <value>The task completed successfully. Deleted {0} posts. _This message will be automatically deleted ._</value>
   </data>
   <data name="PurgeStart" xml:space="preserve">
-    <value>Начинаю чистку канала.</value>
+    <value>Begin cleaning the channel.</value>
   </data>
   <data name="Raid" xml:space="preserve">
-    <value>Рейд</value>
+    <value>Raid</value>
   </data>
   <data name="RndEmbFieldTitle" xml:space="preserve">
-    <value>Капитан, генератор псевдослучайных чисел Вексов отобразил:</value>
+    <value>Captain, Vex pseudo-random number generator displayed:</value>
   </data>
   <data name="RndErrorStart" xml:space="preserve">
-    <value>Вы не указали Роль или указали меньше 1 или больше 10 рандомов.</value>
+    <value>You did not specify a Role or indicated less than 1 or more than 10 random ones.</value>
   </data>
   <data name="RolDelEmbDesc" xml:space="preserve">
-    <value>Название: **{0}**
-Цвет: **{1}**</value>
+    <value>Name: ** {0} **
+Color: ** {1} **</value>
   </data>
   <data name="RolDelEmbTitle" xml:space="preserve">
-    <value>❌ Удалена роль</value>
+    <value>❌ Role removed</value>
   </data>
   <data name="SlfRolClear" xml:space="preserve">
-    <value>Капитан, я удалила все записанные роли в моей базе данных.</value>
+    <value>Captain, I deleted all recorded roles in my database.</value>
   </data>
   <data name="SlfRolEmbDescField" xml:space="preserve">
-    <value>Нажми на {0} что бы получить роль {1}
-</value>
+    <value>Click on {0} to get the role {1}</value>
   </data>
   <data name="SlfRolEmpty" xml:space="preserve">
-    <value>Капитан, в мой базе не записанно ни одной автороли.</value>
+    <value>Captain, not a single autorole is recorded in my database.</value>
   </data>
   <data name="SlfRolErrorEmoji" xml:space="preserve">
-    <value>Капитан, я не смогла сохранить эмодзи. Ты уверен что используешь серверный эмодзи?</value>
+    <value>Captain, I could not save the emoji. Are you sure you are using server emoji?</value>
   </data>
   <data name="SlfRolList" xml:space="preserve">
-    <value>В моей базе записанны такие автороли и эмодзи привязанные к ним:
-</value>
+    <value>In my database, the following autoroli and emoji are attached to them:</value>
   </data>
   <data name="SlfRolNoText" xml:space="preserve">
-    <value>Капитан, ты не указал текст сообщения.</value>
+    <value>Captain, you did not indicate the text of the message.</value>
   </data>
   <data name="SlfRolRoleOrEmojiExist" xml:space="preserve">
-    <value>Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей.</value>
+    <value>The captain, the role and \\ or emoji that you said is already used in the autorole system.</value>
   </data>
   <data name="SlfRolRoleOrEmojIsNull" xml:space="preserve">
-    <value>Капитан, ты не указал роль и\\или эмодзи.</value>
+    <value>Captain, you did not indicate the role and \\ or emoji.</value>
   </data>
   <data name="SlfRolSucAdd" xml:space="preserve">
-    <value>Успех! Капитан я сохранила данную связку роли {0} и {1} в своей базе данных.</value>
+    <value>Success! Captain, I saved this bunch of roles {0} and {1} in my database.</value>
   </data>
   <data name="UnbanDone" xml:space="preserve">
-    <value>Готово. Я прошлась по списку из **{0}** заблокированных стражей. 
-- Успешно разблокировала: **{1}** 
-- Не удалось разблокировать: **{2}** 
-*Если слишком много неудачных попыток, попробуй через пару минут, так как Discord может блокировать такие массовые действия.*</value>
+    <value>Done. I went through the list of ** {0} ** blocked guards.
+- Successfully unlocked: ** {1} **
+- Failed to unlock: ** {2} **
+* If there are too many unsuccessful attempts, try in a couple of minutes, as Discord can block such massive actions. *</value>
   </data>
   <data name="UnbanStart" xml:space="preserve">
-    <value>Капитан, в списке заблокированных я насчитала {0} стражей.
-Приступаю к массовой разблокировке всех стражей.</value>
+    <value>Captain, I counted {0} guards on the list of blocked ones.
+I proceed to mass unlock all the guards.</value>
   </data>
   <data name="Unknown" xml:space="preserve">
-    <value>Неизвестно</value>
+    <value>Unknown</value>
   </data>
   <data name="UsrBanEmbTitle" xml:space="preserve">
-    <value>🔨 Страж был забанен</value>
+    <value>🔨 The guard was banned</value>
   </data>
   <data name="UsrKicEmbTitle" xml:space="preserve">
-    <value>🦶 Страж был выгнан</value>
+    <value>🦶 The guard was banished</value>
   </data>
   <data name="UsrLefEmbDesc" xml:space="preserve">
-    <value>На сервере был известен как:
-**{0}**
-Discord имя стража
+    <value>The server was known as:
+** {0} **
+Discord Guardian Name
 **{1}**</value>
   </data>
   <data name="UsrLefEmbFieldTitle" xml:space="preserve">
-    <value>Причина:</value>
+    <value>Cause:</value>
   </data>
   <data name="UsrLefEmbTitle" xml:space="preserve">
-    <value>💢 Страж покинул сервер</value>
+    <value>💢 Sentinel left the server</value>
   </data>
   <data name="WlcmEmbTitle" xml:space="preserve">
     <value>Добро пожаловать на сервер {0}</value>

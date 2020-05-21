@@ -1,5 +1,6 @@
 ﻿using Bot.Core.Data;
 using Bot.Models;
+using Bot.Preconditions;
 using Bot.Properties;
 using Bot.Services;
 
@@ -16,8 +17,8 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[RequireContext(ContextType.Guild)]
-	public class MilestoneModule : BaseModule
+	[RequireContext(ContextType.Guild), Cooldown(5)]
+	public class MilestoneModule : RootModule
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;

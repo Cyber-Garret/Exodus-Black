@@ -16,9 +16,8 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[RequireUserPermission(GuildPermission.Administrator)]
-	[Cooldown(5)]
-	public class SelfRoleModule : BaseModule
+	[RequireContext(ContextType.Guild), Cooldown(5), RequireUserPermission(GuildPermission.Administrator)]
+	public class SelfRoleModule : RootModule
 	{
 		private readonly ILogger<SelfRoleModule> logger;
 

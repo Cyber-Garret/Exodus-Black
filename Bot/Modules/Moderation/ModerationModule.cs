@@ -17,9 +17,8 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[RequireUserPermission(GuildPermission.Administrator)]
-	[Cooldown(5)]
-	public class ModerationModule : BaseModule
+	[RequireContext(ContextType.Guild), Cooldown(5), RequireUserPermission(GuildPermission.Administrator)]
+	public class ModerationModule : RootModule
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;

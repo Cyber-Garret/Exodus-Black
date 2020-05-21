@@ -289,6 +289,7 @@ namespace Bot.Services
 			int count = 2;
 			foreach (var user in milestone.MilestoneUsers)
 			{
+				if (user == GlobalVariables.ReservedID) continue;
 
 				var discordUser = discord.GetUser(user);
 				embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";

@@ -18,8 +18,8 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[Cooldown(5)]
-	public class MainModule : BaseModule
+	[RequireContext(ContextType.Guild), Cooldown(5)]
+	public class MainModule : RootModule
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;

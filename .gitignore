@@ -263,3 +263,4 @@ __pycache__/
 # VS Code
 .vscode/
 Bot/appsettings.json
+Bot/UserData/

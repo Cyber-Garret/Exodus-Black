@@ -236,7 +236,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "ChannelCreated");
+				logger.LogWarning("ChannelCreated: {0}", ex.Message);
 			}
 
 		}
@@ -276,7 +276,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "ChannelDestroyed");
+				logger.LogWarning("ChannelDestroyed: {0}", ex.Message);
 			}
 		}
 		private async Task GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
@@ -364,7 +364,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "GuildMemberUpdated");
+				logger.LogWarning("GuildMemberUpdated: {0}", ex.Message);
 			}
 
 		}
@@ -435,7 +435,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "MessageUpdated");
+				logger.LogWarning("MessageUpdated: {0}", ex.Message);
 			}
 
 		}
@@ -494,7 +494,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "MessageDeleted");
+				logger.LogWarning("MessageDeleted: {0}", ex.Message);
 			}
 
 		}
@@ -533,7 +533,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "RoleDeleted");
+				logger.LogWarning("RoleDeleted: {0}", ex.Message);
 			}
 
 		}
@@ -553,7 +553,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "UserJoined");
+				logger.LogWarning("UserJoined: {0}", ex.Message);
 			}
 
 		}
@@ -627,7 +627,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "UserWelcome");
+				logger.LogWarning("UserWelcome: {0}", ex.Message);
 			}
 
 		}
@@ -689,7 +689,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "UserLeft");
+				logger.LogWarning("UserLeft: {0}", ex.Message);
 			}
 		}
 
