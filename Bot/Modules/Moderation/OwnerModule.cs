@@ -20,7 +20,7 @@ namespace Bot.Modules
 			this.logger = logger;
 		}
 
-		[Command("unban"), Alias("разбан")]
+		[Command("unban"), Alias("разбан", "розблокування")]
 		public async Task MassUnban()
 		{
 			if (Context.User.Id != Context.Guild.OwnerId)

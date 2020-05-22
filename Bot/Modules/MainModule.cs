@@ -34,7 +34,7 @@ namespace Bot.Modules
 		}
 
 		#region Commands
-		[Command("help"), Alias("справка")]
+		[Command("help"), Alias("справка", "довідка")]
 		public async Task MainHelp()
 		{
 			try
@@ -50,7 +50,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("exotic"), Alias("экзот")]
+		[Command("exotic"), Alias("экзот", "єкзот")]
 		public async Task Exotic([Remainder] string Input = null)
 		{
 			if (Input == null)
@@ -71,7 +71,7 @@ namespace Bot.Modules
 			await ReplyAsync(string.Format(Resources.ExoFound, Context.User.Username), embed: embed);
 		}
 
-		[Command("catalyst"), Alias("каталик")]
+		[Command("catalyst"), Alias("каталик", "каталік")]
 		public async Task GetCatalyst([Remainder] string Input = null)
 		{
 			if (Input == null)
@@ -93,7 +93,7 @@ namespace Bot.Modules
 			await ReplyAsync(string.Format(Resources.CatFound, Context.User.Username), embed: embed);
 		}
 
-		[Command("poll"), Alias("опрос")]
+		[Command("poll"), Alias("опрос", "опитування")]
 		public async Task StartPoll([Remainder] string input)
 		{
 			var embed = PollEmbed(input, (SocketGuildUser)Context.User);
@@ -103,7 +103,7 @@ namespace Bot.Modules
 			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
 		}
 
-		[Command("bip"), Alias("бип")]
+		[Command("bip"), Alias("бип", "біп")]
 		public async Task Bip()
 		{
 			await ReplyAsync(Resources.Bip);

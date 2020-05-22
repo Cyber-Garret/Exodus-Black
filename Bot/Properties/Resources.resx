@@ -198,7 +198,9 @@ Category: {2}</value>
 - I send alerts about Xur to ** &lt;# {2}&gt; **
 - Server logs I write in ** &lt;# {3}&gt; **
 - I send notifications of new guardians to ** &lt;# {4}&gt; **
-- When collecting fees for activity, I will mention: ** {5} **</value>
+- When collecting fees for activity, I will mention: ** {5} **
+- My locale: **{6}**
+- Server timezone: **{7}**</value>
   </data>
   <data name="GuCoEmbTitle" xml:space="preserve">
     <value>My settings on this server.</value>

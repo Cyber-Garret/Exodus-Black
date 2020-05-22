@@ -26,7 +26,7 @@ namespace Bot.Modules
 			this.logger = logger;
 		}
 
-		[Command("addrole"), Alias("ДобавитьРоль")]
+		[Command("AddRole"), Alias("ДобавитьРоль", "ДодатиРоль")]
 		public async Task SaveGuildRole(SocketRole role = null, [Remainder] string text = null)
 		{
 			try
@@ -72,7 +72,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("clearroles"), Alias("УдалитьРоли")]
+		[Command("ClearRoles"), Alias("УдалитьРоли", "ВидалитиРолі")]
 		public async Task ClearGuildSelfRoles()
 		{
 			try
@@ -93,7 +93,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("rolelist"), Alias("СписокРолей")]
+		[Command("RoleList"), Alias("СписокРолей")]
 		public async Task ListGuildRole()
 		{
 			try
@@ -120,7 +120,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("placeroles"), Alias("РазместитьРоли")]
+		[Command("PlaceRoles"), Alias("РазместитьРоли", "РозташуватиРолі")]
 		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.ReadMessageHistory | ChannelPermission.ManageRoles)]
 		public async Task DeploySelfRoleMessage([Remainder] string text = null)
 		{

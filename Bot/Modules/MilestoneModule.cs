@@ -40,13 +40,13 @@ namespace Bot.Modules
 			await GoMilestoneAsync(raidName, MilestoneType.Raid, raidTime, leaderNote);
 		}
 
-		[Command("strike"), Alias("налет")]
+		[Command("strike"), Alias("налет", "наліт")]
 		public async Task RegisterStrike(string nightfallName, string nightfallTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(nightfallName, MilestoneType.Nightfall, nightfallTime, leaderNote);
 		}
 
-		[Command("coll"), Alias("сбор")]
+		[Command("coll"), Alias("сбор", "збір")]
 		public async Task RegisterOther(string otherName, string otherTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(otherName, MilestoneType.Other, otherTime, leaderNote);
@@ -96,7 +96,7 @@ namespace Bot.Modules
 				await ReplyAsync(Resources.MilNotLeader);
 		}
 
-		[Command("note"), Alias("заметка")]
+		[Command("note"), Alias("заметка", "замітка")]
 		public async Task ChangeNote(ulong milestoneId, [Remainder] string note = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
@@ -124,7 +124,7 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync(Resources.MilNotLeader);
 		}
 
-		[Command("transfer"), Alias("передать")]
+		[Command("transfer"), Alias("передать", "передати")]
 		public async Task ChangeLeader(ulong milestoneId, SocketGuildUser newLeader)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
@@ -206,7 +206,7 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync(Resources.MilNotLeader);
 		}
 
-		[Command("cancel"), Alias("отмена")]
+		[Command("cancel"), Alias("отмена","відміна")]
 		public async Task CloseMilestone(ulong milestoneId, [Remainder] string reason = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);

@@ -13,7 +13,10 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
+using System.Globalization;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace Bot.Modules
 {
@@ -31,7 +34,7 @@ namespace Bot.Modules
 		}
 
 		#region Commands
-		[Command("settings"), Alias("настройки")]
+		[Command("settings"), Alias("настройки", "налаштування")]
 		public async Task GetGuildConfig()
 		{
 			// Get or create personal guild settings
@@ -41,7 +44,24 @@ namespace Bot.Modules
 			await ReplyAsync(embed: embed);
 		}
 
-		[Command("news"), Alias("новости")]
+		[Command("locale"), Alias("язык", "мова")]
+		public async Task ChangeGuildLocale()
+		{
+			var guild = GuildData.GetGuildAccount(Context.Guild);
+
+			if (guild.Language.Name == "en-US")
+				guild.Language = new CultureInfo("ru-RU");
+			else if (guild.Language.Name == "ru-RU")
+				guild.Language = new CultureInfo("uk-UA");
+			else
+				guild.Language = new CultureInfo("en-US");
+
+			GuildData.SaveAccounts(Context.Guild);
+
+			await ReplyAsync($"New locale: {guild.Language}");
+		}
+
+		[Command("news"), Alias("новости", "новини")]
 		public async Task SetNotificationChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -60,7 +80,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("logs"), Alias("логи")]
+		[Command("logs"), Alias("логи", "логування")]
 		public async Task SetLogChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -79,7 +99,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("welcome"), Alias("приветствие"), RequireBotPermission(ChannelPermission.AttachFiles)]
+		[Command("welcome"), Alias("приветствие", "привітання"), RequireBotPermission(ChannelPermission.AttachFiles)]
 		public async Task SetWelcomeChannel(ITextChannel channel = null)
 		{
 			// Get or create personal guild settings
@@ -98,7 +118,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("save welcome"), Alias("сохранить приветствие")]
+		[Command("save welcome"), Alias("сохранить приветствие", "зберегти привітання")]
 		public async Task SaveWelcomeMessage([Remainder] string message = null)
 		{
 			// Get or create personal guild settings
@@ -118,7 +138,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("preview welcome"), Alias("посмотреть приветствие")]
+		[Command("preview welcome"), Alias("посмотреть приветствие", "переглянути привітання")]
 		public async Task WelcomeMessagePreview()
 		{
 			// Get or create personal guild settings
@@ -130,7 +150,7 @@ namespace Bot.Modules
 				await ReplyAsync(embed: discordEvent.WelcomeEmbed((SocketGuildUser)Context.User, guild.WelcomeMessage));
 		}
 
-		[Command("prefix"), Alias("префикс")]
+		[Command("prefix"), Alias("префикс", "префікс")]
 		public async Task GuildPrefix(string prefix = null)
 		{
 			var config = GuildData.GetGuildAccount(Context.Guild);
@@ -148,7 +168,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("autorole"), Alias("автороль")]
+		[Command("autorole"), Alias("автороль", "автороль")]
 		[RequireBotPermission(GuildPermission.ManageRoles)]
 		public async Task AutoRoleRoleAdd(IRole role = null)
 		{
@@ -167,7 +187,7 @@ namespace Bot.Modules
 			GuildData.SaveAccounts(Context.Guild);
 		}
 
-		[Command("mention"), Alias("упоминание")]
+		[Command("mention"), Alias("упоминание", "згадування")]
 		public async Task SetGuildMention(SocketRole role = null)
 		{
 			var guild = GuildData.GetGuildAccount(Context.Guild);
@@ -192,7 +212,7 @@ namespace Bot.Modules
 			await ReplyAndDeleteAsync(string.Format(Resources.GuildMilMention, guild.GlobalMention ?? Resources.GuildNoMention));
 		}
 
-		[Command("mailing"), Alias("рассылка")]
+		[Command("mailing"), Alias("рассылка", "розсилка")]
 		public async Task SendMessage(IRole role, [Remainder] string message)
 		{
 			var workMessage = await Context.Channel.SendMessageAsync(string.Format(Resources.MailStart, role.Name));
@@ -222,7 +242,7 @@ namespace Bot.Modules
 			await workMessage.ModifyAsync(m => m.Content = string.Format(Resources.MailDone, role.Name, SucessCount + FailCount, SucessCount, FailCount));
 		}
 
-		[Command("purge"), Alias("чистка")]
+		[Command("purge"), Alias("чистка", "очищення")]
 		[RequireBotPermission(ChannelPermission.ManageMessages)]
 		public async Task PurgeChat(int amount = 1)
 		{
@@ -289,6 +309,11 @@ namespace Bot.Modules
 		#region Methods
 		private Embed GuildConfigEmbed(Guild guild)
 		{
+			var parsedTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone).DisplayName;
+
+			var regex = new Regex(@"\(.*?\)");
+			var guildTimeZone = regex.Match(parsedTimeZone);
+
 			var embed = new EmbedBuilder
 			{
 				Author = new EmbedAuthorBuilder
@@ -311,7 +336,9 @@ namespace Bot.Modules
 				guild.NotificationChannel,
 				guild.LoggingChannel,
 				guild.WelcomeChannel,
-				guild.GlobalMention ?? Resources.GuildNoMention));
+				guild.GlobalMention ?? Resources.GuildNoMention,
+				guild.Language.NativeName,
+				guildTimeZone));
 
 			return embed.Build();
 		}
