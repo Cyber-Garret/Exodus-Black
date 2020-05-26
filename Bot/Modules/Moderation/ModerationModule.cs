@@ -58,7 +58,42 @@ namespace Bot.Modules
 
 			GuildData.SaveAccounts(Context.Guild);
 
-			await ReplyAsync($"New locale: {guild.Language}");
+			Thread.CurrentThread.CurrentUICulture = guild.Language;
+
+			await ReplyAsync(string.Format(Resources.LocaleChanged, guild.Language.NativeName));
+		}
+
+		[Command("time"), Alias("время", "час")]
+		public async Task ChangeTimeForServer(sbyte time)
+		{
+			if (time < -12 || time > 12)
+			{
+				//TODO: resx
+				await ReplyAsync("Incorrect time zone");
+			}
+			else
+			{
+				//TODO: clean code
+				TimeSpan timeSpan = new TimeSpan(time, 0, 0);
+				foreach (var timeZone in TimeZoneInfo.GetSystemTimeZones())
+				{
+					if (timeZone.BaseUtcOffset == timeSpan)
+					{
+						var guild = GuildData.GetGuildAccount(Context.Guild);
+						guild.TimeZone = timeZone.Id;
+
+						GuildData.SaveAccounts(guild.Id);
+
+						var regex = new Regex(@"\(.*?\)");
+						var parsedTimeZone = regex.Match(timeZone.DisplayName);
+						//TODO: resx
+						await ReplyAsync($"Now default time: {parsedTimeZone}");
+
+						break;
+					}
+				}
+			}
+
 		}
 
 		[Command("news"), Alias("новости", "новини")]

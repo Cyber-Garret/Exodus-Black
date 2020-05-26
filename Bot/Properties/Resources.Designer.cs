@@ -61,8 +61,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, для доступа к разблокировке участников у меня нет права **Банить участников**.
-        ///Советую включить право, а после того как я сообщу об окончании работ, выключить это право на всякий случай..
+        ///   Looks up a localized string similar to Captain, for access to unlock participants I do not have the right **Ban members**.
+        ///I advise you to enable the right, and after I inform about the completion of work, turn off this right just in case..
         /// </summary>
         internal static string BanPermission {
             get {
@@ -71,7 +71,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Бип....
+        ///   Looks up a localized string similar to Beep....
         /// </summary>
         internal static string Bip {
             get {
@@ -80,7 +80,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Простая команда проверки моей работоспособности..
+        ///   Looks up a localized string similar to A simple command to test my health..
         /// </summary>
         internal static string BipCommSummary {
             get {
@@ -89,7 +89,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Бонус катализатор.
+        ///   Looks up a localized string similar to Catalyst bonus.
         /// </summary>
         internal static string CatEmbBnsFieldTitle {
             get {
@@ -98,7 +98,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Как получить катализатор.
+        ///   Looks up a localized string similar to How to get a catalyst.
         /// </summary>
         internal static string CatEmbDrpFieldTitle {
             get {
@@ -107,7 +107,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Задание катализатора.
+        ///   Looks up a localized string similar to Catalyst masterwork.
         /// </summary>
         internal static string CatEmbQueFieldTitle {
             get {
@@ -116,7 +116,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Информация о катализаторе для оружия {0}.
+        ///   Looks up a localized string similar to Information about catalyst for weapon {0}.
         /// </summary>
         internal static string CatEmbTitle {
             get {
@@ -125,7 +125,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Итак, {0} вот что мне известно про этот катализатор..
+        ///   Looks up a localized string similar to So, {0} is what I know about this catalyst..
         /// </summary>
         internal static string CatFound {
             get {
@@ -134,7 +134,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :x: Пожалуйста, введите полное или частичное название экзотического оружия..
+        ///   Looks up a localized string similar to : x: Please enter the full or partial name of the exotic weapon..
         /// </summary>
         internal static string CatInputIsNull {
             get {
@@ -143,7 +143,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📖 Создан канал.
+        ///   Looks up a localized string similar to 📖 Channel created.
         /// </summary>
         internal static string ChanCreEmbFieldTitle {
             get {
@@ -152,7 +152,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Удален канал.
+        ///   Looks up a localized string similar to ❌ Channel deleted.
         /// </summary>
         internal static string ChanDelEmbFieldTitle {
             get {
@@ -161,9 +161,9 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Название: **{0}**
+        ///   Looks up a localized string similar to Name: **{0}**
         ///NSFW **{1}**
-        ///Категория: {2}.
+        ///Category: {2}.
         /// </summary>
         internal static string ChanEmbFieldDesc {
             get {
@@ -172,7 +172,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ты сможешь использовать эту команду через {0} сек..
+        ///   Looks up a localized string similar to You can use this command in {0} seconds..
         /// </summary>
         internal static string CooldownMessage {
             get {
@@ -181,7 +181,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Кем: {0}.
+        ///   Looks up a localized string similar to By: {0}.
         /// </summary>
         internal static string DiEvnEmbFooter {
             get {
@@ -190,7 +190,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Сообщение будет автоматически удалено через одну минуту..
+        ///   Looks up a localized string similar to The message will be automatically deleted after one minute..
         /// </summary>
         internal static string EmbFooterAboutDel {
             get {
@@ -199,7 +199,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Если нашли какие либо неточности, сообщите моему создателю: Cyber_Garret#5898.
+        ///   Looks up a localized string similar to If you find any inaccuracies, please inform my creator: Cyber_Garret#5898.
         /// </summary>
         internal static string EmbFooterAboutMyMistake {
             get {
@@ -208,7 +208,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ошибка: {0}.
+        ///   Looks up a localized string similar to Error: {0}.
         /// </summary>
         internal static string Error {
             get {
@@ -217,7 +217,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ошибка:.
+        ///   Looks up a localized string similar to Error:.
         /// </summary>
         internal static string ErrorHndlCom {
             get {
@@ -226,7 +226,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to **Отсутствует**.
+        ///   Looks up a localized string similar to **Missing**.
         /// </summary>
         internal static string ExoEmbCatFieldDescNo {
             get {
@@ -235,7 +235,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to **Есть**.
+        ///   Looks up a localized string similar to **There is**.
         /// </summary>
         internal static string ExoEmbCatFieldDescYes {
             get {
@@ -244,7 +244,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Катализатор.
+        ///   Looks up a localized string similar to Catalyst.
         /// </summary>
         internal static string ExoEmbCatFieldTitle {
             get {
@@ -253,7 +253,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Как получить:.
+        ///   Looks up a localized string similar to How to obtain:.
         /// </summary>
         internal static string ExoEmbHowFieldTitle {
             get {
@@ -262,7 +262,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Итак, {0} вот что мне известно про это снаряжение..
+        ///   Looks up a localized string similar to So, {0} this is what I know about this equipment..
         /// </summary>
         internal static string ExoFound {
             get {
@@ -271,7 +271,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :x: Пожалуйста, введите полное или частичное название экзотического снаряжения..
+        ///   Looks up a localized string similar to : x: Please enter the full or partial name of the exotic equipment..
         /// </summary>
         internal static string ExoInputIsNull {
             get {
@@ -280,12 +280,14 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to - Всего каналов: **{0}**
-        ///- Стражей на сервере: **{1}**
-        ///- Оповещения о Зуре я присылаю в **&lt;#{2}&gt;**
-        ///- Логи сервера я пишу в **&lt;#{3}&gt;**
-        ///- Оповещения о новых стражах я присылаю в **&lt;#{4}&gt;**
-        ///- При сборах в активность я буду упоминать: **{5}**.
+        ///   Looks up a localized string similar to - Total channels: **{0}**
+        ///- Guardians on the server: **{1}**
+        ///- I send alerts about Xur to **&lt;#{2}&gt;**
+        ///- Server logs I write in **&lt;#{3}&gt;**
+        ///- I send notifications of new guardians to **&lt;#{4}&gt;**
+        ///- When collecting fees for activity, I will mention: **{5}**
+        ///- My locale: **{6}**
+        ///- Server timezone: **{7}**.
         /// </summary>
         internal static string GuCoEmbDescField {
             get {
@@ -294,7 +296,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Мои настройки на этом сервере..
+        ///   Looks up a localized string similar to My settings on this server..
         /// </summary>
         internal static string GuCoEmbTitle {
             get {
@@ -303,7 +305,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Основная информация:.
+        ///   Looks up a localized string similar to Basic information:.
         /// </summary>
         internal static string GuCoEmbTitleField {
             get {
@@ -312,7 +314,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Функционал автороли отключен..
+        ///   Looks up a localized string similar to Autorole functionality is disabled..
         /// </summary>
         internal static string GuildAutoroleOff {
             get {
@@ -321,7 +323,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Сохранена роль **{0}**, теперь я буду ее автоматически выдавать всем прибывшим на сервер..
+        ///   Looks up a localized string similar to The role **{0}** has been saved, now I will automatically issue it to everyone who arrives at the server..
         /// </summary>
         internal static string GuildAutoroleOn {
             get {
@@ -330,7 +332,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Я выключила оповещения об изменениях на сервере..
+        ///   Looks up a localized string similar to I turned off alerts about changes on the server..
         /// </summary>
         internal static string GuildLogsOff {
             get {
@@ -339,7 +341,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Теперь большинство изменений на сервере, если у меня конечно есть права, я буду оповещать в канал {0}.
+        ///   Looks up a localized string similar to Now most of the changes on the server, if of course I have rights, I will notify the channel {0}.
         /// </summary>
         internal static string GuildLogsOn {
             get {
@@ -348,7 +350,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, теперь в сообщениях при сборе на активность я буду упоминать: {0}.
+        ///   Looks up a localized string similar to Captain, now in the messages when collecting for activity I will mention: {0}.
         /// </summary>
         internal static string GuildMilMention {
             get {
@@ -357,7 +359,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to **Без упоминания**.
+        ///   Looks up a localized string similar to **No mention**.
         /// </summary>
         internal static string GuildNoMention {
             get {
@@ -366,7 +368,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для команд установлен префикс `{0}`.
+        ///   Looks up a localized string similar to The prefix `{0}` is set for commands.
         /// </summary>
         internal static string GuildPrefixCustom {
             get {
@@ -375,7 +377,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для команд установлен префикс по умолчанию `!`.
+        ///   Looks up a localized string similar to For commands, the default prefix `!`.
         /// </summary>
         internal static string GuildPrefixDefault {
             get {
@@ -384,7 +386,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :x: | В данный момент я не отправляю какое либо сообщение новоприбывшим..
+        ///   Looks up a localized string similar to : x: | At the moment I am not sending any message to new arrivals..
         /// </summary>
         internal static string GuildPrivateWelcomeIsNull {
             get {
@@ -393,7 +395,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Приветственное сообщение успешно удалено..
+        ///   Looks up a localized string similar to The welcome message has been deleted successfully..
         /// </summary>
         internal static string GuildPrivateWelcomeRemove {
             get {
@@ -402,7 +404,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :smiley: Приветственное сообщение сохранено..
+        ///   Looks up a localized string similar to : smiley: Welcome message saved..
         /// </summary>
         internal static string GuildPrivateWelcomeSave {
             get {
@@ -411,7 +413,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Я выключила красочные оповещения о новых участниках на сервере..
+        ///   Looks up a localized string similar to I turned off colorful alerts about new members on the server..
         /// </summary>
         internal static string GuildWelcomeOff {
             get {
@@ -420,7 +422,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Теперь я буду оповещать о новых участниках в канал {0}.
+        ///   Looks up a localized string similar to Now I will notify about new members in the channel {0}.
         /// </summary>
         internal static string GuildWelcomeOn {
             get {
@@ -429,7 +431,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Я выключила оповещения о Зуре..
+        ///   Looks up a localized string similar to I turned off the Xur alerts..
         /// </summary>
         internal static string GuildXurOff {
             get {
@@ -438,7 +440,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Теперь новости о Зуре я буду присылать в канал {0}.
+        ///   Looks up a localized string similar to Now I will send news about Xur to the channel {0}.
         /// </summary>
         internal static string GuildXurOn {
             get {
@@ -447,7 +449,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Добавлена.
+        ///   Looks up a localized string similar to Added.
         /// </summary>
         internal static string GuMemAddRole {
             get {
@@ -456,7 +458,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Убрана.
+        ///   Looks up a localized string similar to Removed.
         /// </summary>
         internal static string GuMemRemRole {
             get {
@@ -465,8 +467,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Имя: **{0}**
-        ///{1} роль: **{2}**.
+        ///   Looks up a localized string similar to Name: **{0}**
+        ///{1} role: **{2}**.
         /// </summary>
         internal static string GuMemRolEmbFieldDesc {
             get {
@@ -475,7 +477,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔑 Обновлена роль стража:.
+        ///   Looks up a localized string similar to 🔑 Updated guard role:.
         /// </summary>
         internal static string GuMemRolEmbFieldTitle {
             get {
@@ -484,9 +486,9 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Предыдущее имя:
+        ///   Looks up a localized string similar to Previous Name:
         ///**{0}**
-        ///Новое имя:
+        ///New name:
         ///**{1}**.
         /// </summary>
         internal static string GuMemUpdEmbFieldDesc {
@@ -496,7 +498,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💢 Имя стража изменено:.
+        ///   Looks up a localized string similar to 💢 Guardian name changed:.
         /// </summary>
         internal static string GuMemUpdEmbFieldTitle {
             get {
@@ -505,7 +507,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж {0} приземлился, а это значит что:.
+        ///   Looks up a localized string similar to Guardian {0} has landed, which means that:.
         /// </summary>
         internal static string Hellotxt {
             get {
@@ -514,7 +516,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Команды администраторов.
+        ///   Looks up a localized string similar to Admin commands.
         /// </summary>
         internal static string HelpEmbAdmFieldTitle {
             get {
@@ -523,9 +525,9 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Моя основная цель - помогать Стражам собирать боевые группы, своевременно сообщать, когда прибывает или улетает посланник девяти Зур.
-        ///Также я могу предоставить информацию о экзотическом снаряжении, катализаторах и много чего еще.
-        ///Больше информации ты можешь найти в разделе документация на моем [сайте]({0}).
+        ///   Looks up a localized string similar to My main goal is to help the Guardians to gather battle groups, to inform in a timely manner when the messenger of nine Xur arrives or leaves.
+        ///I can also provide information on exotic gear, catalysts, and much more.
+        ///You can find more information in the documentation section on my [site]({0}).
         /// </summary>
         internal static string HelpEmbDesc {
             get {
@@ -534,7 +536,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Основные команды.
+        ///   Looks up a localized string similar to Main commands.
         /// </summary>
         internal static string HelpEmbMainFieldTitle {
             get {
@@ -543,7 +545,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Команды активностей.
+        ///   Looks up a localized string similar to Activity commands.
         /// </summary>
         internal static string HelpEmbMilFieldTitle {
             get {
@@ -552,7 +554,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Команды настройки Автороли.
+        ///   Looks up a localized string similar to Autoroles Commands.
         /// </summary>
         internal static string HelpEmbSRolFieldTitle {
             get {
@@ -561,7 +563,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Доброго времени суток. Меня зовут Нейроматрица, я ИИ &quot;Черного исхода&quot; адаптированный для Discord. Успешно функционирую с {0}.
+        ///   Looks up a localized string similar to Good day. My name is Neuromatrix, I’m Black Exodus AI adapted for Discord. Successfully functioning with {0}.
         /// </summary>
         internal static string HelpEmbTitle {
             get {
@@ -570,10 +572,19 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Готово. Я разослала сообщением всем у кого есть роль **{0}**.
-        ///- Всего получателей: **{1}**
-        ///- Успешно доставлено: **{2}**
-        ///- Не удалось отправить: **{3}**.
+        ///   Looks up a localized string similar to Changed default locale to: {0}.
+        /// </summary>
+        internal static string LocaleChanged {
+            get {
+                return ResourceManager.GetString("LocaleChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done. I sent out a message to everyone who has the role **{0}**.
+        ///- Total Recipients: **{1}**
+        ///- Successfully delivered: **{2}**
+        ///- Failed to send: **{3}**.
         /// </summary>
         internal static string MailDone {
             get {
@@ -582,7 +593,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж, учти что я не имею отношения к содержимому данного сообщения..
+        ///   Looks up a localized string similar to Guard, keep in mind that I have no relation to the contents of this message..
         /// </summary>
         internal static string MailEmbFooterDesc {
             get {
@@ -591,7 +602,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :mailbox_with_mail: Вам сообщение от {0} с сервера **`{1}`**.
+        ///   Looks up a localized string similar to : mailbox_with_mail: You got a message from {0} from the server ** `{1}` **.
         /// </summary>
         internal static string MailEmbTitle {
             get {
@@ -600,7 +611,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Приступаю к рассылке сообщений. Всем стражам с ролью **{0}**.
+        ///   Looks up a localized string similar to I am starting to send out messages. To all guards with the role **{0}**.
         /// </summary>
         internal static string MailStart {
             get {
@@ -609,7 +620,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Подготавливаю сбор боевой группы..
+        ///   Looks up a localized string similar to I’m preparing the collection of the battle group..
         /// </summary>
         internal static string MilBake {
             get {
@@ -618,7 +629,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Активность отменена.
+        ///   Looks up a localized string similar to Activity canceled.
         ///{0}.
         /// </summary>
         internal static string MilCanceled {
@@ -628,7 +639,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Права на лидерство были переданы другому стражу. {0}.
+        ///   Looks up a localized string similar to Leadership rights were transferred to another guard. {0}.
         /// </summary>
         internal static string MilChangeLeader {
             get {
@@ -637,7 +648,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to **Заметка от лидера:** {0}.
+        ///   Looks up a localized string similar to **Note from the leader:** {0}.
         /// </summary>
         internal static string MilEmbDesc {
             get {
@@ -646,7 +657,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Отменен по причине: {0}.
+        ///   Looks up a localized string similar to Canceled due to: {0}.
         /// </summary>
         internal static string MilEmbDescCanceled {
             get {
@@ -655,8 +666,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to - Лидер боевой группы: **#1 {0} - {1}**
-        ///- Чтобы за вами закрепилось место нажмите на реакцию {2}.
+        ///   Looks up a localized string similar to - Leader of the battle group: **# 1 {0} - {1}**
+        ///- To  your place, click on the reaction {2}.
         /// </summary>
         internal static string MilEmbInfDescField {
             get {
@@ -665,7 +676,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Информация.
+        ///   Looks up a localized string similar to Information.
         /// </summary>
         internal static string MilEmbInfTitleField {
             get {
@@ -674,7 +685,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В боевую группу записались.
+        ///   Looks up a localized string similar to Signed up in a battle group.
         /// </summary>
         internal static string MilEmbMemTitleField {
             get {
@@ -683,7 +694,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to [Нажав сюда ты перейдешь к активности в которой обновили время.]({0}).
+        ///   Looks up a localized string similar to [By clicking here you will be transferred to the activity in which the time was updated.] ({0}).
         /// </summary>
         internal static string MilEmbTimeFieldDesc {
             get {
@@ -692,7 +703,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ссылка на активность.
+        ///   Looks up a localized string similar to Link to milestone.
         /// </summary>
         internal static string MilEmbTimeFieldTitle {
             get {
@@ -701,7 +712,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, в {1}. {2}: {3}.
+        ///   Looks up a localized string similar to {0}, in {1}. {2}: {3}.
         /// </summary>
         internal static string MilEmbTitle {
             get {
@@ -710,7 +721,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Приветствую, хочу сообщить что лидер активности сменил время начала мероприятия..
+        ///   Looks up a localized string similar to Greetings, I want to inform you that the activity leader has changed the start time of the event..
         /// </summary>
         internal static string MilEmbTitleChangeTime {
             get {
@@ -719,8 +730,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж, произошла критическая ошибка. Попробуй через пару минут снова, если ошибка будет снова напиши моему создателю - Cyber_Garret#5898
-        ///Ошибка: {0}.
+        ///   Looks up a localized string similar to Guard, a critical error has occurred. Try again in a couple of minutes, if the error is again write to my creator - Cyber_Garret#5898
+        ///Error: {0}.
         /// </summary>
         internal static string MilError {
             get {
@@ -729,7 +740,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Доступные активности {0}..
+        ///   Looks up a localized string similar to Available activities {0}..
         /// </summary>
         internal static string MilInfEmbTitle {
             get {
@@ -738,7 +749,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж, нельзя отменить активность не указав причину..
+        ///   Looks up a localized string similar to Guard, you cannot cancel an activity without specifying a reason..
         /// </summary>
         internal static string MilNoReason {
             get {
@@ -747,7 +758,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заметка активности исправлена. {0}.
+        ///   Looks up a localized string similar to Activity note changed. {0}.
         /// </summary>
         internal static string MilNoteEdited {
             get {
@@ -756,7 +767,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, я не разобрала в какую активность ты хочешь собрать боевую группу..
+        ///   Looks up a localized string similar to {0}, I did not understand what activity you want to assemble a battle group..
         /// </summary>
         internal static string MilNotFound {
             get {
@@ -765,7 +776,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж, ты не можешь выполнить данное действие, так как оно доступно только лидеру активности..
+        ///   Looks up a localized string similar to Guard, you cannot complete this action, since it is available only to the activity leader..
         /// </summary>
         internal static string MilNotLeader {
             get {
@@ -774,8 +785,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Собрался в прошлое? Тебя ждет увлекательное шоу &quot;остаться в живых&quot; в исполнении моей команды Золотого Века. Не забудь попкорн
-        ///Бип...Удачи и передай привет моему капитану..
+        ///   Looks up a localized string similar to Gathered in the past? You are waiting for the fascinating show &quot;stay alive&quot; performed by my team of the Golden Age. Don&apos;t forget popcorn
+        ///Beep ... Good luck and say hello to my captain..
         /// </summary>
         internal static string MilPastTime {
             get {
@@ -784,7 +795,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}: {1}. Сервер: {2}.
+        ///   Looks up a localized string similar to {0}: {1}. Server: {2}.
         /// </summary>
         internal static string MilRemEmbFooter {
             get {
@@ -793,7 +804,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Хочу вам напомнить, что у вас через 15 минут начнется **{0}**..
+        ///   Looks up a localized string similar to I want to remind you that you will start **{0}** in 15 minutes..
         /// </summary>
         internal static string MilRemEmbTitle {
             get {
@@ -802,7 +813,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to **Зарезервировано лидером**.
+        ///   Looks up a localized string similar to **Reserved by the leader**.
         /// </summary>
         internal static string MilReserved {
             get {
@@ -811,7 +822,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Невозможно зарезервировать {0}.
+        ///   Looks up a localized string similar to Unable to reserve {0}.
         /// </summary>
         internal static string MilReservedFail {
             get {
@@ -820,7 +831,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Зарезервированно: {0}
+        ///   Looks up a localized string similar to Reserved: {0}
         ///{1}.
         /// </summary>
         internal static string MilReservedOk {
@@ -830,7 +841,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Время активности изменено. {0}.
+        ///   Looks up a localized string similar to Activity time changed. {0}.
         /// </summary>
         internal static string MilTimeChanged {
             get {
@@ -839,7 +850,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Страж, ты указал неизвестный мне формат времени..
+        ///   Looks up a localized string similar to Guard, you indicated an unknown time format for me..
         /// </summary>
         internal static string MilTimeError {
             get {
@@ -848,8 +859,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Где: &lt;#{0}&gt;
-        ///Автор сообщения: **{1}**.
+        ///   Looks up a localized string similar to Where: &lt;#{0}&gt;
+        ///Posted by **{1}**.
         /// </summary>
         internal static string MsgDelEmbDesc {
             get {
@@ -858,7 +869,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Текст сообщения:.
+        ///   Looks up a localized string similar to Message text:.
         /// </summary>
         internal static string MsgDelEmbFieldTitle {
             get {
@@ -867,7 +878,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🗑 Удалено сообщение.
+        ///   Looks up a localized string similar to 🗑 Message deleted.
         /// </summary>
         internal static string MsgDelEmbTitle {
             get {
@@ -876,7 +887,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Где: &lt;#{0}&gt;.
+        ///   Looks up a localized string similar to Where: &lt;#{0}&gt;.
         /// </summary>
         internal static string MsgUpdEmbDesc {
             get {
@@ -885,7 +896,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Новый текст:.
+        ///   Looks up a localized string similar to New text:.
         /// </summary>
         internal static string MsgUpdEmbNewFieldTitle {
             get {
@@ -894,7 +905,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Предыдущий текст:.
+        ///   Looks up a localized string similar to Old text:.
         /// </summary>
         internal static string MsgUpdEmbOldFieldTitle {
             get {
@@ -903,7 +914,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 📝 Обновлено сообщение.
+        ///   Looks up a localized string similar to 📝 Updated message.
         /// </summary>
         internal static string MsgUpdEmbTitle {
             get {
@@ -912,7 +923,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Хочешь бота на заказ? Пиши моему создателю Cyber_Garret#5898.
+        ///   Looks up a localized string similar to Do you want a custom bot? Write to my creator Cyber_Garret#5898.
         /// </summary>
         internal static string MyAd {
             get {
@@ -939,7 +950,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Сумрачный налет.
+        ///   Looks up a localized string similar to Nightfall.
         /// </summary>
         internal static string Nightfall {
             get {
@@ -948,7 +959,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :x: Этой информации в моей базе данных нет. :frowning:.
+        ///   Looks up a localized string similar to : x: This information is not in my database. : frowning:.
         /// </summary>
         internal static string NotFoundInDB {
             get {
@@ -957,7 +968,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :x: | Эта команда не доступна в личных сообщениях..
+        ///   Looks up a localized string similar to : x: | This command is not available in private messages..
         /// </summary>
         internal static string NotInGuildText {
             get {
@@ -966,7 +977,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to :x: | Прошу прощения страж, но эта команда доступна только владельцу сервера!.
+        ///   Looks up a localized string similar to : x: | This command is not available in private messages..
         /// </summary>
         internal static string OnlyForGuildOwner {
             get {
@@ -975,7 +986,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Прочие активноcти.
+        ///   Looks up a localized string similar to Other activities.
         /// </summary>
         internal static string Other {
             get {
@@ -984,7 +995,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} начал голосование..
+        ///   Looks up a localized string similar to {0} started voting..
         /// </summary>
         internal static string PollEmbAuthorName {
             get {
@@ -993,7 +1004,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Тема голосования.
+        ///   Looks up a localized string similar to Voting topic.
         /// </summary>
         internal static string PollEmbTpcFieldTitle {
             get {
@@ -1002,7 +1013,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Задание успешно выполнено. Удалено {0} сообщений. _Это сообщение будет автоматически удалено._.
+        ///   Looks up a localized string similar to The task completed successfully. Deleted {0} posts. _This message will be automatically deleted ._.
         /// </summary>
         internal static string PurgeDone {
             get {
@@ -1011,7 +1022,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Начинаю чистку канала..
+        ///   Looks up a localized string similar to Begin cleaning the channel..
         /// </summary>
         internal static string PurgeStart {
             get {
@@ -1020,7 +1031,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Рейд.
+        ///   Looks up a localized string similar to Raid.
         /// </summary>
         internal static string Raid {
             get {
@@ -1029,7 +1040,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, генератор псевдослучайных чисел Вексов отобразил:.
+        ///   Looks up a localized string similar to Captain, Vex pseudo-random number generator displayed:.
         /// </summary>
         internal static string RndEmbFieldTitle {
             get {
@@ -1038,7 +1049,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Вы не указали Роль или указали меньше 1 или больше 10 рандомов..
+        ///   Looks up a localized string similar to You did not specify a Role or indicated less than 1 or more than 10 random ones..
         /// </summary>
         internal static string RndErrorStart {
             get {
@@ -1047,8 +1058,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Название: **{0}**
-        ///Цвет: **{1}**.
+        ///   Looks up a localized string similar to Name: **{0}**
+        ///Color: **{1}**.
         /// </summary>
         internal static string RolDelEmbDesc {
             get {
@@ -1057,7 +1068,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ❌ Удалена роль.
+        ///   Looks up a localized string similar to ❌ Role removed.
         /// </summary>
         internal static string RolDelEmbTitle {
             get {
@@ -1066,7 +1077,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, я удалила все записанные роли в моей базе данных..
+        ///   Looks up a localized string similar to Captain, I deleted all recorded roles in my database..
         /// </summary>
         internal static string SlfRolClear {
             get {
@@ -1075,8 +1086,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Нажми на {0} что бы получить роль {1}
-        ///.
+        ///   Looks up a localized string similar to Click on {0} to get the role {1}.
         /// </summary>
         internal static string SlfRolEmbDescField {
             get {
@@ -1085,7 +1095,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, в мой базе не записанно ни одной автороли..
+        ///   Looks up a localized string similar to Captain, not a single autorole is recorded in my database..
         /// </summary>
         internal static string SlfRolEmpty {
             get {
@@ -1094,7 +1104,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, я не смогла сохранить эмодзи. Ты уверен что используешь серверный эмодзи?.
+        ///   Looks up a localized string similar to Captain, I could not save the emoji. Are you sure you are using server emoji?.
         /// </summary>
         internal static string SlfRolErrorEmoji {
             get {
@@ -1103,8 +1113,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В моей базе записанны такие автороли и эмодзи привязанные к ним:
-        ///.
+        ///   Looks up a localized string similar to In my database, the following autoroli and emoji are attached to them:.
         /// </summary>
         internal static string SlfRolList {
             get {
@@ -1113,7 +1122,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, ты не указал текст сообщения..
+        ///   Looks up a localized string similar to Captain, you did not indicate the text of the message..
         /// </summary>
         internal static string SlfRolNoText {
             get {
@@ -1122,7 +1131,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, роль и\\или эмодзи что ты указал уже используються в системе авторолей..
+        ///   Looks up a localized string similar to The captain, the role and\\or emoji that you said is already used in the autorole system..
         /// </summary>
         internal static string SlfRolRoleOrEmojiExist {
             get {
@@ -1131,7 +1140,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, ты не указал роль и\\или эмодзи..
+        ///   Looks up a localized string similar to Captain, you did not indicate the role and\\or emoji..
         /// </summary>
         internal static string SlfRolRoleOrEmojIsNull {
             get {
@@ -1140,7 +1149,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Успех! Капитан я сохранила данную связку роли {0} и {1} в своей базе данных..
+        ///   Looks up a localized string similar to Success! Captain, I saved this bunch of roles {0} and {1} in my database..
         /// </summary>
         internal static string SlfRolSucAdd {
             get {
@@ -1149,10 +1158,10 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Готово. Я прошлась по списку из **{0}** заблокированных стражей. 
-        ///- Успешно разблокировала: **{1}** 
-        ///- Не удалось разблокировать: **{2}** 
-        ///*Если слишком много неудачных попыток, попробуй через пару минут, так как Discord может блокировать такие массовые действия.*.
+        ///   Looks up a localized string similar to Done. I went through the list of **{0}** blocked guards.
+        ///- Successfully unlocked: **{1}**
+        ///- Failed to unlock: **{2}**
+        ///*If there are too many unsuccessful attempts, try in a couple of minutes, as Discord can block such massive actions.*.
         /// </summary>
         internal static string UnbanDone {
             get {
@@ -1161,8 +1170,8 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Капитан, в списке заблокированных я насчитала {0} стражей.
-        ///Приступаю к массовой разблокировке всех стражей..
+        ///   Looks up a localized string similar to Captain, I counted {0} guards on the list of blocked ones.
+        ///I proceed to mass unlock all the guards..
         /// </summary>
         internal static string UnbanStart {
             get {
@@ -1171,7 +1180,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Неизвестно.
+        ///   Looks up a localized string similar to Unknown.
         /// </summary>
         internal static string Unknown {
             get {
@@ -1180,7 +1189,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🔨 Страж был забанен.
+        ///   Looks up a localized string similar to 🔨 Guardian was banned.
         /// </summary>
         internal static string UsrBanEmbTitle {
             get {
@@ -1189,7 +1198,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 🦶 Страж был выгнан.
+        ///   Looks up a localized string similar to 🦶 Guardian was banished.
         /// </summary>
         internal static string UsrKicEmbTitle {
             get {
@@ -1198,9 +1207,9 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На сервере был известен как:
+        ///   Looks up a localized string similar to The server was known as:
         ///**{0}**
-        ///Discord имя стража
+        ///Discord Guardian Name
         ///**{1}**.
         /// </summary>
         internal static string UsrLefEmbDesc {
@@ -1210,7 +1219,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Причина:.
+        ///   Looks up a localized string similar to Cause:.
         /// </summary>
         internal static string UsrLefEmbFieldTitle {
             get {
@@ -1219,7 +1228,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 💢 Страж покинул сервер.
+        ///   Looks up a localized string similar to 💢 Guardian left the server.
         /// </summary>
         internal static string UsrLefEmbTitle {
             get {
@@ -1228,7 +1237,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Добро пожаловать на сервер {0}.
+        ///   Looks up a localized string similar to Welcome to the server {0}.
         /// </summary>
         internal static string WlcmEmbTitle {
             get {

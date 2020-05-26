@@ -112,13 +112,13 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BanPermission" xml:space="preserve">
-    <value>Captain, for access to unlock participants I do not have the right ** Ban members **.
+    <value>Captain, for access to unlock participants I do not have the right **Ban members**.
 I advise you to enable the right, and after I inform about the completion of work, turn off this right just in case.</value>
   </data>
   <data name="Bip" xml:space="preserve">
@@ -152,8 +152,8 @@ I advise you to enable the right, and after I inform about the completion of wor
     <value>❌ Channel deleted</value>
   </data>
   <data name="ChanEmbFieldDesc" xml:space="preserve">
-    <value>Name: ** {0} **
-NSFW ** {1} **
+    <value>Name: **{0}**
+NSFW **{1}**
 Category: {2}</value>
   </data>
   <data name="CooldownMessage" xml:space="preserve">
@@ -193,12 +193,12 @@ Category: {2}</value>
     <value>: x: Please enter the full or partial name of the exotic equipment.</value>
   </data>
   <data name="GuCoEmbDescField" xml:space="preserve">
-    <value>- Total channels: ** {0} **
-- Guardians on the server: ** {1} **
-- I send alerts about Xur to ** &lt;# {2}&gt; **
-- Server logs I write in ** &lt;# {3}&gt; **
-- I send notifications of new guardians to ** &lt;# {4}&gt; **
-- When collecting fees for activity, I will mention: ** {5} **
+    <value>- Total channels: **{0}**
+- Guardians on the server: **{1}**
+- I send alerts about Xur to **&lt;#{2}&gt;**
+- Server logs I write in **&lt;#{3}&gt;**
+- I send notifications of new guardians to **&lt;#{4}&gt;**
+- When collecting fees for activity, I will mention: **{5}**
 - My locale: **{6}**
 - Server timezone: **{7}**</value>
   </data>
@@ -260,15 +260,15 @@ Category: {2}</value>
     <value>Removed</value>
   </data>
   <data name="GuMemRolEmbFieldDesc" xml:space="preserve">
-    <value>Name: ** {0} **
-{1} role: ** {2} **</value>
+    <value>Name: **{0}**
+{1} role: **{2}**</value>
   </data>
   <data name="GuMemRolEmbFieldTitle" xml:space="preserve">
     <value>🔑 Updated guard role:</value>
   </data>
   <data name="GuMemUpdEmbFieldDesc" xml:space="preserve">
     <value>Previous Name:
-** {0} **
+**{0}**
 New name:
 **{1}**</value>
   </data>
@@ -276,7 +276,7 @@ New name:
     <value>💢 Guardian name changed:</value>
   </data>
   <data name="Hellotxt" xml:space="preserve">
-    <value>Sentinel {0} has landed, which means that:</value>
+    <value>Guardian {0} has landed, which means that:</value>
   </data>
   <data name="HelpEmbAdmFieldTitle" xml:space="preserve">
     <value>Admin commands</value>
@@ -284,7 +284,7 @@ New name:
   <data name="HelpEmbDesc" xml:space="preserve">
     <value>My main goal is to help the Guardians to gather battle groups, to inform in a timely manner when the messenger of nine Xur arrives or leaves.
 I can also provide information on exotic gear, catalysts, and much more.
-You can find more information in the documentation section on my [site] ({0})</value>
+You can find more information in the documentation section on my [site]({0})</value>
   </data>
   <data name="HelpEmbMainFieldTitle" xml:space="preserve">
     <value>Main commands</value>
@@ -298,11 +298,14 @@ You can find more information in the documentation section on my [site] ({0})</v
   <data name="HelpEmbTitle" xml:space="preserve">
     <value>Good day. My name is Neuromatrix, I’m Black Exodus AI adapted for Discord. Successfully functioning with {0}</value>
   </data>
+  <data name="LocaleChanged" xml:space="preserve">
+    <value>Changed default locale to: {0}</value>
+  </data>
   <data name="MailDone" xml:space="preserve">
-    <value>Done. I sent out a message to everyone who has the role ** {0} **.
-- Total Recipients: ** {1} **
-- Successfully delivered: ** {2} **
-- Failed to send: ** {3} **</value>
+    <value>Done. I sent out a message to everyone who has the role **{0}**.
+- Total Recipients: **{1}**
+- Successfully delivered: **{2}**
+- Failed to send: **{3}**</value>
   </data>
   <data name="MailEmbFooterDesc" xml:space="preserve">
     <value>Guard, keep in mind that I have no relation to the contents of this message.</value>
@@ -311,7 +314,7 @@ You can find more information in the documentation section on my [site] ({0})</v
     <value>: mailbox_with_mail: You got a message from {0} from the server ** `{1}` **</value>
   </data>
   <data name="MailStart" xml:space="preserve">
-    <value>I am starting to send out messages. To all guards with the role ** {0} **</value>
+    <value>I am starting to send out messages. To all guards with the role **{0}**</value>
   </data>
   <data name="MilBake" xml:space="preserve">
     <value>I’m preparing the collection of the battle group.</value>
@@ -330,8 +333,8 @@ You can find more information in the documentation section on my [site] ({0})</v
     <value>Canceled due to: {0}</value>
   </data>
   <data name="MilEmbInfDescField" xml:space="preserve">
-    <value>- Leader of the battle group: ** # 1 {0} - {1} **
-- To fix your place, click on the reaction {2}</value>
+    <value>- Leader of the battle group: **# 1 {0} - {1}**
+- To  your place, click on the reaction {2}</value>
   </data>
   <data name="MilEmbInfTitleField" xml:space="preserve">
     <value>Information</value>
@@ -398,8 +401,8 @@ Beep ... Good luck and say hello to my captain.</value>
     <value>Guard, you indicated an unknown time format for me.</value>
   </data>
   <data name="MsgDelEmbDesc" xml:space="preserve">
-    <value>Where: &lt;# {0}&gt;
-Posted by ** {1} **</value>
+    <value>Where: &lt;#{0}&gt;
+Posted by **{1}**</value>
   </data>
   <data name="MsgDelEmbFieldTitle" xml:space="preserve">
     <value>Message text:</value>
@@ -408,7 +411,7 @@ Posted by ** {1} **</value>
     <value>🗑 Message deleted</value>
   </data>
   <data name="MsgUpdEmbDesc" xml:space="preserve">
-    <value>Where: &lt;# {0}&gt;</value>
+    <value>Where: &lt;#{0}&gt;</value>
   </data>
   <data name="MsgUpdEmbNewFieldTitle" xml:space="preserve">
     <value>New text:</value>
@@ -465,8 +468,8 @@ Posted by ** {1} **</value>
     <value>You did not specify a Role or indicated less than 1 or more than 10 random ones.</value>
   </data>
   <data name="RolDelEmbDesc" xml:space="preserve">
-    <value>Name: ** {0} **
-Color: ** {1} **</value>
+    <value>Name: **{0}**
+Color: **{1}**</value>
   </data>
   <data name="RolDelEmbTitle" xml:space="preserve">
     <value>❌ Role removed</value>
@@ -490,19 +493,19 @@ Color: ** {1} **</value>
     <value>Captain, you did not indicate the text of the message.</value>
   </data>
   <data name="SlfRolRoleOrEmojiExist" xml:space="preserve">
-    <value>The captain, the role and \\ or emoji that you said is already used in the autorole system.</value>
+    <value>The captain, the role and\\or emoji that you said is already used in the autorole system.</value>
   </data>
   <data name="SlfRolRoleOrEmojIsNull" xml:space="preserve">
-    <value>Captain, you did not indicate the role and \\ or emoji.</value>
+    <value>Captain, you did not indicate the role and\\or emoji.</value>
   </data>
   <data name="SlfRolSucAdd" xml:space="preserve">
     <value>Success! Captain, I saved this bunch of roles {0} and {1} in my database.</value>
   </data>
   <data name="UnbanDone" xml:space="preserve">
-    <value>Done. I went through the list of ** {0} ** blocked guards.
-- Successfully unlocked: ** {1} **
-- Failed to unlock: ** {2} **
-* If there are too many unsuccessful attempts, try in a couple of minutes, as Discord can block such massive actions. *</value>
+    <value>Done. I went through the list of **{0}** blocked guards.
+- Successfully unlocked: **{1}**
+- Failed to unlock: **{2}**
+*If there are too many unsuccessful attempts, try in a couple of minutes, as Discord can block such massive actions.*</value>
   </data>
   <data name="UnbanStart" xml:space="preserve">
     <value>Captain, I counted {0} guards on the list of blocked ones.
@@ -512,14 +515,14 @@ I proceed to mass unlock all the guards.</value>
     <value>Unknown</value>
   </data>
   <data name="UsrBanEmbTitle" xml:space="preserve">
-    <value>🔨 The guard was banned</value>
+    <value>🔨 Guardian was banned</value>
   </data>
   <data name="UsrKicEmbTitle" xml:space="preserve">
-    <value>🦶 The guard was banished</value>
+    <value>🦶 Guardian was banished</value>
   </data>
   <data name="UsrLefEmbDesc" xml:space="preserve">
     <value>The server was known as:
-** {0} **
+**{0}**
 Discord Guardian Name
 **{1}**</value>
   </data>
@@ -527,9 +530,9 @@ Discord Guardian Name
     <value>Cause:</value>
   </data>
   <data name="UsrLefEmbTitle" xml:space="preserve">
-    <value>💢 Sentinel left the server</value>
+    <value>💢 Guardian left the server</value>
   </data>
   <data name="WlcmEmbTitle" xml:space="preserve">
-    <value>Добро пожаловать на сервер {0}</value>
+    <value>Welcome to the server {0}</value>
   </data>
 </root>
