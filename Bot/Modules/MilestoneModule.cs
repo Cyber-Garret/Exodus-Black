@@ -96,7 +96,7 @@ namespace Bot.Modules
 				await ReplyAsync(Resources.MilNotLeader);
 		}
 
-		[Command("note"), Alias("заметка", "замітка")]
+		[Command("note"), Alias("заметка", "нотатка")]
 		public async Task ChangeNote(ulong milestoneId, [Remainder] string note = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
@@ -206,7 +206,7 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync(Resources.MilNotLeader);
 		}
 
-		[Command("cancel"), Alias("отмена","відміна")]
+		[Command("cancel"), Alias("отмена", "відміна")]
 		public async Task CloseMilestone(ulong milestoneId, [Remainder] string reason = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);

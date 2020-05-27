@@ -63,13 +63,13 @@ namespace Bot.Modules
 			await ReplyAsync(string.Format(Resources.LocaleChanged, guild.Language.NativeName));
 		}
 
-		[Command("time"), Alias("время", "час")]
+		[Command("utc"), Alias("время", "час")]
 		public async Task ChangeTimeForServer(sbyte time)
 		{
 			if (time < -12 || time > 12)
 			{
 				//TODO: resx
-				await ReplyAsync("Incorrect time zone");
+				await ReplyAsync(Resources.UTCIncorrect);
 			}
 			else
 			{
@@ -87,7 +87,7 @@ namespace Bot.Modules
 						var regex = new Regex(@"\(.*?\)");
 						var parsedTimeZone = regex.Match(timeZone.DisplayName);
 						//TODO: resx
-						await ReplyAsync($"Now default time: {parsedTimeZone}");
+						await ReplyAsync(string.Format(Resources.UTCChanged, parsedTimeZone));
 
 						break;
 					}

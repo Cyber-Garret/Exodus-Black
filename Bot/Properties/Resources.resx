@@ -532,6 +532,12 @@ Discord Guardian Name
   <data name="UsrLefEmbTitle" xml:space="preserve">
     <value>💢 Guardian left the server</value>
   </data>
+  <data name="UTCChanged" xml:space="preserve">
+    <value>Now, on server used {0} timezone.</value>
+  </data>
+  <data name="UTCIncorrect" xml:space="preserve">
+    <value>Incorrect UTC range.</value>
+  </data>
   <data name="WlcmEmbTitle" xml:space="preserve">
     <value>Welcome to the server {0}</value>
   </data>

@@ -50,7 +50,7 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("exotic"), Alias("экзот", "єкзот")]
+		[Command("exotic"), Alias("экзот", "екзот")]
 		public async Task Exotic([Remainder] string Input = null)
 		{
 			if (Input == null)
@@ -122,17 +122,49 @@ namespace Bot.Modules
 
 			var commands = command.Commands.ToList();
 
+			//Sort all commands
 			foreach (var command in commands)
 			{
+				//Main commands
 				if (command.Module.Name == typeof(MainModule).Name)
-					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+				{
+					if (guild.Language.Name == "en-US")
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
+				//Milestone commands
 				else if (command.Module.Name == typeof(MilestoneModule).Name)
-					milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+				{
+					if (guild.Language.Name == "en-US")
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
+				//Admin commands
 				else if (command.Module.Name == typeof(ModerationModule).Name)
-					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+				{
+					if (guild.Language.Name == "en-US")
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
+				//Self role admin commands
 				else if (command.Module.Name == typeof(SelfRoleModule).Name)
-					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
-
+				{
+					if (guild.Language.Name == "en-US")
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
 			}
 
 			var embed = new EmbedBuilder

@@ -1237,6 +1237,24 @@ namespace Bot.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Now, on server used {0} timezone..
+        /// </summary>
+        internal static string UTCChanged {
+            get {
+                return ResourceManager.GetString("UTCChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incorrect UTC range..
+        /// </summary>
+        internal static string UTCIncorrect {
+            get {
+                return ResourceManager.GetString("UTCIncorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome to the server {0}.
         /// </summary>
         internal static string WlcmEmbTitle {
