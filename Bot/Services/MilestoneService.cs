@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Services
@@ -108,7 +109,9 @@ namespace Bot.Services
 		{
 			try
 			{
-				var Guild = discord.GetGuild(milestone.GuildId);
+				var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 				var RemindEmbed = this.RemindEmbed(milestone);
 
 				var Leader = discord.GetUser(milestone.Leader);
@@ -146,6 +149,9 @@ namespace Bot.Services
 			try
 			{
 				var Guild = discord.GetGuild(milestone.GuildId);
+				var loadedGuild = GuildData.GetGuildAccount(Guild);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 				var channel = Guild.GetTextChannel(milestone.ChannelId);
 				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
 
@@ -183,6 +189,9 @@ namespace Bot.Services
 
 		public Embed MilestoneEmbed(Milestone milestone)
 		{
+			var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 			var embed = new EmbedBuilder
 			{
 				Title = string.Format(Resources.MilEmbTitle,
@@ -230,11 +239,14 @@ namespace Bot.Services
 			return embed.Build();
 		}
 
-		public Embed GetMilestonesNameEmbed(MilestoneType type)
+		public Embed GetMilestonesNameEmbed(SocketGuild guild, MilestoneType type)
 		{
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 			var embed = new EmbedBuilder
 			{
-				Title = string.Format(Resources.MilInfEmbTitle, GetNameForMilestoneType(type)),
+				Title = string.Format(Resources.MilInfEmbTitle, GetNameForMilestoneType(guild, type)),
 				Color = GetColorByType(type)
 			};
 			if (type == MilestoneType.Raid)
@@ -269,6 +281,9 @@ namespace Bot.Services
 		private Embed RemindEmbed(Milestone milestone)
 		{
 			var guild = discord.GetGuild(milestone.GuildId);
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 
 			var embed = new EmbedBuilder()
 			{
@@ -307,6 +322,9 @@ namespace Bot.Services
 
 		private Embed TimeChangedEmbed(SocketGuild guild, Milestone milestone, string jumpUrl)
 		{
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 			var embed = new EmbedBuilder()
 			{
 				Title = Resources.MilEmbTitleChangeTime,
@@ -336,8 +354,11 @@ namespace Bot.Services
 			};
 		}
 
-		private string GetNameForMilestoneType(MilestoneType type)
+		private string GetNameForMilestoneType(SocketGuild guild, MilestoneType type)
 		{
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 			return type switch
 			{
 				MilestoneType.Raid => Resources.Raid,

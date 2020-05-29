@@ -121,7 +121,7 @@ namespace Bot.Modules
 		}
 
 		[Command("PlaceRoles"), Alias("РазместитьРоли", "РозташуватиРолі")]
-		[RequireBotPermission(ChannelPermission.AddReactions | ChannelPermission.ReadMessageHistory | ChannelPermission.ManageRoles)]
+		[RequireBotPermission(GuildPermission.AddReactions | GuildPermission.ManageRoles)]
 		public async Task DeploySelfRoleMessage([Remainder] string text = null)
 		{
 			try

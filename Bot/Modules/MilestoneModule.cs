@@ -256,7 +256,7 @@ namespace Bot.Modules
 				Embed embed;
 				if (milestoneInfo == null)
 				{
-					embed = milestoneHandler.GetMilestonesNameEmbed(type);
+					embed = milestoneHandler.GetMilestonesNameEmbed(Context.Guild, type);
 					await ReplyAndDeleteAsync(string.Format(Resources.MilNotFound, Context.User.Mention), embed: embed, timeout: TimeSpan.FromMinutes(1));
 					return;
 				}
