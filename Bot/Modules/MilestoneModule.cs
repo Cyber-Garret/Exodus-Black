@@ -40,7 +40,7 @@ namespace Bot.Modules
 			await GoMilestoneAsync(raidName, MilestoneType.Raid, raidTime, leaderNote);
 		}
 
-		[Command("strike"), Alias("налет", "наліт")]
+		[Command("strike"), Alias("налёт", "наліт")]
 		public async Task RegisterStrike(string nightfallName, string nightfallTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(nightfallName, MilestoneType.Nightfall, nightfallTime, leaderNote);
