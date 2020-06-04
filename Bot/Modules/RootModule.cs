@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Addons.Interactive;
+using Discord.Commands;
 
 namespace Bot.Modules
 {
-	public class BaseModule : InteractiveBase
+	public class RootModule : InteractiveBase
 	{
-		internal const string NotInGuildText = ":x: | Эта команда не доступна в личных сообщениях.";
 		internal IEmote WhiteHeavyCheckMark => new Emoji("\u2705");
 		internal IEmote RedX => new Emoji("\u274C");
 	}

@@ -14,6 +14,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Services
@@ -205,6 +206,9 @@ namespace Bot.Services
 			if (!(arg is ITextChannel channel)) return;
 			try
 			{
+				var loadedGuild = GuildData.GetGuildAccount(channel.GuildId);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 				var log = await channel.Guild.GetAuditLogsAsync(1);
 				var audit = log.ToList();
 				var name = audit[0].Action == ActionType.ChannelCreated ? audit[0].User.Username : Resources.Unknown;
@@ -225,18 +229,15 @@ namespace Bot.Services
 					channel.IsNsfw,
 					channel.GetCategoryAsync().Result.Name));
 
-				var guildChannel = (IGuildChannel)arg;
-
-				var guild = GuildData.GetGuildAccount(guildChannel.Guild);
-				if (guild.LoggingChannel != 0)
+				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "ChannelCreated");
+				logger.LogWarning("ChannelCreated: {0}", ex.Message);
 			}
 
 		}
@@ -245,6 +246,9 @@ namespace Bot.Services
 			if (!(arg is ITextChannel channel)) return;
 			try
 			{
+				var loadedGuild = GuildData.GetGuildAccount(channel.GuildId);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 				var log = await channel.Guild.GetAuditLogsAsync(1);
 				var audit = log.ToList();
 				var name = audit[0].Action == ActionType.ChannelDeleted ? audit[0].User.Username : Resources.Unknown;
@@ -265,18 +269,15 @@ namespace Bot.Services
 					channel.IsNsfw,
 					channel.GetCategoryAsync().Result.Name));
 
-				var guildChannel = (IGuildChannel)arg;
-
-				var guild = GuildData.GetGuildAccount(guildChannel.Guild);
-				if (guild.LoggingChannel != 0)
+				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "ChannelDestroyed");
+				logger.LogWarning("ChannelDestroyed: {0}", ex.Message);
 			}
 		}
 		private async Task GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
@@ -284,7 +285,8 @@ namespace Bot.Services
 			if (after == null || before == after || before.IsBot) return;
 			try
 			{
-				var guild = GuildData.GetGuildAccount(before.Guild);
+				var loadedGuild = GuildData.GetGuildAccount(before.Guild);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 
 				if (before.Nickname != after.Nickname)
@@ -306,9 +308,9 @@ namespace Bot.Services
 						embed.WithFooter(string.Format(Resources.DiEvnEmbFooter, name), audit[0].User.GetAvatarUrl() ?? audit[0].User.GetDefaultAvatarUrl());
 					}
 
-					if (guild.LoggingChannel != 0)
+					if (loadedGuild.LoggingChannel != 0)
 					{
-						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -354,9 +356,9 @@ namespace Bot.Services
 					}
 
 
-					if (guild.LoggingChannel != 0)
+					if (loadedGuild.LoggingChannel != 0)
 					{
-						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -364,7 +366,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "GuildMemberUpdated");
+				logger.LogWarning("GuildMemberUpdated: {0}", ex.Message);
 			}
 
 		}
@@ -376,7 +378,8 @@ namespace Bot.Services
 			{
 				if (channel is IGuildChannel currentIGuildChannel)
 				{
-					var guild = GuildData.GetGuildAccount(currentIGuildChannel.Guild);
+					var loadedGuild = GuildData.GetGuildAccount(currentIGuildChannel.GuildId);
+					Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 
 					var after = msgAfter as IUserMessage;
@@ -425,17 +428,17 @@ namespace Bot.Services
 					}
 
 
-					if (guild.LoggingChannel != 0)
+					if (loadedGuild.LoggingChannel != 0)
 					{
 
-						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "MessageUpdated");
+				logger.LogWarning("MessageUpdated: {0}", ex.Message);
 			}
 
 		}
@@ -446,7 +449,8 @@ namespace Bot.Services
 			{
 				if (msg.Value.Channel is ITextChannel textChannel)
 				{
-					var guild = GuildData.GetGuildAccount(textChannel.Guild);
+					var loadedGuild = GuildData.GetGuildAccount(textChannel.Guild);
+					Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 					var log = await textChannel.Guild.GetAuditLogsAsync(1);
 					var audit = log.ToList();
@@ -484,17 +488,17 @@ namespace Bot.Services
 						embedDel.AddField(Resources.MsgDelEmbFieldTitle, $"{msg.Value.Content}");
 					}
 
-					if (guild.LoggingChannel != 0)
+					if (loadedGuild.LoggingChannel != 0)
 					{
 
-						await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embedDel.Build());
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "MessageDeleted");
+				logger.LogWarning("MessageDeleted: {0}", ex.Message);
 			}
 
 		}
@@ -502,6 +506,8 @@ namespace Bot.Services
 		{
 			try
 			{
+				var loadedGuild = GuildData.GetGuildAccount(role.Guild);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 				var log = await role.Guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
@@ -523,17 +529,15 @@ namespace Bot.Services
 					}
 				};
 
-				var guild = GuildData.GetGuildAccount(role.Guild);
-
-				if (guild.LoggingChannel != 0)
+				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "RoleDeleted");
+				logger.LogWarning("RoleDeleted: {0}", ex.Message);
 			}
 
 		}
@@ -543,17 +547,19 @@ namespace Bot.Services
 			{
 				if (user == null || user.IsBot) return;
 
-				var guild = GuildData.GetGuildAccount(user.Guild);
-				if (string.IsNullOrWhiteSpace(guild.WelcomeMessage)) return;
+				var loadedGuild = GuildData.GetGuildAccount(user.Guild);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
+				if (string.IsNullOrWhiteSpace(loadedGuild.WelcomeMessage)) return;
 
 				var dM = await user.GetOrCreateDMChannelAsync();
-				var embed = WelcomeEmbed(user, guild.WelcomeMessage);
+				var embed = WelcomeEmbed(user, loadedGuild.WelcomeMessage);
 
 				await dM.SendMessageAsync(embed: embed);
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "UserJoined");
+				logger.LogWarning("UserJoined: {0}", ex.Message);
 			}
 
 		}
@@ -561,9 +567,11 @@ namespace Bot.Services
 		{
 			try
 			{
-				var guild = GuildData.GetGuildAccount(user.Guild.Id);
-				if (guild.WelcomeChannel == 0) return;
-				if (!(discord.GetChannel(guild.WelcomeChannel) is SocketTextChannel channel)) return;
+				var loadedGuild = GuildData.GetGuildAccount(user.Guild);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
+				if (loadedGuild.WelcomeChannel == 0) return;
+				if (!(discord.GetChannel(loadedGuild.WelcomeChannel) is SocketTextChannel channel)) return;
 				string[] randomWelcome =
 					{
 					"Опять Кабал? ©Ашер",
@@ -627,7 +635,7 @@ namespace Bot.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "UserWelcome");
+				logger.LogWarning("UserWelcome: {0}", ex.Message);
 			}
 
 		}
@@ -636,6 +644,9 @@ namespace Bot.Services
 			if (user == null || user.IsBot) return;
 			try
 			{
+				var loadedGuild = GuildData.GetGuildAccount(user.Guild);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 				var log = await user.Guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
 				var embed = new EmbedBuilder
@@ -679,17 +690,15 @@ namespace Bot.Services
 					}
 				}
 
-
-				var guild = GuildData.GetGuildAccount(user.Guild);
-				if (guild.LoggingChannel != 0)
+				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(guild.Id).GetTextChannel(guild.LoggingChannel)
+					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning(ex, "UserLeft");
+				logger.LogWarning("UserLeft: {0}", ex.Message);
 			}
 		}
 

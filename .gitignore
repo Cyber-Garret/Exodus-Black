@@ -262,3 +262,5 @@ __pycache__/
 *.pyc
 # VS Code
 .vscode/
+Bot/appsettings.json
+Bot/UserData/

@@ -1,5 +1,6 @@
 ﻿using Bot.Core.Data;
 using Bot.Models;
+using Bot.Preconditions;
 using Bot.Properties;
 using Bot.Services;
 
@@ -16,8 +17,8 @@ using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[RequireContext(ContextType.Guild)]
-	public class MilestoneModule : BaseModule
+	[RequireContext(ContextType.Guild), Cooldown(5)]
+	public class MilestoneModule : RootModule
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
@@ -33,29 +34,25 @@ namespace Bot.Modules
 		}
 
 		#region Commands
-		[Command("рейд")]
-		[Summary("Анонс сбора боевой группы в рейд.")]
+		[Command("raid"), Alias("рейд")]
 		public async Task RegisterRaid(string raidName, string raidTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(raidName, MilestoneType.Raid, raidTime, leaderNote);
 		}
 
-		[Command("налет")]
-		[Summary("Aнонс сбора боевой группы в сумрачный налёт.")]
+		[Command("strike"), Alias("налёт", "наліт")]
 		public async Task RegisterStrike(string nightfallName, string nightfallTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(nightfallName, MilestoneType.Nightfall, nightfallTime, leaderNote);
 		}
 
-		[Command("сбор")]
-		[Summary("Анонс сбора боевой группы в активности типа Паноптикум, Яма, Трон и тд и тп.")]
+		[Command("coll"), Alias("сбор", "збір")]
 		public async Task RegisterOther(string otherName, string otherTime, [Remainder] string leaderNote = null)
 		{
 			await GoMilestoneAsync(otherName, MilestoneType.Other, otherTime, leaderNote);
 		}
 
-		[Command("резерв")]
-		[Summary("Позволяет зарезирвировать места в активности.")]
+		[Command("reserve"), Alias("резерв")]
 		public async Task Reserve(ulong milestoneId, int count)
 		{
 
@@ -99,8 +96,7 @@ namespace Bot.Modules
 				await ReplyAsync(Resources.MilNotLeader);
 		}
 
-		[Command("заметка")]
-		[Summary("Позволяет удалить или изменить заметку активности.")]
+		[Command("note"), Alias("заметка", "нотатка")]
 		public async Task ChangeNote(ulong milestoneId, [Remainder] string note = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
@@ -128,8 +124,7 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync(Resources.MilNotLeader);
 		}
 
-		[Command("передать")]
-		[Summary("Позволяет передать лидерство над активностью.")]
+		[Command("transfer"), Alias("передать", "передати")]
 		public async Task ChangeLeader(ulong milestoneId, SocketGuildUser newLeader)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
@@ -161,8 +156,57 @@ namespace Bot.Modules
 				await ReplyAndDeleteAsync(Resources.MilNotLeader);
 		}
 
-		[Command("отмена")]
-		[Summary("Позволяет отменить активность.")]
+		[Command("time"), Alias("перенос")]
+		public async Task ChangeTime(ulong milestoneId, string newTime)
+		{
+			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
+			if (milestone.Leader == Context.User.Id)
+			{
+				var IsSucess = DateTime.TryParseExact(newTime, GlobalVariables.timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+
+				if (IsSucess)
+				{
+					var guild = GuildData.GetGuildAccount(milestone.GuildId);
+					var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
+					var raidTimeOffset = new DateTimeOffset(dateTime, guildTimeZone.BaseUtcOffset);
+
+					var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone).AddMinutes(15);
+
+					if (raidTimeOffset < now)
+						await ReplyAndDeleteAsync(Resources.MilPastTime);
+					else
+					{
+						milestone.DateExpire = raidTimeOffset;
+						ActiveMilestoneData.SaveMilestones(milestone.MessageId);
+
+						try
+						{
+							var channel = discord.GetGuild(milestone.GuildId).GetTextChannel(milestone.ChannelId);
+							var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+							await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+
+							await ReplyAndDeleteAsync(string.Format(Resources.MilTimeChanged, msg.GetJumpUrl()));
+
+							//Notif all user about time changed
+							await milestoneHandler.TimeChangedNotificationAsync(milestone);
+						}
+						catch (Exception ex)
+						{
+							logger.LogError(ex, "Milestone change time error");
+							await ReplyAsync(string.Format(Resources.Error, ex.Message));
+						}
+					}
+
+				}
+				else
+					await ReplyAndDeleteAsync(Resources.MilTimeError);
+			}
+			else
+				await ReplyAndDeleteAsync(Resources.MilNotLeader);
+		}
+
+		[Command("cancel"), Alias("отмена", "відміна")]
 		public async Task CloseMilestone(ulong milestoneId, [Remainder] string reason = null)
 		{
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
@@ -212,14 +256,12 @@ namespace Bot.Modules
 				Embed embed;
 				if (milestoneInfo == null)
 				{
-					embed = milestoneHandler.GetMilestonesNameEmbed(type);
+					embed = milestoneHandler.GetMilestonesNameEmbed(Context.Guild, type);
 					await ReplyAndDeleteAsync(string.Format(Resources.MilNotFound, Context.User.Mention), embed: embed, timeout: TimeSpan.FromMinutes(1));
 					return;
 				}
 
-				string[] formats = { "dd.MM-HH:mm", "dd,MM-HH,mm", "dd.MM.HH.mm", "dd,MM,HH,mm" };
-
-				var IsSucess = DateTime.TryParseExact(time, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+				var IsSucess = DateTime.TryParseExact(time, GlobalVariables.timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
 
 				if (IsSucess)
 				{

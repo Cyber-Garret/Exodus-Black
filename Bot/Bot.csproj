@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>dotnet-Bot-4E6EFB48-F9EE-4BFE-9F3A-0DA6C1D3F6FC</UserSecretsId>
-    <NeutralLanguage>ru-RU</NeutralLanguage>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Authors>Cyber_Garret</Authors>
     <Product>Failsafe</Product>
@@ -42,6 +42,9 @@
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.uk.resx">
+      <Generator></Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

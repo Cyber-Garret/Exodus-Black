@@ -13,12 +13,13 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
-	[Cooldown(5)]
-	public class MainModule : BaseModule
+	[RequireContext(ContextType.Guild), Cooldown(5)]
+	public class MainModule : RootModule
 	{
 		private readonly ILogger logger;
 		private readonly DiscordSocketClient discord;
@@ -33,7 +34,7 @@ namespace Bot.Modules
 		}
 
 		#region Commands
-		[Command("справка")]
+		[Command("help"), Alias("справка", "довідка")]
 		public async Task MainHelp()
 		{
 			try
@@ -49,10 +50,8 @@ namespace Bot.Modules
 			}
 		}
 
-		[Command("экзот")]
-		[Summary("Отображает информацию о экзотическом снаряжении. Ищет как по полному названию, так и частичному.")]
-		[Remarks("Пример: !экзот буря")]
-		public async Task Exotic([Remainder]string Input = null)
+		[Command("exotic"), Alias("экзот", "екзот")]
+		public async Task Exotic([Remainder] string Input = null)
 		{
 			if (Input == null)
 			{
@@ -72,10 +71,8 @@ namespace Bot.Modules
 			await ReplyAsync(string.Format(Resources.ExoFound, Context.User.Username), embed: embed);
 		}
 
-		[Command("каталик")]
-		[Summary("Отображает информацию о катализаторе для оружия.")]
-		[Remarks("Пример: !катализатор мида или !каталик туз")]
-		public async Task GetCatalyst([Remainder]string Input = null)
+		[Command("catalyst"), Alias("каталик", "каталік")]
+		public async Task GetCatalyst([Remainder] string Input = null)
 		{
 			if (Input == null)
 			{
@@ -96,9 +93,7 @@ namespace Bot.Modules
 			await ReplyAsync(string.Format(Resources.CatFound, Context.User.Username), embed: embed);
 		}
 
-		[Command("опрос")]
-		[Summary("Создает голосование среди стражей. Поддерживает разметку MarkDown.")]
-		[Remarks("Синтаксис: !опрос <текст сообщение>\nПример: !опрос Добавляем 10 рейдовых каналов?")]
+		[Command("poll"), Alias("опрос", "опитування")]
 		public async Task StartPoll([Remainder] string input)
 		{
 			var embed = PollEmbed(input, (SocketGuildUser)Context.User);
@@ -108,8 +103,7 @@ namespace Bot.Modules
 			await msg.AddReactionsAsync(new IEmote[] { WhiteHeavyCheckMark, RedX });
 		}
 
-		[Command("бип")]
-		[Summary("Простая команда проверки моей работоспособности.")]
+		[Command("bip"), Alias("бип", "біп")]
 		public async Task Bip()
 		{
 			await ReplyAsync(Resources.Bip);
@@ -128,22 +122,54 @@ namespace Bot.Modules
 
 			var commands = command.Commands.ToList();
 
+			//Sort all commands
 			foreach (var command in commands)
 			{
+				//Main commands
 				if (command.Module.Name == typeof(MainModule).Name)
-					mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+				{
+					if (guild.Language.Name == "en-US")
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
+				//Milestone commands
 				else if (command.Module.Name == typeof(MilestoneModule).Name)
-					milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+				{
+					if (guild.Language.Name == "en-US")
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
+				//Admin commands
 				else if (command.Module.Name == typeof(ModerationModule).Name)
-					adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+				{
+					if (guild.Language.Name == "en-US")
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
+				//Self role admin commands
 				else if (command.Module.Name == typeof(SelfRoleModule).Name)
-					selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
-
+				{
+					if (guild.Language.Name == "en-US")
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
+					else if (guild.Language.Name == "ru-RU")
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
+					else
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+				}
 			}
 
 			var embed = new EmbedBuilder
 			{
-				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date),
+				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date.ToShortDateString()),
 				Color = Color.Gold,
 				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite),
 				Footer = new EmbedFooterBuilder

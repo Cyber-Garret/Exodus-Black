@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Services
@@ -17,13 +18,13 @@ namespace Bot.Services
 	public class MilestoneService
 	{
 		private readonly ILogger _logger;
-		private readonly DiscordSocketClient _discord;
+		private readonly DiscordSocketClient discord;
 		private readonly EmoteService _emote;
 
 		public MilestoneService(IServiceProvider service)
 		{
 			_logger = service.GetRequiredService<ILogger<MilestoneService>>();
-			_discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 			_emote = service.GetRequiredService<EmoteService>();
 		}
 
@@ -51,7 +52,7 @@ namespace Bot.Services
 					}
 					else
 					{
-						var user = _discord.GetUser(reaction.UserId);
+						var user = discord.GetUser(reaction.UserId);
 						await msg.RemoveReactionAsync(_emote.Raid, user);
 					}
 				}
@@ -85,7 +86,7 @@ namespace Bot.Services
 					}
 					else
 					{
-						var user = _discord.GetUser(reaction.UserId);
+						var user = discord.GetUser(reaction.UserId);
 						await msg.RemoveReactionAsync(_emote.Raid, user);
 					}
 				}
@@ -104,14 +105,16 @@ namespace Bot.Services
 				await message.ModifyAsync(m => m.Embed = newEmbed);
 		}
 
-		public async Task RaidNotificationAsync(Milestone milestone)
+		public async Task MilestoneNotificationAsync(Milestone milestone)
 		{
 			try
 			{
-				var Guild = _discord.GetGuild(milestone.GuildId);
-				var RemindEmbed = MilestoneRemindEmbed(milestone);
+				var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
-				var Leader = _discord.GetUser(milestone.Leader);
+				var RemindEmbed = this.RemindEmbed(milestone);
+
+				var Leader = discord.GetUser(milestone.Leader);
 				var LeaderDM = await Leader.GetOrCreateDMChannelAsync();
 
 				await LeaderDM.SendMessageAsync(embed: RemindEmbed);
@@ -120,7 +123,53 @@ namespace Bot.Services
 				{
 					try
 					{
-						var LoadedUser = _discord.GetUser(user);
+
+						if (user == GlobalVariables.ReservedID) continue;
+
+						var LoadedUser = discord.GetUser(user);
+
+						var DM = await LoadedUser.GetOrCreateDMChannelAsync();
+						await DM.SendMessageAsync(embed: RemindEmbed);
+					}
+					catch (Exception ex)
+					{
+						_logger.LogWarning(ex, "RaidNotification in DM of user");
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogWarning(ex, "RaidNotification Global");
+			}
+
+		}
+
+		public async Task TimeChangedNotificationAsync(Milestone milestone)
+		{
+			try
+			{
+				var Guild = discord.GetGuild(milestone.GuildId);
+				var loadedGuild = GuildData.GetGuildAccount(Guild);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
+				var channel = Guild.GetTextChannel(milestone.ChannelId);
+				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+
+				var RemindEmbed = TimeChangedEmbed(Guild, milestone, msg.GetJumpUrl());
+
+				var Leader = discord.GetUser(milestone.Leader);
+				var LeaderDM = await Leader.GetOrCreateDMChannelAsync();
+
+				await LeaderDM.SendMessageAsync(embed: RemindEmbed);
+
+				foreach (var user in milestone.MilestoneUsers)
+				{
+					try
+					{
+
+						if (user == GlobalVariables.ReservedID) continue;
+
+						var LoadedUser = discord.GetUser(user);
 
 						var DM = await LoadedUser.GetOrCreateDMChannelAsync();
 						await DM.SendMessageAsync(embed: RemindEmbed);
@@ -140,6 +189,9 @@ namespace Bot.Services
 
 		public Embed MilestoneEmbed(Milestone milestone)
 		{
+			var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 			var embed = new EmbedBuilder
 			{
 				Title = string.Format(Resources.MilEmbTitle,
@@ -155,7 +207,7 @@ namespace Bot.Services
 			if (milestone.Note != null)
 				embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
 
-			var leader = _discord.GetUser(milestone.Leader);
+			var leader = discord.GetUser(milestone.Leader);
 
 			embed.AddField(Resources.MilEmbInfTitleField, string.Format(Resources.MilEmbInfDescField, leader.Mention, leader.Username, _emote.Raid));
 
@@ -174,7 +226,7 @@ namespace Bot.Services
 					}
 					else
 					{
-						var discordUser = _discord.GetUser(user);
+						var discordUser = discord.GetUser(user);
 						embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
 					}
 					count++;
@@ -187,11 +239,14 @@ namespace Bot.Services
 			return embed.Build();
 		}
 
-		public Embed GetMilestonesNameEmbed(MilestoneType type)
+		public Embed GetMilestonesNameEmbed(SocketGuild guild, MilestoneType type)
 		{
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 			var embed = new EmbedBuilder
 			{
-				Title = string.Format(Resources.MilInfEmbTitle, GetNameForMilestoneType(type)),
+				Title = string.Format(Resources.MilInfEmbTitle, GetNameForMilestoneType(guild, type)),
 				Color = GetColorByType(type)
 			};
 			if (type == MilestoneType.Raid)
@@ -223,9 +278,12 @@ namespace Bot.Services
 			return embed.Build();
 		}
 
-		private Embed MilestoneRemindEmbed(Milestone milestone)
+		private Embed RemindEmbed(Milestone milestone)
 		{
-			var guild = _discord.GetGuild(milestone.GuildId);
+			var guild = discord.GetGuild(milestone.GuildId);
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 
 			var embed = new EmbedBuilder()
 			{
@@ -241,19 +299,43 @@ namespace Bot.Services
 			{
 				Name = Resources.MilEmbMemTitleField
 			};
-			var leader = _discord.GetUser(milestone.Leader);
+			var leader = discord.GetUser(milestone.Leader);
 			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
 			int count = 2;
 			foreach (var user in milestone.MilestoneUsers)
 			{
+				if (user == GlobalVariables.ReservedID) continue;
 
-				var discordUser = _discord.GetUser(user);
+				var discordUser = discord.GetUser(user);
 				embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
 
 				count++;
 			}
 			if (embedFieldUsers.Value != null)
 				embed.AddField(embedFieldUsers);
+
+			embed.WithFooter($"{string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name)}\n{Resources.MyAd}", guild.IconUrl);
+			embed.WithCurrentTimestamp();
+
+			return embed.Build();
+		}
+
+		private Embed TimeChangedEmbed(SocketGuild guild, Milestone milestone, string jumpUrl)
+		{
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
+			var embed = new EmbedBuilder()
+			{
+				Title = Resources.MilEmbTitleChangeTime,
+				Author = GetGame(milestone.MilestoneInfo.Game),
+				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType),
+				ThumbnailUrl = milestone.MilestoneInfo.Icon
+			};
+			if (milestone.Note != null)
+				embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
+
+			embed.AddField(Resources.MilEmbTimeFieldTitle, string.Format(Resources.MilEmbTimeFieldDesc, jumpUrl));
 
 			embed.WithFooter($"{string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name)}\n{Resources.MyAd}", guild.IconUrl);
 			embed.WithCurrentTimestamp();
@@ -272,8 +354,11 @@ namespace Bot.Services
 			};
 		}
 
-		private string GetNameForMilestoneType(MilestoneType type)
+		private string GetNameForMilestoneType(SocketGuild guild, MilestoneType type)
 		{
+			var loadedGuild = GuildData.GetGuildAccount(guild);
+			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+
 			return type switch
 			{
 				MilestoneType.Raid => Resources.Raid,
@@ -297,6 +382,12 @@ namespace Bot.Services
 				author.Name = "The Division 2";
 				author.IconUrl = @"https://neira.su/img/Division2.png";
 				author.Url = @"https://tomclancy-thedivision.ubisoft.com/game/";
+			}
+			else if (game == GameName.Warzone)
+			{
+				author.Name = "CoD: Warzone";
+				author.IconUrl = @"https://neira.su/img/Warzone.png";
+				author.Url = @"https://www.callofduty.com/warzone";
 			}
 			else
 			{

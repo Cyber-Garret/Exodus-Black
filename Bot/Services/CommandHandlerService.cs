@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Services
@@ -53,6 +54,7 @@ namespace Bot.Services
 			 {
 				 var context = new SocketCommandContext(discord, msg);
 				 var guild = GuildData.GetGuildAccount(context.Guild);
+				 Thread.CurrentThread.CurrentUICulture = guild.Language;
 				 var argPos = 0;
 				 // ignore if command not start from prefix
 				 var prefix = guild.CommandPrefix ?? config["Bot:Prefix"];
