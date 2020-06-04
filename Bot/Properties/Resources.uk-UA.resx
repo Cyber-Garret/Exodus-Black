@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Bip" xml:space="preserve">
     <value>Біп...</value>
@@ -542,5 +542,19 @@ Discord ім'я ґардіана
   </data>
   <data name="UTCIncorrect" xml:space="preserve">
     <value>Некоректний формат часового поясу.</value>
+  </data>
+  <data name="XurArriveEmbTitle" xml:space="preserve">
+    <value>Ґардіан! Зур прибув в сонячну систему!</value>
+  </data>
+  <data name="XurArriveEmbDesc" xml:space="preserve">
+    <value>Визначити точне місце розташування Зур-а я не можу.
+[Тут ти зможеш відшукати його положення](https://whereisxur.com/)
+[Або тут](https://ftw.in/game/destiny-2/find-xur)</value>
+  </data>
+  <data name="XurLeaveEmbTitle" xml:space="preserve">
+    <value>Увага! Зур покинув сонячну систему.</value>
+  </data>
+  <data name="XurLeaveEmbDesc" xml:space="preserve">
+    <value>Він просто зник! :open_mouth:</value>
   </data>
 </root>

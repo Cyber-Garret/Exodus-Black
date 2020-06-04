@@ -541,4 +541,18 @@ Discord Guardian Name
   <data name="WlcmEmbTitle" xml:space="preserve">
     <value>Welcome to the server {0}</value>
   </data>
+  <data name="XurArriveEmbDesc" xml:space="preserve">
+    <value>I cannot determine the exact location of Xur.
+[Here you can find his position](https://whereisxur.com/)
+[Or here](https://ftw.in/game/destiny-2/find-xur)</value>
+  </data>
+  <data name="XurArriveEmbTitle" xml:space="preserve">
+    <value>Guards! Xur has arrived in the solar system!</value>
+  </data>
+  <data name="XurLeaveEmbDesc" xml:space="preserve">
+    <value>He just disappeared! :open_mouth: </value>
+  </data>
+  <data name="XurLeaveEmbTitle" xml:space="preserve">
+    <value>Attention! Xur left the solar system.</value>
+  </data>
 </root>

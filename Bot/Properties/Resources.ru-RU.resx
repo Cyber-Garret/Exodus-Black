@@ -542,4 +542,18 @@ Discord имя стража
   <data name="UTCIncorrect" xml:space="preserve">
     <value>Некорректный формат часового пояса.</value>
   </data>
+  <data name="XurArriveEmbTitle" xml:space="preserve">
+    <value>Стражи! Зур прибыл в солнечную систему!</value>
+  </data>
+  <data name="XurArriveEmbDesc" xml:space="preserve">
+    <value>Определить точное местоположение Зур-а я не могу.
+[Тут ты сможешь отыскать его положение](https://whereisxur.com/)
+[Или тут](https://ftw.in/game/destiny-2/find-xur)</value>
+  </data>
+  <data name="XurLeaveEmbDesc" xml:space="preserve">
+    <value>Он просто испарился! :open_mouth: </value>
+  </data>
+  <data name="XurLeaveEmbTitle" xml:space="preserve">
+    <value>Внимание! Зур покинул солнечную систему.</value>
+  </data>
 </root>

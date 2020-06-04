@@ -1262,5 +1262,43 @@ namespace Bot.Properties {
                 return ResourceManager.GetString("WlcmEmbTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I cannot determine the exact location of Xur.
+        ///[Here you can find his position](https://whereisxur.com/)
+        ///[Or here](https://ftw.in/game/destiny-2/find-xur).
+        /// </summary>
+        internal static string XurArriveEmbDesc {
+            get {
+                return ResourceManager.GetString("XurArriveEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guards! Xur has arrived in the solar system!.
+        /// </summary>
+        internal static string XurArriveEmbTitle {
+            get {
+                return ResourceManager.GetString("XurArriveEmbTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to He just disappeared! :open_mouth: .
+        /// </summary>
+        internal static string XurLeaveEmbDesc {
+            get {
+                return ResourceManager.GetString("XurLeaveEmbDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attention! Xur left the solar system..
+        /// </summary>
+        internal static string XurLeaveEmbTitle {
+            get {
+                return ResourceManager.GetString("XurLeaveEmbTitle", resourceCulture);
+            }
+        }
     }
 }

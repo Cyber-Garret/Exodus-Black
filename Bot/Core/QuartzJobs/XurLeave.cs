@@ -1,4 +1,5 @@
 ﻿using Bot.Core.Data;
+using Bot.Properties;
 
 using Discord;
 using Discord.WebSocket;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Quartz;
 
 using System;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Core.QuartzJobs
@@ -26,7 +29,6 @@ namespace Bot.Core.QuartzJobs
 		}
 		public Task Execute(IJobExecutionContext context)
 		{
-			var embed = XurLeaveEmbed();
 
 			Parallel.ForEach(discord.Guilds, async SocketGuild =>
 			{
@@ -37,24 +39,26 @@ namespace Bot.Core.QuartzJobs
 					if (guild.NotificationChannel == 0) return;
 
 					await discord.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-				   .SendMessageAsync(text: guild.GlobalMention, embed: embed);
+				   .SendMessageAsync(text: guild.GlobalMention, embed: XurLeaveEmbed(guild.Language).Build());
 				}
 				catch (Exception ex) { logger.LogError(ex, "XurLeave"); }
 			});
 			return Task.CompletedTask;
 		}
 
-		private Embed XurLeaveEmbed()
+		private EmbedBuilder XurLeaveEmbed(CultureInfo culture)
 		{
+			Thread.CurrentThread.CurrentUICulture = culture;
+
 			var embed = new EmbedBuilder
 			{
-				Title = "Внимание! Зур покинул солнечную систему.",
+				Title = Resources.XurLeaveEmbTitle,
 				Color = Color.Red,
 				ThumbnailUrl = "https://www.bungie.net/common/destiny2_content/icons/5659e5fc95912c079962376dfe4504ab.png",
-				Description = "Он просто испарился! :open_mouth: "
+				Description = Resources.XurLeaveEmbDesc
 			};
 
-			return embed.Build();
+			return embed;
 		}
 	}
 }
