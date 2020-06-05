@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Web
 {
@@ -24,6 +24,8 @@ namespace Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 			services.AddControllersWithViews();
 		}
 
@@ -41,17 +43,41 @@ namespace Web
 				app.UseHsts();
 			}
 			app.UseHttpsRedirection();
+
 			app.UseStaticFiles();
 
-			app.UseRouting();
-
-			app.UseAuthorization();
-
-			app.UseEndpoints(endpoints =>
+			var supportedCultures = new List<CultureInfo>
 			{
-				endpoints.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Home}/{action=Index}/{id?}");
+				new CultureInfo("en"),
+				new CultureInfo("ru"),
+				new CultureInfo("uk"),
+			};
+			var localizationOptions = new RequestLocalizationOptions
+			{
+				DefaultRequestCulture = new RequestCulture("en"),
+				SupportedCultures = supportedCultures,
+				SupportedUICultures = supportedCultures
+			};
+			var requestProvider = new RouteDataRequestCultureProvider();
+			localizationOptions.RequestCultureProviders.Insert(0, requestProvider);
+
+			app.UseRouter(routes =>
+			{
+				routes.MapMiddlewareRoute("{culture=en}/{*endpoints}", subApp =>
+				{
+					subApp.UseRouting();
+
+					subApp.UseRequestLocalization(localizationOptions);
+
+					subApp.UseAuthorization();
+
+					subApp.UseEndpoints(endpoints =>
+					{
+						endpoints.MapControllerRoute(
+							name: "default",
+							pattern: "{culture=en}/{controller=Home}/{action=Index}/{id?}");
+					});
+				});
 			});
 		}
 	}
