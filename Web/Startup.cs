@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.AspNetCore.Http;
 
 namespace Web
 {
@@ -24,6 +26,16 @@ namespace Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.Configure<CookiePolicyOptions>(options =>
+			{
+				// This lambda determines whether user consent for non-essential cookies is needed for a given request.
+				options.CheckConsentNeeded = context => true;
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions => {
+				cookieOptions.LoginPath = "/";
+			});
+
 			services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 			services.AddControllersWithViews();
@@ -69,6 +81,7 @@ namespace Web
 
 					subApp.UseRequestLocalization(localizationOptions);
 
+					subApp.UseAuthentication();
 					subApp.UseAuthorization();
 
 					subApp.UseEndpoints(endpoints =>

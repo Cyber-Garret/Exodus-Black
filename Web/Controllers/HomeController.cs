@@ -22,7 +22,6 @@ namespace Web.Controllers
 		public IActionResult Index()
 		{
 			ViewData["Welcome"] = _localizer["Welcome"];
-			_logger.LogInformation(_localizer["Welcome"]);
 			return View();
 		}
 
