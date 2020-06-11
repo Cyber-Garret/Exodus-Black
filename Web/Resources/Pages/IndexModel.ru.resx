@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddBot" xml:space="preserve">
     <value>Добавить в Дискорд</value>
@@ -131,5 +131,50 @@
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Страж, тебя приветствует</value>
+  </data>
+  <data name="BotStatRaids" xml:space="preserve">
+    <value>Собрано рейдов</value>
+  </data>
+  <data name="BotStatServers" xml:space="preserve">
+    <value>Серверов</value>
+  </data>
+  <data name="BotStatUsers" xml:space="preserve">
+    <value>Пользователей</value>
+  </data>
+  <data name="Enjoy" xml:space="preserve">
+    <value>Погрузись&lt;br&gt;В нашу&lt;br&gt;Сеть!</value>
+  </data>
+  <data name="FeatDesc" xml:space="preserve">
+    <value>Нейроматрица является эффективным помощником в управлении и внутренней организации клана. Этот бот способен отследить и отобразить в логах всю важную информацию о малейших изменениях в составе клана.</value>
+  </data>
+  <data name="FeatTitle" xml:space="preserve">
+    <value>Возможности бота</value>
+  </data>
+  <data name="FeatOneTitle" xml:space="preserve">
+    <value>Уведомления</value>
+  </data>
+  <data name="FeatOneDesc" xml:space="preserve">
+    <value>Получайте уведомления о том когда приходит и уходит Зур в любой, выбранный вами текстовый канал. А еще уже в разработке отображение ассортимента и карта с позицией, где его найти. Хотите красивое уведомление о новом страже на вашем сервере? Нейра подберет случайную фразу и фон и поприветствует нового участника.</value>
+  </data>
+  <data name="FeatTwoTitle" xml:space="preserve">
+    <value>Логирование</value>
+  </data>
+  <data name="FeatTwoDesc" xml:space="preserve">
+    <value>Кто-то покинул сервер, кто-то выгнал стража, что вообще происходит? Нейра может отслеживать разные действия участников на сервере - изменение/удаление сообщений, присоединение участников и ещё много всего!</value>
+  </data>
+  <data name="FeatThreeTitle" xml:space="preserve">
+    <value>Сбор Рейдов</value>
+  </data>
+  <data name="FeatThreeDesc" xml:space="preserve">
+    <value>Устали расписывать условия для сбора группы в рейд, редактировать сообщение, когда кто-то хочет в вашу группу, забыли, что у вас намечена активность? Нейра готова помочь вам оформить красивое сообщение, автоматически будет записывать участников при нажатии на одну реакцию, а за 15 минут до начала активности напомнит всем участникам личным сообщением.</value>
+  </data>
+  <data name="FeatFourTitle" xml:space="preserve">
+    <value>База данных</value>
+  </data>
+  <data name="FeatFourDesc" xml:space="preserve">
+    <value>Автономная база данных всего экзотического снаряжения и катализаторов прямо на вашем сервере! Получили новую крутую пушку, а где точно найти катализатор не знаете? Спросите Нейру!</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Главная</value>
   </data>
 </root>

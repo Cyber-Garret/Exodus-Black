@@ -34,5 +34,10 @@ namespace Web.Services
 		{
 			return "https://docs.neira.su/";
 		}
+
+		public string YandexMoneyUrl()
+		{
+			return "https://money.yandex.ru/to/410019748161790";
+		}
 	}
 }

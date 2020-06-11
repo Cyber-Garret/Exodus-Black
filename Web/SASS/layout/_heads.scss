@@ -1,5 +1,5 @@
 ﻿// Styling for the masthead
-header.masthead {
+section.masthead {
 	text-align: center;
 	color: white;
 	background-image: url('../img/header-bg.jpg');
@@ -7,6 +7,7 @@ header.masthead {
 	background-attachment: scroll;
 	background-position: center center;
 	background-size: cover;
+	max-height: 50rem;
 
 	.intro-text {
 		padding-top: 150px;
@@ -32,8 +33,36 @@ header.masthead {
 	}
 }
 
+section.serverhead {
+	text-align: center;
+	color: white;
+	background-image: url('../img/header-bg-servers.jpg');
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	background-position: center center;
+	background-size: cover;
+	max-height: 30rem;
+
+	.intro-text {
+		padding-top: 150px;
+		padding-bottom: 100px;
+
+		.intro-heading {
+			font-size: 2.5rem;
+			font-weight: 700;
+			text-shadow: 0.25rem 0.25rem 0.25rem #000000;
+			line-height: 50px;
+			margin-bottom: 25px;
+		}
+
+		.title-font {
+			@include title-font;
+		}
+	}
+}
+
 @media(min-width:768px) {
-	header.masthead {
+	section.masthead {
 		.intro-text {
 			padding-top: 300px;
 			padding-bottom: 200px;
@@ -53,7 +82,7 @@ header.masthead {
 				margin-bottom: 50px;
 			}
 
-			.title-font{
+			.title-font {
 				@include title-font;
 			}
 		}

@@ -117,64 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddBot" xml:space="preserve">
-    <value>Додати бота на сервер</value>
+  <data name="Dev" xml:space="preserve">
+    <value>Developed by</value>
   </data>
-  <data name="BotStatDesc" xml:space="preserve">
-    <value>Наші досягнення.</value>
+  <data name="Docs" xml:space="preserve">
+    <value>Docs</value>
   </data>
-  <data name="BotStatTitle" xml:space="preserve">
-    <value>Статистика бота</value>
+  <data name="Donate" xml:space="preserve">
+    <value>Support project</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Нейроматриця</value>
+    <value>Failsafe</value>
   </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>Ґардіан, тебе вітає</value>
-  </data>
-  <data name="BotStatRaids" xml:space="preserve">
-    <value>Рейдів зібрано</value>
-  </data>
-  <data name="BotStatServers" xml:space="preserve">
-    <value>Серверів</value>
-  </data>
-  <data name="BotStatUsers" xml:space="preserve">
-    <value>Користувачів</value>
-  </data>
-  <data name="Enjoy" xml:space="preserve">
-    <value>Поринь&lt;br&gt;У нашу&lt;br&gt;мережу!</value>
-  </data>
-  <data name="FeatDesc" xml:space="preserve">
-    <value>Нейроматріца є ефективним помічником в управлінні і внутрішньої організації клану. Цей бот здатний відстежити і відобразити в логах всю важливу інформацію про найменші зміни в діскорді.</value>
-  </data>
-  <data name="FeatFourDesc" xml:space="preserve">
-    <value>Автономна база даних всього екзотичного спорядження і каталізаторів прямо на вашому сервері! Отримали нову круту гармату, а де точно знайти каталізатор не знаєте? Запитайте Нейру!</value>
-  </data>
-  <data name="FeatFourTitle" xml:space="preserve">
-    <value>База даних</value>
-  </data>
-  <data name="FeatOneDesc" xml:space="preserve">
-    <value>Отримуйте повідомлення про те коли приходить і покидає Зур в будь-який, вибраний вами текстовий канал. А ще вже в розробці відображення асортименту і карта з позицією, де його знайти. Хочете файне повідомлення про нових Ґардіанів на вашому сервері? Нейра підбере випадкову фразу і фон і привітає нового учасника.</value>
-  </data>
-  <data name="FeatOneTitle" xml:space="preserve">
-    <value>Повідомлення</value>
-  </data>
-  <data name="FeatThreeDesc" xml:space="preserve">
-    <value>Втомилися розписувати умови для збору групи в рейд, редагувати повідомлення, коли хтось хоче в вашу групу, забули, що у вас намічена активність? Нейра готова допомогти вам оформити красиве повідомлення, автоматично буде записувати учасників при натисканні на одну реакцію, а за 15 хвилин до початку активності нагадає всім учасникам особистим повідомленням.</value>
-  </data>
-  <data name="FeatThreeTitle" xml:space="preserve">
-    <value>Збір рейдів</value>
-  </data>
-  <data name="FeatTitle" xml:space="preserve">
-    <value>Можливості бота</value>
-  </data>
-  <data name="FeatTwoDesc" xml:space="preserve">
-    <value>Хтось покинув сервер, хтось вигнав ґардіана, що взагалі відбувається? Нейра може відстежувати різні дії учасників на сервері - зміна/видалення повідомлень, приєднання учасників і ще багато всього!</value>
-  </data>
-  <data name="FeatTwoTitle" xml:space="preserve">
-    <value>Логування</value>
+  <data name="Statistic" xml:space="preserve">
+    <value>Statistic</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Головна</value>
+    <value>Discord Bot Failsafe | Destiny 2 discord bot</value>
   </data>
 </root>
