@@ -82,3 +82,24 @@ img::selection {
 img::-moz-selection {
 	background: transparent;
 }
+
+.stat-communities {
+	margin-top: 1rem;
+	background: url(/img/globe-europe-solid.svg) no-repeat center center;
+	width: auto;
+	height: auto;
+}
+
+.stat-users {
+	margin-top: 1rem;
+	background: url(/img/users-solid.svg) no-repeat center center;
+	width: auto;
+	height: auto;
+}
+
+.stat-raids {
+	margin-top: 1rem;
+	background: url(/img/clipboard-check-solid.svg) no-repeat center center;
+	width: auto;
+	height: auto;
+}

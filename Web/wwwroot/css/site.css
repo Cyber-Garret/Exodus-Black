@@ -85,6 +85,24 @@ img::selection {
 img::-moz-selection {
   background: transparent; }
 
+.stat-communities {
+  margin-top: 1rem;
+  background: url(/img/globe-europe-solid.svg) no-repeat center center;
+  width: auto;
+  height: auto; }
+
+.stat-users {
+  margin-top: 1rem;
+  background: url(/img/users-solid.svg) no-repeat center center;
+  width: auto;
+  height: auto; }
+
+.stat-raids {
+  margin-top: 1rem;
+  background: url(/img/clipboard-check-solid.svg) no-repeat center center;
+  width: auto;
+  height: auto; }
+
 .btn {
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   font-weight: 700; }
@@ -165,7 +183,8 @@ section.masthead {
   max-height: 50rem; }
   section.masthead .intro-text {
     padding-top: 150px;
-    padding-bottom: 100px; }
+    padding-bottom: 100px;
+    text-shadow: 0.25rem 0.25rem 0.25rem #000000; }
     section.masthead .intro-text .intro-lead-in {
       font-size: 22px;
       font-style: italic;
@@ -201,24 +220,34 @@ section.serverhead {
     section.serverhead .intro-text .title-font {
       font-family: Fyodor-BoldOblique; }
 
-@media (min-width: 768px) {
-  section.masthead .intro-text {
-    padding-top: 300px;
-    padding-bottom: 200px; }
-    section.masthead .intro-text .intro-lead-in {
-      font-size: 40px;
-      font-style: italic;
-      line-height: 40px;
-      margin-bottom: 25px;
-      font-family: 'Droid Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
-    section.masthead .intro-text .intro-heading {
-      font-size: 5rem;
-      font-weight: 700;
-      line-height: 75px;
-      margin-bottom: 50px; }
-    section.masthead .intro-text .title-font {
-      font-family: Fyodor-BoldOblique; } }
+/*@media(min-width:768px) {
+	section.masthead {
+		.intro-text {
+			padding-top: 300px;
+			padding-bottom: 200px;
 
+			.intro-lead-in {
+				font-size: 40px;
+				font-style: italic;
+				line-height: 40px;
+				margin-bottom: 25px;
+				@include serif-font;
+			}
+
+			.intro-heading {
+				font-size: 5rem;
+				font-weight: 700;
+				line-height: 75px;
+				margin-bottom: 50px;
+			}
+
+			.title-font {
+				@include title-font;
+			}
+		}
+	}
+}
+*/
 .stat-heading {
   margin: 15px 0;
   text-transform: none; }

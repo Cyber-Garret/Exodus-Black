@@ -12,13 +12,16 @@
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
 			<div class="container">
-				<a class="navbar-brand" asp-page="Index">@res.Get("Name")</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+				<a class="navbar-brand" asp-page="Index">
+					<img src="~/img/neira.png" class="d-inline-block align-top" width="30" height="30" alt="Logo">
+					@res.Get("Name")
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleMenu" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-					<ul class="navbar-nav flex-grow-1">
+				<div id="navbarToggleMenu" class="navbar-collapse collapse">
+					<ul class="navbar-nav text-capitalize ml-auto">
 						<li class="nav-item">
 							<a class="nav-link">@res.Get("Statistic")</a>
 						</li>
@@ -30,22 +33,29 @@
 						</li>
 					</ul>
 				</div>
-				<vc:culture-switcher />
 			</div>
 		</nav>
 	</header>
 	<main role="main" class="pb-3">
 		@RenderBody()
 	</main>
-
+	<!-- Footer -->
 	<footer class="border-top footer text-muted">
 		<div class="container">
-			&copy; 2018-@DateTime.Now.Year - @res.Get("Name") - @res.Get("Dev") <a href="@res.BlackExodusInvite()" rel="nofollow" target="_blank">Cyber_Garret#5898</a>
+			<div class="align-items-center">
+				<div class="btn-group">
+					<vc:culture-switcher />
+				</div>
+				<br />
+				<span class="copyright">&copy; 2018-@DateTime.Now.Year - @res.Get("Dev") <a href="@res.BlackExodusInvite()" rel="nofollow" target="_blank">Cyber_Garret#5898</a></span>
+			</div>
 		</div>
 	</footer>
 
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" crossorigin="anonymous"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 
 	@RenderSection("Scripts", required: false)
