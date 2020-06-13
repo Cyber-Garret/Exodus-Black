@@ -12,7 +12,7 @@
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
 			<div class="container">
-				<a class="navbar-brand" asp-page="Index">
+				<a class="navbar-brand" asp-route-culture="@Context.Request.RouteValues["culture"]" asp-page="Index">
 					<img src="~/img/neira.png" class="d-inline-block align-top" width="30" height="30" alt="Logo">
 					@res.Get("Name")
 				</a>
@@ -23,13 +23,10 @@
 				<div id="navbarToggleMenu" class="navbar-collapse collapse">
 					<ul class="navbar-nav text-capitalize ml-auto">
 						<li class="nav-item">
-							<a class="nav-link">@res.Get("Statistic")</a>
-						</li>
-						<li class="nav-item">
 							<a class="nav-link" href="http://docs.neira.su/" target="_blank">@res.Get("Docs")</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" asp-page="Donate">@res.Get("Donate")</a>
+							<a class="nav-link" asp-route-culture="@Context.Request.RouteValues["culture"]" asp-page="Donate">@res.Get("Donate")</a>
 						</li>
 					</ul>
 				</div>

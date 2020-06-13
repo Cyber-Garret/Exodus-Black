@@ -1,20 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 using System.Globalization;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Options;
+
+using Web.Models;
 using Web.Services;
 
 namespace Web
@@ -44,6 +42,7 @@ namespace Web
 				options.DefaultRequestCulture = new RequestCulture("en");
 				options.SupportedCultures = supportedCultures;
 				options.SupportedUICultures = supportedCultures;
+				options.RequestCultureProviders.Insert(0, new RouteDataRequestCultureProvider { Options = options });
 			});
 			services.AddSingleton<SharedResourcesService>();
 
@@ -58,9 +57,10 @@ namespace Web
 				cookieOptions.LoginPath = "/";
 			});
 
-			services.AddRazorPages().AddRazorPagesOptions(options =>
+			services.AddRazorPages(options =>
 			{
 				options.Conventions.AuthorizeFolder("/admin");
+				options.Conventions.Add(new CultureTemplatePageRouteModelConvention());
 			}).AddViewLocalization();
 		}
 
@@ -78,7 +78,6 @@ namespace Web
 				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
 			app.UseRouting();
