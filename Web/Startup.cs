@@ -12,9 +12,6 @@ using Microsoft.Extensions.Options;
 
 using System.Globalization;
 
-using Web.Models;
-using Web.Services;
-
 namespace Web
 {
 	public class Startup
@@ -60,7 +57,6 @@ namespace Web
 			services.AddRazorPages(options =>
 			{
 				options.Conventions.AuthorizeFolder("/admin");
-				options.Conventions.Add(new CultureTemplatePageRouteModelConvention());
 			}).AddViewLocalization();
 		}
 

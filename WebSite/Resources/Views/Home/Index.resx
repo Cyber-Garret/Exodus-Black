@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddBot" xml:space="preserve">
+    <value>Add bot</value>
+  </data>
+  <data name="BotStatDesc" xml:space="preserve">
+    <value>Our achievements.</value>
+  </data>
+  <data name="BotStatRaids" xml:space="preserve">
+    <value>Helped for Raids</value>
+  </data>
+  <data name="BotStatServers" xml:space="preserve">
+    <value>Servers</value>
+  </data>
+  <data name="BotStatTitle" xml:space="preserve">
+    <value>Bot Statistic</value>
+  </data>
+  <data name="BotStatUsers" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Enjoy" xml:space="preserve">
+    <value>Immerse&lt;br&gt;yourself&lt;br&gt;in our network!</value>
+  </data>
+  <data name="FeatDesc" xml:space="preserve">
+    <value>Failsafe is an effective assistant in the management and internal organization of the clan. This bot is able to track and display in logs all the important information about the slightest changes in the composition of the clan.</value>
+  </data>
+  <data name="FeatFourDesc" xml:space="preserve">
+    <value>A standalone database of all exotic equipment and catalysts right on your server! Got a new cool gun, and where exactly to find the catalyst do not know? Ask Failsafe!</value>
+  </data>
+  <data name="FeatFourTitle" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="FeatOneDesc" xml:space="preserve">
+    <value>Get notifications about when Xur comes and goes to any text channel you choose. And also in the development of the display of the range and the map with the position where to find it. Want a beautiful notification of a new Guardian on your server? Failsafe will pick up a random phrase and background and greet the new participant.</value>
+  </data>
+  <data name="FeatOneTitle" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="FeatThreeDesc" xml:space="preserve">
+    <value>Tired of writing down the conditions for collecting a group in a raid, editing a message when someone wants to your group, forget that you have an activity? Failsafe is ready to help you make a beautiful message, will automatically record participants when you click on one reaction, and 15 minutes before the activity will remind all participants a personal message.</value>
+  </data>
+  <data name="FeatThreeTitle" xml:space="preserve">
+    <value>Raid battle groups</value>
+  </data>
+  <data name="FeatTitle" xml:space="preserve">
+    <value>Bot features</value>
+  </data>
+  <data name="FeatTwoDesc" xml:space="preserve">
+    <value>Someone left the server, someone kicked out the Guardian from server, what's going on? Failsafe can track different actions of participants on the server - changing/deleting messages, joining participants and more!</value>
+  </data>
+  <data name="FeatTwoTitle" xml:space="preserve">
+    <value>Logging</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Failsafe</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Guardian, you are welcome by</value>
+  </data>
+</root>
