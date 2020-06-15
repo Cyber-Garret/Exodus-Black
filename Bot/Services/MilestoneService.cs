@@ -374,19 +374,19 @@ namespace Bot.Services
 			if (game == GameName.Destiny)
 			{
 				author.Name = "Destiny 2";
-				author.IconUrl = @"https://neira.su/img/Destiny2.png";
+				author.IconUrl = @"https://www.neira.app/img/Destiny2.png";
 				author.Url = @"https://www.bungie.net/";
 			}
 			else if (game == GameName.Division)
 			{
 				author.Name = "The Division 2";
-				author.IconUrl = @"https://neira.su/img/Division2.png";
+				author.IconUrl = @"https://www.neira.app/img/Division2.png";
 				author.Url = @"https://tomclancy-thedivision.ubisoft.com/game/";
 			}
 			else if (game == GameName.Warzone)
 			{
 				author.Name = "CoD: Warzone";
-				author.IconUrl = @"https://neira.su/img/Warzone.png";
+				author.IconUrl = @"https://www.neira.app/img/Warzone.png";
 				author.Url = @"https://www.callofduty.com/warzone";
 			}
 			else
