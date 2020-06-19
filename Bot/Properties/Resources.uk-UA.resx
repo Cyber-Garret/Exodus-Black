@@ -538,11 +538,11 @@ Discord ім'я ґардіана
     <value>Некоректний формат часового поясу.</value>
   </data>
   <data name="XurArriveEmbTitle" xml:space="preserve">
-    <value>Ґардіан! Зур прибув в сонячну систему!</value>
+    <value>Ґардіан! Зур прибув у сонячну систему!</value>
   </data>
   <data name="XurArriveEmbDesc" xml:space="preserve">
     <value>Визначити точне місце розташування Зур-а я не можу.
-[Тут ти зможеш відшукати його положення](https://whereisxur.com/)
+[Тут ти зможеш відшукати його місцезнаходження](https://whereisxur.com/)
 [Або тут](https://ftw.in/game/destiny-2/find-xur)</value>
   </data>
   <data name="XurLeaveEmbTitle" xml:space="preserve">
