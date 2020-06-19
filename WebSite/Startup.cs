@@ -14,6 +14,8 @@ using System.Globalization;
 
 using WebSite.Services;
 
+using Neiralink;
+
 namespace WebSite
 {
 	public class Startup
@@ -35,7 +37,7 @@ namespace WebSite
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions => {
-				cookieOptions.LoginPath = "/";
+				cookieOptions.LoginPath = "/Login";
 			});
 
 			services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
@@ -57,6 +59,9 @@ namespace WebSite
 					opts.SupportedUICultures = supportedCultures;
 				});
 			services.AddSingleton<SharedResourcesService>();
+
+			services.AddTransient<IDbClient, DbClient>(provider => new DbClient(Configuration.GetConnectionString("DefaultConnection")));
+
 			services.AddControllersWithViews()
 				.AddViewLocalization(
 				LanguageViewLocationExpanderFormat.Suffix,
@@ -80,6 +85,7 @@ namespace WebSite
 
 			app.UseRouting();
 
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();

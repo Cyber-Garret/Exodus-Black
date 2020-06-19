@@ -1,5 +1,16 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+	ViewData["Title"] = "Admin panel";
 }
+	<div class="container margin-top-5">
+		@if (!User.Identity.IsAuthenticated)
+		{
+			<h3>Closed</h3>
+			<span>@User.Identity.IsAuthenticated</span>
+		}
+		else
+		{
+			<h2>Admin panel</h2>
+			<span>@User.Identity.IsAuthenticated</span>
+			<a class="btn btn-info" asp-controller="Admin" asp-action="Logout">Logout</a>
+		}
+	</div>

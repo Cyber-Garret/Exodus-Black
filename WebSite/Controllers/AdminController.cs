@@ -16,7 +16,6 @@ using WebSite.ViewModels;
 
 namespace WebSite.Controllers
 {
-	[Authorize]
 	public class AdminController : Controller
 	{
 		private readonly IConfiguration _configuration;
@@ -41,7 +40,7 @@ namespace WebSite.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var user = _configuration.GetSection("SiteUser").Get<SiteAdmin>();
+				var user = _configuration.GetSection("SiteAdmin").Get<SiteAdmin>();
 
 				if (credential.UserName == user.UserName)
 				{
@@ -62,7 +61,7 @@ namespace WebSite.Controllers
 		public async Task<IActionResult> Logout()
 		{
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-			return RedirectToAction("Login", "Account");
+			return RedirectToAction("Index", "Admin");
 		}
 
 		private async Task Authenticate(SiteAdmin credential)
