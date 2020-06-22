@@ -14,10 +14,10 @@ namespace Bot.Services
 	public class SelfRoleService
 	{
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		public SelfRoleService(IServiceProvider service)
 		{
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			logger = service.GetRequiredService<ILogger<SelfRoleService>>();
 		}
 		public async Task SelfRoleReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)

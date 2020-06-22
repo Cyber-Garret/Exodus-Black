@@ -7,21 +7,23 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Neiralink;
+using Neiralink.Models;
+
 namespace WebSite.Controllers
 {
 	[Authorize]
 	public class WelcomeController : Controller
 	{
+		private readonly IDbClient db;
+		public WelcomeController(IDbClient dbClient)
+		{
+			db = dbClient;
+		}
 		// GET: WelcomeController
 		public ActionResult Index()
 		{
-			return View();
-		}
-
-		// GET: WelcomeController/Details/5
-		public ActionResult Details(int id)
-		{
-			return View();
+			return View(db.GetAllWelcomes());
 		}
 
 		// GET: WelcomeController/Create
@@ -33,10 +35,11 @@ namespace WebSite.Controllers
 		// POST: WelcomeController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
+		public ActionResult Create(RandomWelcome welcome)
 		{
 			try
 			{
+				db.CreateWelcome(welcome);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -48,16 +51,20 @@ namespace WebSite.Controllers
 		// GET: WelcomeController/Edit/5
 		public ActionResult Edit(int id)
 		{
-			return View();
+			var welcome = db.GetWelcome(id);
+			if (welcome != null)
+				return View(welcome);
+			return NotFound();
 		}
 
 		// POST: WelcomeController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public ActionResult Edit(RandomWelcome welcome)
 		{
 			try
 			{
+				db.UpdateWelcome(welcome);
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -67,18 +74,23 @@ namespace WebSite.Controllers
 		}
 
 		// GET: WelcomeController/Delete/5
-		public ActionResult Delete(int id)
+		[ActionName("Delete")]
+		public ActionResult ConfirmDelete(int id)
 		{
-			return View();
+			var welcome = db.GetWelcome(id);
+			if (welcome != null)
+				return View(welcome);
+			return NotFound();
 		}
 
 		// POST: WelcomeController/Delete/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
+		public ActionResult Delete(int id)
 		{
 			try
 			{
+				db.DeleteWelcome(id);
 				return RedirectToAction(nameof(Index));
 			}
 			catch

@@ -10,7 +10,10 @@ using ImageMagick;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Neiralink;
+
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -23,17 +26,21 @@ namespace Bot.Services
 	{
 		// declare the fields used later in this class
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 		private readonly SelfRoleService roleService;
-		public DiscordEventHandlerService(IServiceProvider service)
+
+		private readonly IDbClient db;
+		public DiscordEventHandlerService(IServiceProvider service, IDbClient dbClient)
 		{
 			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
 			roleService = service.GetRequiredService<SelfRoleService>();
+
+			db = dbClient;
 		}
 
 		public void Configure()
@@ -572,38 +579,21 @@ namespace Bot.Services
 
 				if (loadedGuild.WelcomeChannel == 0) return;
 				if (!(discord.GetChannel(loadedGuild.WelcomeChannel) is SocketTextChannel channel)) return;
-				string[] randomWelcome =
-					{
-					"Опять Кабал? ©Ашер",
-					"Бип. ©Нейра",
-					"Я использовала часть своего кода, программируя эту броню! Но если умрешь, во всем виноват будешь ты, а не я ©Нейра",
-					"Капитан, вы знали, что я подслушивала за Гоулом, Хм... Я думала он вас на атомы распылит ©Нейра",
-					"Раз уж вы здесь, не хотите ненадолго остаться?.. Несколько тысяч лет меня устроит ©Нейра",
-					"\"Мотиватор дня\" Не сдавайся детка! \"Конец записи\"©Нейра",
-					"Значит им танков сколько захочешь, а мне ни одного? ©Кейд-6",
-					"Свет живет во всем вокруг и во всех нас. Можешь заслонить его, можешь даже попытаться запереть его. Но он всегда найдет выход. - ©Глашатай Странника.",
-					"Окей, значит так... Эм... Вы - сборище неудачников. Но раз других поубивали, то и вы сойдёте. ©Кейд-6",
-					"Короче, всё пропало. Мой шмот, ваш шмот... Важнее, конечно, мой шмот. ©Кейд-6",
-					"Пришло время новых легенд.",
-					"Это - конец вашего пути. ©Гоул",
-					"Все любят плохую идею, если она сработала. ©Кейд-6",
-					"Эй, как насчет того, чтобы ты встал здесь и делал мою работу? А я пойду и буду делать твою. Которая заключается в том, чтобы тут околачиваться. ©Кейд-6",
-					"Тут не библиотека. Проходи, не задерживайся. ©Кейд-6",
-					"Да, ты клёвый и всё такое, но проваливай. ©Кейд-6",
-					"Так, стоп, погоди... отойди назад... ещё... вот так нормально. ©Кейд-6",
-					"Убери свой камень с моей карты. ©Кейд-6",
-					"(Смешно пародируя голос Кабалов) Отдайте нам Праймуса, или мы взорвем корабль. ©Кейд-6",
-					"Если ты увидишь их... просто пристрели. ©Кейд-6",
-					"Расслабься, он работает нормально. Приготовься для воскрешения, Призрак. ©Кейд-6",
-					"(Шепотом) Ты мой любимчик. Тссс, никому не говори. ©Кейд-6",
-					"Я бы хотел постоять тут с тобой весь день, но... Я соврал, я бы совсем не хотел стоять тут с тобой весь день. ©Кейд-6",
-					"Они убили Кейда! Сволочи!",
-					"Так я прав... или я прав? ©Кейд-6",
-					"Сколько раз стиралась моя система? 41,42,43? ©Банши-44" };
+				List<string> randomWelcome = new List<string>();
+
+				foreach (var welcome in db.GetAllWelcomes())
+				{
+					if (loadedGuild.Language.TwoLetterISOLanguageName == "ru")
+						randomWelcome.Add(welcome.RU);
+					else if (loadedGuild.Language.TwoLetterISOLanguageName == "uk")
+						randomWelcome.Add(welcome.UK);
+					else
+						randomWelcome.Add(welcome.EN);
+				}
 
 				var rand = new Random();
 
-				string welcomeMessage = randomWelcome[rand.Next(randomWelcome.Length)];
+				string welcomeMessage = randomWelcome[rand.Next(randomWelcome.Count)];
 				string background = Path.Combine(Directory.GetCurrentDirectory(), "UserData", "welcome-bg", $"bg{rand.Next(1, 31)}.jpg");
 
 				using var image = new MagickImage(background, 512, 200);

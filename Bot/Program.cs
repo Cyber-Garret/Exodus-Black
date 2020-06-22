@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using Neiralink;
+
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -86,6 +88,8 @@ namespace Bot
 						services.AddSingleton(new JobSchedule(typeof(XurLeave), $"0 0 {hour} ? * TUE")); // run every Tuesday in 20:00
 						services.AddSingleton(new JobSchedule(typeof(MilestoneRemind), "0/10 * * * * ?")); // run every 10 seconds.
 						services.AddSingleton(new JobSchedule(typeof(MilestoneClean), "0 0/15 * * * ?")); // run every 15 minute.
+
+						services.AddTransient<IDbClient, DbClient>(provider => new DbClient(builtConfig.GetConnectionString("DefaultConnection")));
 					})
 					.ConfigureAppConfiguration((hostingContext, config) =>
 					{

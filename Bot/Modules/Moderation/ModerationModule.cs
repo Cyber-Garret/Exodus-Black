@@ -24,12 +24,12 @@ namespace Bot.Modules
 	public class ModerationModule : RootModule
 	{
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly DiscordEventHandlerService discordEvent;
 		public ModerationModule(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<ModerationModule>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			discordEvent = service.GetRequiredService<DiscordEventHandlerService>();
 		}
 

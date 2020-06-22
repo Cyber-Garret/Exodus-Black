@@ -18,13 +18,13 @@ namespace Bot.Services
 	{
 		private readonly IServiceProvider service;
 		private readonly IConfiguration config;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly CommandService commands;
 		public CommandHandlerService(IServiceProvider service)
 		{
 			this.service = service;
 			config = service.GetRequiredService<IConfiguration>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			commands = service.GetRequiredService<CommandService>();
 		}
 

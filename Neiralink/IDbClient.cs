@@ -5,6 +5,7 @@ using Neiralink.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Text;
 
@@ -34,7 +35,7 @@ namespace Neiralink
 
 		public void CreateWelcome(RandomWelcome randomWelcome)
 		{
-			using var db = new SqlConnection(connectionString);
+			using var db = new MySqlConnection(connectionString);
 
 			var sqlQuery = "INSERT INTO RandomWelcomes (EN, RU, UK) VALUES(@EN, @RU, @UK)";
 			db.Execute(sqlQuery, randomWelcome);
@@ -47,26 +48,26 @@ namespace Neiralink
 
 		public void DeleteWelcome(int id)
 		{
-			using var db = new SqlConnection(connectionString);
+			using var db = new MySqlConnection(connectionString);
 			var sqlQuery = "DELETE FROM RandomWelcomes WHERE RowID = @id";
 			db.Execute(sqlQuery, new { id });
 		}
 
 		public IEnumerable<RandomWelcome> GetAllWelcomes()
 		{
-			using var db = new SqlConnection(connectionString);
+			using var db = new MySqlConnection(connectionString);
 			return db.Query<RandomWelcome>("SELECT * FROM RandomWelcomes").ToList();
 		}
 
 		public RandomWelcome GetWelcome(int id)
 		{
-			using var db = new SqlConnection(connectionString);
+			using var db = new MySqlConnection(connectionString);
 			return db.Query<RandomWelcome>("SELECT * FROM RandomWelcomes WHERE RowID = @id", new { id }).FirstOrDefault();
 		}
 
 		public void UpdateWelcome(RandomWelcome randomWelcome)
 		{
-			using var db = new SqlConnection(connectionString);
+			using var db = new MySqlConnection(connectionString);
 			var sqlQuery = "UPDATE RandomWelcomes SET EN = @EN, RU = @RU, UK = @UK WHERE RowID = @RowID";
 			db.Execute(sqlQuery, randomWelcome);
 		}

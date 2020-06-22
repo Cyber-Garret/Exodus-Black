@@ -21,14 +21,14 @@ namespace Bot.Modules
 	public class MilestoneModule : RootModule
 	{
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 
 		public MilestoneModule(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<MilestoneModule>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
 		}

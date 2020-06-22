@@ -21,13 +21,13 @@ namespace Bot.Modules
 	public class MainModule : RootModule
 	{
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly CommandService command;
 		private readonly EmoteService emote;
 		public MainModule(IServiceProvider service, ILogger<MainModule> logger)
 		{
 			this.logger = logger;
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			command = service.GetRequiredService<CommandService>();
 			emote = service.GetRequiredService<EmoteService>();
 		}

@@ -2,7 +2,7 @@
 
 namespace Neiralink.Models
 {
-	public struct RandomWelcome
+	public class RandomWelcome
 	{
 		[Key]
 		public int RowID { get; set; }

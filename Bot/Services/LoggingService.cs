@@ -17,14 +17,14 @@ namespace Bot.Services
 	{
 		// declare the fields used later in this class
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly CommandService command;
 		private readonly EmoteService emote;
 
 		public LoggingService(IServiceProvider services)
 		{
 			// get the services we need via DI, and assign the fields declared above to them
-			discord = services.GetRequiredService<DiscordSocketClient>();
+			discord = services.GetRequiredService<DiscordShardedClient>();
 			command = services.GetRequiredService<CommandService>();
 			logger = services.GetRequiredService<ILogger<LoggingService>>();
 			emote = services.GetRequiredService<EmoteService>();
@@ -33,19 +33,18 @@ namespace Bot.Services
 		public void Configure()
 		{
 			// hook into these events with the methods provided below
-			discord.Ready += OnReadyAsync;
+			discord.ShardReady += OnReadyAsync;
 			discord.Log += OnLogAsync;
-			discord.Disconnected += OnDisconnectedAsync;
+			discord.ShardDisconnected += OnDisconnectedAsync;
 			command.Log += OnLogAsync;
 		}
 
 		// this method executes on the bot being connected/ready
-		public Task OnReadyAsync()
+		public Task OnReadyAsync(DiscordSocketClient client)
 		{
 			Task.Run(() =>
 			{
-				logger.LogWarning($"Connected as -> [{discord.CurrentUser}]");
-				logger.LogWarning($"Connected to {discord.Guilds.Count} servers.");
+				logger.LogWarning($"Shard #{client.ShardId}, connected to {client.Guilds.Count} servers.");
 
 				if (emote.Raid == null)
 					emote.Configure();
@@ -55,9 +54,9 @@ namespace Bot.Services
 		}
 
 		// this method executes on the bot being disconnected from Discord API
-		public Task OnDisconnectedAsync(Exception ex)
+		public Task OnDisconnectedAsync(Exception ex, DiscordSocketClient arg)
 		{
-			logger.LogInformation($"Bot disconnected. [{ex.Message}]");
+			logger.LogInformation($"Shard disconnected. [{ex.Message}]");
 			return Task.CompletedTask;
 		}
 
