@@ -301,7 +301,7 @@ NSFW **{1}**
 - Не вдалось надіслати: **{3}**</value>
   </data>
   <data name="MailEmbFooterDesc" xml:space="preserve">
-    <value>Ґардіане, прошу врахувати, що я ніяким боком не причетна до змісту даного повідомлення. | neira.su</value>
+    <value>Ґардіане, прошу врахувати, що я ніяким боком не причетна до змісту даного повідомлення. | www.neira.app</value>
   </data>
   <data name="MailEmbTitle" xml:space="preserve">
     <value>:mailbox_with_mail: Вам повідомлення від {0} з сервера **`{1}`**</value>
@@ -392,12 +392,6 @@ NSFW **{1}**
   </data>
   <data name="MsgUpdEmbTitle" xml:space="preserve">
     <value>📝 Повідомлення оновлене</value>
-  </data>
-  <data name="NeiraFooterIcon" xml:space="preserve">
-    <value>https://neira.su/img/neira.png</value>
-  </data>
-  <data name="NeiraWebSite" xml:space="preserve">
-    <value>https://neira.su/</value>
   </data>
   <data name="Nightfall" xml:space="preserve">
     <value>Найтфол (Сутінковий наліт)</value>
@@ -544,11 +538,11 @@ Discord ім'я ґардіана
     <value>Некоректний формат часового поясу.</value>
   </data>
   <data name="XurArriveEmbTitle" xml:space="preserve">
-    <value>Ґардіан! Зур прибув в сонячну систему!</value>
+    <value>Ґардіан! Зур прибув у сонячну систему!</value>
   </data>
   <data name="XurArriveEmbDesc" xml:space="preserve">
     <value>Визначити точне місце розташування Зур-а я не можу.
-[Тут ти зможеш відшукати його положення](https://whereisxur.com/)
+[Тут ти зможеш відшукати його місцезнаходження](https://whereisxur.com/)
 [Або тут](https://ftw.in/game/destiny-2/find-xur)</value>
   </data>
   <data name="XurLeaveEmbTitle" xml:space="preserve">

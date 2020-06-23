@@ -426,10 +426,10 @@ Posted by **{1}**</value>
     <value>Do you want a custom bot? Write to my creator Cyber_Garret#5898</value>
   </data>
   <data name="NeiraFooterIcon" xml:space="preserve">
-    <value>https://neira.su/img/neira.png</value>
+    <value>https://www.neira.app/img/neira.png</value>
   </data>
   <data name="NeiraWebSite" xml:space="preserve">
-    <value>https://neira.su/</value>
+    <value>www.neira.app</value>
   </data>
   <data name="Nightfall" xml:space="preserve">
     <value>Nightfall</value>

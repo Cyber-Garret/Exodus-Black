@@ -1,0 +1,32 @@
+﻿@model Neiralink.Models.RandomWelcome
+
+@{
+	ViewData["Title"] = "New random welcome";
+}
+<div class="container margin-top-5">
+	<h2>@ViewData["Title"]</h2>
+
+	<form asp-action="Create" asp-controller="Welcome">
+		<div>
+			<div class="form-group">
+				<label asp-for="EN"></label>
+				<input type="text" asp-for="EN" class="form-control form-control-sm" />
+			</div>
+			<div class="form-group">
+				<label asp-for="RU"></label>
+				<input type="text" asp-for="RU" class="form-control  form-control-sm" />
+			</div>
+			<div class="form-group">
+				<label asp-for="UK"></label>
+				<input type="text" asp-for="UK" class="form-control  form-control-sm" />
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Сохранить" class="btn btn-outline-secondary" />
+			</div>
+		</div>
+	</form>
+
+	<div>
+		<a asp-controller="Welcome" asp-action="Index">Return to list</a>
+	</div>
+</div>

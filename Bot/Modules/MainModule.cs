@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Modules
@@ -22,13 +21,13 @@ namespace Bot.Modules
 	public class MainModule : RootModule
 	{
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly CommandService command;
 		private readonly EmoteService emote;
 		public MainModule(IServiceProvider service, ILogger<MainModule> logger)
 		{
 			this.logger = logger;
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			command = service.GetRequiredService<CommandService>();
 			emote = service.GetRequiredService<EmoteService>();
 		}
@@ -171,7 +170,7 @@ namespace Bot.Modules
 			{
 				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date.ToShortDateString()),
 				Color = Color.Gold,
-				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite),
+				Description = string.Format(Resources.HelpEmbDesc, $"https://{Resources.NeiraWebSite}/"),
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = Resources.NeiraFooterIcon,
