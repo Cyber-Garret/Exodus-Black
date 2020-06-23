@@ -52,7 +52,7 @@ namespace Bot.Services
 			//New Task for fix disconeting from Discord WebSockets by 1001 if current Task not completed.
 			Task.Run(async () =>
 			 {
-				 var context = new SocketCommandContext(discord, msg);
+				 var context = new ShardedCommandContext(discord, msg);
 				 var guild = GuildData.GetGuildAccount(context.Guild);
 				 Thread.CurrentThread.CurrentUICulture = guild.Language;
 				 var argPos = 0;

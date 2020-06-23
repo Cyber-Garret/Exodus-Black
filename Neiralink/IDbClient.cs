@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace Neiralink
 {
@@ -16,6 +17,7 @@ namespace Neiralink
 		void CreateWelcome(RandomWelcome randomWelcome);
 		void DeleteWelcome(int id);
 		IEnumerable<RandomWelcome> GetAllWelcomes();
+		List<string> GetWelcomesByLocale(CultureInfo culture);
 		RandomWelcome GetWelcome(int id);
 		void UpdateWelcome(RandomWelcome randomWelcome);
 	}
@@ -63,6 +65,12 @@ namespace Neiralink
 		{
 			using var db = new MySqlConnection(connectionString);
 			return db.Query<RandomWelcome>("SELECT * FROM RandomWelcomes WHERE RowID = @id", new { id }).FirstOrDefault();
+		}
+
+		public List<string> GetWelcomesByLocale(CultureInfo culture)
+		{
+			using var db = new MySqlConnection(connectionString);
+			return db.Query<string>($"SELECT {culture.TwoLetterISOLanguageName} FROM RandomWelcomes").ToList();
 		}
 
 		public void UpdateWelcome(RandomWelcome randomWelcome)

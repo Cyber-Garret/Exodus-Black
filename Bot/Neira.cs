@@ -36,8 +36,6 @@ namespace Bot
 			try
 			{
 				var token = config["Bot:Token"];
-
-				service.GetRequiredService<LoggingService>().Configure();
 				service.GetRequiredService<DiscordEventHandlerService>().Configure();
 				await service.GetRequiredService<CommandHandlerService>().InstallCommandsAsync();
 

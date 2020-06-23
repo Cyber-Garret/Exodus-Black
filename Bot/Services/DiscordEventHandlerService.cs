@@ -7,6 +7,7 @@ using Discord.WebSocket;
 
 using ImageMagick;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -26,15 +27,17 @@ namespace Bot.Services
 	{
 		// declare the fields used later in this class
 		private readonly ILogger logger;
+		private readonly IConfiguration configuration;
 		private readonly DiscordShardedClient discord;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 		private readonly SelfRoleService roleService;
 
 		private readonly IDbClient db;
-		public DiscordEventHandlerService(IServiceProvider service, IDbClient dbClient)
+		public DiscordEventHandlerService(IServiceProvider service, IDbClient dbClient, IConfiguration configuration)
 		{
 			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
+			this.configuration = configuration;
 			discord = service.GetRequiredService<DiscordShardedClient>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
@@ -45,12 +48,16 @@ namespace Bot.Services
 
 		public void Configure()
 		{
+			discord.ShardReady += Discord_ShardReady;
+			discord.ShardDisconnected += Discord_ShardDisconnected;
+
 			discord.JoinedGuild += Discord_JoinedGuild;
 			discord.LeftGuild += Discord_LeftGuild;
 
 			discord.ChannelCreated += Discord_ChannelCreated;
 			discord.ChannelDestroyed += Discord_ChannelDestroyed;
 
+			discord.GuildAvailable += Discord_GuildAvailable;
 			discord.GuildMemberUpdated += Discord_GuildMemberUpdated;
 
 			discord.MessageUpdated += Discord_MessageUpdated;
@@ -65,7 +72,25 @@ namespace Bot.Services
 			discord.ReactionRemoved += Discord_ReactionRemoved;
 		}
 
+
+
 		#region Events
+		private Task Discord_ShardReady(DiscordSocketClient client)
+		{
+			Task.Run(() =>
+			{
+				logger.LogWarning($"Shard #{client.ShardId} ready, connected to {client.Guilds.Count} servers.");
+			});
+
+			return Task.CompletedTask;
+		}
+
+		private Task Discord_ShardDisconnected(Exception ex, DiscordSocketClient client)
+		{
+			logger.LogInformation($"Shard #{client.ShardId} disconnected. [{ex.Message}]");
+			return Task.CompletedTask;
+		}
+
 		private Task Discord_JoinedGuild(SocketGuild guild)
 		{
 			Task.Run(() =>
@@ -99,6 +124,17 @@ namespace Bot.Services
 			{
 				await ChannelDestroyed(arg);
 			});
+			return Task.CompletedTask;
+		}
+
+		private Task Discord_GuildAvailable(SocketGuild guild)
+		{
+			if (emote.Raid == null)
+			{
+				var homeGuild = configuration.GetValue<ulong>("Bot:HomeGuild");
+				if (guild.Id == homeGuild)
+					emote.Configure();
+			}
 			return Task.CompletedTask;
 		}
 
@@ -579,17 +615,7 @@ namespace Bot.Services
 
 				if (loadedGuild.WelcomeChannel == 0) return;
 				if (!(discord.GetChannel(loadedGuild.WelcomeChannel) is SocketTextChannel channel)) return;
-				List<string> randomWelcome = new List<string>();
-
-				foreach (var welcome in db.GetAllWelcomes())
-				{
-					if (loadedGuild.Language.TwoLetterISOLanguageName == "ru")
-						randomWelcome.Add(welcome.RU);
-					else if (loadedGuild.Language.TwoLetterISOLanguageName == "uk")
-						randomWelcome.Add(welcome.UK);
-					else
-						randomWelcome.Add(welcome.EN);
-				}
+				List<string> randomWelcome = db.GetWelcomesByLocale(loadedGuild.Language);
 
 				var rand = new Random();
 
