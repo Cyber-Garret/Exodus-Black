@@ -1,0 +1,36 @@
+﻿@model Neiralink.Models.MilestoneInfo
+@{
+	ViewData["Title"] = "Edit Milestone";
+}
+<div class="container margin-top-5">
+	<h2>@ViewData["Title"].</h2>
+
+	<form asp-action="Edit" asp-controller="Milestone">
+		<div>
+			<input type="hidden" asp-for="RowID" />
+			<div class="form-group">
+				<label asp-for="Icon"></label>
+				<input type="text" asp-for="Icon" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label asp-for="MaxSpace"></label>
+				<input type="number" asp-for="MaxSpace" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label asp-for="MilestoneType"></label>
+				<input type="number" asp-for="MilestoneType" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label asp-for="Game"></label>
+				<input type="number" asp-for="Game" class="form-control" />
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-outline-secondary" />
+			</div>
+		</div>
+	</form>
+
+	<div>
+		<a asp-controller="Milestone" asp-action="Index">Return to list</a>
+	</div>
+</div>

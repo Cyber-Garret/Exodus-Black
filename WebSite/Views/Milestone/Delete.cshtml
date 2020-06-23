@@ -1,0 +1,35 @@
+﻿@model Neiralink.Models.MilestoneInfo
+@{
+	ViewData["Title"] = "Delete Milestone";
+}
+<div class="container margin-top-5">
+	<h2>@ViewBag.Title</h2>
+	<div>
+		<dl class="dl-horizontal">
+			<dt>Icon</dt>
+			<dd>
+				@Model.Icon
+			</dd>
+			<dt>Max users</dt>
+			<dd>
+				@Model.MaxSpace
+			</dd>
+			<dt>Type</dt>
+			<dd>
+				@Model.MilestoneType
+			</dd>
+			<dt>Game</dt>
+			<dd>
+				@Model.Game
+			</dd>
+		</dl>
+
+		<div>
+			<form asp-controller="Milestone" asp-action="Delete" method="post">
+				<div class="form-group">
+					<input type="submit" class="btn btn-default" value="Delete" />
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

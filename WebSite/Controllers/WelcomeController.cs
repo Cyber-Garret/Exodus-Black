@@ -15,8 +15,8 @@ namespace WebSite.Controllers
 	[Authorize]
 	public class WelcomeController : Controller
 	{
-		private readonly IDbClient db;
-		public WelcomeController(IDbClient dbClient)
+		private readonly IWelcomeDbClient db;
+		public WelcomeController(IWelcomeDbClient dbClient)
 		{
 			db = dbClient;
 		}

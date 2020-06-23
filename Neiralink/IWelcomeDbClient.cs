@@ -12,17 +12,19 @@ using System.Globalization;
 
 namespace Neiralink
 {
-	public interface IDbClient
+	public interface IWelcomeDbClient
 	{
+		#region Random welcomes
 		void CreateWelcome(RandomWelcome randomWelcome);
 		void DeleteWelcome(int id);
 		IEnumerable<RandomWelcome> GetAllWelcomes();
 		List<string> GetWelcomesByLocale(CultureInfo culture);
 		RandomWelcome GetWelcome(int id);
 		void UpdateWelcome(RandomWelcome randomWelcome);
+		#endregion
 	}
 
-	public class DbClient : IDbClient
+	public class WelcomeDbClient : IWelcomeDbClient
 	{
 		private readonly string connectionString = null;
 
@@ -30,11 +32,12 @@ namespace Neiralink
 		/// 
 		/// </summary>
 		/// <param name="connectionString">Db connection string</param>
-		public DbClient(string connectionString)
+		public WelcomeDbClient(string connectionString)
 		{
 			this.connectionString = connectionString;
 		}
 
+		#region Random welcomes
 		public void CreateWelcome(RandomWelcome randomWelcome)
 		{
 			using var db = new MySqlConnection(connectionString);
@@ -79,5 +82,6 @@ namespace Neiralink
 			var sqlQuery = "UPDATE RandomWelcomes SET EN = @EN, RU = @RU, UK = @UK WHERE RowID = @RowID";
 			db.Execute(sqlQuery, randomWelcome);
 		}
+		#endregion
 	}
 }
