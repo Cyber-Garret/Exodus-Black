@@ -20,12 +20,12 @@ namespace Bot.Core.QuartzJobs
 	public class XurArrive : IJob
 	{
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 
 		public XurArrive(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<XurArrive>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 		}
 		public Task Execute(IJobExecutionContext context)
 		{

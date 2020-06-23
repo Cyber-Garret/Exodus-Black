@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Addons.Interactive;
-using Discord.Commands;
 
 namespace Bot.Modules
 {

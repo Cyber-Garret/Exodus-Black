@@ -17,48 +17,19 @@ namespace Bot.Services
 	{
 		// declare the fields used later in this class
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly CommandService command;
-		private readonly EmoteService emote;
+
 
 		public LoggingService(IServiceProvider services)
 		{
 			// get the services we need via DI, and assign the fields declared above to them
-			discord = services.GetRequiredService<DiscordSocketClient>();
+			discord = services.GetRequiredService<DiscordShardedClient>();
 			command = services.GetRequiredService<CommandService>();
 			logger = services.GetRequiredService<ILogger<LoggingService>>();
-			emote = services.GetRequiredService<EmoteService>();
-		}
 
-		public void Configure()
-		{
-			// hook into these events with the methods provided below
-			discord.Ready += OnReadyAsync;
 			discord.Log += OnLogAsync;
-			discord.Disconnected += OnDisconnectedAsync;
 			command.Log += OnLogAsync;
-		}
-
-		// this method executes on the bot being connected/ready
-		public Task OnReadyAsync()
-		{
-			Task.Run(() =>
-			{
-				logger.LogWarning($"Connected as -> [{discord.CurrentUser}]");
-				logger.LogWarning($"Connected to {discord.Guilds.Count} servers.");
-
-				if (emote.Raid == null)
-					emote.Configure();
-			});
-
-			return Task.CompletedTask;
-		}
-
-		// this method executes on the bot being disconnected from Discord API
-		public Task OnDisconnectedAsync(Exception ex)
-		{
-			logger.LogInformation($"Bot disconnected. [{ex.Message}]");
-			return Task.CompletedTask;
 		}
 
 		// this method switches out the severity level from Discord.Net's API, and logs appropriately

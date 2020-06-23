@@ -932,7 +932,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://neira.su/img/neira.png.
+        ///   Looks up a localized string similar to https://www.neira.app/img/neira.png.
         /// </summary>
         internal static string NeiraFooterIcon {
             get {
@@ -941,7 +941,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://neira.su/.
+        ///   Looks up a localized string similar to www.neira.app.
         /// </summary>
         internal static string NeiraWebSite {
             get {

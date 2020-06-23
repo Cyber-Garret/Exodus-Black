@@ -2,7 +2,7 @@
 	"Name": "Последнее желание",
 	"Alias": "пж",
 	"Type": "Рейд",
-	"Icon": "http://neira.su/img/milestones/raids/last_wish.jpg",
+	"Icon": "http://www.neira.app/img/milestones/raids/last_wish.jpg",
 	"MaxSpace": 6,
 	"MilestoneType": 0,
 	"Game": 0

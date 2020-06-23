@@ -12,11 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using System;
-using System.Linq;
 using System.Globalization;
-using System.Threading.Tasks;
-using System.Threading;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Bot.Modules
 {
@@ -24,12 +24,12 @@ namespace Bot.Modules
 	public class ModerationModule : RootModule
 	{
 		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly DiscordEventHandlerService discordEvent;
 		public ModerationModule(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<ModerationModule>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			discordEvent = service.GetRequiredService<DiscordEventHandlerService>();
 		}
 

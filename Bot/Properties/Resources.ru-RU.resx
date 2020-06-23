@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BanPermission" xml:space="preserve">
     <value>Капитан, для доступа к разблокировке участников у меня нет права **Банить участников**.
@@ -420,12 +420,6 @@ NSFW **{1}**
   </data>
   <data name="MyAd" xml:space="preserve">
     <value>Хочешь бота на заказ? Пиши моему создателю Cyber_Garret#5898</value>
-  </data>
-  <data name="NeiraFooterIcon" xml:space="preserve">
-    <value>https://neira.su/img/neira.png</value>
-  </data>
-  <data name="NeiraWebSite" xml:space="preserve">
-    <value>https://neira.su/</value>
   </data>
   <data name="Nightfall" xml:space="preserve">
     <value>Сумрачный налет</value>

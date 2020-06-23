@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Neiralink.Models.RandomWelcome>
+@{
+	ViewData["Title"] = "Random welcome list";
+}
+<div class="container margin-top-5">
+	<h2>@ViewData["Title"]</h2>
+	<p>
+		<a asp-controller="Welcome" asp-action="Create">Add</a>
+	</p>
+	<table class="table">
+		<tr>
+			<th>ID</th>
+			<th>EN</th>
+			<th>RU</th>
+			<th>UA</th>
+			<th></th>
+		</tr>
+
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.RowID</td>
+				<td>
+					@item.EN
+				</td>
+				<td>
+					@item.RU
+				</td>
+				<td>
+					@item.UK
+				</td>
+				<td>
+					<a asp-controller="Welcome" asp-action="Edit" asp-route-id="@item.RowID">Edit</a> |
+					<a asp-controller="Welcome" asp-action="Delete" asp-route-id="@item.RowID">Delete</a>
+				</td>
+			</tr>
+		}
+	</table>
+</div>

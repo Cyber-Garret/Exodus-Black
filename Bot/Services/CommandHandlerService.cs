@@ -18,13 +18,13 @@ namespace Bot.Services
 	{
 		private readonly IServiceProvider service;
 		private readonly IConfiguration config;
-		private readonly DiscordSocketClient discord;
+		private readonly DiscordShardedClient discord;
 		private readonly CommandService commands;
 		public CommandHandlerService(IServiceProvider service)
 		{
 			this.service = service;
 			config = service.GetRequiredService<IConfiguration>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
+			discord = service.GetRequiredService<DiscordShardedClient>();
 			commands = service.GetRequiredService<CommandService>();
 		}
 
@@ -52,7 +52,7 @@ namespace Bot.Services
 			//New Task for fix disconeting from Discord WebSockets by 1001 if current Task not completed.
 			Task.Run(async () =>
 			 {
-				 var context = new SocketCommandContext(discord, msg);
+				 var context = new ShardedCommandContext(discord, msg);
 				 var guild = GuildData.GetGuildAccount(context.Guild);
 				 Thread.CurrentThread.CurrentUICulture = guild.Language;
 				 var argPos = 0;
