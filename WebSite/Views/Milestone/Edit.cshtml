@@ -1,36 +1,54 @@
-﻿@model Neiralink.Models.MilestoneInfo
+﻿@model MilestoneEditViewModel
 @{
-	ViewData["Title"] = "Edit Milestone";
+	Layout = "_Admin";
+	ViewData["Title"] = $"Edit Milestone #{Model.Info.RowID}";
 }
-<div class="container margin-top-5">
-	<h2>@ViewData["Title"].</h2>
 
-	<form asp-action="Edit" asp-controller="Milestone">
-		<div>
-			<input type="hidden" asp-for="RowID" />
-			<div class="form-group">
-				<label asp-for="Icon"></label>
-				<input type="text" asp-for="Icon" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label asp-for="MaxSpace"></label>
-				<input type="number" asp-for="MaxSpace" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label asp-for="MilestoneType"></label>
-				<input type="number" asp-for="MilestoneType" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label asp-for="Game"></label>
-				<input type="number" asp-for="Game" class="form-control" />
-			</div>
-			<div class="form-group">
-				<input type="submit" value="Save" class="btn btn-outline-secondary" />
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" asp-controller="Milestone">
+	<div>
+		<input type="hidden" asp-for="Info.RowID" />
+		<div class="form-group">
+			<label asp-for="Info.Icon"></label>
+			<input class="form-control form-control-sm" type="text" asp-for="Info.Icon" />
+		</div>
+		<div class="form-group">
+			<label asp-for="Info.MaxSpace"></label>
+			<input class="form-control form-control-sm" type="number" asp-for="Info.MaxSpace" />
+		</div>
+		<div class="form-group">
+			<label asp-for="Info.MilestoneType"></label>
+			<select class="form-control form-control-sm" asp-for="Info.MilestoneType" asp-items="Html.GetEnumSelectList<Neiralink.Models.MilestoneType>()"></select>
+		</div>
+		<div class="form-group">
+			<label asp-for="Info.Game"></label>
+			<select class="form-control form-control-sm" asp-for="Info.Game" asp-items="Html.GetEnumSelectList<Neiralink.Models.GameName>()"></select>
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Update in DB" class="btn btn-outline-secondary" />
+		</div>
+	</div>
+</form>
+<hr />
+<div class="card-deck">
+	@foreach (var locale in Model.Locales)
+	{
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">@locale.LangKey</h5>
+				<h6 class="card-subtitle mb-2 text-muted">@locale.Name</h6>
+				<p class="card-text">Alias: @locale.Alias</p>
+				<p class="card-text">Type: @locale.Type</p>
+				<a class="card-link" asp-controller="Milestone" asp-action="EditLocale" asp-route-id="@locale.MilestoneInfoRowID" asp-route-lang="@locale.LangKey">Edit</a>
+				<a class="card-link text-danger" asp-controller="Milestone" asp-action="DeleteLocale">Delete</a>
 			</div>
 		</div>
-	</form>
-
-	<div>
-		<a asp-controller="Milestone" asp-action="Index">Return to list</a>
-	</div>
+	}
+</div>
+<div class="float-left">
+	<a asp-controller="Milestone" asp-action="CreateLocale" asp-route-id="@Model.Info.RowID">Add locale</a>
+</div>
+<div class="float-right">
+	<a asp-controller="Milestone" asp-action="Index">Return to list</a>
 </div>

@@ -16,9 +16,11 @@ namespace Neiralink
 		void AddMilestone(MilestoneInfo milestoneInfo);
 		void AddMilestoneLocale(MilestoneInfoLocale infoLocale);
 		void DeleteMilestone(byte id);
+		void DeleteMilestoneLocale(byte id, LangKey lang);
 		IEnumerable<MilestoneInfo> GetAllMilestoneInfos();
 
 		MilestoneInfo GetMilestoneInfo(byte id);
+		MilestoneInfoLocale GetMilestoneLocale(byte id, LangKey lang);
 		IEnumerable<MilestoneInfoLocale> GetMilestoneLocales(byte id);
 
 		void UpdateMilestone(MilestoneInfo milestoneInfo);
@@ -58,6 +60,13 @@ namespace Neiralink
 			db.Execute(sqlQuery, new { id });
 		}
 
+		public void DeleteMilestoneLocale(byte id, LangKey lang)
+		{
+			using var db = new MySqlConnection(conn);
+			var sqlQuery = "DELETE FROM MilestoneInfoLocales WHERE MilestoneInfoRowID = @id AND LangKey = @lang";
+			db.Execute(sqlQuery, new { id, lang });
+		}
+
 		public IEnumerable<MilestoneInfo> GetAllMilestoneInfos()
 		{
 			using var db = new MySqlConnection(conn);
@@ -68,6 +77,12 @@ namespace Neiralink
 		{
 			using var db = new MySqlConnection(conn);
 			return db.Query<MilestoneInfo>("SELECT * FROM MilestoneInfos WHERE RowID = @id", new { id }).FirstOrDefault();
+		}
+
+		public MilestoneInfoLocale GetMilestoneLocale(byte id, LangKey lang)
+		{
+			using var db = new MySqlConnection(conn);
+			return db.QueryFirst<MilestoneInfoLocale>("SELECT * FROM MilestoneInfoLocales WHERE MilestoneInfoRowID = @id AND LangKey = @lang", new { id, lang });
 		}
 
 		public IEnumerable<MilestoneInfoLocale> GetMilestoneLocales(byte id)

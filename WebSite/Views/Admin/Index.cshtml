@@ -1,16 +1,27 @@
 ﻿@{
+	Layout = "_Admin";
 	ViewData["Title"] = "Admin panel";
 }
-<div class="container margin-top-5">
-	@if (!User.Identity.IsAuthenticated)
-	{
-		<h3 class="text-danger">Access denied</h3>
-	}
-	else
-	{
-		<h2>Admin panel</h2>
-		<span>Welcome @User.Identity.Name</span>
-		<a class="btn btn-primary" asp-controller="Welcome" asp-action="Index" target="_blank">Random welcome list</a>
-		<a class="btn btn-info" asp-controller="Admin" asp-action="Logout">Logout</a>
-	}
-</div>
+
+@if (!User.Identity.IsAuthenticated)
+{
+	<h3 class="text-danger">Access denied</h3>
+}
+else
+{
+	<h3 class="text-center">Admin panel</h3>
+	<form class="text-center">
+		<div class="form-group">
+			<a class="alert-link" asp-controller="Welcome" asp-action="Index">Random welcome editor</a>
+		</div>
+		<div class="form-group">
+			<a class="alert-link" asp-controller="Milestone" asp-action="Index">Milestone constructor</a>
+		</div>
+		<div class="form-group">
+			<a class="alert-link" href="#">Exotic gear editor</a>
+		</div>
+		<div class="form-group">
+			<a class="alert-link" href="#">Catalyst editor</a>
+		</div>
+	</form>
+}

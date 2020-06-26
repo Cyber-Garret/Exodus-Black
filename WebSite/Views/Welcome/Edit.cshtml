@@ -1,32 +1,32 @@
 ﻿@model Neiralink.Models.RandomWelcome
 @{
-	ViewData["Title"] = "Edit random welcome";
+	Layout = "_Admin";
+	ViewData["Title"] = $"Edit welcome #{Model.RowID}";
 }
-<div class="container margin-top-5">
-	<h2>@ViewData["Title"].</h2>
 
-	<form asp-action="Edit" asp-controller="Welcome">
-		<div>
-			<input type="hidden" asp-for="RowID" />
-			<div class="form-group">
-				<label asp-for="EN"></label>
-				<input type="text" asp-for="EN" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label asp-for="RU"></label>
-				<input type="text" asp-for="RU" class="form-control" />
-			</div>
-			<div class="form-group">
-				<label asp-for="UK"></label>
-				<input type="text" asp-for="UK" class="form-control" />
-			</div>
-			<div class="form-group">
-				<input type="submit" value="Сохранить" class="btn btn-outline-secondary" />
-			</div>
-		</div>
-	</form>
+<h2>@ViewData["Title"]</h2>
 
+<form asp-action="Edit" asp-controller="Welcome">
 	<div>
-		<a asp-controller="Welcome" asp-action="Index">Return to list</a>
+		<input type="hidden" asp-for="RowID" />
+		<div class="form-group">
+			<label asp-for="EN"></label>
+			<input class="form-control form-control-sm" type="text" asp-for="EN" />
+		</div>
+		<div class="form-group">
+			<label asp-for="RU"></label>
+			<input class="form-control form-control-sm" type="text" asp-for="RU" />
+		</div>
+		<div class="form-group">
+			<label asp-for="UK"></label>
+			<input class="form-control form-control-sm" type="text" asp-for="UK" />
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Update in DB" class="btn btn-outline-secondary" />
+		</div>
 	</div>
+</form>
+
+<div class="float-right">
+	<a asp-controller="Welcome" asp-action="Index">Return to list</a>
 </div>

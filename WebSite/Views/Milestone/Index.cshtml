@@ -1,43 +1,46 @@
-﻿@model IEnumerable<Neiralink.Models.MilestoneInfo>
+﻿@using Neiralink.Models
+@model IEnumerable<Neiralink.Models.MilestoneInfo>
 @{
-	ViewData["Title"] = "Milestone list";
+	Layout = "_Admin";
+	ViewData["Title"] = "Milestone constructor";
+	var counter = 1;
 }
-<div class="container margin-top-5">
-	<h2>@ViewData["Title"]</h2>
-	<p>
-		<a asp-controller="Milestone" asp-action="Create">Add</a>
-	</p>
-	<table class="table">
-		<tr>
-			<th>ID</th>
-			<th>Icon</th>
-			<th>Max users</th>
-			<th>Type</th>
-			<th>Game name</th>
-			<th></th>
-		</tr>
 
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>@item.RowID</td>
-				<td>
-					<img class="img-thumbnail" style="max-height: 5rem;" src="@item.Icon" />
-				</td>
-				<td>
-					@item.MaxSpace
-				</td>
-				<td>
-					@item.MilestoneType
-				</td>
-				<td>
-					@item.Game
-				</td>
-				<td>
-					<a asp-controller="Milestone" asp-action="Edit" asp-route-id="@item.RowID">Edit</a> |
-					<a asp-controller="Milestone" asp-action="Delete" asp-route-id="@item.RowID">Delete</a>
-				</td>
-			</tr>
-		}
-	</table>
-</div>
+<h2>@ViewData["Title"]</h2>
+<p>
+	<a class="btn btn-sm btn-primary" asp-controller="Milestone" asp-action="Create">Add</a>
+</p>
+<table class="table table-hover">
+	<tr>
+		<th scope="col">ID</th>
+		<th scope="col">Icon</th>
+		<th scope="col">Max users</th>
+		<th scope="col">Type</th>
+		<th scope="col">Game name</th>
+		<th scope="col">Actions</th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<th scope="row">@counter</th>
+			<td>
+				<img class="img-thumbnail" style="max-height: 5rem;" src="@item.Icon" />
+			</td>
+			<td>
+				@item.MaxSpace
+			</td>
+			<td>
+				@item.MilestoneType
+			</td>
+			<td>
+				@item.Game.GetGameDisplayName()
+			</td>
+			<td>
+				<a asp-controller="Milestone" asp-action="Edit" asp-route-id="@item.RowID">Edit</a> |
+				<a asp-controller="Milestone" asp-action="Delete" asp-route-id="@item.RowID">Delete</a>
+			</td>
+		</tr>
+		counter++;
+	}
+</table>

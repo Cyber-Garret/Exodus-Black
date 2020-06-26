@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Neiralink;
 using Neiralink.Models;
 
+using WebSite.ViewModels;
+
 namespace WebSite.Controllers
 {
 	[Authorize]
@@ -21,27 +23,17 @@ namespace WebSite.Controllers
 			db = milestoneDbClient;
 		}
 
-		// GET: MilestoneController
 		public ActionResult Index()
 		{
 			return View(db.GetAllMilestoneInfos());
 		}
 
-		// GET: MilestoneController/Details/5
-		public ActionResult Details(int id)
-		{
-			return View();
-		}
-
-		// GET: MilestoneController/Create
+		#region Main
 		public ActionResult Create()
 		{
 			return View();
 		}
-
-		// POST: MilestoneController/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public ActionResult Create(MilestoneInfo milestone)
 		{
 			try
@@ -55,18 +47,14 @@ namespace WebSite.Controllers
 			}
 		}
 
-		// GET: MilestoneController/Edit/5
 		public ActionResult Edit(byte id)
 		{
 			var milestone = db.GetMilestoneInfo(id);
 			if (milestone != null)
-				return View(milestone);
+				return View(new MilestoneEditViewModel { Info = milestone, Locales = db.GetMilestoneLocales(id).ToList() });
 			return NotFound();
 		}
-
-		// POST: MilestoneController/Edit/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public ActionResult Edit(MilestoneInfo milestone)
 		{
 			try
@@ -80,7 +68,6 @@ namespace WebSite.Controllers
 			}
 		}
 
-		// GET: MilestoneController/Delete/5
 		[ActionName("Delete")]
 		public ActionResult ConfirmDelete(byte id)
 		{
@@ -89,10 +76,7 @@ namespace WebSite.Controllers
 				return View(milestone);
 			return NotFound();
 		}
-
-		// POST: MilestoneController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
+		[HttpPost, ValidateAntiForgeryToken]
 		public ActionResult Delete(byte id)
 		{
 			try
@@ -105,5 +89,75 @@ namespace WebSite.Controllers
 				return View();
 			}
 		}
+		#endregion
+
+		#region Locale
+		public ActionResult CreateLocale(byte id)
+		{
+			if (id > 0)
+			{
+				var model = new MilestoneInfoLocale { MilestoneInfoRowID = id };
+				return View(model);
+			}
+			return NotFound();
+		}
+		[HttpPost, ValidateAntiForgeryToken]
+		public ActionResult CreateLocale(MilestoneInfoLocale locale)
+		{
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					db.AddMilestoneLocale(locale);
+					return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
+				}
+				catch
+				{
+					return View();
+				}
+			}
+			else
+				return View();
+		}
+
+		public ActionResult EditLocale(byte id, LangKey lang)
+		{
+			var locale = db.GetMilestoneLocale(id, lang);
+			if (locale != null)
+				return View(locale);
+			return NotFound();
+		}
+		[HttpPost, ValidateAntiForgeryToken]
+		public ActionResult EditLocale(MilestoneInfoLocale locale)
+		{
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					db.UpdateMilestoneLocale(locale);
+					return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
+				}
+				catch
+				{
+					return View();
+				}
+			}
+			return RedirectToAction(nameof(Index));
+		}
+
+		public ActionResult DeleteLocale(byte id, LangKey lang)
+		{
+			try
+			{
+				db.DeleteMilestoneLocale(id, lang);
+				return RedirectToAction(nameof(Edit), new { id });
+			}
+			catch
+			{
+				return RedirectToAction(nameof(Index));
+			}
+		}
+		#endregion
+
 	}
 }
