@@ -1,4 +1,4 @@
-﻿@model MilestoneEditViewModel
+﻿@model MilestoneViewModel
 @{
 	Layout = "_Admin";
 	ViewData["Title"] = $"Edit Milestone #{Model.Info.RowID}";
@@ -36,12 +36,12 @@
 	{
 		<div class="card">
 			<div class="card-body">
-				<h5 class="card-title">@locale.LangKey</h5>
-				<h6 class="card-subtitle mb-2 text-muted">@locale.Name</h6>
+				<h5 class="card-title">@locale.Name</h5>
+				<h6 class="card-subtitle mb-2 text-muted">Lang: @locale.LangKey</h6>
 				<p class="card-text">Alias: @locale.Alias</p>
 				<p class="card-text">Type: @locale.Type</p>
 				<a class="card-link" asp-controller="Milestone" asp-action="EditLocale" asp-route-id="@locale.MilestoneInfoRowID" asp-route-lang="@locale.LangKey">Edit</a>
-				<a class="card-link text-danger" asp-controller="Milestone" asp-action="DeleteLocale">Delete</a>
+				<a class="card-link text-danger" asp-controller="Milestone" asp-action="DeleteLocale" asp-route-id="@locale.MilestoneInfoRowID" asp-route-lang="@locale.LangKey">Delete</a>
 			</div>
 		</div>
 	}

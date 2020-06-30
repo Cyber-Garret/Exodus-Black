@@ -1,0 +1,26 @@
+﻿@model Neiralink.Models.Catalyst
+@using Neiralink.Models
+@{
+	Layout = "_Admin";
+	ViewData["Title"] = $"Delete catalyst {Model.WeaponName}";
+}
+<h2>@ViewBag.Title</h2>
+<div>
+	<dl class="dl-horizontal">
+		<dt><label asp-for="IconUrl"></label></dt>
+		<dd><img class="img-thumbnail" style="max-height:5rem;" src="@Model.IconUrl" /></dd>
+		<dt><label asp-for="Lang"></label></dt>
+		<dd>@Model.Lang.GetEnumDisplayName()</dd>
+		<dt><label asp-for="WeaponName"></label></dt>
+		<dd>@Model.WeaponName</dd>
+	</dl>
+
+	<div>
+		<form asp-controller="Catalyst" asp-action="Delete" method="post">
+			<div class="form-group">
+				<input class="btn btn-danger" type="submit" value="Delete" />
+			</div>
+		</form>
+		<a class="float-right" asp-controller="Catalyst" asp-action="Index">Return to list</a>
+	</div>
+</div>

@@ -29,13 +29,13 @@ namespace WebSite.Controllers
 			return View();
 		}
 
-		[Route("Login"), HttpGet, AllowAnonymous]
+		[Route("Login"), HttpGet]
 		public IActionResult Login()
 		{
 			return View();
 		}
 
-		[Route("Login"), HttpPost, AllowAnonymous]
+		[Route("Login"), HttpPost]
 		public async Task<IActionResult> LoginAsync(LoginViewModel credential)
 		{
 			if (ModelState.IsValid)
@@ -64,13 +64,14 @@ namespace WebSite.Controllers
 			return RedirectToAction("Index", "Admin");
 		}
 
+		[NonAction]
 		private async Task Authenticate(SiteAdmin credential)
 		{
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, credential.UserName)
 			};
-			
+
 			var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 		}

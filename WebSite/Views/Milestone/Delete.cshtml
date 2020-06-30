@@ -1,4 +1,5 @@
-﻿@model Neiralink.Models.MilestoneInfo
+﻿@model MilestoneViewModel
+@using Neiralink.Models
 @{
 	Layout = "_Admin";
 	ViewData["Title"] = "Delete Milestone";
@@ -8,29 +9,26 @@
 	<div>
 		<dl class="dl-horizontal">
 			<dt>Icon</dt>
-			<dd>
-				@Model.Icon
-			</dd>
+			<dd><img class="img-thumbnail" style="max-height: 5rem;" src="@Model.Info.Icon" /></dd>
 			<dt>Max users</dt>
-			<dd>
-				@Model.MaxSpace
-			</dd>
+			<dd>@Model.Info.MaxSpace</dd>
 			<dt>Type</dt>
-			<dd>
-				@Model.MilestoneType
-			</dd>
+			<dd>@Model.Info.MilestoneType</dd>
 			<dt>Game</dt>
-			<dd>
-				@Model.Game
-			</dd>
+			<dd>@Model.Info.Game.GetEnumDisplayName()</dd>
+			<dt>Locales count</dt>
+			<dd>@Model.Locales.Count</dd>
 		</dl>
 
 		<div>
 			<form asp-controller="Milestone" asp-action="Delete" method="post">
 				<div class="form-group">
-					<input type="submit" class="btn btn-default" value="Delete" />
+					<input type="submit" class="btn btn-danger" value="Delete" />
 				</div>
 			</form>
+		</div>
+		<div class="float-right">
+			<a asp-controller="Milestone" asp-action="Index">Return to list</a>
 		</div>
 	</div>
 </div>

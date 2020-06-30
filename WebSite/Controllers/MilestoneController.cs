@@ -51,7 +51,7 @@ namespace WebSite.Controllers
 		{
 			var milestone = db.GetMilestoneInfo(id);
 			if (milestone != null)
-				return View(new MilestoneEditViewModel { Info = milestone, Locales = db.GetMilestoneLocales(id).ToList() });
+				return View(new MilestoneViewModel { Info = milestone, Locales = db.GetMilestoneLocales(id).ToList() });
 			return NotFound();
 		}
 		[HttpPost, ValidateAntiForgeryToken]
@@ -73,7 +73,7 @@ namespace WebSite.Controllers
 		{
 			var milestone = db.GetMilestoneInfo(id);
 			if (milestone != null)
-				return View(milestone);
+				return View(new MilestoneViewModel { Info = milestone, Locales = db.GetMilestoneLocales(id).ToList() });
 			return NotFound();
 		}
 		[HttpPost, ValidateAntiForgeryToken]
