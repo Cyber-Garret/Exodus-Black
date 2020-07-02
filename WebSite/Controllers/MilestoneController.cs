@@ -23,18 +23,18 @@ namespace WebSite.Controllers
 			db = milestoneDbClient;
 		}
 
-		public ActionResult Index()
+		public IActionResult Index()
 		{
 			return View(db.GetAllMilestoneInfos());
 		}
 
 		#region Main
-		public ActionResult Create()
+		public IActionResult Create()
 		{
 			return View();
 		}
 		[HttpPost, ValidateAntiForgeryToken]
-		public ActionResult Create(MilestoneInfo milestone)
+		public IActionResult Create(MilestoneInfo milestone)
 		{
 			try
 			{
@@ -47,7 +47,7 @@ namespace WebSite.Controllers
 			}
 		}
 
-		public ActionResult Edit(byte id)
+		public IActionResult Edit(byte id)
 		{
 			var milestone = db.GetMilestoneInfo(id);
 			if (milestone != null)
@@ -55,21 +55,22 @@ namespace WebSite.Controllers
 			return NotFound();
 		}
 		[HttpPost, ValidateAntiForgeryToken]
-		public ActionResult Edit(MilestoneInfo milestone)
+		public IActionResult Edit(MilestoneViewModel milestone)
 		{
 			try
 			{
-				db.UpdateMilestone(milestone);
+				db.UpdateMilestone(milestone.Info);
 				return RedirectToAction(nameof(Index));
 			}
-			catch
+			catch(Exception ex)
 			{
+				Console.WriteLine(ex);
 				return View();
 			}
 		}
 
 		[ActionName("Delete")]
-		public ActionResult ConfirmDelete(byte id)
+		public IActionResult ConfirmDelete(byte id)
 		{
 			var milestone = db.GetMilestoneInfo(id);
 			if (milestone != null)
@@ -77,7 +78,7 @@ namespace WebSite.Controllers
 			return NotFound();
 		}
 		[HttpPost, ValidateAntiForgeryToken]
-		public ActionResult Delete(byte id)
+		public IActionResult Delete(byte id)
 		{
 			try
 			{
@@ -92,7 +93,7 @@ namespace WebSite.Controllers
 		#endregion
 
 		#region Locale
-		public ActionResult CreateLocale(byte id)
+		public IActionResult CreateLocale(byte id)
 		{
 			if (id > 0)
 			{
@@ -102,7 +103,7 @@ namespace WebSite.Controllers
 			return NotFound();
 		}
 		[HttpPost, ValidateAntiForgeryToken]
-		public ActionResult CreateLocale(MilestoneInfoLocale locale)
+		public IActionResult CreateLocale(MilestoneInfoLocale locale)
 		{
 			if (ModelState.IsValid)
 			{
@@ -120,7 +121,7 @@ namespace WebSite.Controllers
 				return View();
 		}
 
-		public ActionResult EditLocale(byte id, LangKey lang)
+		public IActionResult EditLocale(byte id, LangKey lang)
 		{
 			var locale = db.GetMilestoneLocale(id, lang);
 			if (locale != null)
@@ -128,7 +129,7 @@ namespace WebSite.Controllers
 			return NotFound();
 		}
 		[HttpPost, ValidateAntiForgeryToken]
-		public ActionResult EditLocale(MilestoneInfoLocale locale)
+		public IActionResult EditLocale(MilestoneInfoLocale locale)
 		{
 			if (ModelState.IsValid)
 			{
@@ -145,7 +146,7 @@ namespace WebSite.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-		public ActionResult DeleteLocale(byte id, LangKey lang)
+		public IActionResult DeleteLocale(byte id, LangKey lang)
 		{
 			try
 			{

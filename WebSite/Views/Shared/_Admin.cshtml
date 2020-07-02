@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - @res.Get("Title")</title>
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous" />
 	<link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body class="admin-body">
@@ -37,6 +37,7 @@
 	<main role="main" class="container pb-3">
 		@RenderBody()
 	</main>
+	<!-- Footer -->
 	<footer class="border-top admin-footer text-muted">
 		<div class="row">
 			<div class="copyright col-sm-6">&copy; 2018-@DateTime.Now.Year - @res.Get("Dev") <a asp-controller="Home" asp-action="BlackExodus" rel="nofollow" target="_blank">Cyber_Garret#5898</a></div>

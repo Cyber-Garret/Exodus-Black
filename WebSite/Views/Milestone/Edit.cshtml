@@ -3,9 +3,10 @@
 	Layout = "_Admin";
 	ViewData["Title"] = $"Edit Milestone #{Model.Info.RowID}";
 }
-
-<h2>@ViewData["Title"]</h2>
-
+<div class="text-center">
+	<h2>@ViewData["Title"]</h2>
+	<img class="img-thumbnail" style="max-height: 10rem;" src="@Model.Info.Icon" />
+</div>
 <form asp-action="Edit" asp-controller="Milestone">
 	<div>
 		<input type="hidden" asp-for="Info.RowID" />

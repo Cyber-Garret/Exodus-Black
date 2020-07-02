@@ -29,20 +29,13 @@ namespace WebSite.Controllers
 			return View();
 		}
 
-		[Route("Login"), HttpGet]
-		public IActionResult Login()
-		{
-			return View();
-		}
-
-		[Route("Login"), HttpPost]
-		public async Task<IActionResult> LoginAsync(LoginViewModel credential)
+		[HttpPost]
+		public async Task<IActionResult> Index(LoginViewModel credential)
 		{
 			if (ModelState.IsValid)
 			{
-				var user = _configuration.GetSection("SiteAdmin").Get<SiteAdmin>();
-
-				if (credential.UserName == user.UserName)
+				var user = _configuration.GetSection("SiteAdmins").Get<List<SiteAdmin>>().FirstOrDefault(u => u.UserName == credential.UserName);
+				if (user != null)
 				{
 					var passwordHasher = new PasswordHasher<string>();
 					if (passwordHasher.VerifyHashedPassword(null, user.Password, credential.Password) == PasswordVerificationResult.Success)
@@ -52,10 +45,9 @@ namespace WebSite.Controllers
 						return RedirectToAction(actionName: "Index", controllerName: "Admin");
 					}
 				}
-				ViewData["Message"] = "Invalid attempt";
+				ModelState.AddModelError("", "Invalid attempt");
 			}
-
-			return View();
+			return View(credential);
 		}
 
 		public async Task<IActionResult> Logout()
