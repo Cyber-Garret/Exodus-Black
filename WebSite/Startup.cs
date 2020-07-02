@@ -36,7 +36,8 @@ namespace WebSite
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
-			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions => {
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookieOptions =>
+			{
 				cookieOptions.LoginPath = "/Login";
 			});
 
@@ -59,8 +60,11 @@ namespace WebSite
 					opts.SupportedUICultures = supportedCultures;
 				});
 			services.AddSingleton<SharedResourcesService>();
-
-			services.AddTransient<IDbClient, DbClient>(provider => new DbClient(Configuration.GetConnectionString("DefaultConnection")));
+			//DB
+			var connString = Configuration.GetConnectionString("DefaultConnection");
+			services.AddTransient<IWelcomeDbClient, WelcomeDbClient>(provider => new WelcomeDbClient(connString));
+			services.AddTransient<IMilestoneDbClient, MilesoneDbClient>(provider => new MilesoneDbClient(connString));
+			services.AddTransient<ICatalystDbClient, CatalystDbClient>(provider => new CatalystDbClient(connString));
 
 			services.AddControllersWithViews()
 				.AddViewLocalization(

@@ -1,0 +1,57 @@
+﻿@inject SharedResourcesService res
+<!DOCTYPE html>
+<html lang="en" class="admin-html">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - @res.Get("Title")</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous" />
+	<link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="admin-body">
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container">
+				<a class="navbar-brand" asp-route-culture="@Context.Request.RouteValues["culture"]" asp-controller="Home" asp-action="Index">
+					<img src="~/img/neira.png" class="d-inline-block align-top" width="30" height="30" alt="Logo">
+					@res.Get("Name")
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+					<ul class="navbar-nav flex-grow-1">
+						<li class="nav-item">
+							<a class="nav-link" asp-route-culture="@Context.Request.RouteValues["culture"]" asp-controller="Admin" asp-action="Index">Admin panel</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			@if (User.Identity.IsAuthenticated)
+			{
+				<a class="navbar-text alert-link" asp-controller="Admin" asp-action="Logout">Hello @User.Identity.Name</a>
+			}
+		</nav>
+	</header>
+	<main role="main" class="container pb-3">
+		@RenderBody()
+	</main>
+	<!-- Footer -->
+	<footer class="border-top admin-footer text-muted">
+		<div class="row">
+			<div class="copyright col-sm-6">&copy; 2018-@DateTime.Now.Year - @res.Get("Dev") <a asp-controller="Home" asp-action="BlackExodus" rel="nofollow" target="_blank">Cyber_Garret#5898</a></div>
+			<div class="col-sm-6 text-right">
+				@await Html.PartialAsync("_SelectLanguagePartial")
+			</div>
+		</div>
+	</footer>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" crossorigin="anonymous"></script>
+
+	@RenderSection("Scripts", required: false)
+</body>
+</html>

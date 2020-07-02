@@ -1,39 +1,42 @@
 ﻿@model IEnumerable<Neiralink.Models.RandomWelcome>
 @{
+	Layout = "_Admin";
 	ViewData["Title"] = "Random welcome list";
+	var counter = 1;
 }
-<div class="container margin-top-5">
-	<h2>@ViewData["Title"]</h2>
-	<p>
-		<a asp-controller="Welcome" asp-action="Create">Add</a>
-	</p>
-	<table class="table">
-		<tr>
-			<th>ID</th>
-			<th>EN</th>
-			<th>RU</th>
-			<th>UA</th>
-			<th></th>
-		</tr>
 
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>@item.RowID</td>
-				<td>
-					@item.EN
-				</td>
-				<td>
-					@item.RU
-				</td>
-				<td>
-					@item.UK
-				</td>
-				<td>
-					<a asp-controller="Welcome" asp-action="Edit" asp-route-id="@item.RowID">Edit</a> |
-					<a asp-controller="Welcome" asp-action="Delete" asp-route-id="@item.RowID">Delete</a>
-				</td>
-			</tr>
-		}
-	</table>
-</div>
+<h2>@ViewData["Title"]</h2>
+<p>
+	<a class="btn btn-sm btn-primary" asp-controller="Welcome" asp-action="Create">Add</a>
+</p>
+
+<table class="table table-hover">
+	<caption>List of random welcomes in Failsafe bot</caption>
+	<tr>
+		<th scope="col">#</th>
+		<th scope="col">EN</th>
+		<th scope="col">RU</th>
+		<th scope="col">UA</th>
+		<th scope="col">Actions</th>
+	</tr>
+	@foreach (var item in Model)
+	{
+		<tr>
+			<th scope="row">@counter</th>
+			<td>
+				@item.EN
+			</td>
+			<td>
+				@item.RU
+			</td>
+			<td>
+				@item.UK
+			</td>
+			<td>
+				<a asp-controller="Welcome" asp-action="Edit" asp-route-id="@item.RowID">Edit</a> |
+				<a asp-controller="Welcome" asp-action="Delete" asp-route-id="@item.RowID">Delete</a>
+			</td>
+		</tr>
+		counter++;
+	}
+</table>

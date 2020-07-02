@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Neiralink.Models.Catalyst>
+@using Neiralink.Models
+@{
+	Layout = "_Admin";
+	ViewData["Title"] = "Catalyst editor list";
+	var counter = 1;
+}
+
+<h2>@ViewData["Title"]</h2>
+<p>
+	<a class="btn btn-sm btn-primary" asp-controller="Catalyst" asp-action="Create">Add</a>
+</p>
+
+<table class="table table-sm table-hover">
+	<caption>List of catalyst db of Failsafe</caption>
+	<tr>
+		<th scope="col">#</th>
+		<th scope="col">Icon</th>
+		<th scope="col">Lang</th>
+		<th scope="col">Weapon Name</th>
+		<th scope="col">Actions</th>
+	</tr>
+	@foreach (var item in Model)
+	{
+		<tr>
+			<th scope="row">@counter</th>
+			<td><img class="img-thumbnail" style="max-height:5rem;" src="@item.IconUrl" /></td>
+			<td>@item.Lang.GetEnumDisplayName()</td>
+			<td>@item.WeaponName</td>
+			<td>
+				<a asp-controller="Catalyst" asp-action="Edit" asp-route-id="@item.RowID" asp-route-lang="@item.Lang">Edit</a> |
+				<a asp-controller="Catalyst" asp-action="Delete" asp-route-id="@item.RowID" asp-route-lang="@item.Lang">Delete</a>
+			</td>
+		</tr>
+		counter++;
+	}
+</table>

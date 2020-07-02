@@ -33,8 +33,8 @@ namespace Bot.Services
 		private readonly EmoteService emote;
 		private readonly SelfRoleService roleService;
 
-		private readonly IDbClient db;
-		public DiscordEventHandlerService(IServiceProvider service, IDbClient dbClient, IConfiguration configuration)
+		private readonly IWelcomeDbClient db;
+		public DiscordEventHandlerService(IServiceProvider service, IWelcomeDbClient dbClient, IConfiguration configuration)
 		{
 			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
 			this.configuration = configuration;

@@ -1,0 +1,45 @@
+﻿@model Neiralink.Models.Catalyst
+@{
+	Layout = "_Admin";
+	ViewData["Title"] = $"Edit catalyst {Model.WeaponName}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" asp-controller="Catalyst">
+	<div>
+		<input type="hidden" asp-for="RowID" />
+		<input type="hidden" asp-for="Lang" />
+		<div class="form-group">
+			<label asp-for="IconUrl"></label>
+			<input class="form-control  form-control-sm" type="text" asp-for="IconUrl" />
+		</div>
+		<div class="form-group">
+			<label asp-for="WeaponName"></label>
+			<input class="form-control  form-control-sm" type="text" asp-for="WeaponName" />
+		</div>
+		<div class="form-group">
+			<label asp-for="Description"></label>
+			<input class="form-control  form-control-sm" type="text" asp-for="Description" />
+		</div>
+		<div class="form-group">
+			<label asp-for="DropLocation"></label>
+			<input class="form-control  form-control-sm" type="text" asp-for="DropLocation" />
+		</div>
+		<div class="form-group">
+			<label asp-for="Masterwork"></label>
+			<input class="form-control  form-control-sm" type="text" asp-for="Masterwork" />
+		</div>
+		<div class="form-group">
+			<label asp-for="Bonus"></label>
+			<input class="form-control  form-control-sm" type="text" asp-for="Bonus" />
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Update in DB" class="btn btn-outline-secondary" />
+		</div>
+	</div>
+</form>
+
+<div class="float-right">
+	<a asp-controller="Catalyst" asp-action="Index">Return to list</a>
+</div>

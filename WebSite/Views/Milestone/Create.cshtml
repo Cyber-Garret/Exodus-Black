@@ -1,0 +1,35 @@
+﻿@model Neiralink.Models.MilestoneInfo
+
+@{
+	Layout = "_Admin";
+	ViewData["Title"] = "New milestone";
+}
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" asp-controller="Milestone">
+	<div>
+		<div class="form-group">
+			<label asp-for="Icon"></label>
+			<input class="form-control form-control-sm" type="text" asp-for="Icon" />
+		</div>
+		<div class="form-group">
+			<label asp-for="MaxSpace"></label>
+			<input type="number" asp-for="MaxSpace" class="form-control  form-control-sm" />
+		</div>
+		<div class="form-group">
+			<label asp-for="MilestoneType"></label>
+			<select class="form-control form-control-sm" asp-for="MilestoneType" asp-items="Html.GetEnumSelectList<Neiralink.Models.MilestoneType>()"></select>
+		</div>
+		<div class="form-group">
+			<label asp-for="Game"></label>
+			<select class="form-control form-control-sm" asp-for="Game" asp-items="Html.GetEnumSelectList<Neiralink.Models.GameName>()"></select>
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Add in DB" class="btn btn-outline-secondary" />
+		</div>
+	</div>
+</form>
+
+<div class="float-right">
+	<a asp-controller="Milestone" asp-action="Index">Return to list</a>
+</div>

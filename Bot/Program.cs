@@ -89,7 +89,7 @@ namespace Bot
 						services.AddSingleton(new JobSchedule(typeof(MilestoneRemind), "0/10 * * * * ?")); // run every 10 seconds.
 						services.AddSingleton(new JobSchedule(typeof(MilestoneClean), "0 0/15 * * * ?")); // run every 15 minute.
 
-						services.AddTransient<IDbClient, DbClient>(provider => new DbClient(builtConfig.GetConnectionString("DefaultConnection")));
+						services.AddTransient<IWelcomeDbClient, WelcomeDbClient>(provider => new WelcomeDbClient(builtConfig.GetConnectionString("DefaultConnection")));
 					})
 					.ConfigureAppConfiguration((hostingContext, config) =>
 					{

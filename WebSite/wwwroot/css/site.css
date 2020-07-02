@@ -421,3 +421,23 @@ ul.social-buttons {
 
 .margin-top-5 {
   margin-top: 5rem; }
+
+/* Sticky footer styles
+-------------------------------------------------- */
+.admin-html {
+  position: relative;
+  min-height: 100%; }
+
+.admin-body {
+  /* Margin bottom by footer height */
+  margin-bottom: 100px; }
+
+.admin-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px;
+  /* Vertically center the text there */ }
