@@ -11,7 +11,7 @@
 		<input type="hidden" asp-for="MilestoneInfoRowID" />
 		<div class="form-group">
 			<label asp-for="LangKey"></label>
-			<select class="form-control form-control-sm" asp-for="LangKey" asp-items="Html.GetEnumSelectList<Neiralink.Models.LangKey>()"></select>
+			<select class="form-control form-control-sm" asp-for="LangKey" asp-items="Html.GetEnumSelectList<Neiralink.Models.LangKey>()" disabled></select>
 		</div>
 		<div class="form-group">
 			<label asp-for="Name"></label>

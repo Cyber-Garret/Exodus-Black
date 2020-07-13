@@ -101,7 +101,7 @@ namespace Neiralink
 		public void UpdateMilestoneLocale(MilestoneInfoLocale infoLocale)
 		{
 			using var db = new MySqlConnection(conn);
-			var sqlQuery = "UPDATE MilestoneInfoLocales SET LangKey = @LangKey, Name = @Name, Alias = @Alias, Type = @Type WHERE MilestoneInfoRowID = @MilestoneInfoRowID AND LangKey = @LangKey";
+			var sqlQuery = "UPDATE MilestoneInfoLocales Name = @Name, Alias = @Alias, Type = @Type WHERE MilestoneInfoRowID = @MilestoneInfoRowID AND LangKey = @LangKey";
 			db.Execute(sqlQuery, infoLocale);
 		}
 	}
