@@ -429,7 +429,7 @@ Posted by **{1}**</value>
     <value>https://www.neira.app/img/neira.png</value>
   </data>
   <data name="NeiraWebSite" xml:space="preserve">
-    <value>www.neira.app</value>
+    <value>https://neira.app/</value>
   </data>
   <data name="Nightfall" xml:space="preserve">
     <value>Nightfall</value>
