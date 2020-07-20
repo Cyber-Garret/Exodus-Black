@@ -941,7 +941,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to www.neira.app.
+        ///   Looks up a localized string similar to https://neira.app/.
         /// </summary>
         internal static string NeiraWebSite {
             get {
