@@ -62,7 +62,7 @@ namespace Bot
 							LogLevel = discordSeverity,
 							DefaultRetryMode = RetryMode.AlwaysRetry,
 							MessageCacheSize = 300,
-							TotalShards = 4
+							TotalShards = 2
 						}))
 						.AddSingleton(new CommandService(new CommandServiceConfig
 						{
