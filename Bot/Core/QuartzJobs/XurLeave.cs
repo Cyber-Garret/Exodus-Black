@@ -39,7 +39,7 @@ namespace Bot.Core.QuartzJobs
 					if (guild.NotificationChannel == 0) return;
 
 					await discord.GetGuild(guild.Id).GetTextChannel(guild.NotificationChannel)
-				   .SendMessageAsync(text: guild.GlobalMention, embed: XurLeaveEmbed(guild.Language).Build());
+				   .SendMessageAsync(embed: XurLeaveEmbed(guild.Language).Build());
 				}
 				catch (Exception ex) { logger.LogError(ex, "XurLeave"); }
 			});
