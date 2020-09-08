@@ -170,7 +170,7 @@ namespace Bot.Modules
 			{
 				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date.ToShortDateString()),
 				Color = Color.Gold,
-				Description = string.Format(Resources.HelpEmbDesc, $"https://{Resources.NeiraWebSite}/"),
+				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite),
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = Resources.NeiraFooterIcon,

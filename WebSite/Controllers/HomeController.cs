@@ -60,9 +60,6 @@ namespace WebSite.Controllers
 
 		[Route("BlackExodus")]
 		public IActionResult BlackExodus() => RedirectPermanent($"https://discord.com/invite/WcuNPM9");
-
-		[Route("Docs")]
-		public IActionResult VkGroup() => RedirectPermanent($"https://docs.neira.su/");
 		#endregion
 	}
 }

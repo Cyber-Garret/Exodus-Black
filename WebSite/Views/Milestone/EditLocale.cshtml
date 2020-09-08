@@ -9,6 +9,7 @@
 <form asp-action="EditLocale" asp-controller="Milestone">
 	<div>
 		<input type="hidden" asp-for="MilestoneInfoRowID" />
+		<input type="hidden" asp-for="LangKey" />
 		<div class="form-group">
 			<label asp-for="LangKey"></label>
 			<select class="form-control form-control-sm" asp-for="LangKey" asp-items="Html.GetEnumSelectList<Neiralink.Models.LangKey>()" disabled></select>
