@@ -21,14 +21,14 @@ namespace Bot
 		private readonly IConfiguration config;
 		private readonly IServiceProvider service;
 		private readonly ILogger<Neira> logger;
-		private readonly DiscordShardedClient discord;
+		private readonly DiscordSocketClient discord;
 
 		public Neira(IServiceProvider service)
 		{
 			this.service = service;
 			logger = service.GetRequiredService<ILogger<Neira>>();
 			config = service.GetRequiredService<IConfiguration>();
-			discord = service.GetRequiredService<DiscordShardedClient>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken cancellationToken)

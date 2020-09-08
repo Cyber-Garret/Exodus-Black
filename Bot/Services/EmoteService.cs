@@ -17,14 +17,14 @@ namespace Bot.Services
 		public IEmote Solar;
 		public IEmote Void;
 
-		private readonly DiscordShardedClient discord;
+		private readonly DiscordSocketClient discord;
 		private readonly IConfiguration config;
 		private readonly ILogger logger;
 
 		public EmoteService(IServiceProvider service)
 		{
 			logger = service.GetRequiredService<ILogger<EmoteService>>();
-			discord = service.GetRequiredService<DiscordShardedClient>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 			config = service.GetRequiredService<IConfiguration>();
 		}
 

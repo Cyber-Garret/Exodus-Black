@@ -17,14 +17,14 @@ namespace Bot.Services
 	{
 		// declare the fields used later in this class
 		private readonly ILogger logger;
-		private readonly DiscordShardedClient discord;
+		private readonly DiscordSocketClient discord;
 		private readonly CommandService command;
 
 
 		public LoggingService(IServiceProvider services)
 		{
 			// get the services we need via DI, and assign the fields declared above to them
-			discord = services.GetRequiredService<DiscordShardedClient>();
+			discord = services.GetRequiredService<DiscordSocketClient>();
 			command = services.GetRequiredService<CommandService>();
 			logger = services.GetRequiredService<ILogger<LoggingService>>();
 

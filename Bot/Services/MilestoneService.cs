@@ -18,13 +18,13 @@ namespace Bot.Services
 	public class MilestoneService
 	{
 		private readonly ILogger _logger;
-		private readonly DiscordShardedClient discord;
+		private readonly DiscordSocketClient discord;
 		private readonly EmoteService _emote;
 
 		public MilestoneService(IServiceProvider service)
 		{
 			_logger = service.GetRequiredService<ILogger<MilestoneService>>();
-			discord = service.GetRequiredService<DiscordShardedClient>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 			_emote = service.GetRequiredService<EmoteService>();
 		}
 

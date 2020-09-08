@@ -8,6 +8,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -20,15 +21,17 @@ namespace Bot.Modules
 	[RequireContext(ContextType.Guild), Cooldown(5)]
 	public class MilestoneModule : RootModule
 	{
+		private readonly IConfiguration config;
 		private readonly ILogger logger;
-		private readonly DiscordShardedClient discord;
+		private readonly DiscordSocketClient discord;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 
 		public MilestoneModule(IServiceProvider service)
 		{
+			config = service.GetRequiredService<IConfiguration>();
 			logger = service.GetRequiredService<ILogger<MilestoneModule>>();
-			discord = service.GetRequiredService<DiscordShardedClient>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
 		}
@@ -162,7 +165,9 @@ namespace Bot.Modules
 			var milestone = ActiveMilestoneData.GetMilestone(milestoneId);
 			if (milestone.Leader == Context.User.Id)
 			{
-				var IsSucess = DateTime.TryParseExact(newTime, GlobalVariables.timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+				//Get time formats from appsetings.json
+				var timeFormats = config.GetSection("Bot:TimeFormats").Get<string[]>();
+				var IsSucess = DateTime.TryParseExact(newTime, timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
 
 				if (IsSucess)
 				{
@@ -261,7 +266,9 @@ namespace Bot.Modules
 					return;
 				}
 
-				var IsSucess = DateTime.TryParseExact(time, GlobalVariables.timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+				//Get time formats from appsetings.json
+				var timeFormats = config.GetSection("Bot:TimeFormats").Get<string[]>();
+				var IsSucess = DateTime.TryParseExact(time, timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
 
 				if (IsSucess)
 				{

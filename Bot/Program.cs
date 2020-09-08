@@ -55,14 +55,13 @@ namespace Bot
 						services.AddSingleton<IJobFactory, SingletonJobFactory>();
 						services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 						// bot services
-						services.AddSingleton(new DiscordShardedClient(new DiscordSocketConfig
+						services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
 						{
 							ExclusiveBulkDelete = true,
 							AlwaysDownloadUsers = true,
 							LogLevel = discordSeverity,
 							DefaultRetryMode = RetryMode.AlwaysRetry,
-							MessageCacheSize = 300,
-							TotalShards = 2
+							MessageCacheSize = 300
 						}))
 						.AddSingleton(new CommandService(new CommandServiceConfig
 						{

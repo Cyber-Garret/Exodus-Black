@@ -28,7 +28,7 @@ namespace Bot.Services
 		// declare the fields used later in this class
 		private readonly ILogger logger;
 		private readonly IConfiguration configuration;
-		private readonly DiscordShardedClient discord;
+		private readonly DiscordSocketClient discord;
 		private readonly MilestoneService milestoneHandler;
 		private readonly EmoteService emote;
 		private readonly SelfRoleService roleService;
@@ -38,7 +38,7 @@ namespace Bot.Services
 		{
 			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
 			this.configuration = configuration;
-			discord = service.GetRequiredService<DiscordShardedClient>();
+			discord = service.GetRequiredService<DiscordSocketClient>();
 			milestoneHandler = service.GetRequiredService<MilestoneService>();
 			emote = service.GetRequiredService<EmoteService>();
 			roleService = service.GetRequiredService<SelfRoleService>();
@@ -48,8 +48,7 @@ namespace Bot.Services
 
 		public void Configure()
 		{
-			discord.ShardReady += Discord_ShardReady;
-			discord.ShardDisconnected += Discord_ShardDisconnected;
+			discord.Ready += Discord_Ready;
 
 			discord.JoinedGuild += Discord_JoinedGuild;
 			discord.LeftGuild += Discord_LeftGuild;
@@ -75,19 +74,10 @@ namespace Bot.Services
 
 
 		#region Events
-		private Task Discord_ShardReady(DiscordSocketClient client)
+		private Task Discord_Ready()
 		{
-			Task.Run(() =>
-			{
-				logger.LogWarning($"Shard #{client.ShardId} ready, connected to {client.Guilds.Count} servers.");
-			});
-
-			return Task.CompletedTask;
-		}
-
-		private Task Discord_ShardDisconnected(Exception ex, DiscordSocketClient client)
-		{
-			logger.LogInformation($"Shard #{client.ShardId} disconnected. [{ex.Message}]");
+			logger.LogWarning($"Connected as -> {discord.CurrentUser}");
+			logger.LogInformation($"We are on [{discord.Guilds.Count}] servers");
 			return Task.CompletedTask;
 		}
 
