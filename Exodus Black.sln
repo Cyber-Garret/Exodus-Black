@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{9FD1C8
 		Headers.psd = Headers.psd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neiralink", "Neiralink\Neiralink.csproj", "{48D66A5A-D1AA-46E3-A448-46EC906B9989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neiralink", "Neiralink\Neiralink.csproj", "{48D66A5A-D1AA-46E3-A448-46EC906B9989}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
