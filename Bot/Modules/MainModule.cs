@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 
 namespace Bot.Modules
@@ -90,6 +91,19 @@ namespace Bot.Modules
 			var embed = CatalystEmbed(catalyst);
 
 			await ReplyAsync(string.Format(Resources.CatFound, Context.User.Username), embed: embed);
+		}
+
+		[Command("mods"), Alias("моды", "моди")]
+		public async Task ModsInfo()
+		{
+			try
+			{
+				await ReplyAsync(embed: ModsEmbed());
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Mod command");
+			}
 		}
 
 		[Command("poll"), Alias("опрос", "опитування")]
@@ -235,6 +249,31 @@ namespace Bot.Modules
 			.Build();
 
 			return embed;
+		}
+
+		private Embed ModsEmbed()
+		{
+			var embed = new EmbedBuilder
+			{
+				Title = Resources.ModEmbTitle,
+				Color = Color.Gold,
+				Footer = new EmbedFooterBuilder { IconUrl = Resources.NeiraFooterIcon, Text = Resources.EmbFooterAboutMyMistake }
+			};
+			//Elements
+			embed.AddField(Resources.ModFieldElementTitle, GlobalVariables.InvisibleString);
+			embed.AddField($"{emote.Arc} {Resources.ModFieldArcTitle}", Resources.ModFieldArcDesc);
+			embed.AddField($"{emote.Solar} {Resources.ModFieldSolarTitle}", Resources.ModFieldSolarDesc);
+			embed.AddField($"{emote.Void} {Resources.ModFieldVoidTitle}", Resources.ModFieldVoidDesc);
+
+			//Armor
+			embed.AddField(Resources.ModFieldTypeTitle, GlobalVariables.InvisibleString);
+			embed.AddField(Resources.ModFieldHelmetTitle, Resources.ModFieldHelmetDesc);
+			embed.AddField(Resources.ModFieldGauntletsTitle, Resources.ModFieldGauntletsDesc);
+			embed.AddField(Resources.ModFieldChestTitle, Resources.ModFieldChestDesc);
+			embed.AddField(Resources.ModFieldLegTitle, Resources.ModFieldLegDesc);
+			embed.AddField(Resources.ModFieldClassItemTitle, Resources.ModFieldClassItemDesc);
+
+			return embed.Build();
 		}
 
 		private Embed PollEmbed(string text, SocketGuildUser user)

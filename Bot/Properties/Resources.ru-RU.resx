@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BanPermission" xml:space="preserve">
     <value>Капитан, для доступа к разблокировке участников у меня нет права **Банить участников**.
@@ -549,5 +549,62 @@ Discord имя стража
   </data>
   <data name="XurLeaveEmbTitle" xml:space="preserve">
     <value>Внимание! Зур покинул солнечную систему.</value>
+  </data>
+  <data name="ModEmbTitle" xml:space="preserve">
+    <value>Модификаторы брони 2.0</value>
+  </data>
+  <data name="ModFieldElementTitle" xml:space="preserve">
+    <value>Тип энергии к которому привязан тип оружия:</value>
+  </data>
+  <data name="ModFieldArcDesc" xml:space="preserve">
+    <value>Импульсные винтовки, пулемёты, дробовики, мечи, луки.</value>
+  </data>
+  <data name="ModFieldSolarTitle" xml:space="preserve">
+    <value>Солнце</value>
+  </data>
+  <data name="ModFieldSolarDesc" xml:space="preserve">
+    <value>Ракетные установки, автоматы, пистолеты-пулеметы, плазменные винтовки, линейно-плазменные винтовки.</value>
+  </data>
+  <data name="ModFieldVoidTitle" xml:space="preserve">
+    <value>Пустота</value>
+  </data>
+  <data name="ModFieldVoidDesc" xml:space="preserve">
+    <value>Револьверы, снайперские винтовки, гранатомёты, винтовки разведчиков, пистолеты.</value>
+  </data>
+  <data name="ModFieldTypeTitle" xml:space="preserve">
+    <value>Тип модификатора в доспехах:</value>
+  </data>
+  <data name="ModFieldHelmetTitle" xml:space="preserve">
+    <value>Шлем</value>
+  </data>
+  <data name="ModFieldHelmetDesc" xml:space="preserve">
+    <value>Прицельность, локаторы боеприпасов.</value>
+  </data>
+  <data name="ModFieldGauntletsTitle" xml:space="preserve">
+    <value>Рукавицы</value>
+  </data>
+  <data name="ModFieldGauntletsDesc" xml:space="preserve">
+    <value>Скорость перезарядки, откат гранат и ближнего боя.</value>
+  </data>
+  <data name="ModFieldChestTitle" xml:space="preserve">
+    <value>Нагрудник</value>
+  </data>
+  <data name="ModFieldChestDesc" xml:space="preserve">
+    <value>Резервный боезапас, стойкий прицел.</value>
+  </data>
+  <data name="ModFieldLegTitle" xml:space="preserve">
+    <value>Броня для ног</value>
+  </data>
+  <data name="ModFieldLegDesc" xml:space="preserve">
+    <value>Сборщик боеприпасов, легкость оружия.</value>
+  </data>
+  <data name="ModFieldClassItemTitle" xml:space="preserve">
+    <value>Классовый предмет</value>
+  </data>
+  <data name="ModFieldClassItemDesc" xml:space="preserve">
+    <value>Добивающий прием, восстановление способностей.</value>
+  </data>
+  <data name="ModFieldArcTitle" xml:space="preserve">
+    <value>Молния</value>
   </data>
 </root>
