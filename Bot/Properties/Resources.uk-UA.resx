@@ -560,4 +560,52 @@ Discord ім'я ґардіана
   <data name="ModFieldArcTitle" xml:space="preserve">
     <value>Блискавка</value>
   </data>
+  <data name="ModFieldArcDesc" xml:space="preserve">
+    <value>Імпульсні гвинтівки, кулемети, дробовики, мечі, луки.</value>
+  </data>
+  <data name="ModFieldSolarTitle" xml:space="preserve">
+    <value>Cонце</value>
+  </data>
+  <data name="ModFieldSolarDesc" xml:space="preserve">
+    <value>Ракетні установки, автомати, пістолети-кулемети, плазмові гвинтівки, лінійно-плазмові гвинтівки.</value>
+  </data>
+  <data name="ModFieldVoidTitle" xml:space="preserve">
+    <value>Пустота</value>
+  </data>
+  <data name="ModFieldVoidDesc" xml:space="preserve">
+    <value>Револьвери, снайперські гвинтівки, гранатомети, гвинтівки розвідників, пістолети.</value>
+  </data>
+  <data name="ModFieldTypeTitle" xml:space="preserve">
+    <value>Тип модифікатора в обладунках:</value>
+  </data>
+  <data name="ModFieldHelmetTitle" xml:space="preserve">
+    <value>Шолом</value>
+  </data>
+  <data name="ModFieldHelmetDesc" xml:space="preserve">
+    <value>Прицільність, локатори боєприпасів.</value>
+  </data>
+  <data name="ModFieldGauntletsTitle" xml:space="preserve">
+    <value>Рукавиці</value>
+  </data>
+  <data name="ModFieldGauntletsDesc" xml:space="preserve">
+    <value>Швидкість перезарядки, відкат гранат і ближнього бою.</value>
+  </data>
+  <data name="ModFieldChestTitle" xml:space="preserve">
+    <value>Нагрудник</value>
+  </data>
+  <data name="ModFieldChestDesc" xml:space="preserve">
+    <value>Резервний боєзапас, стійкий приціл.</value>
+  </data>
+  <data name="ModFieldLegTitle" xml:space="preserve">
+    <value>Броня для ніг</value>
+  </data>
+  <data name="ModFieldLegDesc" xml:space="preserve">
+    <value>Складальник боєприпасів, легкість зброї.</value>
+  </data>
+  <data name="ModFieldClassItemTitle" xml:space="preserve">
+    <value>Класовий предмет</value>
+  </data>
+  <data name="ModFieldClassItemDesc" xml:space="preserve">
+    <value>Добиваючі прийоми, відновлення здібностей.</value>
+  </data>
 </root>

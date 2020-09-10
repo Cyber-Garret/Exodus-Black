@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Neiralink;
 using Neiralink.Models;
+
+using System;
+using System.Linq;
 
 using WebSite.ViewModels;
 
@@ -62,7 +59,7 @@ namespace WebSite.Controllers
 				db.UpdateMilestone(milestone.Info);
 				return RedirectToAction(nameof(Index));
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Console.WriteLine(ex);
 				return View();

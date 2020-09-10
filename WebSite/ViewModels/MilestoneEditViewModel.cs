@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Neiralink.Models;
 
-using Neiralink.Models;
+using System.Collections.Generic;
 
 namespace WebSite.ViewModels
 {

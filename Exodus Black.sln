@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{9FD1C8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neiralink", "Neiralink\Neiralink.csproj", "{48D66A5A-D1AA-46E3-A448-46EC906B9989}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Addons.Interactive", "..\Discord.Addons.Interactive\Discord.Addons.Interactive\Discord.Addons.Interactive.csproj", "{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addons", "Addons", "{37A42AEA-324B-4E08-AE63-ECFD5140DDBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +37,16 @@ Global
 		{48D66A5A-D1AA-46E3-A448-46EC906B9989}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48D66A5A-D1AA-46E3-A448-46EC906B9989}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48D66A5A-D1AA-46E3-A448-46EC906B9989}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E} = {37A42AEA-324B-4E08-AE63-ECFD5140DDBB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6931ABD9-F386-4DBA-96B8-95FD43D84AA2}

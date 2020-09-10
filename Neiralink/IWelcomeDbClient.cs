@@ -1,14 +1,12 @@
 ﻿using Dapper;
 
+using MySql.Data.MySqlClient;
+
 using Neiralink.Models;
 
-using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using MySql.Data.MySqlClient;
-using System.Linq;
-using System.Text;
 using System.Globalization;
+using System.Linq;
 
 namespace Neiralink
 {

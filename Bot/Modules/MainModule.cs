@@ -5,15 +5,20 @@ using Bot.Properties;
 using Bot.Services;
 
 using Discord;
+using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Neiralink;
+
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Resources;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Modules
@@ -25,12 +30,14 @@ namespace Bot.Modules
 		private readonly DiscordSocketClient discord;
 		private readonly CommandService command;
 		private readonly EmoteService emote;
+		private readonly IWishDbClient wishDb;
 		public MainModule(IServiceProvider service, ILogger<MainModule> logger)
 		{
 			this.logger = logger;
 			discord = service.GetRequiredService<DiscordSocketClient>();
 			command = service.GetRequiredService<CommandService>();
 			emote = service.GetRequiredService<EmoteService>();
+			wishDb = service.GetRequiredService<IWishDbClient>();
 		}
 
 		#region Commands
@@ -103,6 +110,21 @@ namespace Bot.Modules
 			catch (Exception ex)
 			{
 				logger.LogError(ex, "Mod command");
+			}
+		}
+
+		[Command("wish"), Alias("желание", "бажання")]
+		public async Task Wishes()
+		{
+			try
+			{
+				var guild = GuildData.GetGuildAccount(Context.Guild);
+				
+				await PagedReplyAsync(GetPaginatedWishesEmbed(guild.Language), new ReactionList { Trash = true });
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Wish command");
 			}
 		}
 
@@ -260,13 +282,13 @@ namespace Bot.Modules
 				Footer = new EmbedFooterBuilder { IconUrl = Resources.NeiraFooterIcon, Text = Resources.EmbFooterAboutMyMistake }
 			};
 			//Elements
-			embed.AddField(Resources.ModFieldElementTitle, GlobalVariables.InvisibleString);
+			embed.AddField(GlobalVariables.InvisibleString, $"**{Resources.ModFieldElementTitle}**");
 			embed.AddField($"{emote.Arc} {Resources.ModFieldArcTitle}", Resources.ModFieldArcDesc);
 			embed.AddField($"{emote.Solar} {Resources.ModFieldSolarTitle}", Resources.ModFieldSolarDesc);
 			embed.AddField($"{emote.Void} {Resources.ModFieldVoidTitle}", Resources.ModFieldVoidDesc);
 
 			//Armor
-			embed.AddField(Resources.ModFieldTypeTitle, GlobalVariables.InvisibleString);
+			embed.AddField(GlobalVariables.InvisibleString, $"**{Resources.ModFieldTypeTitle}**");
 			embed.AddField(Resources.ModFieldHelmetTitle, Resources.ModFieldHelmetDesc);
 			embed.AddField(Resources.ModFieldGauntletsTitle, Resources.ModFieldGauntletsDesc);
 			embed.AddField(Resources.ModFieldChestTitle, Resources.ModFieldChestDesc);
@@ -274,6 +296,20 @@ namespace Bot.Modules
 			embed.AddField(Resources.ModFieldClassItemTitle, Resources.ModFieldClassItemDesc);
 
 			return embed.Build();
+		}
+
+		private PaginatedMessage GetPaginatedWishesEmbed(CultureInfo guildLocale)
+		{
+			var localeISO = guildLocale.TwoLetterISOLanguageName.ToUpper();
+			var wishes = wishDb.GetWishes(localeISO);
+
+			var pager = new PaginatedMessage
+			{
+				Color = Color.DarkPurple,
+				Pages = wishes.Select(wish => new Page { Title = wish.Title, Description = wish.Desc, ImageUrl = wish.WallScreenshot }),
+				Options = { Timeout = TimeSpan.FromMinutes(5) },
+			};
+			return pager;
 		}
 
 		private Embed PollEmbed(string text, SocketGuildUser user)
