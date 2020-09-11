@@ -119,8 +119,8 @@ namespace Bot.Modules
 			try
 			{
 				var guild = GuildData.GetGuildAccount(Context.Guild);
-				
-				await PagedReplyAsync(GetPaginatedWishesEmbed(guild.Language), new ReactionList { Trash = true });
+
+				await PagedReplyAsync(GetPaginatedWishesEmbed(guild.Language), new ReactionList { Trash = true, First = true, Last = true });
 			}
 			catch (Exception ex)
 			{
@@ -308,6 +308,7 @@ namespace Bot.Modules
 				Color = Color.DarkPurple,
 				Pages = wishes.Select(wish => new Page { Title = wish.Title, Description = wish.Desc, ImageUrl = wish.WallScreenshot }),
 				Options = { Timeout = TimeSpan.FromMinutes(5) },
+				FooterTextOverride = Resources.WishFooterFormat
 			};
 			return pager;
 		}

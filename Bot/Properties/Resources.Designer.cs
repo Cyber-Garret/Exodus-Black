@@ -1003,7 +1003,7 @@ namespace Bot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modifier type in armor.
+        ///   Looks up a localized string similar to Modifier type in armor:.
         /// </summary>
         internal static string ModFieldTypeTitle {
             get {
@@ -1422,6 +1422,15 @@ namespace Bot.Properties {
         internal static string UTCIncorrect {
             get {
                 return ResourceManager.GetString("UTCIncorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wish {0}/{1}.
+        /// </summary>
+        internal static string WishFooterFormat {
+            get {
+                return ResourceManager.GetString("WishFooterFormat", resourceCulture);
             }
         }
         
