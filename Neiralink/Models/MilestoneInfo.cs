@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Neiralink.Enums;
+
+using System.ComponentModel.DataAnnotations;
 
 using KeyAttribute = Dapper.Contrib.Extensions.KeyAttribute;
 

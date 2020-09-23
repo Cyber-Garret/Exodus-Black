@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using Neiralink;
+using Neiralink.Enums;
 using Neiralink.Models;
 
 using System.Linq;

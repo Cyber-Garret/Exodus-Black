@@ -18,11 +18,11 @@
 		</div>
 		<div class="form-group">
 			<label asp-for="MilestoneType"></label>
-			<select class="form-control form-control-sm" asp-for="MilestoneType" asp-items="Html.GetEnumSelectList<Neiralink.Models.MilestoneType>()"></select>
+			<select class="form-control form-control-sm" asp-for="MilestoneType" asp-items="Html.GetEnumSelectList<Neiralink.Enums.MilestoneType>()"></select>
 		</div>
 		<div class="form-group">
 			<label asp-for="Game"></label>
-			<select class="form-control form-control-sm" asp-for="Game" asp-items="Html.GetEnumSelectList<Neiralink.Models.GameName>()"></select>
+			<select class="form-control form-control-sm" asp-for="Game" asp-items="Html.GetEnumSelectList<Neiralink.Enums.GameName>()"></select>
 		</div>
 		<div class="form-group">
 			<input type="submit" value="Add in DB" class="btn btn-outline-secondary" />

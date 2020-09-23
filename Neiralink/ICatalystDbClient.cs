@@ -2,6 +2,7 @@
 
 using MySql.Data.MySqlClient;
 
+using Neiralink.Enums;
 using Neiralink.Models;
 
 using System.Collections.Generic;

@@ -15,10 +15,8 @@ using Microsoft.Extensions.Logging;
 using Neiralink;
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bot.Modules

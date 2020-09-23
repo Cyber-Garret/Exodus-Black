@@ -1,5 +1,7 @@
 ﻿using Dapper.Contrib.Extensions;
 
+using Neiralink.Enums;
+
 namespace Neiralink.Models
 {
 	public class Catalyst
