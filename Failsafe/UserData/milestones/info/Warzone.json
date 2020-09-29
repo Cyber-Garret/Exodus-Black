@@ -1,0 +1,9 @@
+{
+	"Name": "Верданск",
+	"Alias": "кб",
+	"Type": "Королевская битва",
+	"Icon": "https://neira.su/img/milestones/other/warzone.jpg",
+	"MaxSpace": 4,
+	"MilestoneType": 2,
+	"Game": 2
+}

@@ -1,0 +1,9 @@
+{
+	"Name": "Башня Серафимов",
+	"Alias": "бс",
+	"Type": "Открытое мероприятие",
+	"Icon": "http://www.neira.app/img/milestones/other/seraph_towers.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 2,
+	"Game": 0
+}

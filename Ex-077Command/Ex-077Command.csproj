@@ -1,0 +1,127 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>WebSite.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\img\clipboard-check-solid.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\Destiny2.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\discord-brands.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\Division2.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\features\1.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\features\2.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\features\3.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\features\4.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\globe-europe-solid.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\header-bg-servers.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\header-bg.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\altars_of_sorrow.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\blind_well.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\bounties.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\conflict.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\control_points.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\dark_zones.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\escalation_protocol.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\legendary.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\menagerie.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\nightmare_hunt.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\pit_of_heresy.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\seraph_towers.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\shattered_throne.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\other\warzone.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\crown_of_sorrow.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\dark_hours.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\eater_of_worlds.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\garden_of_salvation.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\last_wish.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\leviathan.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\scourge_of_the_past.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\raids\spire_of_stars.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\a_garden_world.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\broodhold.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\exodus_crash.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\lake_of_shadows.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\pyramidion.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\savanthuns_song.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\strange_terrain.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\the_arms_dealer.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\the_corrupted.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\the_hollowed_lair.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\the_insight_terminus.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\the_inverted_spire.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\the_scarlet_keep.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\tree_of_probabilities.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\warden_of_nothing.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\milestones\strikes\will_of_the_thousands.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\neira.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\users-solid.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\Warzone.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGenerators.Mvc" Version="3.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Destiny2\Destiny2.csproj" />
+    <ProjectReference Include="..\Neiralink\Fuselage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\site.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\site.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Fyodor-Bold.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Fyodor-BoldCondensed.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Fyodor-BoldCondensedOblique.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Fyodor-BoldExpanded.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Fyodor-BoldExpandedOblique.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\fonts\Fyodor-BoldOblique.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\js\main.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="manifest\" />
+  </ItemGroup>
+
+</Project>

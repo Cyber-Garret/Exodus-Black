@@ -1,0 +1,9 @@
+{
+	"Name": "Темная Зона",
+	"Alias": "тз",
+	"Type": "PvE-PvP операция",
+	"Icon": "https://neira.su/img/milestones/other/dark_zones.jpg",
+	"MaxSpace": 4,
+	"MilestoneType": 2,
+	"Game": 1
+}

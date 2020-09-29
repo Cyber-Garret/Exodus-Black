@@ -1,0 +1,9 @@
+{
+	"Name": "\"Железный конь\"",
+	"Alias": "жк",
+	"Type": "Операция",
+	"Icon": "https://www.neira.app/img/milestones/raids/iron_horse.jpg",
+	"MaxSpace": 8,
+	"MilestoneType": 0,
+	"Game": 1
+}

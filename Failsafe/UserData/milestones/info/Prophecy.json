@@ -1,0 +1,9 @@
+{
+	"Name": "Откровение",
+	"Alias": "отк",
+	"Type": "Подземелье",
+	"Icon": "http://www.neira.app/img/milestones/other/prophecy.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 2,
+	"Game": 0
+}
