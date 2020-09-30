@@ -1,5 +1,5 @@
-﻿using Bot.Core.Data;
-using Bot.Services;
+﻿using Failsafe.Core.Data;
+using Failsafe.Services;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,7 +9,7 @@ using Quartz;
 using System;
 using System.Threading.Tasks;
 
-namespace Bot.Core.QuartzJobs
+namespace Failsafe.Core.QuartzJobs
 {
 	[DisallowConcurrentExecution]
 	public class MilestoneRemind : IJob

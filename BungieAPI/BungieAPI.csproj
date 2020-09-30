@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>BungieAPI</PackageId>
+    <Version>1.9.2</Version>
+    <Authors>Andy Schott</Authors>
+    <Company />
+    <PackageDescription>A .NET Core wrapper around Bungie's Destiny 2 API.</PackageDescription>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>bungie;destiny2</PackageTags>
+    <RepositoryUrl>https://github.com/andyschott/Destiny2</RepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.8" />
+    <PackageReference Include="IdentityModel" Version="4.4.0" />
+  </ItemGroup>
+</Project>

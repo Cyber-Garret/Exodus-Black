@@ -1,4 +1,4 @@
-﻿namespace Bot
+﻿namespace Failsafe
 {
 	internal static class GlobalVariables
 	{

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace Bot.Services
+namespace Failsafe.Services
 {
 	/// <summary>
 	/// Provides logging for Discord.Net's API

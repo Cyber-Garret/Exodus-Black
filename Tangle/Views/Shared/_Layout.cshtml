@@ -3,44 +3,46 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - Hallows</title>
+	<title>@ViewData["Title"] - Tangle</title>
 	<link rel="stylesheet" href="~/lib/mdl/css/material.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
 </head>
 <body>
-	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-			<div class="container">
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hallows</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-						aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-					<ul class="navbar-nav flex-grow-1">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-						</li>
-					</ul>
-				</div>
+	<div class="mdl-layout mdl-js-layout">
+		<header class="mdl-layout__header mdl-layout__header--scroll">
+			<div class="mdl-layout__header-row">
+				<!-- Title -->
+				<span class="mdl-layout-title">The Tangle</span>
+				<!-- Add spacer, to align navigation to the right -->
+				<div class="mdl-layout-spacer"></div>
+				<!-- Navigation -->
+				<nav class="mdl-navigation">
+					<a class="mdl-navigation__link" asp-controller="Home" asp-action="Index">Home</a>
+					<a class="mdl-navigation__link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+				</nav>
 			</div>
-		</nav>
-	</header>
-	<div class="container">
-		<main role="main" class="pb-3">
-			@RenderBody()
-		</main>
-	</div>
-
-	<footer class="border-top footer text-muted">
-		<div class="container">
-			&copy; 2020 - Hallows - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		</header>
+		<div class="mdl-layout__drawer">
+			<span class="mdl-layout-title">The Tangle</span>
+			<nav class="mdl-navigation">
+				<a class="mdl-navigation__link" asp-controller="Home" asp-action="Index">Home</a>
+				<a class="mdl-navigation__link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+			</nav>
 		</div>
-	</footer>
+		<main class="mdl-layout__content">
+			<div class="page-content">@RenderBody()</div>
+		</main>
+		<footer class="mdl-mini-footer">
+			<div class="mdl-mini-footer__left-section">
+				<div class="mdl-logo">&copy; 2020 - The Tangle</div>
+				<ul class="mdl-mini-footer__link-list">
+					<li><a asp-controller="Home" asp-action="Privacy">Privacy & Terms</a></li>
+				</ul>
+			</div>
+		</footer>
+	</div>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/mdl/js/material.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>

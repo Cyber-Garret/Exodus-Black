@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="manifest\**" />
+    <Content Remove="manifest\**" />
+    <EmbeddedResource Remove="manifest\**" />
+    <None Remove="manifest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
@@ -73,8 +80,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Destiny2\Destiny2.csproj" />
-    <ProjectReference Include="..\Neiralink\Fuselage.csproj" />
+    <ProjectReference Include="..\Fuselage\Fuselage.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -118,10 +124,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="manifest\" />
   </ItemGroup>
 
 </Project>

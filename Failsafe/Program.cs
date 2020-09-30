@@ -1,5 +1,5 @@
-using Bot.Core.QuartzJobs;
-using Bot.Services;
+using Failsafe.Core.QuartzJobs;
+using Failsafe.Services;
 
 using Discord;
 using Discord.Addons.Interactive;
@@ -22,7 +22,7 @@ using Serilog.Core;
 
 using System;
 
-namespace Bot
+namespace Failsafe
 {
 	public class Program
 	{

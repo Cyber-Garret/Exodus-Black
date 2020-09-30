@@ -1,5 +1,5 @@
-﻿using Bot.Preconditions;
-using Bot.Properties;
+﻿using Failsafe.Preconditions;
+using Failsafe.Properties;
 
 using Discord.Commands;
 
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace Bot.Modules
+namespace Failsafe.Modules
 {
 	[RequireContext(ContextType.Guild), Cooldown(5)]
 	public class GuildOwnerModule : RootModule

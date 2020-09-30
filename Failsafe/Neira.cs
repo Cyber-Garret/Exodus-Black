@@ -1,6 +1,6 @@
-using Bot.Core.Data;
-using Bot.Properties;
-using Bot.Services;
+using Failsafe.Core.Data;
+using Failsafe.Properties;
+using Failsafe.Services;
 
 using Discord;
 using Discord.WebSocket;
@@ -14,7 +14,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Bot
+namespace Failsafe
 {
 	public class Neira : BackgroundService
 	{

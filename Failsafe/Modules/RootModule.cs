@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Addons.Interactive;
 
-namespace Bot.Modules
+namespace Failsafe.Modules
 {
 	public class RootModule : InteractiveBase
 	{

@@ -1,5 +1,5 @@
-﻿using Bot.Core.Data;
-using Bot.Properties;
+﻿using Failsafe.Core.Data;
+using Failsafe.Properties;
 
 using Discord;
 using Discord.WebSocket;
@@ -14,7 +14,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Bot.Core.QuartzJobs
+namespace Failsafe.Core.QuartzJobs
 {
 	[DisallowConcurrentExecution]
 	public class XurArrive : IJob

@@ -1,4 +1,3 @@
-using Destiny2;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -14,12 +13,9 @@ using Microsoft.Extensions.Options;
 
 using Neiralink;
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 
-using WebSite.Models;
 using WebSite.Services;
 
 namespace WebSite
@@ -46,17 +42,6 @@ namespace WebSite
 			{
 				cookieOptions.LoginPath = "/Login";
 			});
-
-			services.Configure<BungieSettings>(Configuration.GetSection("Bungie"));
-			var bungie = Configuration.GetSection("Bungie").Get<BungieSettings>();
-			var config = new Destiny2Config(Configuration["AppName"], Configuration["AppVersion"], Configuration["AppId"], Configuration["AppUrl"], Configuration["AppEmail"])
-			{
-				BaseUrl = bungie.BaseUrl,
-				ApiKey = bungie.ApiKey,
-				ManifestDatabasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "manifest")
-			};
-			services.AddDestiny2(config);
-
 
 			services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
 

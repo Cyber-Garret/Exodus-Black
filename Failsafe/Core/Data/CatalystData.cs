@@ -1,10 +1,10 @@
-﻿using Bot.Models;
+﻿using Failsafe.Models;
 
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace Bot.Core.Data
+namespace Failsafe.Core.Data
 {
 	internal static class CatalystData
 	{

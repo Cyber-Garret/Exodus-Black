@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 
-namespace Bot.Services
+namespace Failsafe.Services
 {
 	public class EmoteService
 	{

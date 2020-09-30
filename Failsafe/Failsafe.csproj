@@ -11,7 +11,7 @@
     <PackageProjectUrl>https://github.com/Cyber-Garret/Failsafe</PackageProjectUrl>
     <PackageIcon>neira.png</PackageIcon>
     <PackageIconUrl />
-    <StartupObject>Bot.Program</StartupObject>
+    <StartupObject>Failsafe.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="UserData\milestones_info\**" />
@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Discord.Addons.Interactive\Discord.Addons.Interactive\Discord.Addons.Interactive.csproj" />
-    <ProjectReference Include="..\Neiralink\Fuselage.csproj" />
+    <ProjectReference Include="..\Fuselage\Fuselage.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="UserData\welcome-bg\bg1.jpg">

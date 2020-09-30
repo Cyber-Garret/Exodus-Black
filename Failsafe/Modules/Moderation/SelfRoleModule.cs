@@ -1,7 +1,7 @@
-﻿using Bot.Core.Data;
-using Bot.Models;
-using Bot.Preconditions;
-using Bot.Properties;
+﻿using Failsafe.Core.Data;
+using Failsafe.Models;
+using Failsafe.Preconditions;
+using Failsafe.Properties;
 
 using Discord;
 using Discord.Commands;
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Bot.Modules
+namespace Failsafe.Modules
 {
 	[RequireContext(ContextType.Guild), Cooldown(5), RequireUserPermission(GuildPermission.Administrator)]
 	public class SelfRoleModule : RootModule

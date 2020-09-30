@@ -1,4 +1,4 @@
-﻿using Bot.Core.Data;
+﻿using Failsafe.Core.Data;
 
 using Microsoft.Extensions.Logging;
 
@@ -7,7 +7,7 @@ using Quartz;
 using System;
 using System.Threading.Tasks;
 
-namespace Bot.Core.QuartzJobs
+namespace Failsafe.Core.QuartzJobs
 {
 	[DisallowConcurrentExecution]
 	public class MilestoneClean : IJob

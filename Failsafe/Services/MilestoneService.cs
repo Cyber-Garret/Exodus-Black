@@ -1,6 +1,6 @@
-﻿using Bot.Core.Data;
-using Bot.Models;
-using Bot.Properties;
+﻿using Failsafe.Core.Data;
+using Failsafe.Models;
+using Failsafe.Properties;
 
 using Discord;
 using Discord.WebSocket;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Bot.Services
+namespace Failsafe.Services
 {
 	public class MilestoneService
 	{

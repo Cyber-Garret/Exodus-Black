@@ -1,5 +1,5 @@
-﻿using Bot.Core.Data;
-using Bot.Properties;
+﻿using Failsafe.Core.Data;
+using Failsafe.Properties;
 
 using Discord.Commands;
 using Discord.WebSocket;
@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Bot.Services
+namespace Failsafe.Services
 {
 	public class CommandHandlerService
 	{

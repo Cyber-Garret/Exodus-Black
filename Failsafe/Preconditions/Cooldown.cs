@@ -1,4 +1,4 @@
-﻿using Bot.Properties;
+﻿using Failsafe.Properties;
 
 using Discord.Commands;
 
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Bot.Preconditions
+namespace Failsafe.Preconditions
 {
 	public sealed class Cooldown : PreconditionAttribute
 	{

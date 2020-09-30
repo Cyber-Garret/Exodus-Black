@@ -1,4 +1,4 @@
-﻿using Bot.Core.Data;
+﻿using Failsafe.Core.Data;
 
 using Discord;
 using Discord.WebSocket;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace Bot.Services
+namespace Failsafe.Services
 {
 	public class SelfRoleService
 	{
