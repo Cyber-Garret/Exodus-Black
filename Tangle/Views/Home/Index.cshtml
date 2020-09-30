@@ -3,27 +3,22 @@
 	ViewData["Title"] = "Home Page";
 }
 
-<div class="mdl-grid">
-	<div class="mdl-cell mdl-cell--4-col"></div>
-	<div class="mdl-cell mdl-cell--4-col">
-		<ul class="weapon-list-action mdl-list">
-			@foreach (var weapon in Model.Weapons)
-			{
-				<li class="mdl-list__item mdl-list__item--two-line">
-					<span class="mdl-list__item-primary-content">
-						<img class="mdl-list__item-avatar" src="@weapon.Icon" />
-						<span>@weapon.Name</span>
-						<span class="mdl-list__item-sub-title">@weapon.Slot</span>
-					</span>
-					<span class="mdl-list__item-secondary-content">
-						<span class="mdl-list__item-secondary-info">Perks</span>
-						<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent mdl-list__item-secondary-action">
-							<i class="material-icons">assignment</i>
-						</button>
-					</span>
-				</li>
-			}
-		</ul>
-	</div>
-	<div class="mdl-cell mdl-cell--4-col"></div>
-</div>
+<ul class="list-unstyled">
+	@foreach (var weapon in Model.Weapons)
+	{
+		<li class="media border border-primary" style="padding:1rem;margin:1rem;">
+			<img src="@weapon.Icon" class="align-self-start mr-3 rounded-lg" style="max-height:64px;" alt="@weapon.Name">
+			<div class="media-body">
+				<h5 class="mt-0">@weapon</h5>
+				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+					Perks <span class="badge badge-light">@weapon.Perks.Count()</span>
+				</button>
+				<div class="collapse" id="collapseExample">
+					<div class="card card-body">
+						Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+					</div>
+				</div>
+			</div>
+		</li>
+	}
+</ul>

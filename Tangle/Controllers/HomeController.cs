@@ -18,12 +18,10 @@ namespace Tangle.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
 		private readonly IManifest _manifest;
 
-		public HomeController(ILogger<HomeController> logger, IManifest manifest)
+		public HomeController(IManifest manifest)
 		{
-			_logger = logger;
 			_manifest = manifest;
 		}
 
@@ -34,7 +32,7 @@ namespace Tangle.Controllers
 
 			var model = new IndexViewModel
 			{
-				Weapons = weapons.Take(10)
+				Weapons = weapons.Take(100)
 			};
 			return View(model);
 		}

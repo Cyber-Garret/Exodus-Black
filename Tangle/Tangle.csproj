@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="manifest\" />
+    <Folder Include="wwwroot\css\img\" />
   </ItemGroup>
 
   <ItemGroup>
