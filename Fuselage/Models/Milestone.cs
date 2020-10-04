@@ -23,8 +23,9 @@ namespace Fuselage.Models
 		[Display(Name = "Milestone type")]
 		public MilestoneType Type { get; set; }
 
-		[Display(Name = "Milestone color in Discord")]
-		public Color Color { get; set; }
+		//TODO: store and get color from DB
+		//[Display(Name = "Milestone color in Discord")]
+		//public Color Color { get; set; }
 
 		public IEnumerable<MilestoneLocale> MilestoneLocales { get; set; }
 	}

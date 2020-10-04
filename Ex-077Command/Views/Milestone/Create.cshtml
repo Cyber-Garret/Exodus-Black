@@ -1,13 +1,14 @@
-﻿@model Neiralink.Models.MilestoneInfo
+﻿@model Fuselage.Models.Milestone;
 
 @{
 	Layout = "_Admin";
 	ViewData["Title"] = "New milestone";
 }
-<h2>@ViewData["Title"]</h2>
+<div class="container">
 
-<form asp-action="Create" asp-controller="Milestone">
-	<div>
+	<h2>@ViewData["Title"]</h2>
+
+	<form asp-action="Create">
 		<div class="form-group">
 			<label asp-for="Icon"></label>
 			<input class="form-control form-control-sm" type="text" asp-for="Icon" />
@@ -17,19 +18,16 @@
 			<input type="number" asp-for="MaxSpace" class="form-control  form-control-sm" />
 		</div>
 		<div class="form-group">
-			<label asp-for="MilestoneType"></label>
-			<select class="form-control form-control-sm" asp-for="MilestoneType" asp-items="Html.GetEnumSelectList<Neiralink.Enums.MilestoneType>()"></select>
+			<label asp-for="Type"></label>
+			<select class="form-control form-control-sm" asp-for="Type" asp-items="Html.GetEnumSelectList<Fuselage.Enums.MilestoneType>()"></select>
 		</div>
 		<div class="form-group">
-			<label asp-for="Game"></label>
-			<select class="form-control form-control-sm" asp-for="Game" asp-items="Html.GetEnumSelectList<Neiralink.Enums.GameName>()"></select>
+			<input type="submit" value="Add" class="btn btn-outline-secondary" />
 		</div>
-		<div class="form-group">
-			<input type="submit" value="Add in DB" class="btn btn-outline-secondary" />
-		</div>
-	</div>
-</form>
+	</form>
 
-<div class="float-right">
-	<a asp-controller="Milestone" asp-action="Index">Return to list</a>
+	<div class="float-right">
+		<a asp-controller="Milestone" asp-action="Index">Return to list</a>
+	</div>
+
 </div>

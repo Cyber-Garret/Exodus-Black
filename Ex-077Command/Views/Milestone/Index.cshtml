@@ -1,46 +1,50 @@
 ﻿@using WebSite.Helpers
-@model IEnumerable<Neiralink.Models.MilestoneInfo>
+@model IEnumerable<Fuselage.Models.Milestone>
 @{
 	Layout = "_Admin";
 	ViewData["Title"] = "Milestone constructor";
 	var counter = 1;
 }
 
-<h2>@ViewData["Title"]</h2>
-<p>
-	<a class="btn btn-sm btn-primary" asp-controller="Milestone" asp-action="Create">Add</a>
-</p>
-<table class="table table-hover">
-	<tr>
-		<th scope="col">ID</th>
-		<th scope="col">Icon</th>
-		<th scope="col">Max users</th>
-		<th scope="col">Type</th>
-		<th scope="col">Game name</th>
-		<th scope="col">Actions</th>
-	</tr>
+<div class="container">
 
-	@foreach (var item in Model)
-	{
+	<h2>@ViewData["Title"]</h2>
+	<p>
+		<a class="btn btn-sm btn-primary" asp-action="Create">Add</a>
+	</p>
+	<hr />
+	<table class="table table-hover">
 		<tr>
-			<th scope="row">@counter</th>
-			<td>
-				<img class="img-thumbnail" style="max-height: 5rem;" src="@item.Icon" />
-			</td>
-			<td>
-				@item.MaxSpace
-			</td>
-			<td>
-				@item.MilestoneType
-			</td>
-			<td>
-				@item.Game.GetEnumDisplayName()
-			</td>
-			<td>
-				<a asp-controller="Milestone" asp-action="Edit" asp-route-id="@item.RowID">Edit</a> |
-				<a asp-controller="Milestone" asp-action="Delete" asp-route-id="@item.RowID">Delete</a>
-			</td>
+			<th scope="col">#</th>
+			<th scope="col">Icon</th>
+			<th scope="col">Max users</th>
+			<th scope="col">Type</th>
+			<th scope="col">Actions</th>
 		</tr>
-		counter++;
-	}
-</table>
+
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td class="font-weight-bold">@counter</td>
+				<td>
+					<img class="img-thumbnail" style="max-height: 5rem;" src="@item.Icon" />
+				</td>
+				<td>
+					@item.MaxSpace
+				</td>
+				<td>
+					@item.Type
+				</td>
+				<td>
+					<div class="btn-group btn-group-sm">
+						<a class="btn btn-primary" asp-action="Detail" asp-route-id="@item.Id">Detail</a>
+						<a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+						<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					</div>
+				</td>
+			</tr>
+			counter++;
+		}
+	</table>
+
+</div>

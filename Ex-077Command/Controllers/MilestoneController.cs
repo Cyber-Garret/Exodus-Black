@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using Neiralink;
-using Neiralink.Enums;
-using Neiralink.Models;
+using Fuselage;
+using Fuselage.Models;
 
 using System;
 using System.Linq;
@@ -15,147 +14,120 @@ namespace WebSite.Controllers
 	[Authorize]
 	public class MilestoneController : Controller
 	{
-		private readonly IMilestoneDbClient db;
-		public MilestoneController(IMilestoneDbClient milestoneDbClient)
+		private readonly FuselageContext _fuselage;
+		public MilestoneController(FuselageContext fuselage)
 		{
-			db = milestoneDbClient;
+			_fuselage = fuselage;
 		}
 
-		public IActionResult Index()
-		{
-			return View(db.GetAllMilestoneInfos());
-		}
+		public IActionResult Index() => View(_fuselage.Milestones);
 
 		#region Main
-		public IActionResult Create()
-		{
-			return View();
-		}
+		public IActionResult Create() => View();
+
 		[HttpPost, ValidateAntiForgeryToken]
-		public IActionResult Create(MilestoneInfo milestone)
+		public IActionResult Create(Milestone milestone)
 		{
-			try
-			{
-				db.AddMilestone(milestone);
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
+			_fuselage.Milestones.Add(milestone);
+			_fuselage.SaveChanges();
+			return RedirectToAction(nameof(Index));
 		}
 
-		public IActionResult Edit(byte id)
+		public IActionResult Edit(int id)
 		{
-			var milestone = db.GetMilestoneInfo(id);
+			var milestone = _fuselage.Milestones.FirstOrDefault(s => s.Id == id);
 			if (milestone != null)
-				return View(new MilestoneViewModel { Info = milestone, Locales = db.GetMilestoneLocales(id).ToList() });
+				return View(milestone);
 			return NotFound();
-		}
-		[HttpPost, ValidateAntiForgeryToken]
-		public IActionResult Edit(MilestoneViewModel milestone)
-		{
-			try
-			{
-				db.UpdateMilestone(milestone.Info);
-				return RedirectToAction(nameof(Index));
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex);
-				return View();
-			}
 		}
 
-		[ActionName("Delete")]
-		public IActionResult ConfirmDelete(byte id)
-		{
-			var milestone = db.GetMilestoneInfo(id);
-			if (milestone != null)
-				return View(new MilestoneViewModel { Info = milestone, Locales = db.GetMilestoneLocales(id).ToList() });
-			return NotFound();
-		}
 		[HttpPost, ValidateAntiForgeryToken]
-		public IActionResult Delete(byte id)
+		public IActionResult Edit(Milestone milestone)
 		{
-			try
+			_fuselage.Milestones.Update(milestone);
+			_fuselage.SaveChanges();
+			return RedirectToAction(nameof(Index));
+		}
+
+		public IActionResult Delete(int id)
+		{
+			var milsetone = _fuselage.Milestones.FirstOrDefault(s => s.Id == id);
+			if (milsetone != null)
 			{
-				db.DeleteMilestone(id);
+				_fuselage.Milestones.Remove(milsetone);
+				_fuselage.SaveChanges();
 				return RedirectToAction(nameof(Index));
 			}
-			catch
-			{
-				return View();
-			}
+			return NotFound();
 		}
 		#endregion
 
 		#region Locale
-		public IActionResult CreateLocale(byte id)
-		{
-			if (id > 0)
-			{
-				var model = new MilestoneInfoLocale { MilestoneInfoRowID = id };
-				return View(model);
-			}
-			return NotFound();
-		}
-		[HttpPost, ValidateAntiForgeryToken]
-		public IActionResult CreateLocale(MilestoneInfoLocale locale)
-		{
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					db.AddMilestoneLocale(locale);
-					return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
-				}
-				catch
-				{
-					return View();
-				}
-			}
-			else
-				return View();
-		}
+		//public IActionResult CreateLocale(byte id)
+		//{
+		//	if (id > 0)
+		//	{
+		//		var model = new MilestoneInfoLocale { MilestoneInfoRowID = id };
+		//		return View(model);
+		//	}
+		//	return NotFound();
+		//}
+		//[HttpPost, ValidateAntiForgeryToken]
+		//public IActionResult CreateLocale(MilestoneInfoLocale locale)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		try
+		//		{
+		//			_fuselage.AddMilestoneLocale(locale);
+		//			return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
+		//		}
+		//		catch
+		//		{
+		//			return View();
+		//		}
+		//	}
+		//	else
+		//		return View();
+		//}
 
-		public IActionResult EditLocale(byte id, LangKey lang)
-		{
-			var locale = db.GetMilestoneLocale(id, lang);
-			if (locale != null)
-				return View(locale);
-			return NotFound();
-		}
-		[HttpPost, ValidateAntiForgeryToken]
-		public IActionResult EditLocale(MilestoneInfoLocale locale)
-		{
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					db.UpdateMilestoneLocale(locale);
-					return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
-				}
-				catch
-				{
-					return View();
-				}
-			}
-			return RedirectToAction(nameof(Index));
-		}
+		//public IActionResult EditLocale(byte id, LangKey lang)
+		//{
+		//	var locale = _fuselage.GetMilestoneLocale(id, lang);
+		//	if (locale != null)
+		//		return View(locale);
+		//	return NotFound();
+		//}
+		//[HttpPost, ValidateAntiForgeryToken]
+		//public IActionResult EditLocale(MilestoneInfoLocale locale)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		try
+		//		{
+		//			_fuselage.UpdateMilestoneLocale(locale);
+		//			return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
+		//		}
+		//		catch
+		//		{
+		//			return View();
+		//		}
+		//	}
+		//	return RedirectToAction(nameof(Index));
+		//}
 
-		public IActionResult DeleteLocale(byte id, LangKey lang)
-		{
-			try
-			{
-				db.DeleteMilestoneLocale(id, lang);
-				return RedirectToAction(nameof(Edit), new { id });
-			}
-			catch
-			{
-				return RedirectToAction(nameof(Index));
-			}
-		}
+		//public IActionResult DeleteLocale(byte id, LangKey lang)
+		//{
+		//	try
+		//	{
+		//		_fuselage.DeleteMilestoneLocale(id, lang);
+		//		return RedirectToAction(nameof(Edit), new { id });
+		//	}
+		//	catch
+		//	{
+		//		return RedirectToAction(nameof(Index));
+		//	}
+		//}
 		#endregion
 
 	}
