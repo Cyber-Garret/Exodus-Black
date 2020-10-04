@@ -1,7 +1,7 @@
 namespace BungieAPI.Definitions
 {
-    public class DestinyVendorServiceDefinition
-    {
-        public string Name { get; set; }
-    }
+	public class DestinyVendorServiceDefinition
+	{
+		public string Name { get; set; }
+	}
 }

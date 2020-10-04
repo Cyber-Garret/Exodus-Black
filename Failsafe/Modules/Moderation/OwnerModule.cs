@@ -1,7 +1,7 @@
-﻿using Failsafe.Preconditions;
-using Failsafe.Properties;
+﻿using Discord.Commands;
 
-using Discord.Commands;
+using Failsafe.Preconditions;
+using Failsafe.Properties;
 
 using Microsoft.Extensions.Logging;
 

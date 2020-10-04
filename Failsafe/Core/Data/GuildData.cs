@@ -1,6 +1,6 @@
-﻿using Failsafe.Models;
+﻿using Discord;
 
-using Discord;
+using Failsafe.Models;
 
 using System.Collections.Concurrent;
 using System.IO;

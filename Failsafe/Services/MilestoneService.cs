@@ -1,9 +1,9 @@
-﻿using Failsafe.Core.Data;
+﻿using Discord;
+using Discord.WebSocket;
+
+using Failsafe.Core.Data;
 using Failsafe.Models;
 using Failsafe.Properties;
-
-using Discord;
-using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

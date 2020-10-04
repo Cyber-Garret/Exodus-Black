@@ -1,12 +1,12 @@
 namespace BungieAPI
 {
-    public enum DamageType
-    {
-        None = 0,
-        Kinetic = 1,
-        Arc = 2,
-        Thermal = 3,
-        Void = 4,
-        Raid = 5,
-    }
+	public enum DamageType
+	{
+		None = 0,
+		Kinetic = 1,
+		Arc = 2,
+		Thermal = 3,
+		Void = 4,
+		Raid = 5,
+	}
 }

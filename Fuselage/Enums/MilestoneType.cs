@@ -1,4 +1,4 @@
-﻿namespace Neiralink.Enums
+﻿namespace Fuselage.Enums
 {
 	public enum MilestoneType : byte
 	{
@@ -11,7 +11,7 @@
 		/// </summary>
 		Nightfall,
 		/// <summary>
-		/// Вungeons, public events, anything from other games
+		/// Dungeons, public events, anything other
 		/// </summary>
 		Other
 	}

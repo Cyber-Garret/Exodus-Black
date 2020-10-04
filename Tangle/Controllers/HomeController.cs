@@ -1,15 +1,12 @@
-﻿using System;
+﻿using BungieAPI;
+using BungieAPI.Definitions;
+
+using Microsoft.AspNetCore.Mvc;
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-
-using BungieAPI;
-using BungieAPI.Config;
-using BungieAPI.Definitions;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Tangle.Entities;
 using Tangle.Entities.ViewModels;
@@ -32,9 +29,18 @@ namespace Tangle.Controllers
 
 			var model = new IndexViewModel
 			{
-				Weapons = weapons.Take(100)
+				Weapons = weapons.Take(10)
 			};
 			return View(model);
+		}
+
+		public async Task<PartialViewResult> Perks(uint hash)
+		{
+			var perks = new List<Perk>();
+			var item = await _manifest.LoadInventoryItem(hash);
+
+			perks.AddRange(await LoadPerks(item.Sockets.SocketEntries));
+			return PartialView("_Perks", perks);
 		}
 
 		public IActionResult Privacy()
@@ -79,12 +85,6 @@ namespace Tangle.Controllers
 			return perks;
 		}
 
-		//public async Task<Perk> LoadPerk(uint hash)
-		//{
-		//	var plug = await _manifest.LoadInventoryItem(hash);
-		//	var categories = await _manifest.LoadItemCategories(plug.ItemCategoryHashes);
-		//	return new Perk("https://www.bungie.net", plug, categories);
-		//}
 		#endregion
 	}
 }

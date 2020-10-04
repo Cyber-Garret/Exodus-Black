@@ -1,19 +1,34 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using System.ComponentModel.DataAnnotations;
 
-using Neiralink.Enums;
-
-namespace Neiralink.Models
+namespace Fuselage.Models
 {
 	public class Catalyst
 	{
 		[Key]
-		public int RowID { get; set; }
-		public LangKey Lang { get; set; }
-		public string WeaponName { get; set; }
-		public string IconUrl { get; set; }
+		public int Id { get; set; }
+
+		[MaxLength(5), Display(Name = "Locale")]
+		public string Locale { get; set; }
+
+		[MaxLength(100), Display(Name = "Weapon name")]
+		public string Name { get; set; }
+
+		/// <summary>
+		/// URL of icon
+		/// </summary>
+		[Required, MaxLength(2048), Display(Name = "Icon URL")]
+		public string Icon { get; set; }
+
+		[MaxLength(200), Display(Name = "Weapon description")]
 		public string Description { get; set; }
+
+		[MaxLength(200), Display(Name = "How to obtain")]
 		public string DropLocation { get; set; }
+
+		[MaxLength(200), Display(Name = "Objectives")]
+		public string Objectives { get; set; }
+
+		[MaxLength(200), Display(Name = "Bonuses")]
 		public string Masterwork { get; set; }
-		public string Bonus { get; set; }
 	}
 }

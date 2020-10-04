@@ -1,97 +1,75 @@
-﻿
+﻿using Fuselage;
+using Fuselage.Models;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using Neiralink;
-using Neiralink.Models;
+using System.Linq;
 
 namespace WebSite.Controllers
 {
 	[Authorize]
 	public class WelcomeController : Controller
 	{
-		private readonly IWelcomeDbClient db;
-		public WelcomeController(IWelcomeDbClient dbClient)
+		private readonly FuselageContext _fuselage;
+		public WelcomeController(FuselageContext fuselage)
 		{
-			db = dbClient;
+			_fuselage = fuselage;
 		}
-		// GET: WelcomeController
+
 		public ActionResult Index()
 		{
-			return View(db.GetAllWelcomes());
+			return View(_fuselage.Welcomes);
 		}
 
-		// GET: WelcomeController/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
+		#region Create
+		public IActionResult Create() => View();
 
-		// POST: WelcomeController/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Create(RandomWelcome welcome)
+		public IActionResult Create(Welcome welcome)
 		{
-			try
-			{
-				db.CreateWelcome(welcome);
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
+			_fuselage.Add(welcome);
+			_fuselage.SaveChanges();
+			return RedirectToAction(nameof(Index));
 		}
+		#endregion
 
-		// GET: WelcomeController/Edit/5
-		public ActionResult Edit(int id)
+		#region Edit
+		public IActionResult Edit(int id)
 		{
-			var welcome = db.GetWelcome(id);
+			var welcome = _fuselage.Welcomes.FirstOrDefault(s => s.Id == id);
+
 			if (welcome != null)
 				return View(welcome);
+
 			return NotFound();
 		}
 
-		// POST: WelcomeController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(RandomWelcome welcome)
+		public IActionResult Edit(Welcome welcome)
 		{
-			try
-			{
-				db.UpdateWelcome(welcome);
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
+			_fuselage.Welcomes.Update(welcome);
+			_fuselage.SaveChanges();
+			return RedirectToAction(nameof(Index));
 		}
+		#endregion
 
-		// GET: WelcomeController/Delete/5
-		[ActionName("Delete")]
-		public ActionResult ConfirmDelete(int id)
+		#region Delete
+		public IActionResult Delete(int id)
 		{
-			var welcome = db.GetWelcome(id);
-			if (welcome != null)
-				return View(welcome);
-			return NotFound();
-		}
+			var welcome = _fuselage.Welcomes.FirstOrDefault(s => s.Id == id);
 
-		// POST: WelcomeController/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id)
-		{
-			try
-			{
-				db.DeleteWelcome(id);
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
+			if (welcome == null)
+				return NotFound();
+
+			_fuselage.Welcomes.Remove(welcome);
+			_fuselage.SaveChanges();
+			return RedirectToAction(nameof(Index));
 		}
+		#endregion
+
+
 	}
 }

@@ -1,37 +1,42 @@
-﻿@model IEnumerable<Neiralink.Models.Catalyst>
-@using WebSite.Helpers
+﻿@model IEnumerable<Fuselage.Models.Catalyst>
 @{
 	Layout = "_Admin";
 	ViewData["Title"] = "Catalyst editor list";
 	var counter = 1;
 }
 
-<h2>@ViewData["Title"]</h2>
-<p>
-	<a class="btn btn-sm btn-primary" asp-controller="Catalyst" asp-action="Create">Add</a>
-</p>
+<div class="container-fluid">
 
-<table class="table table-sm table-hover">
-	<caption>List of catalyst db of Failsafe</caption>
-	<tr>
-		<th scope="col">#</th>
-		<th scope="col">Icon</th>
-		<th scope="col">Lang</th>
-		<th scope="col">Weapon Name</th>
-		<th scope="col">Actions</th>
-	</tr>
-	@foreach (var item in Model)
-	{
+	<h2>@ViewData["Title"]</h2>
+	<p>
+		<a class="btn btn-sm btn-primary" asp-controller="Catalyst" asp-action="Create">Add</a>
+	</p>
+	<hr />
+	<table class="table table-sm table-hover">
+		<caption>List of catalyst for Failsafe</caption>
 		<tr>
-			<th scope="row">@counter</th>
-			<td><img class="img-thumbnail" style="max-height:5rem;" src="@item.IconUrl" /></td>
-			<td>@item.Lang.GetEnumDisplayName()</td>
-			<td>@item.WeaponName</td>
-			<td>
-				<a asp-controller="Catalyst" asp-action="Edit" asp-route-id="@item.RowID" asp-route-lang="@item.Lang">Edit</a> |
-				<a asp-controller="Catalyst" asp-action="Delete" asp-route-id="@item.RowID" asp-route-lang="@item.Lang">Delete</a>
-			</td>
+			<th scope="col">#</th>
+			<th scope="col">Icon</th>
+			<th scope="col">Lang</th>
+			<th scope="col">Weapon Name</th>
+			<th scope="col">Actions</th>
 		</tr>
-		counter++;
-	}
-</table>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td class="font-weight-bold">@counter</td>
+				<td><img class="img-thumbnail" style="max-height:5rem;" src="@item.Icon" /></td>
+				<td>@item.Locale</td>
+				<td>@item.Name</td>
+				<td>
+					<div class="btn-group btn-group-sm">
+						<a class="btn btn-primary" asp-controller="Catalyst" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+						<a class="btn btn-danger" asp-controller="Catalyst" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					</div>
+				</td>
+			</tr>
+			counter++;
+		}
+	</table>
+
+</div>

@@ -1,10 +1,10 @@
-using Failsafe.Core.QuartzJobs;
-using Failsafe.Services;
-
 using Discord;
 using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
+
+using Failsafe.Core.QuartzJobs;
+using Failsafe.Services;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

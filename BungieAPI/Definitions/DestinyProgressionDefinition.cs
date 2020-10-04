@@ -1,18 +1,19 @@
-using System.Collections.Generic;
 using BungieAPI.Misc;
+
+using System.Collections.Generic;
 
 namespace BungieAPI.Definitions
 {
-    public class DestinyProgressionDefinition : AbstractDefinition
-    {
-        public int Scope { get; set; }
-        public bool RepeatLastStep { get; set; }
-        public string Source { get; set; }
-        public IEnumerable<DestinyProgressionStepDefinition> Steps { get; set; }
-        public bool Visible { get; set; }
-        public uint FactionHash { get; set; }
-        public DestinyColor Color { get; set; }
-        public string RankIcon { get; set; }
-        public IEnumerable<DestinyProgressionRewardItemQuantity> RewardItems { get; set; }
-    }
+	public class DestinyProgressionDefinition : AbstractDefinition
+	{
+		public int Scope { get; set; }
+		public bool RepeatLastStep { get; set; }
+		public string Source { get; set; }
+		public IEnumerable<DestinyProgressionStepDefinition> Steps { get; set; }
+		public bool Visible { get; set; }
+		public uint FactionHash { get; set; }
+		public DestinyColor Color { get; set; }
+		public string RankIcon { get; set; }
+		public IEnumerable<DestinyProgressionRewardItemQuantity> RewardItems { get; set; }
+	}
 }

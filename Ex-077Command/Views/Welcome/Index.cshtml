@@ -1,42 +1,41 @@
-﻿@model IEnumerable<Neiralink.Models.RandomWelcome>
+﻿@model IEnumerable<Fuselage.Models.Welcome>
 @{
 	Layout = "_Admin";
 	ViewData["Title"] = "Random welcome list";
 	var counter = 1;
 }
-
-<h2>@ViewData["Title"]</h2>
-<p>
-	<a class="btn btn-sm btn-primary" asp-controller="Welcome" asp-action="Create">Add</a>
-</p>
-
-<table class="table table-hover">
-	<caption>List of random welcomes in Failsafe bot</caption>
-	<tr>
-		<th scope="col">#</th>
-		<th scope="col">EN</th>
-		<th scope="col">RU</th>
-		<th scope="col">UA</th>
-		<th scope="col">Actions</th>
-	</tr>
-	@foreach (var item in Model)
-	{
+<div class="container-fluid">
+	<h2>@ViewData["Title"]</h2>
+	<p>
+		<a class="btn btn-sm btn-primary" asp-controller="Welcome" asp-action="Create">Add</a>
+	</p>
+	<hr />
+	<table class="table table-sm table-hover">
+		<caption>List of random welcomes in Failsafe bot</caption>
 		<tr>
-			<th scope="row">@counter</th>
-			<td>
-				@item.EN
-			</td>
-			<td>
-				@item.RU
-			</td>
-			<td>
-				@item.UK
-			</td>
-			<td>
-				<a asp-controller="Welcome" asp-action="Edit" asp-route-id="@item.RowID">Edit</a> |
-				<a asp-controller="Welcome" asp-action="Delete" asp-route-id="@item.RowID">Delete</a>
-			</td>
+			<th scope="col">#</th>
+			<th scope="col">@Html.DisplayNameFor(m => m.First().Locale)</th>
+			<th scope="col">@Html.DisplayNameFor(m => m.First().Message)</th>
+			<th scope="col">Actions</th>
 		</tr>
-		counter++;
-	}
-</table>
+		@foreach (var welcome in Model)
+		{
+			<tr>
+				<th scope="row">@counter</th>
+				<td>
+					@welcome.Locale
+				</td>
+				<td>
+					@welcome.Message
+				</td>
+				<td>
+					<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+						<a class="btn btn-sm btn-primary" asp-controller="Welcome" asp-action="Edit" asp-route-id="@welcome.Id">Edit</a>
+						<a class="btn btn-sm btn-danger" asp-controller="Welcome" asp-action="Delete" asp-route-id="@welcome.Id">Delete</a>
+					</div>
+				</td>
+			</tr>
+			counter++;
+		}
+	</table>
+</div>

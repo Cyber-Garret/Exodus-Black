@@ -1,6 +1,6 @@
-﻿using Failsafe.Properties;
+﻿using Discord.Commands;
 
-using Discord.Commands;
+using Failsafe.Properties;
 
 using System;
 using System.Collections.Concurrent;

@@ -1,4 +1,6 @@
 
+using Fuselage;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -67,6 +69,7 @@ namespace WebSite
 			services.AddTransient<IWelcomeDbClient, WelcomeDbClient>(provider => new WelcomeDbClient(connString));
 			services.AddTransient<IMilestoneDbClient, MilesoneDbClient>(provider => new MilesoneDbClient(connString));
 			services.AddTransient<ICatalystDbClient, CatalystDbClient>(provider => new CatalystDbClient(connString));
+			services.AddDbContext<FuselageContext>();
 
 			services.AddControllersWithViews()
 				.AddViewLocalization(

@@ -1,5 +1,3 @@
-using System;
-
 namespace Tangle.Entities.ViewModels
 {
 	public class ErrorViewModel

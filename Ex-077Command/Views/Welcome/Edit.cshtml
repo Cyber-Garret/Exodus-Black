@@ -1,32 +1,44 @@
-﻿@model Neiralink.Models.RandomWelcome
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@model Fuselage.Models.Welcome
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
 @{
 	Layout = "_Admin";
-	ViewData["Title"] = $"Edit welcome #{Model.RowID}";
+	ViewData["Title"] = $"Edit welcome #{Model.Id}";
+	var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+	var cultureItems = LocOptions.Value.SupportedUICultures
+		.Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+		.ToList();
 }
+<div class="container">
+	<h2>@ViewData["Title"]</h2>
+	<hr />
+	<form asp-action="Edit">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="form-group">
+			<input type="hidden" asp-for="Id" />
+		</div>
+		<div class="form-group">
+			<label asp-for="Locale"></label>
+			<select asp-for="Locale" asp-items="cultureItems"></select>
+		</div>
+		<div class="form-group">
+			<label asp-for="Message"></label>
+			<input class="form-control  form-control-sm" type="text" asp-for="Message" />
+			<span asp-validation-for="Message" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Save" class="btn btn-outline-secondary" />
+		</div>
+	</form>
 
-<h2>@ViewData["Title"]</h2>
-
-<form asp-action="Edit" asp-controller="Welcome">
-	<div>
-		<input type="hidden" asp-for="RowID" />
-		<div class="form-group">
-			<label asp-for="EN"></label>
-			<input class="form-control form-control-sm" type="text" asp-for="EN" />
-		</div>
-		<div class="form-group">
-			<label asp-for="RU"></label>
-			<input class="form-control form-control-sm" type="text" asp-for="RU" />
-		</div>
-		<div class="form-group">
-			<label asp-for="UK"></label>
-			<input class="form-control form-control-sm" type="text" asp-for="UK" />
-		</div>
-		<div class="form-group">
-			<input type="submit" value="Update in DB" class="btn btn-outline-secondary" />
-		</div>
+	<div class="float-right">
+		<a asp-action="Index">Return to list</a>
 	</div>
-</form>
 
-<div class="float-right">
-	<a asp-controller="Welcome" asp-action="Index">Return to list</a>
 </div>

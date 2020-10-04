@@ -6,19 +6,31 @@
 <ul class="list-unstyled">
 	@foreach (var weapon in Model.Weapons)
 	{
-		<li class="media border border-primary" style="padding:1rem;margin:1rem;">
+		<li class="media border border-primary p-1 m-1">
 			<img src="@weapon.Icon" class="align-self-start mr-3 rounded-lg" style="max-height:64px;" alt="@weapon.Name">
 			<div class="media-body">
 				<h5 class="mt-0">@weapon</h5>
+				<button class="btn btn-success perk" data-id="@weapon.Hash" data-toggle="modal" data-target="#perkModal">Изменить</button>
 				<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
 					Perks <span class="badge badge-light">@weapon.Perks.Count()</span>
 				</button>
-				<div class="collapse" id="collapseExample">
-					<div class="card card-body">
-						Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-					</div>
-				</div>
 			</div>
 		</li>
 	}
 </ul>
+<!-- Modal -->
+<div class="modal fade" id="perkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$(function () {
+			$('button.perk').on('click', function () {
+				$('.modal-dialog').load(`/Home/Perks?hash=${$(this).data('id')}`);
+			});
+		})
+	</script>
+}

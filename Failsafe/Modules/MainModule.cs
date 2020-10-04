@@ -1,13 +1,13 @@
-﻿using Failsafe.Core.Data;
+﻿using Discord;
+using Discord.Addons.Interactive;
+using Discord.Commands;
+using Discord.WebSocket;
+
+using Failsafe.Core.Data;
 using Failsafe.Models;
 using Failsafe.Preconditions;
 using Failsafe.Properties;
 using Failsafe.Services;
-
-using Discord;
-using Discord.Addons.Interactive;
-using Discord.Commands;
-using Discord.WebSocket;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
