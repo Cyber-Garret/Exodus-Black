@@ -1,6 +1,4 @@
-﻿namespace WebSite.Resources
+﻿namespace Ex077.Resources
 {
-	public class SharedResources
-	{
-	}
+	public class SharedResources { }
 }

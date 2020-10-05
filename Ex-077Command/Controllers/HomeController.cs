@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 
-using WebSite.ViewModels;
+using Ex077.ViewModels;
 
-namespace WebSite.Controllers
+namespace Ex077.Controllers
 {
 	public class HomeController : Controller
 	{

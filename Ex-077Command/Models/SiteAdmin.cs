@@ -1,4 +1,4 @@
-﻿namespace WebSite.Models
+﻿namespace Ex077.Models
 {
 	public class SiteAdmin
 	{

@@ -18,9 +18,9 @@ using Neiralink;
 using System.Collections.Generic;
 using System.Globalization;
 
-using WebSite.Services;
+using Ex077.Services;
 
-namespace WebSite
+namespace Ex077
 {
 	public class Startup
 	{

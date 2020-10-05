@@ -2,9 +2,9 @@
 
 using System.Reflection;
 
-using WebSite.Resources;
+using Ex077.Resources;
 
-namespace WebSite.Services
+namespace Ex077.Services
 {
 	public class SharedResourcesService
 	{

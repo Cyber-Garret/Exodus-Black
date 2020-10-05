@@ -7,9 +7,10 @@ using Fuselage.Models;
 using System;
 using System.Linq;
 
-using WebSite.ViewModels;
+using Ex077.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
-namespace WebSite.Controllers
+namespace Ex077.Controllers
 {
 	[Authorize]
 	public class MilestoneController : Controller
@@ -33,6 +34,13 @@ namespace WebSite.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
+		public PartialViewResult Detail(int id)
+		{
+			var model = _fuselage.Milestones.Include(n => n.MilestoneLocales).FirstOrDefault(s => s.Id == id);
+			if (model != null)
+				return PartialView("_Detail", model);
+			return null;
+		}
 		public IActionResult Edit(int id)
 		{
 			var milestone = _fuselage.Milestones.FirstOrDefault(s => s.Id == id);

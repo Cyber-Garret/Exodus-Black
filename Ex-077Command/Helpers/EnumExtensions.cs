@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace WebSite.Helpers
+namespace Ex077.Helpers
 {
 	public static class EnumExtensions
 	{

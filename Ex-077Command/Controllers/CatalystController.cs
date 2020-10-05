@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Linq;
 
-namespace WebSite.Controllers
+namespace Ex077.Controllers
 {
 	[Authorize]
 	public class CatalystController : Controller

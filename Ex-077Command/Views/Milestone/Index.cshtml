@@ -1,4 +1,4 @@
-﻿@using WebSite.Helpers
+﻿@using Ex077.Helpers
 @model IEnumerable<Fuselage.Models.Milestone>
 @{
 	Layout = "_Admin";
@@ -37,7 +37,7 @@
 				</td>
 				<td>
 					<div class="btn-group btn-group-sm">
-						<a class="btn btn-primary" asp-action="Detail" asp-route-id="@item.Id">Detail</a>
+						<a class="btn btn-primary detail" data-id="@item.Id" data-toggle="modal" data-target="#detailModal">Detail</a>
 						<a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
 						<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 					</div>
@@ -48,3 +48,20 @@
 	</table>
 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$(function () {
+			$('a.detail').on('click', function () {
+				$('.modal-dialog').load(`/Milestone/Detail?id=${$(this).data('id')}`);
+			});
+		})
+	</script>
+}

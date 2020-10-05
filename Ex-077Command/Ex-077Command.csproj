@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>WebSite.Program</StartupObject>
+    <StartupObject>Ex077.Program</StartupObject>
+    <AssemblyName>Ex077</AssemblyName>
+    <RootNamespace>Ex077</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -128,6 +130,12 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SharedResources.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -9,10 +9,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-using WebSite.Models;
-using WebSite.ViewModels;
+using Ex077.Models;
+using Ex077.ViewModels;
 
-namespace WebSite.Controllers
+namespace Ex077.Controllers
 {
 	public class AdminController : Controller
 	{
