@@ -14,11 +14,11 @@
 				{
 					<div class="card">
 						<div class="card-body">
-							<h5 class="card-title">@locale.Name</h5>
+							<h5 class="card-title">@locale.Name (@locale.Locale)</h5>
 							<p class="card-text">Aliases: @locale.Alias</p>
 							<p class="card-text"><small class="text-muted">@locale.Type</small></p>
-							<a class="card-link" href="#">Edit</a>
-							<a class="card-link text-danger" href="#">Delete</a>
+							<a class="card-link" asp-action="EditLocale" asp-route-id="@locale.Id">Edit</a>
+							<a class="card-link text-danger" asp-action="DeleteLocale" asp-route-id="@locale.Id">Delete</a>
 						</div>
 					</div>
 				}
@@ -27,11 +27,6 @@
 			{
 				<h2>No data</h2>
 			}
-		</div>
-	</div>
-	<div class="modal-footer">
-		<div class="btn-group btn-group-sm">
-			<button class="btn btn-outline-primary">Add Locale</button>
 		</div>
 	</div>
 </div>

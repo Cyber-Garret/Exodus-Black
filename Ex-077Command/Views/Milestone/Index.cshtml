@@ -19,6 +19,7 @@
 			<th scope="col">Icon</th>
 			<th scope="col">Max users</th>
 			<th scope="col">Type</th>
+			<th scope="col">Locales</th>
 			<th scope="col">Actions</th>
 		</tr>
 
@@ -26,19 +27,15 @@
 		{
 			<tr>
 				<td class="font-weight-bold">@counter</td>
-				<td>
-					<img class="img-thumbnail" style="max-height: 5rem;" src="@item.Icon" />
-				</td>
-				<td>
-					@item.MaxSpace
-				</td>
-				<td>
-					@item.Type
-				</td>
+				<td><img class="img-thumbnail" style="max-height: 5rem;" src="@item.Icon" /></td>
+				<td>@item.MaxSpace</td>
+				<td>@item.Type</td>
+				<td>@item.MilestoneLocales.Count()</td>
 				<td>
 					<div class="btn-group btn-group-sm">
 						<a class="btn btn-primary detail" data-id="@item.Id" data-toggle="modal" data-target="#detailModal">Detail</a>
 						<a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+						<a class="btn btn-primary" asp-action="CreateLocale" asp-route-id="@item.Id">Add locale</a>
 						<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 					</div>
 				</td>
@@ -51,7 +48,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 
 	</div>
 </div>

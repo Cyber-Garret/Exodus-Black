@@ -21,7 +21,7 @@ namespace Ex077.Controllers
 			_fuselage = fuselage;
 		}
 
-		public IActionResult Index() => View(_fuselage.Milestones);
+		public IActionResult Index() => View(_fuselage.Milestones.Include(j => j.MilestoneLocales).AsNoTracking());
 
 		#region Main
 		public IActionResult Create() => View();
@@ -71,71 +71,58 @@ namespace Ex077.Controllers
 		#endregion
 
 		#region Locale
-		//public IActionResult CreateLocale(byte id)
-		//{
-		//	if (id > 0)
-		//	{
-		//		var model = new MilestoneInfoLocale { MilestoneInfoRowID = id };
-		//		return View(model);
-		//	}
-		//	return NotFound();
-		//}
-		//[HttpPost, ValidateAntiForgeryToken]
-		//public IActionResult CreateLocale(MilestoneInfoLocale locale)
-		//{
-		//	if (ModelState.IsValid)
-		//	{
-		//		try
-		//		{
-		//			_fuselage.AddMilestoneLocale(locale);
-		//			return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
-		//		}
-		//		catch
-		//		{
-		//			return View();
-		//		}
-		//	}
-		//	else
-		//		return View();
-		//}
+		public IActionResult CreateLocale(int id)
+		{
+			var milestone = _fuselage.Milestones.AsNoTracking().FirstOrDefault(s => s.Id == id);
+			if (milestone != null)
+			{
+				var model = new MilestoneLocale { MilestoneId = milestone.Id, Milestone = milestone };
+				return View(model);
+			}
+			return NotFound();
+		}
 
-		//public IActionResult EditLocale(byte id, LangKey lang)
-		//{
-		//	var locale = _fuselage.GetMilestoneLocale(id, lang);
-		//	if (locale != null)
-		//		return View(locale);
-		//	return NotFound();
-		//}
-		//[HttpPost, ValidateAntiForgeryToken]
-		//public IActionResult EditLocale(MilestoneInfoLocale locale)
-		//{
-		//	if (ModelState.IsValid)
-		//	{
-		//		try
-		//		{
-		//			_fuselage.UpdateMilestoneLocale(locale);
-		//			return RedirectToAction(nameof(Edit), new { id = locale.MilestoneInfoRowID });
-		//		}
-		//		catch
-		//		{
-		//			return View();
-		//		}
-		//	}
-		//	return RedirectToAction(nameof(Index));
-		//}
+		[HttpPost, ValidateAntiForgeryToken]
+		public IActionResult CreateLocale(MilestoneLocale milestoneLocale)
+		{
+			if (ModelState.IsValid)
+			{
+				//EF Core crutch
+				milestoneLocale.Id = 0;
 
-		//public IActionResult DeleteLocale(byte id, LangKey lang)
-		//{
-		//	try
-		//	{
-		//		_fuselage.DeleteMilestoneLocale(id, lang);
-		//		return RedirectToAction(nameof(Edit), new { id });
-		//	}
-		//	catch
-		//	{
-		//		return RedirectToAction(nameof(Index));
-		//	}
-		//}
+				_fuselage.MilestoneLocales.Add(milestoneLocale);
+				_fuselage.SaveChanges();
+				return RedirectToAction(nameof(Index));
+			}
+			else return View(milestoneLocale);
+		}
+
+		public IActionResult EditLocale(int id)
+		{
+			var locale = _fuselage.MilestoneLocales.FirstOrDefault(s => s.Id == id);
+			if (locale != null)
+				return View(locale);
+			return NotFound();
+		}
+		[HttpPost, ValidateAntiForgeryToken]
+		public IActionResult EditLocale(MilestoneLocale milestoneLocale)
+		{
+			_fuselage.MilestoneLocales.Update(milestoneLocale);
+			_fuselage.SaveChanges();
+			return RedirectToAction(nameof(Index));
+		}
+
+		public IActionResult DeleteLocale(int id)
+		{
+			var milsetone = _fuselage.MilestoneLocales.FirstOrDefault(s => s.Id == id);
+			if (milsetone != null)
+			{
+				_fuselage.MilestoneLocales.Remove(milsetone);
+				_fuselage.SaveChanges();
+				return RedirectToAction(nameof(Index));
+			}
+			return NotFound();
+		}
 		#endregion
 
 	}
