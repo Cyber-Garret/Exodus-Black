@@ -1,45 +1,80 @@
-﻿// Core variables, mixins and fonts
-@import "base/variables";
-@import "base/fonts";
-@import "base/mixins";
-
-// Global CSS
-@import "base/page";
-
-//Components
-@import "components/buttons";
-@import "components/navbar";
-
-//Layouts
-@import "layout/heads";
-@import "layout/stat";
-@import "layout/timeline";
-@import "layout/footer";
-
-
-.margin-top-5 {
-	margin-top: 5rem;
+﻿.container {
+	max-width: 960px;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-.admin-html {
-	position: relative;
-	min-height: 100%;
+/*
+ * Custom translucent site header
+ */
+
+.site-header {
+	background-color: rgba(0, 0, 0, .85);
+	-webkit-backdrop-filter: saturate(180%) blur(20px);
+	backdrop-filter: saturate(180%) blur(20px);
 }
 
-.admin-body {
-	/* Margin bottom by footer height */
-	margin-bottom: 100px;
+.site-header a {
+	color: #999;
+	transition: ease-in-out color .15s;
 }
 
-.admin-footer {
+.site-header a:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+.main-bg {
+	background-image: url(../img/header-bg.jpg);
+	background-size: cover;
+}
+
+.failsafe {
 	position: absolute;
+	right: 10%;
+	bottom: -30%;
+	width: 300px;
+	height: 540px;
+	background-color: #333;
+	border-radius: 21px;
+	-webkit-transform: rotate(30deg);
+	transform: rotate(30deg);
+}
+
+.failsafe::before {
+	background-image: url(../img/Failsafe.jpg);
+	background-size: cover;
+	position: absolute;
+	top: 10%;
+	right: 10px;
+	bottom: 10%;
+	left: 10px;
+	content: "";
+	background-color: rgba(255, 255, 255, .1);
+	border-radius: 5px;
+}
+
+.failsafe-malfunction {
+	position: absolute;
+	top: -25%;
+	right: auto;
 	bottom: 0;
-	width: 100%;
-	white-space: nowrap;
-	/* Set the fixed height of the footer here */
-	height: 60px;
-	line-height: 60px;
-	/* Vertically center the text there */
+	left: 5%;
+	width: 300px;
+	height: 540px;
+	background-color: #e5e5e5;
+	border-radius: 21px;
+	-webkit-transform: rotate(30deg);
+	transform: rotate(30deg);
+}
+
+.failsafe-malfunction::before {
+	background-image: url(../img/Failsafe_Malfunction.jpg);
+	background-size: cover;
+	position: absolute;
+	top: 10%;
+	right: 10px;
+	bottom: 10%;
+	left: 10px;
+	content: "";
+	background-color: rgba(255, 255, 255, .1);
+	border-radius: 5px;
 }
