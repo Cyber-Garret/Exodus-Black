@@ -34,19 +34,32 @@
 	else
 	{
 		<h3 class="text-center">Admin panel</h3>
-		<form class="text-center">
-			<div class="form-group">
-				<a class="alert-link" asp-controller="Welcome" asp-action="Index">Random welcome editor</a>
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<a class="nav-link active" id="action-tab" data-toggle="tab" href="#action" role="tab" aria-controls="action" aria-selected="true">Actions</a>
+			</li>
+			<li class="nav-item" role="presentation">
+				<a class="nav-link disabled" id="logs-tab" data-toggle="tab" href="#logs" role="tab" aria-controls="logs" aria-selected="false">Logs</a>
+			</li>
+		</ul>
+		<div class="tab-content" id="myTabContent">
+			<div class="tab-pane fade show active" id="action" role="tabpanel" aria-labelledby="action-tab">
+				<div class="list-group list-group-flush">
+					<a class="list-group-item list-group-item-action" asp-controller="Welcome" asp-action="Index">
+						Random welcome editor
+					</a>
+					<a class="list-group-item list-group-item-action" asp-controller="Milestone" asp-action="Index">
+						Milestone constructor
+					</a>
+					<a class="list-group-item list-group-item-action" asp-controller="Catalyst" asp-action="Index">
+						Catalyst editor
+					</a>
+					<a class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">
+						Exotic gear editor
+					</a>
+				</div>
 			</div>
-			<div class="form-group">
-				<a class="alert-link" asp-controller="Milestone" asp-action="Index">Milestone constructor</a>
-			</div>
-			<div class="form-group">
-				<a class="alert-link" href="#">Exotic gear editor</a>
-			</div>
-			<div class="form-group">
-				<a class="alert-link" asp-controller="Catalyst" asp-action="Index">Catalyst editor</a>
-			</div>
-		</form>
+			<div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs-tab">Under development</div>
+		</div>
 	}
 </div>
