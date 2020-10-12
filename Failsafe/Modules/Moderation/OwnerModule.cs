@@ -1,66 +1,51 @@
-﻿using Discord.Commands;
-
-using Failsafe.Preconditions;
-using Failsafe.Properties;
-
-using Microsoft.Extensions.Logging;
-
-using System;
+﻿using System;
+using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace Failsafe.Modules
+using Discord.Commands;
+using Discord.WebSocket;
+
+using Failsafe.Properties;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
+namespace Failsafe.Modules.Moderation
 {
-	[RequireContext(ContextType.Guild), Cooldown(5)]
 	public class GuildOwnerModule : RootModule
 	{
-		private readonly ILogger<GuildOwnerModule> logger;
+		private readonly ulong botOwner;
+		private readonly ILogger<GuildOwnerModule> _logger;
+		private readonly DiscordSocketClient _discord;
 
-		public GuildOwnerModule(ILogger<GuildOwnerModule> logger)
+		public GuildOwnerModule(IConfiguration configuration, ILogger<GuildOwnerModule> logger, DiscordSocketClient discord)
 		{
-			this.logger = logger;
+			botOwner = configuration.GetValue<ulong>("Bot:Owner");
+			_logger = logger;
+			_discord = discord;
 		}
 
-		[Command("unban"), Alias("разбан", "розблокування")]
-		public async Task MassUnban()
+		[Command("guilds"), Alias("гильдии", "гільдії")]
+		public async Task Guilds()
 		{
-			if (Context.User.Id != Context.Guild.OwnerId)
-			{
-				await ReplyAndDeleteAsync(Resources.OnlyForGuildOwner);
+			if (Context.User.Id != botOwner)
 				return;
-			}
-			if (Context.Guild.CurrentUser.GuildPermissions.BanMembers)
-			{
-				int SucessCount = 0;
-				int FailCount = 0;
-				//Get list of all banned users in guild
-				var bannedList = await Context.Guild.GetBansAsync();
 
-				// Place simple start message 
-				var workMessage = await Context.Channel.SendMessageAsync(string.Format(Resources.UnbanStart, bannedList.Count));
+			var guilds = _discord.Guilds.OrderBy(o => o.Users.Count).Take(10);
+			var message = guilds.Aggregate("**Smallest guilds:**\n", (current, guild) => current + $"{guild.Name}({guild.Id}) - Users: {guild.Users.Count}\n");
+			await ReplyAsync(message);
+		}
 
-				foreach (var user in bannedList)
-				{
-					try
-					{
-						await Context.Guild.RemoveBanAsync(user.User);
-						SucessCount++;
-					}
-					catch (Exception ex)
-					{
-						FailCount++;
-						logger.LogWarning(ex, "Unban command");
-					}
+		[Command("leave"), Alias("выйти", "покинути")]
+		public async Task Leave(ulong guildId)
+		{
+			if (Context.User.Id != botOwner)
+				return;
 
-				}
-				//We inform the server owner of the work done by changing the message.
-				await workMessage.ModifyAsync(m => m.Content = string.Format(Resources.UnbanDone, bannedList.Count, SucessCount, FailCount));
-			}
-			else
-			{
-				await ReplyAsync(Resources.BanPermission);
-			}
-
-
+			var guild = _discord.GetGuild(guildId);
+			await guild.LeaveAsync();
+			await ReplyAsync($"{guild.Name} will be abandoned. Now im on {_discord.Guilds.Count} guilds");
 		}
 	}
 }

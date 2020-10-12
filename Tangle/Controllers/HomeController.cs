@@ -23,7 +23,7 @@ namespace Tangle.Controllers
 		}
 
 		#region Actions
-		public async Task<IActionResult> IndexAsync()
+		public async Task<IActionResult> Index()
 		{
 			var weapons = GetWeapons(await _manifest.LoadInventoryItemsWithCategory(1)).OrderBy(o => o.Name);
 
