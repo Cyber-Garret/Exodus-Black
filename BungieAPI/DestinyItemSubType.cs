@@ -1,4 +1,4 @@
-namespace Destiny
+namespace BungieAPI
 {
 	public enum DestinyItemSubType
 	{

@@ -23,7 +23,7 @@ namespace BungieAPI.Definitions
 		public bool ConsolidateCategories { get; set; }
 		public IEnumerable<DestinyVendorActionDefinition> Actions { get; set; }
 		public IEnumerable<DestinyVendorCategoryEntryDefinition> Categories { get; set; }
-		public IEnumerable<DestinyVendorCategoryEntryDefinition> originalCategories { get; set; }
+		public IEnumerable<DestinyVendorCategoryEntryDefinition> OriginalCategories { get; set; }
 		public IEnumerable<DestinyDisplayCategoryDefinition> DisplayCategories { get; set; }
 		public IEnumerable<DestinyVendorInteractionDefinition> Interactions { get; set; }
 		public IEnumerable<DestinyVendorInventoryFlyoutDefinition> InventoryFlyouts { get; set; }

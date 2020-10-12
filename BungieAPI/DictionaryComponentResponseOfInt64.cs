@@ -7,7 +7,7 @@ namespace BungieAPI
 	public class DictionaryComponentResponseOfInt64<T>
 	{
 		[JsonProperty(PropertyName = "data")]
-		public IDictionary<long, T> Data { get; set; } = null;
+		public IDictionary<long, T> Data { get; set; }
 		// privacy
 	}
 }

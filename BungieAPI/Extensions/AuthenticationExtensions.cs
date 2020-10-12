@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class AuthenticationExtensions

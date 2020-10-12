@@ -8,8 +8,6 @@
 
 .site-header {
 	background-color: rgba(0, 0, 0, .85);
-	-webkit-backdrop-filter: saturate(180%) blur(20px);
-	backdrop-filter: saturate(180%) blur(20px);
 }
 
 .site-header a {
@@ -27,54 +25,11 @@
 	background-size: cover;
 }
 
-.failsafe {
-	position: absolute;
-	right: 10%;
-	bottom: -30%;
-	width: 300px;
-	height: 540px;
-	background-color: #333;
-	border-radius: 21px;
-	-webkit-transform: rotate(30deg);
-	transform: rotate(30deg);
-}
-
-.failsafe::before {
-	background-image: url(../img/Failsafe.jpg);
+.donate-bg {
+	background-image: url(../img/header-bg-servers.jpg);
 	background-size: cover;
-	position: absolute;
-	top: 10%;
-	right: 10px;
-	bottom: 10%;
-	left: 10px;
-	content: "";
-	background-color: rgba(255, 255, 255, .1);
-	border-radius: 5px;
 }
 
-.failsafe-malfunction {
-	position: absolute;
-	top: -25%;
-	right: auto;
-	bottom: 0;
-	left: 5%;
-	width: 300px;
-	height: 540px;
-	background-color: #e5e5e5;
-	border-radius: 21px;
-	-webkit-transform: rotate(30deg);
-	transform: rotate(30deg);
-}
-
-.failsafe-malfunction::before {
-	background-image: url(../img/Failsafe_Malfunction.jpg);
-	background-size: cover;
-	position: absolute;
-	top: 10%;
-	right: 10px;
-	bottom: 10%;
-	left: 10px;
-	content: "";
-	background-color: rgba(255, 255, 255, .1);
-	border-radius: 5px;
+.embed-responsive .card-img-top {
+	object-fit: cover;
 }

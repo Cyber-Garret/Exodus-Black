@@ -9,10 +9,10 @@ namespace BungieAPI.Definitions.Items
 		public uint InsertionMaterialRequirementHash { get; set; }
 		public uint EnabledMaterialRequirementHash { get; set; }
 		// enabledRules
-		public string UIPlugLabel { get; set; }
+		public string UiPlugLabel { get; set; }
 		public PlugUiStyles PlugStyle { get; set; }
 		public bool IsPseudoPlug { get; set; }
-		public PlugAvailabilityMode plugAvailability { get; set; }
+		public PlugAvailabilityMode PlugAvailability { get; set; }
 		public string AlternateUiPlugLabel { get; set; }
 		public int AlternatePlugStyle { get; set; }
 		public bool IsDummyPlug { get; set; }

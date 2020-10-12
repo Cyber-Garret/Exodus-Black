@@ -8,7 +8,7 @@
 	</div>
 	<div class="modal-body">
 		<div class="card-group">
-			@if (Model.MilestoneLocales.Count() > 0)
+			@if (Model.MilestoneLocales.Any())
 			{
 				@foreach (var locale in Model.MilestoneLocales)
 				{
@@ -17,8 +17,8 @@
 							<h5 class="card-title">@locale.Name (@locale.Locale)</h5>
 							<p class="card-text">Aliases: @locale.Alias</p>
 							<p class="card-text"><small class="text-muted">@locale.Type</small></p>
-							<a class="card-link" asp-action="EditLocale" asp-route-id="@locale.Id">Edit</a>
-							<a class="card-link text-danger" asp-action="DeleteLocale" asp-route-id="@locale.Id">Delete</a>
+							<a asp-action="EditLocale" asp-route-id="@locale.Id" class="card-link">Edit</a>
+							<a asp-action="DeleteLocale" asp-route-id="@locale.Id" class="card-link text-danger">Delete</a>
 						</div>
 					</div>
 				}

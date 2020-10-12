@@ -1,35 +1,33 @@
-﻿@model HomeViewModel
-@inject IViewLocalizer localizer
-@inject SharedResourcesService shared_res
+﻿@inject IViewLocalizer Localizer
+@inject SharedResourcesService SharedRes
+
+@model HomeViewModel
 @{
-	ViewData["Title"] = localizer["Title"];
+	ViewData["Title"] = Localizer["Title"];
 }
 
 <!-- Main -->
 <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center main-bg text-light">
 	<div class="col-md-5 p-lg-5 mx-auto my-5">
-		<p class="lead font-weight-normal">@localizer["Welcome"]</p>
-		<h1 class="display-4 font-weight-normal">@localizer["Name"]</h1>
-		<a class="btn btn-outline-primary" asp-controller="Home" asp-action="AddBot" rel="nofollow" target="_blank">@localizer["AddBot"]</a>
+		<p class="lead font-weight-normal">@Localizer["Welcome"]</p>
+		<h1 class="display-4 font-weight-normal">@Localizer["Name"]</h1>
 	</div>
-	<div class="failsafe shadow-sm d-none d-md-block"></div>
-	<div class="failsafe-malfunction shadow-sm d-none d-md-block"></div>
 </div>
 
 <!-- Stat -->
 <div class="py-5 bg-light">
 	<div class="container">
 		<div class="col-lg-12 text-center">
-			<h2 class="section-heading text-uppercase">@localizer["BotStatTitle"]</h2>
-			<h3 class="section-subheading text-muted">@localizer["BotStatDesc"]</h3>
+			<h2 class="text-uppercase">@Localizer["BotStatTitle"]</h2>
+			<h3 class="text-muted">@Localizer["BotStatDesc"]</h3>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="card mb-4 shadow-sm text-center">
 					<i class="fas fa-globe-europe fa-10x mt-4"></i>
 					<div class="card-body">
-						<h2>@localizer["BotStatServers"]</h2>
-						<p class="card-text">400+</p>
+						<h2>@Localizer["BotStatServers"]</h2>
+						<p class="card-text">300+</p>
 					</div>
 				</div>
 			</div>
@@ -37,7 +35,7 @@
 				<div class="card mb-4 shadow-sm text-center">
 					<i class="fas fa-users fa-10x mt-4"></i>
 					<div class="card-body">
-						<h2>@localizer["BotStatUsers"]</h2>
+						<h2>@Localizer["BotStatUsers"]</h2>
 						<p class="card-text">21300+</p>
 					</div>
 				</div>
@@ -46,7 +44,7 @@
 				<div class="card mb-4 shadow-sm text-center">
 					<i class="fas fa-clipboard-list fa-10x mt-4"></i>
 					<div class="card-body">
-						<h2>@localizer["BotStatRaids"]</h2>
+						<h2>@Localizer["BotStatRaids"]</h2>
 						<p class="card-text">13500+</p>
 					</div>
 				</div>
@@ -59,52 +57,76 @@
 <div class="py-5 bg-dark text-light">
 	<div class="container">
 		<div class="col-lg-12 text-center">
-			<h2 class="section-heading text-uppercase">@localizer["FeatTitle"]</h2>
-			<h3 class="section-subheading text-muted">@localizer["FeatDesc"]</h3>
+			<h2 class="text-uppercase">@Localizer["FeatTitle"]</h2>
+			<h3 class="text-muted">@Localizer["FeatDesc"]</h3>
 		</div>
 		<div class="row row-cols-1 row-cols-md-2">
 			<div class="col mb-4">
 				<div class="card mb-4 shadow-sm text-light bg-dark">
-					<img class="card-img-top" src="~/img/features/1.jpg" />
+					<div class="embed-responsive embed-responsive-16by9">
+						<img class="card-img-top embed-responsive-item" src="~/img/features/1.jpg" alt="@Localizer["FeatOneTitle"]" />
+					</div>
 					<div class="card-body">
-						<h3 class="card-title">@localizer["FeatOneTitle"]</h3>
-						<p class="card-text">@localizer["FeatOneDesc"]</p>
+						<h3 class="card-title">@Localizer["FeatOneTitle"]</h3>
+						<p class="card-text">@Localizer["FeatOneDesc"]</p>
 					</div>
 				</div>
 			</div>
 			<div class="col mb-4">
 				<div class="card shadow-sm text-light bg-dark">
-					<img class="card-img-top" src="~/img/features/2.jpg" />
+					<div class="embed-responsive embed-responsive-16by9">
+						<img class="card-img-top embed-responsive-item" src="~/img/features/2.jpg" alt="@Localizer["FeatTwoTitle"]" />
+					</div>
 					<div class="card-body">
-						<h3 class="card-title">@localizer["FeatTwoTitle"]</h3>
-						<p class="card-text">@localizer["FeatTwoDesc"]</p>
+						<h3 class="card-title">@Localizer["FeatTwoTitle"]</h3>
+						<p class="card-text">@Localizer["FeatTwoDesc"]</p>
 					</div>
 				</div>
 			</div>
 			<div class="col mb-4">
 				<div class="card shadow-sm text-light bg-dark">
-					<img class="card-img-top" src="~/img/features/3.jpg" />
+					<div class="embed-responsive embed-responsive-16by9">
+						<img class="card-img-top embed-responsive-item" src="~/img/features/3.jpg" alt="@Localizer["FeatThreeTitle"]" />
+					</div>
 					<div class="card-body">
-						<h3 class="card-title">@localizer["FeatThreeTitle"]</h3>
-						<p class="card-text">@localizer["FeatThreeDesc"]</p>
+						<h3 class="card-title">@Localizer["FeatThreeTitle"]</h3>
+						<p class="card-text">@Localizer["FeatThreeDesc"]</p>
 					</div>
 				</div>
 			</div>
 			<div class="col mb-4">
 				<div class="card shadow-sm text-light bg-dark">
-					<img class="card-img-top" src="~/img/features/4.jpg" />
+					<div class="embed-responsive embed-responsive-16by9">
+						<img class="card-img-top embed-responsive-item" src="~/img/features/4.jpg" alt="@Localizer["FeatFourTitle"]" />
+					</div>
 					<div class="card-body">
-						<h3 class="card-title">@localizer["FeatFourTitle"]</h3>
-						<p class="card-text">@localizer["FeatFourDesc"]</p>
+						<h3 class="card-title">@Localizer["FeatFourTitle"]</h3>
+						<p class="card-text">@Localizer["FeatFourDesc"]</p>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
+
+<!-- Bots -->
+<div class="py-5 bg-light">
+	<div class="container">
+		<div class="col-lg-12 text-center">
+			<h2 class="text-uppercase">@Localizer["BotStatTitle"]</h2>
+			<h3 class="text-muted">@Localizer["BotStatDesc"]</h3>
+		</div>
 		<div class="row">
-			<div class="mx-auto text-center">
-				<a asp-controller="Home" asp-action="BlackExodus" rel="nofollow" target="_blank">
-					<h4>@localizer["Enjoy"]</h4>
-				</a>
+			<div class="col-md-4">
+				<div class="card mb-4 shadow-sm text-center">
+					<i class="fas fa-server fa-10x mt-4"></i>
+					<div class="card-body">
+						<h2>Bot on servers</h2>
+						<p class="card-text">300/100</p>
+						<p class="card-text text-danger">Sorry, the bot has been verified, but at the moment it is still impossible to add it to your server. As soon as the Discord fixes this problem, you can immediately add the bot to your wonderful guild.</p>
+						<a asp-action="AddBot" class="btn btn-primary disabled">@Localizer["AddBot"]</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -6,7 +6,7 @@ namespace BungieAPI.Definitions
 	{
 		public int RewardedAtProgressionLevel { get; set; }
 		public int AcquisionBehavior { get; set; }
-		public string UIDisplayStyle { get; set; }
+		public string UiDisplayStyle { get; set; }
 		public IEnumerable<string> ClaimUnlockDisplayStrings { get; set; }
 		public uint ItemHash { get; set; }
 		public long? ItemInstanceId { get; set; }

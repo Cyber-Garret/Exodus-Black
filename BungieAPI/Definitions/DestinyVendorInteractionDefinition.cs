@@ -11,7 +11,7 @@ namespace BungieAPI.Definitions
 		public int VendorCategoryIndex { get; set; }
 		public uint? QuestlineItemHash { get; set; }
 		public IEnumerable<DestinyVendorInteractionSackEntryDefinition> SackInteractionList { get; set; }
-		public uint UIInteractionType { get; set; }
+		public uint UiInteractionType { get; set; }
 		public int InteractionType { get; set; }
 		public string RewardBlockLabel { get; set; }
 		public int RewardVendorCategoryIndex { get; set; }

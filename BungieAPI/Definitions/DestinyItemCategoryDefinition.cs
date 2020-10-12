@@ -1,5 +1,3 @@
-using Destiny;
-
 using System.Collections.Generic;
 
 namespace BungieAPI.Definitions
