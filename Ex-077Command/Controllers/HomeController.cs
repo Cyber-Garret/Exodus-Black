@@ -1,33 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Ex077.Entities;
+using Ex077.ViewModels;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using System;
 using System.Diagnostics;
-
-using Ex077.ViewModels;
 
 namespace Ex077.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
+		private readonly IOptions<BotOptions> _options;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(IOptions<BotOptions> options)
 		{
-			_logger = logger;
+			_options = options;
 		}
 
 		#region GET
 		public IActionResult Index()
 		{
 			return View(new HomeViewModel());
-		}
-		[Route("Donate")]
-		public IActionResult Donate()
-		{
-			return View(new DonateViewModel());
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -52,14 +48,35 @@ namespace Ex077.Controllers
 		#endregion
 
 		#region Routes
-		[Route("AddBot")]
-		public IActionResult AddBot() => RedirectPermanent($"https://discord.com/oauth2/authorize?client_id=521693707238506498&scope=bot&permissions=269479104");
-
-		[Route("YandexMoney")]
-		public IActionResult YandexMoney() => RedirectPermanent($"https://money.yandex.ru/to/410019748161790");
 
 		[Route("BlackExodus")]
-		public IActionResult BlackExodus() => RedirectPermanent($"https://discord.com/invite/WcuNPM9");
+		public IActionResult BlackExodus() =>
+			RedirectPermanent(_options.Value.ExodusInviteLink);
+
+		[Route("AddEnBot")]
+		public IActionResult AddEnBot() =>
+			RedirectPermanent(_options.Value.EnBotLink);
+
+		[Route("EnDocs")]
+		public IActionResult EnDocs() =>
+			RedirectPermanent(_options.Value.EnDocsLink);
+
+		[Route("AddRuBot")]
+		public IActionResult AddRuBot() =>
+			Redirect(_options.Value.RuBotLink);
+
+		[Route("RuDocs")]
+		public IActionResult RuDocs() =>
+			RedirectPermanent(_options.Value.RuDocsLink);
+
+		[Route("AddUaBot")]
+		public IActionResult AddUaBot() =>
+			RedirectPermanent(_options.Value.UaBotLink);
+
+		[Route("UaDocs")]
+		public IActionResult UaDocs() =>
+			RedirectPermanent(_options.Value.UaDocsLink);
+
 		#endregion
 	}
 }

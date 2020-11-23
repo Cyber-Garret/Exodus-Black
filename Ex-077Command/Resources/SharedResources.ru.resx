@@ -112,11 +112,17 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutDesc" xml:space="preserve">
+    <value>Нейроматрица является эффективным помощником в управлении и внутренней организации клана. Этот бот способен отследить и отобразить в логах всю важную информацию о малейших изменениях в составе клана.</value>
+  </data>
+  <data name="AboutTitle" xml:space="preserve">
+    <value>О боте</value>
+  </data>
   <data name="Dev" xml:space="preserve">
     <value>Разработано</value>
   </data>

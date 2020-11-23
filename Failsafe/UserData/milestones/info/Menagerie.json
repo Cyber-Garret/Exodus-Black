@@ -1,9 +1,0 @@
-{
-	"Name": "Паноптикум",
-	"Alias": "пн",
-	"Type": "Лабиринт",
-	"Icon": "http://www.neira.app/img/milestones/menagerie.jpg",
-	"MaxSpace": 6,
-	"MilestoneType": 2,
-	"Game": 0
-}

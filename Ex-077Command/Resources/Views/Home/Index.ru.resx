@@ -112,13 +112,13 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddBot" xml:space="preserve">
-    <value>Добавить в Дискорд</value>
+    <value>Добавить бота</value>
   </data>
   <data name="BotStatDesc" xml:space="preserve">
     <value>Наши достижения.</value>
@@ -176,5 +176,14 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>Главная</value>
+  </data>
+  <data name="BotNodesDesc" xml:space="preserve">
+    <value>Доступный кластер узлов Нейроматрицы</value>
+  </data>
+  <data name="BotNodesTitle" xml:space="preserve">
+    <value>Узлы бота</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Бот скоро будет доступен.</value>
   </data>
 </root>

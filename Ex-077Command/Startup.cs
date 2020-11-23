@@ -1,4 +1,7 @@
 
+using Ex077.Entities;
+using Ex077.Services;
+
 using Fuselage;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,8 +21,6 @@ using Neiralink;
 using System.Collections.Generic;
 using System.Globalization;
 
-using Ex077.Services;
-
 namespace Ex077
 {
 	public class Startup
@@ -34,6 +35,8 @@ namespace Ex077
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddOptions<BotOptions>().Bind(Configuration.GetSection(BotOptions.OptionsName));
+
 			services.Configure<CookiePolicyOptions>(options =>
 			{
 				// This lambda determines whether user consent for non-essential cookies is needed for a given request.

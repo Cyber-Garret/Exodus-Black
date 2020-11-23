@@ -1,9 +1,0 @@
-{
-	"Name": "Глубины Марса",
-	"Alias": "гм",
-	"Type": "Сумрачный налет",
-	"Icon": "http://www.neira.app/img/milestones/strikes/strange_terrain.jpg",
-	"MaxSpace": 3,
-	"MilestoneType": 1,
-	"Game": 0
-}

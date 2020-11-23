@@ -18,15 +18,15 @@
 				<div class="row">
 					<div class="col-sm-8 col-md-7 py-4">
 						<h4 class="text-white">@Res.Get("AboutTitle")</h4>
-						<p class="text-muted">@Res.Get("AboutDesc")</p>
+						<p class="text-white">@Res.Get("AboutDesc")</p>
 					</div>
-					<div class="col-sm-4 offset-md-1 py-4">
-						<h4 class="text-white">Resources</h4>
-						<ul class="list-unstyled">
-							<li><a class="text-muted" href="http://docs.neira.app/" target="_blank">@Res.Get("Docs")</a></li>
-							<li><a asp-action="Donate" asp-controller="Home" asp-route-culture="@Context.Request.RouteValues["culture"]" class="text-muted">@Res.Get("Donate")</a></li>
-						</ul>
-					</div>
+					@*<div class="col-sm-4 offset-md-1 py-4">
+							<h4 class="text-white">Resources</h4>
+							<ul class="list-unstyled">
+								<li><a class="text-white" href="http://docs.neira.app/" target="_blank">@Res.Get("Docs")</a></li>
+								<li><a asp-action="Donate" asp-controller="Home" asp-route-culture="@Context.Request.RouteValues["culture"]" class="text-white">@Res.Get("Donate")</a></li>
+							</ul>
+						</div>*@
 				</div>
 			</div>
 		</div>
@@ -42,30 +42,20 @@
 			</div>
 		</div>
 	</header>
-
-	@*<nav class="site-header sticky-top py-1">
-			<div class="container d-flex flex-column flex-md-row justify-content-between">
-				<a class="py-2" aria-label="Home" asp-route-culture="@Context.Request.RouteValues["culture"]" asp-controller="Home" asp-action="Index">
-					<img src="~/img/neira.png" class="d-block mx-auto" width="24" height="24" alt="Logo">
-				</a>
-				<a class="py-2 d-none d-md-inline-block" href="http://docs.neira.app/" target="_blank">@Res.Get("Docs")</a>
-				<a class="py-2 d-none d-md-inline-block" asp-route-culture="@Context.Request.RouteValues["culture"]" asp-controller="Home" asp-action="Donate">@Res.Get("Donate")</a>
-			</div>
-		</nav>*@
 	<main role="main">
 		@RenderBody()
 	</main>
 	<!-- Footer -->
 	<footer class="container footer mt-auto py-3">
-		<div class="row">
-			<div class="col-12 col-md">
-				<img src="~/img/neira.png" class="d-block mb-2" width="24" height="24" alt="Logo">
-				<small class="d-block mb-3 text-muted">&copy; 2018-@DateTime.Now.Year</small>
-				<small class="d-block mb-3 text-muted">@Res.Get("Dev") <a asp-controller="Home" asp-action="BlackExodus" rel="nofollow" target="_blank">Cyber_Garret#5898</a></small>
+		<div class="float-left">
+			<div class="row align-items-center">
+				<img src="~/img/neira.png" class="mr-2" width="24" height="24" alt="Logo">
+				<span class="text-muted mr-2">&copy; 2018-@DateTime.Now.Year</span>
+				<span class="text-muted">@Res.Get("Dev") <a asp-controller="Home" asp-action="BlackExodus" rel="nofollow" target="_blank">Cyber_Garret#5898</a></span>
 			</div>
-			<div class="float-right">
-				@await Html.PartialAsync("_SelectLanguagePartial")
-			</div>
+		</div>
+		<div class="row float-right">
+			@await Html.PartialAsync("_SelectLanguagePartial")
 		</div>
 	</footer>
 	<script src="~/lib/jquery/jquery.min.js"></script>

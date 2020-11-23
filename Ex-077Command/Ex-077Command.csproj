@@ -5,6 +5,8 @@
     <StartupObject>Ex077.Program</StartupObject>
     <AssemblyName>Ex077</AssemblyName>
     <RootNamespace>Ex077</RootNamespace>
+    <Authors>Cyber_Garret</Authors>
+    <UserSecretsId>9726a774-b1cb-4998-b8d9-97fe9f390369</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

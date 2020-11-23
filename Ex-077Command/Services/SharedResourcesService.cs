@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using Ex077.Resources;
+
+using Microsoft.Extensions.Localization;
 
 using System.Reflection;
-
-using Ex077.Resources;
 
 namespace Ex077.Services
 {

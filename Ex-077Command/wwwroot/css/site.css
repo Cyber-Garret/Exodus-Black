@@ -19,9 +19,5 @@
   background-image: url(../../img/header-bg.jpg);
   background-size: cover; }
 
-.donate-bg {
-  background-image: url(../../img/header-bg-servers.jpg);
-  background-size: cover; }
-
 .embed-responsive .card-img-top {
   object-fit: cover; }

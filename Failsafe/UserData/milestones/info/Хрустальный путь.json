@@ -1,0 +1,9 @@
+{
+	"Name": "Хрустальный путь",
+	"Alias": "хп",
+	"Type": "Налет",
+	"Icon": "http://www.neira.app/img/milestones/strikes/the_corrupted.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}

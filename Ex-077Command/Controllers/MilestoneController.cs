@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-using Fuselage;
+﻿using Fuselage;
 using Fuselage.Models;
 
-using System;
-using System.Linq;
-
-using Ex077.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using System.Linq;
 
 namespace Ex077.Controllers
 {
