@@ -24,14 +24,14 @@ using System;
 
 namespace Failsafe
 {
-	public class Program
+	public static class Program
 	{
 		public static void Main(string[] args)
 		{
 			CreateHostBuilder(args).Build().Run();
 		}
 
-		public static IHostBuilder CreateHostBuilder(string[] args)
+		private static IHostBuilder CreateHostBuilder(string[] args)
 		{
 			var builtConfig = CreateConfigBuilder(args);
 
@@ -45,7 +45,7 @@ namespace Failsafe
 					.ConfigureLogging(logger =>
 					{
 						logger.ClearProviders();
-						logger.AddSerilog(logger: log, dispose: true);
+						logger.AddSerilog(log);
 					})
 					.ConfigureServices((hostContext, services) =>
 					{
@@ -61,7 +61,18 @@ namespace Failsafe
 							AlwaysDownloadUsers = true,
 							LogLevel = discordSeverity,
 							DefaultRetryMode = RetryMode.AlwaysRetry,
-							MessageCacheSize = 300
+							MessageCacheSize = 300,
+							GatewayIntents = GatewayIntents.Guilds |
+											 GatewayIntents.GuildMembers |
+											 GatewayIntents.GuildBans |
+											 GatewayIntents.GuildEmojis |
+											 GatewayIntents.GuildIntegrations |
+											 GatewayIntents.GuildWebhooks |
+											 GatewayIntents.GuildInvites |
+											 GatewayIntents.GuildMessages |
+											 GatewayIntents.GuildMessageReactions |
+											 GatewayIntents.DirectMessages |
+											 GatewayIntents.DirectMessageReactions
 						}))
 						.AddSingleton(new CommandService(new CommandServiceConfig
 						{
@@ -122,7 +133,7 @@ namespace Failsafe
 		/// <summary>
 		/// Create serilog log configuration and return Logger class
 		/// </summary>
-		private static Logger CreateSerilogLogger(IConfigurationRoot configuration)
+		private static Logger CreateSerilogLogger(IConfiguration configuration)
 		{
 			// create logger with console output by default
 			var logger = new LoggerConfiguration()
@@ -131,15 +142,11 @@ namespace Failsafe
 			var logPath = configuration["Logging:FilePath"];
 
 			// check if filepath for logging presented
-			if (!string.IsNullOrWhiteSpace(logPath))
-			{
-				logger.WriteTo.File(logPath);
-				return logger.CreateLogger();
-			}
-			else
-			{
-				return logger.CreateLogger();
-			}
+			if (string.IsNullOrWhiteSpace(logPath)) return logger.CreateLogger();
+
+			logger.WriteTo.File(logPath);
+			return logger.CreateLogger();
+
 		}
 	}
 }

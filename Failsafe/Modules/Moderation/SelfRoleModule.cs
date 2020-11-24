@@ -168,12 +168,7 @@ namespace Failsafe.Modules
 					Name = Context.Guild.Name
 				},
 				Color = Color.Gold,
-				Description = text,
-				Footer = new EmbedFooterBuilder
-				{
-					IconUrl = Resources.NeiraFooterIcon,
-					Text = Resources.MyAd
-				}
+				Description = text
 			};
 
 			//Create field with roles and associated emotes

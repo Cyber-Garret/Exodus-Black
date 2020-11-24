@@ -418,9 +418,6 @@ NSFW **{1}**
   <data name="MsgUpdEmbTitle" xml:space="preserve">
     <value>📝 Обновлено сообщение</value>
   </data>
-  <data name="MyAd" xml:space="preserve">
-    <value>Хочешь бота на заказ? Пиши моему создателю Cyber_Garret#5898</value>
-  </data>
   <data name="Nightfall" xml:space="preserve">
     <value>Сумрачный налет</value>
   </data>
@@ -549,63 +546,6 @@ Discord имя стража
   </data>
   <data name="XurLeaveEmbTitle" xml:space="preserve">
     <value>Внимание! Зур покинул солнечную систему.</value>
-  </data>
-  <data name="ModEmbTitle" xml:space="preserve">
-    <value>Модификаторы брони 2.0</value>
-  </data>
-  <data name="ModFieldElementTitle" xml:space="preserve">
-    <value>Тип энергии к которому привязан тип оружия:</value>
-  </data>
-  <data name="ModFieldArcDesc" xml:space="preserve">
-    <value>Импульсные винтовки, пулемёты, дробовики, мечи, луки.</value>
-  </data>
-  <data name="ModFieldSolarTitle" xml:space="preserve">
-    <value>Солнце</value>
-  </data>
-  <data name="ModFieldSolarDesc" xml:space="preserve">
-    <value>Ракетные установки, автоматы, пистолеты-пулеметы, плазменные винтовки, линейно-плазменные винтовки.</value>
-  </data>
-  <data name="ModFieldVoidTitle" xml:space="preserve">
-    <value>Пустота</value>
-  </data>
-  <data name="ModFieldVoidDesc" xml:space="preserve">
-    <value>Револьверы, снайперские винтовки, гранатомёты, винтовки разведчиков, пистолеты.</value>
-  </data>
-  <data name="ModFieldTypeTitle" xml:space="preserve">
-    <value>Тип модификатора в доспехах:</value>
-  </data>
-  <data name="ModFieldHelmetTitle" xml:space="preserve">
-    <value>Шлем</value>
-  </data>
-  <data name="ModFieldHelmetDesc" xml:space="preserve">
-    <value>Прицельность, локаторы боеприпасов.</value>
-  </data>
-  <data name="ModFieldGauntletsTitle" xml:space="preserve">
-    <value>Рукавицы</value>
-  </data>
-  <data name="ModFieldGauntletsDesc" xml:space="preserve">
-    <value>Скорость перезарядки, откат гранат и ближнего боя.</value>
-  </data>
-  <data name="ModFieldChestTitle" xml:space="preserve">
-    <value>Нагрудник</value>
-  </data>
-  <data name="ModFieldChestDesc" xml:space="preserve">
-    <value>Резервный боезапас, стойкий прицел.</value>
-  </data>
-  <data name="ModFieldLegTitle" xml:space="preserve">
-    <value>Броня для ног</value>
-  </data>
-  <data name="ModFieldLegDesc" xml:space="preserve">
-    <value>Сборщик боеприпасов, легкость оружия.</value>
-  </data>
-  <data name="ModFieldClassItemTitle" xml:space="preserve">
-    <value>Классовый предмет</value>
-  </data>
-  <data name="ModFieldClassItemDesc" xml:space="preserve">
-    <value>Добивающий прием, восстановление способностей.</value>
-  </data>
-  <data name="ModFieldArcTitle" xml:space="preserve">
-    <value>Молния</value>
   </data>
   <data name="WishFooterFormat" xml:space="preserve">
     <value>Желание {0}/{1}</value>

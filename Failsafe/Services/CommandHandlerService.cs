@@ -16,22 +16,23 @@ namespace Failsafe.Services
 {
 	public class CommandHandlerService
 	{
-		private readonly IServiceProvider service;
-		private readonly IConfiguration config;
-		private readonly DiscordSocketClient discord;
-		private readonly CommandService commands;
-		public CommandHandlerService(IServiceProvider service)
+		private readonly IServiceProvider _service;
+		private readonly IConfiguration _config;
+		private readonly DiscordSocketClient _discord;
+		private readonly CommandService _commands;
+
+		public CommandHandlerService(IServiceProvider service, IConfiguration config, DiscordSocketClient discord, CommandService commands)
 		{
-			this.service = service;
-			config = service.GetRequiredService<IConfiguration>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
-			commands = service.GetRequiredService<CommandService>();
+			_service = service;
+			_config = config;
+			_discord = discord;
+			_commands = commands;
 		}
 
 		public async Task InstallCommandsAsync()
 		{
 			// Hook the MessageReceived event into our command handler
-			discord.MessageReceived += HandleCommandAsync;
+			_discord.MessageReceived += HandleCommandAsync;
 
 			// Here we discover all of the command modules in the entry 
 			// assembly and load them. Starting from Discord.NET 2.0, a
@@ -41,7 +42,7 @@ namespace Failsafe.Services
 			//
 			// If you do not use Dependency Injection, pass null.
 			// See Dependency Injection guide for more information.
-			await commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: service);
+			await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: _service);
 		}
 
 		private Task HandleCommandAsync(SocketMessage message)
@@ -52,31 +53,38 @@ namespace Failsafe.Services
 			//New Task for fix disconeting from Discord WebSockets by 1001 if current Task not completed.
 			Task.Run(async () =>
 			 {
-				 var context = new SocketCommandContext(discord, msg);
-				 var guild = GuildData.GetGuildAccount(context.Guild);
-				 Thread.CurrentThread.CurrentUICulture = guild.Language;
-				 var argPos = 0;
-				 // ignore if command not start from prefix
-				 var prefix = guild.CommandPrefix ?? config["Bot:Prefix"];
-				 if (msg.HasStringPrefix(prefix, ref argPos) || msg.HasMentionPrefix(discord.CurrentUser, ref argPos))
+				 try
 				 {
-					 // search command
-					 var cmdSearchResult = commands.Search(context, argPos);
-					 // if command not found just finish Task
-					 if (cmdSearchResult.Commands == null) return;
-					 //Execute command in current discord context
-					 var executionTask = commands.ExecuteAsync(context, argPos, service);
-
-					 await executionTask.ContinueWith(task =>
+					 var context = new SocketCommandContext(_discord, msg);
+					 var guild = GuildData.GetGuildAccount(context.Guild);
+					 Thread.CurrentThread.CurrentUICulture = guild.Language;
+					 var argPos = 0;
+					 // ignore if command not start from prefix
+					 var prefix = guild.CommandPrefix ?? _config["Bot:Prefix"];
+					 if (msg.HasStringPrefix(prefix, ref argPos) || msg.HasMentionPrefix(_discord.CurrentUser, ref argPos))
 					 {
-						 // if Success or command unknown just finish Task
-						 if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
+						 // search command
+						 var cmdSearchResult = _commands.Search(context, argPos);
+						 // if command not found just finish Task
+						 if (cmdSearchResult.Commands == null) return;
+						 //Execute command in current discord context
+						 var executionTask = _commands.ExecuteAsync(context, argPos, _service);
 
-						 var errorText = string.Format("{0}, {1} {2}", context.User.Mention, Resources.ErrorHndlCom, task.Result.ErrorReason);
-						 context.Channel.SendMessageAsync(errorText);
-					 });
+						 await executionTask.ContinueWith(task =>
+						 {
+							 // if Success or command unknown just finish Task
+							 if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
+
+							 context.Channel.SendMessageAsync($"{context.User.Mention}, {Resources.ErrorHndlCom} {task.Result.ErrorReason}");
+						 });
+					 }
 				 }
-				 else return;
+				 catch (Exception e)
+				 {
+					 Console.WriteLine(e);
+					 throw;
+				 }
+
 			 });
 			return Task.CompletedTask;
 		}

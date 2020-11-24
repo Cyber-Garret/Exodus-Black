@@ -26,49 +26,55 @@ namespace Failsafe.Services
 	public class DiscordEventHandlerService
 	{
 		// declare the fields used later in this class
-		private readonly ILogger logger;
-		private readonly IConfiguration configuration;
-		private readonly DiscordSocketClient discord;
-		private readonly MilestoneService milestoneHandler;
-		private readonly EmoteService emote;
-		private readonly SelfRoleService roleService;
+		private readonly ILogger<DiscordEventHandlerService> _logger;
+		private readonly IConfiguration _config;
+		private readonly DiscordSocketClient _discord;
+		private readonly MilestoneService _milestoneHandler;
+		private readonly EmoteService _emote;
+		private readonly SelfRoleService _roleService;
+		private readonly IWelcomeDbClient _db;
 
-		private readonly IWelcomeDbClient db;
-		public DiscordEventHandlerService(IServiceProvider service, IWelcomeDbClient dbClient, IConfiguration configuration)
+		public DiscordEventHandlerService(ILogger<DiscordEventHandlerService> logger,
+			IConfiguration config,
+			DiscordSocketClient discord,
+			MilestoneService milestoneHandler,
+			EmoteService emote,
+			SelfRoleService roleService,
+			IWelcomeDbClient db)
 		{
-			logger = service.GetRequiredService<ILogger<DiscordEventHandlerService>>();
-			this.configuration = configuration;
-			discord = service.GetRequiredService<DiscordSocketClient>();
-			milestoneHandler = service.GetRequiredService<MilestoneService>();
-			emote = service.GetRequiredService<EmoteService>();
-			roleService = service.GetRequiredService<SelfRoleService>();
-
-			db = dbClient;
+			_logger = logger;
+			_config = config;
+			_discord = discord;
+			_milestoneHandler = milestoneHandler;
+			_emote = emote;
+			_roleService = roleService;
+			_db = db;
 		}
+
 
 		public void Configure()
 		{
-			discord.Ready += Discord_Ready;
+			_discord.Ready += Discord_Ready;
 
-			discord.JoinedGuild += Discord_JoinedGuild;
-			discord.LeftGuild += Discord_LeftGuild;
+			_discord.JoinedGuild += Discord_JoinedGuild;
+			_discord.LeftGuild += Discord_LeftGuild;
 
-			discord.ChannelCreated += Discord_ChannelCreated;
-			discord.ChannelDestroyed += Discord_ChannelDestroyed;
+			_discord.ChannelCreated += Discord_ChannelCreated;
+			_discord.ChannelDestroyed += Discord_ChannelDestroyed;
 
-			discord.GuildAvailable += Discord_GuildAvailable;
-			discord.GuildMemberUpdated += Discord_GuildMemberUpdated;
+			_discord.GuildAvailable += Discord_GuildAvailable;
+			_discord.GuildMemberUpdated += Discord_GuildMemberUpdated;
 
-			discord.MessageUpdated += Discord_MessageUpdated;
-			discord.MessageDeleted += Discord_MessageDeleted;
+			_discord.MessageUpdated += Discord_MessageUpdated;
+			_discord.MessageDeleted += Discord_MessageDeleted;
 
-			discord.RoleDeleted += Discord_RoleDeleted;
+			_discord.RoleDeleted += Discord_RoleDeleted;
 
-			discord.UserJoined += Discord_UserJoined;
-			discord.UserLeft += Discord_UserLeft;
+			_discord.UserJoined += Discord_UserJoined;
+			_discord.UserLeft += Discord_UserLeft;
 
-			discord.ReactionAdded += Discord_ReactionAdded;
-			discord.ReactionRemoved += Discord_ReactionRemoved;
+			_discord.ReactionAdded += Discord_ReactionAdded;
+			_discord.ReactionRemoved += Discord_ReactionRemoved;
 		}
 
 
@@ -76,8 +82,8 @@ namespace Failsafe.Services
 		#region Events
 		private Task Discord_Ready()
 		{
-			logger.LogWarning($"Connected as -> {discord.CurrentUser}");
-			logger.LogInformation($"We are on [{discord.Guilds.Count}] servers");
+			_logger.LogInformation($"Connected as -> {_discord.CurrentUser}");
+			_logger.LogInformation($"We are on [{_discord.Guilds.Count}] servers");
 			return Task.CompletedTask;
 		}
 
@@ -119,11 +125,11 @@ namespace Failsafe.Services
 
 		private Task Discord_GuildAvailable(SocketGuild guild)
 		{
-			if (emote.Raid == null)
+			if (_emote.Raid == null)
 			{
-				var homeGuild = configuration.GetValue<ulong>("Bot:HomeGuild");
+				var homeGuild = _config.GetValue<ulong>("Bot:HomeGuild");
 				if (guild.Id == homeGuild)
-					emote.Configure();
+					_emote.Configure();
 			}
 			return Task.CompletedTask;
 		}
@@ -206,10 +212,10 @@ namespace Failsafe.Services
 				if (!reaction.User.Value.IsBot)
 				{
 					//New milestone?
-					if (reaction.Emote.Equals(emote.Raid))
-						await milestoneHandler.MilestoneReactionAdded(cacheable, reaction);
+					if (reaction.Emote.Equals(_emote.Raid))
+						await _milestoneHandler.MilestoneReactionAdded(cacheable, reaction);
 					// self role message?
-					await roleService.SelfRoleReactionAdded(cacheable, reaction);
+					await _roleService.SelfRoleReactionAdded(cacheable, reaction);
 
 				}
 			});
@@ -223,10 +229,10 @@ namespace Failsafe.Services
 				if (!reaction.User.Value.IsBot)
 				{
 					//New milestone?
-					if (reaction.Emote.Equals(emote.Raid))
-						await milestoneHandler.MilestoneReactionRemoved(cacheable, reaction);
+					if (reaction.Emote.Equals(_emote.Raid))
+						await _milestoneHandler.MilestoneReactionRemoved(cacheable, reaction);
 
-					await roleService.SelfRoleReactionRemoved(cacheable, reaction);
+					await _roleService.SelfRoleReactionRemoved(cacheable, reaction);
 				}
 			});
 			return Task.CompletedTask;
@@ -264,13 +270,13 @@ namespace Failsafe.Services
 
 				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+					await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("ChannelCreated: {0}", ex.Message);
+				_logger.LogWarning("ChannelCreated: {0}", ex.Message);
 			}
 
 		}
@@ -304,13 +310,13 @@ namespace Failsafe.Services
 
 				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+					await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("ChannelDestroyed: {0}", ex.Message);
+				_logger.LogWarning("ChannelDestroyed: {0}", ex.Message);
 			}
 		}
 		private async Task GuildMemberUpdated(SocketGuildUser before, SocketGuildUser after)
@@ -343,7 +349,7 @@ namespace Failsafe.Services
 
 					if (loadedGuild.LoggingChannel != 0)
 					{
-						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+						await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -391,7 +397,7 @@ namespace Failsafe.Services
 
 					if (loadedGuild.LoggingChannel != 0)
 					{
-						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+						await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
@@ -399,7 +405,7 @@ namespace Failsafe.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("GuildMemberUpdated: {0}", ex.Message);
+				_logger.LogWarning("GuildMemberUpdated: {0}", ex.Message);
 			}
 
 		}
@@ -464,14 +470,14 @@ namespace Failsafe.Services
 					if (loadedGuild.LoggingChannel != 0)
 					{
 
-						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+						await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embed.Build());
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("MessageUpdated: {0}", ex.Message);
+				_logger.LogWarning("MessageUpdated: {0}", ex.Message);
 			}
 
 		}
@@ -524,14 +530,14 @@ namespace Failsafe.Services
 					if (loadedGuild.LoggingChannel != 0)
 					{
 
-						await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+						await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 							.SendMessageAsync(null, false, embedDel.Build());
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("MessageDeleted: {0}", ex.Message);
+				_logger.LogWarning("MessageDeleted: {0}", ex.Message);
 			}
 
 		}
@@ -564,13 +570,13 @@ namespace Failsafe.Services
 
 				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+					await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("RoleDeleted: {0}", ex.Message);
+				_logger.LogWarning("RoleDeleted: {0}", ex.Message);
 			}
 
 		}
@@ -592,7 +598,7 @@ namespace Failsafe.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("UserJoined: {0}", ex.Message);
+				_logger.LogWarning("UserJoined: {0}", ex.Message);
 			}
 
 		}
@@ -604,8 +610,8 @@ namespace Failsafe.Services
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 				if (loadedGuild.WelcomeChannel == 0) return;
-				if (!(discord.GetChannel(loadedGuild.WelcomeChannel) is SocketTextChannel channel)) return;
-				List<string> randomWelcome = db.GetWelcomesByLocale(loadedGuild.Language);
+				if (!(_discord.GetChannel(loadedGuild.WelcomeChannel) is SocketTextChannel channel)) return;
+				List<string> randomWelcome = _db.GetWelcomesByLocale(loadedGuild.Language);
 
 				var rand = new Random();
 
@@ -641,7 +647,7 @@ namespace Failsafe.Services
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("UserWelcome: {0}", ex.Message);
+				_logger.LogWarning("UserWelcome: {0}", ex.Message);
 			}
 
 		}
@@ -698,13 +704,13 @@ namespace Failsafe.Services
 
 				if (loadedGuild.LoggingChannel != 0)
 				{
-					await discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
+					await _discord.GetGuild(loadedGuild.Id).GetTextChannel(loadedGuild.LoggingChannel)
 						.SendMessageAsync(null, false, embed.Build());
 				}
 			}
 			catch (Exception ex)
 			{
-				logger.LogWarning("UserLeft: {0}", ex.Message);
+				_logger.LogWarning("UserLeft: {0}", ex.Message);
 			}
 		}
 

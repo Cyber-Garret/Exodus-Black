@@ -98,19 +98,6 @@ namespace Failsafe.Modules
 			await ReplyAsync(string.Format(Resources.CatFound, Context.User.Username), embed: embed);
 		}
 
-		[Command("mods"), Alias("моды", "моди")]
-		public async Task ModsInfo()
-		{
-			try
-			{
-				await ReplyAsync(embed: ModsEmbed());
-			}
-			catch (Exception ex)
-			{
-				logger.LogError(ex, "Mod command");
-			}
-		}
-
 		[Command("wish"), Alias("желание", "бажання")]
 		public async Task Wishes()
 		{
@@ -204,12 +191,7 @@ namespace Failsafe.Modules
 			{
 				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date.ToShortDateString()),
 				Color = Color.Gold,
-				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite),
-				Footer = new EmbedFooterBuilder
-				{
-					IconUrl = Resources.NeiraFooterIcon,
-					Text = Resources.MyAd
-				}
+				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite)
 			}
 			.AddField(Resources.HelpEmbMainFieldTitle, mainCommands[0..^2])
 			.AddField(Resources.HelpEmbMilFieldTitle, milestoneCommands[0..^2])
@@ -231,7 +213,7 @@ namespace Failsafe.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = @"https://www.bungie.net/common/destiny2_content/icons/ee21b5bc72f9e48366c9addff163a187.png",
-					Text = $"{Resources.EmbFooterAboutMyMistake}\n{Resources.MyAd}"
+					Text = Resources.EmbFooterAboutMyMistake
 				}
 
 			};
@@ -260,7 +242,7 @@ namespace Failsafe.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = @"https://www.bungie.net/common/destiny2_content/icons/2caeb9d168a070bb0cf8142f5d755df7.jpg",
-					Text = $"{Resources.EmbFooterAboutMyMistake}\n{Resources.MyAd}"
+					Text = Resources.EmbFooterAboutMyMistake
 				}
 			}
 			.AddField(Resources.CatEmbDrpFieldTitle, catalyst.DropLocation)
@@ -269,31 +251,6 @@ namespace Failsafe.Modules
 			.Build();
 
 			return embed;
-		}
-
-		private Embed ModsEmbed()
-		{
-			var embed = new EmbedBuilder
-			{
-				Title = Resources.ModEmbTitle,
-				Color = Color.Gold,
-				Footer = new EmbedFooterBuilder { IconUrl = Resources.NeiraFooterIcon, Text = Resources.EmbFooterAboutMyMistake }
-			};
-			//Elements
-			embed.AddField(GlobalVariables.InvisibleString, $"**{Resources.ModFieldElementTitle}**");
-			embed.AddField($"{emote.Arc} {Resources.ModFieldArcTitle}", Resources.ModFieldArcDesc);
-			embed.AddField($"{emote.Solar} {Resources.ModFieldSolarTitle}", Resources.ModFieldSolarDesc);
-			embed.AddField($"{emote.Void} {Resources.ModFieldVoidTitle}", Resources.ModFieldVoidDesc);
-
-			//Armor
-			embed.AddField(GlobalVariables.InvisibleString, $"**{Resources.ModFieldTypeTitle}**");
-			embed.AddField(Resources.ModFieldHelmetTitle, Resources.ModFieldHelmetDesc);
-			embed.AddField(Resources.ModFieldGauntletsTitle, Resources.ModFieldGauntletsDesc);
-			embed.AddField(Resources.ModFieldChestTitle, Resources.ModFieldChestDesc);
-			embed.AddField(Resources.ModFieldLegTitle, Resources.ModFieldLegDesc);
-			embed.AddField(Resources.ModFieldClassItemTitle, Resources.ModFieldClassItemDesc);
-
-			return embed.Build();
 		}
 
 		private PaginatedMessage GetPaginatedWishesEmbed(CultureInfo guildLocale)
@@ -320,12 +277,7 @@ namespace Failsafe.Modules
 					Name = string.Format(Resources.PollEmbAuthorName, user.Nickname ?? user.Username),
 					IconUrl = user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl()
 				},
-				Color = Color.Green,
-				Footer = new EmbedFooterBuilder
-				{
-					IconUrl = Resources.NeiraFooterIcon,
-					Text = Resources.MyAd
-				}
+				Color = Color.Green
 			}
 			.AddField(Resources.PollEmbTpcFieldTitle, text)
 			.Build();

@@ -49,12 +49,12 @@ namespace Failsafe.Modules
 		{
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 
-			if (guild.Language.Name == "en-US")
-				guild.Language = new CultureInfo("ru-RU");
-			else if (guild.Language.Name == "ru-RU")
-				guild.Language = new CultureInfo("uk-UA");
-			else
-				guild.Language = new CultureInfo("en-US");
+			guild.Language = guild.Language.Name switch
+			{
+				"en-US" => new CultureInfo("ru-RU"),
+				"ru-RU" => new CultureInfo("uk-UA"),
+				_ => new CultureInfo("en-US")
+			};
 
 			GuildData.SaveAccounts(Context.Guild);
 
@@ -74,23 +74,21 @@ namespace Failsafe.Modules
 			else
 			{
 				//TODO: clean code
-				TimeSpan timeSpan = new TimeSpan(time, 0, 0);
+				var timeSpan = new TimeSpan(time, 0, 0);
 				foreach (var timeZone in TimeZoneInfo.GetSystemTimeZones())
 				{
-					if (timeZone.BaseUtcOffset == timeSpan)
-					{
-						var guild = GuildData.GetGuildAccount(Context.Guild);
-						guild.TimeZone = timeZone.Id;
+					if (timeZone.BaseUtcOffset != timeSpan) continue;
+					var guild = GuildData.GetGuildAccount(Context.Guild);
+					guild.TimeZone = timeZone.Id;
 
-						GuildData.SaveAccounts(guild.Id);
+					GuildData.SaveAccounts(guild.Id);
 
-						var regex = new Regex(@"\(.*?\)");
-						var parsedTimeZone = regex.Match(timeZone.DisplayName);
-						//TODO: resx
-						await ReplyAsync(string.Format(Resources.UTCChanged, parsedTimeZone));
+					var regex = new Regex(@"\(.*?\)");
+					var parsedTimeZone = regex.Match(timeZone.DisplayName);
+					//TODO: resx
+					await ReplyAsync(string.Format(Resources.UTCChanged, parsedTimeZone));
 
-						break;
-					}
+					break;
 				}
 			}
 
@@ -228,14 +226,13 @@ namespace Failsafe.Modules
 			var guild = GuildData.GetGuildAccount(Context.Guild);
 			if (role == null)
 			{
-				if (guild.GlobalMention == "@here")
-					guild.GlobalMention = "@everyone";
-				else if (guild.GlobalMention == "@everyone")
-					guild.GlobalMention = null;
-				else if (guild.GlobalMention == null)
-					guild.GlobalMention = "@here";
-				else
-					guild.GlobalMention = null;
+				guild.GlobalMention = guild.GlobalMention switch
+				{
+					"@here" => "@everyone",
+					"@everyone" => null,
+					null => "@here",
+					_ => null
+				};
 			}
 			else
 			{
@@ -252,37 +249,35 @@ namespace Failsafe.Modules
 		{
 			var workMessage = await Context.Channel.SendMessageAsync(string.Format(Resources.MailStart, role.Name));
 
-			int SucessCount = 0;
-			int FailCount = 0;
+			var sucessCount = 0;
+			var failCount = 0;
 			var embed = MailingEmbed(message);
 
 			foreach (var user in Context.Guild.Users)
 			{
-				if (user.Roles.Contains(role) || role.Name == "everyone")
+				if (!user.Roles.Contains(role) && role.Name != "everyone") continue;
+				try
 				{
-					try
-					{
-						var DM = await user.GetOrCreateDMChannelAsync();
+					var dm = await user.GetOrCreateDMChannelAsync();
 
-						await DM.SendMessageAsync(embed: embed);
-						SucessCount++;
-					}
-					catch (Exception ex)
-					{
-						FailCount++;
-						logger.LogWarning(ex, "SendMessage command");
-					}
+					await dm.SendMessageAsync(embed: embed);
+					sucessCount++;
+				}
+				catch (Exception ex)
+				{
+					failCount++;
+					logger.LogWarning(ex, "SendMessage command");
 				}
 			}
-			await workMessage.ModifyAsync(m => m.Content = string.Format(Resources.MailDone, role.Name, SucessCount + FailCount, SucessCount, FailCount));
+			await workMessage.ModifyAsync(m => m.Content = string.Format(Resources.MailDone, role.Name, sucessCount + failCount, sucessCount, failCount));
 		}
 
 		[Command("purge"), Alias("чистка", "очищення")]
 		[RequireBotPermission(ChannelPermission.ManageMessages)]
 		public async Task PurgeChat(int amount = 1)
 		{
-			var GuildOwner = Context.Guild.OwnerId;
-			if (Context.User.Id != GuildOwner)
+			var guildOwner = Context.Guild.OwnerId;
+			if (Context.User.Id != guildOwner)
 			{
 				await ReplyAndDeleteAsync(Resources.OnlyForGuildOwner);
 				return;
@@ -292,24 +287,25 @@ namespace Failsafe.Modules
 			{
 				await ReplyAsync(Resources.PurgeStart);
 				var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
-				if (messages.Count() < 1)
+				var messagesForDeletion = messages as IMessage[] ?? messages.ToArray();
+				if (!messagesForDeletion.Any())
 					return;
 
-				var TooOlds = messages.Any(m => m.CreatedAt < DateTime.UtcNow.AddDays(-14));
-				if (TooOlds)
+				var tooOlds = messagesForDeletion.Any(m => m.CreatedAt < DateTime.UtcNow.AddDays(-14));
+				if (tooOlds)
 				{
-					foreach (var message in messages)
+					foreach (var message in messagesForDeletion)
 					{
 						await Task.Delay(1000);
-						await (Context.Channel as ITextChannel).DeleteMessageAsync(message.Id);
+						await ((ITextChannel)Context.Channel).DeleteMessageAsync(message.Id);
 					}
 				}
 				else
 				{
 					//Clean amount of messages in current channel
-					await (Context.Channel as ITextChannel).DeleteMessagesAsync(messages);
+					await ((ITextChannel)Context.Channel).DeleteMessagesAsync(messagesForDeletion);
 
-					await ReplyAndDeleteAsync(string.Format(Resources.PurgeDone, messages.Count()));
+					await ReplyAndDeleteAsync(string.Format(Resources.PurgeDone, messagesForDeletion.Length));
 				}
 
 			}
@@ -323,7 +319,7 @@ namespace Failsafe.Modules
 		[Command("random"), Alias("рандом")]
 		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
 		{
-			if (mentionedRole == null || (count >= 10 && count <= 1))
+			if (mentionedRole == null || (count >= 10 || count <= 1))
 			{
 				await ReplyAndDeleteAsync(Resources.RndErrorStart);
 				return;
@@ -357,12 +353,7 @@ namespace Failsafe.Modules
 					Name = Resources.GuCoEmbTitle
 				},
 				Color = Color.Orange,
-				ThumbnailUrl = Context.Guild.IconUrl,
-				Footer = new EmbedFooterBuilder
-				{
-					IconUrl = Resources.NeiraFooterIcon,
-					Text = Resources.MyAd,
-				}
+				ThumbnailUrl = Context.Guild.IconUrl
 			}
 			.AddField(Resources.GuCoEmbTitleField,
 			string.Format(Resources.GuCoEmbDescField,
@@ -390,7 +381,7 @@ namespace Failsafe.Modules
 				Footer = new EmbedFooterBuilder
 				{
 					IconUrl = Resources.NeiraFooterIcon,
-					Text = $"{Resources.MailEmbFooterDesc}\n{Resources.MyAd}"
+					Text = Resources.MailEmbFooterDesc
 				}
 			};
 			return embed.Build();
@@ -402,9 +393,9 @@ namespace Failsafe.Modules
 			var users = Context.Guild.Users.ToList();
 
 			//Predicate for filtering users with mentioned role
-			bool isHaveRole(SocketGuildUser x) { return x.Roles.Contains(mentionedRole); }
+			bool IsHaveRole(SocketGuildUser x) => x.Roles.Contains(mentionedRole);
 			//Filter users from context who have mentioned role and not a Bot
-			var filteredusers = users.FindAll(isHaveRole).Where(u => u.IsBot == false);
+			var filteredusers = users.FindAll(IsHaveRole).Where(u => u.IsBot == false);
 
 			var embed = new EmbedBuilder()
 			{

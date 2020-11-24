@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28809.33
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Addons.Interactive", "..\Discord.Addons.Interactive\Discord.Addons.Interactive\Discord.Addons.Interactive.csproj", "{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addons", "Addons", "{37A42AEA-324B-4E08-AE63-ECFD5140DDBB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fuselage", "Fuselage\Fuselage.csproj", "{7D5C1A56-E11F-4DB6-93F3-EDCADB15FBA6}"
@@ -13,6 +11,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Failsafe", "Failsafe\Failsa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ex-077Command", "Ex-077Command\Ex-077Command.csproj", "{D39CC110-FF0E-4D91-8633-9630BD67C2F9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Addons.Interactive", "Addons\Discord.Addons.Interactive\Discord.Addons.Interactive.csproj", "{6C52AC9F-C55F-4E3B-A474-7DD8FB0097EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discord.NET", "Discord.NET", "{B46F3A88-E329-44D7-9307-9A8D0AB9F97A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Net.Core", "..\Discord.Net\src\Discord.Net.Core\Discord.Net.Core.csproj", "{793E2222-60B1-451B-A08A-946048072E7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Net.Rest", "..\Discord.Net\src\Discord.Net.Rest\Discord.Net.Rest.csproj", "{33438A0A-9B0C-45F6-919A-6C4A9BC38EDE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Net.Commands", "..\Discord.Net\src\Discord.Net.Commands\Discord.Net.Commands.csproj", "{08C77F4F-65F4-43CA-BDB9-BBEA74A04AC2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Net.WebSocket", "..\Discord.Net\src\Discord.Net.WebSocket\Discord.Net.WebSocket.csproj", "{4616F03E-0802-41A5-93DA-A5BC2D1467E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Net.Webhook", "..\Discord.Net\src\Discord.Net.Webhook\Discord.Net.Webhook.csproj", "{919B7610-DD29-49D4-99F6-28BDF8A6BC42}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C56C7038-4848-4406-982B-07534CDC255C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,10 +34,6 @@ Global
 		Description = Discord Bot in Destiny 2 world
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D5C1A56-E11F-4DB6-93F3-EDCADB15FBA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D5C1A56-E11F-4DB6-93F3-EDCADB15FBA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D5C1A56-E11F-4DB6-93F3-EDCADB15FBA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,12 +46,41 @@ Global
 		{D39CC110-FF0E-4D91-8633-9630BD67C2F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D39CC110-FF0E-4D91-8633-9630BD67C2F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D39CC110-FF0E-4D91-8633-9630BD67C2F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C52AC9F-C55F-4E3B-A474-7DD8FB0097EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C52AC9F-C55F-4E3B-A474-7DD8FB0097EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C52AC9F-C55F-4E3B-A474-7DD8FB0097EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C52AC9F-C55F-4E3B-A474-7DD8FB0097EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{793E2222-60B1-451B-A08A-946048072E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{793E2222-60B1-451B-A08A-946048072E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{793E2222-60B1-451B-A08A-946048072E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{793E2222-60B1-451B-A08A-946048072E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33438A0A-9B0C-45F6-919A-6C4A9BC38EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33438A0A-9B0C-45F6-919A-6C4A9BC38EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33438A0A-9B0C-45F6-919A-6C4A9BC38EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33438A0A-9B0C-45F6-919A-6C4A9BC38EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08C77F4F-65F4-43CA-BDB9-BBEA74A04AC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08C77F4F-65F4-43CA-BDB9-BBEA74A04AC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08C77F4F-65F4-43CA-BDB9-BBEA74A04AC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08C77F4F-65F4-43CA-BDB9-BBEA74A04AC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4616F03E-0802-41A5-93DA-A5BC2D1467E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4616F03E-0802-41A5-93DA-A5BC2D1467E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4616F03E-0802-41A5-93DA-A5BC2D1467E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4616F03E-0802-41A5-93DA-A5BC2D1467E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{919B7610-DD29-49D4-99F6-28BDF8A6BC42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{919B7610-DD29-49D4-99F6-28BDF8A6BC42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{919B7610-DD29-49D4-99F6-28BDF8A6BC42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{919B7610-DD29-49D4-99F6-28BDF8A6BC42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5C09E2F0-03B1-44C4-A3BB-411B04796F4E} = {37A42AEA-324B-4E08-AE63-ECFD5140DDBB}
+		{6C52AC9F-C55F-4E3B-A474-7DD8FB0097EB} = {37A42AEA-324B-4E08-AE63-ECFD5140DDBB}
+		{793E2222-60B1-451B-A08A-946048072E7E} = {B46F3A88-E329-44D7-9307-9A8D0AB9F97A}
+		{33438A0A-9B0C-45F6-919A-6C4A9BC38EDE} = {B46F3A88-E329-44D7-9307-9A8D0AB9F97A}
+		{08C77F4F-65F4-43CA-BDB9-BBEA74A04AC2} = {B46F3A88-E329-44D7-9307-9A8D0AB9F97A}
+		{4616F03E-0802-41A5-93DA-A5BC2D1467E0} = {B46F3A88-E329-44D7-9307-9A8D0AB9F97A}
+		{919B7610-DD29-49D4-99F6-28BDF8A6BC42} = {B46F3A88-E329-44D7-9307-9A8D0AB9F97A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6931ABD9-F386-4DBA-96B8-95FD43D84AA2}

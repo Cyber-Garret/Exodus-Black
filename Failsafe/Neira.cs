@@ -35,6 +35,7 @@ namespace Failsafe
 		{
 			try
 			{
+				logger.LogInformation($"Discord.NET version:{DiscordConfig.Version}");
 				var token = config["Bot:Token"];
 				service.GetRequiredService<DiscordEventHandlerService>().Configure();
 				await service.GetRequiredService<CommandHandlerService>().InstallCommandsAsync();

@@ -400,63 +400,6 @@ Beep ... Good luck and say hello to my captain.</value>
   <data name="MilTimeError" xml:space="preserve">
     <value>Guard, you indicated an unknown time format for me.</value>
   </data>
-  <data name="ModEmbTitle" xml:space="preserve">
-    <value>Armor mods 2.0</value>
-  </data>
-  <data name="ModFieldArcDesc" xml:space="preserve">
-    <value>Pulse rifles, machine guns, shotguns, swords, bows.</value>
-  </data>
-  <data name="ModFieldArcTitle" xml:space="preserve">
-    <value>Arc</value>
-  </data>
-  <data name="ModFieldChestDesc" xml:space="preserve">
-    <value>Reserve ammunition, persistent sight.</value>
-  </data>
-  <data name="ModFieldChestTitle" xml:space="preserve">
-    <value>Chest Armor</value>
-  </data>
-  <data name="ModFieldClassItemDesc" xml:space="preserve">
-    <value>Finishing technique, restoration of abilities.</value>
-  </data>
-  <data name="ModFieldClassItemTitle" xml:space="preserve">
-    <value>Class Item</value>
-  </data>
-  <data name="ModFieldElementTitle" xml:space="preserve">
-    <value>The type of energy to which the type of weapon is attached:</value>
-  </data>
-  <data name="ModFieldGauntletsDesc" xml:space="preserve">
-    <value>Reload speed, rollback of grenades and melee.</value>
-  </data>
-  <data name="ModFieldGauntletsTitle" xml:space="preserve">
-    <value>Gauntlets</value>
-  </data>
-  <data name="ModFieldHelmetDesc" xml:space="preserve">
-    <value>Targeting, ammunition locators.</value>
-  </data>
-  <data name="ModFieldHelmetTitle" xml:space="preserve">
-    <value>Helmet</value>
-  </data>
-  <data name="ModFieldLegDesc" xml:space="preserve">
-    <value>Ammo collector, weapon lightness.</value>
-  </data>
-  <data name="ModFieldLegTitle" xml:space="preserve">
-    <value>Leg Armor</value>
-  </data>
-  <data name="ModFieldSolarDesc" xml:space="preserve">
-    <value>Rocket launchers, auto rifles, submachine guns, plasma rifles, linear plasma rifles.</value>
-  </data>
-  <data name="ModFieldSolarTitle" xml:space="preserve">
-    <value>Solar</value>
-  </data>
-  <data name="ModFieldTypeTitle" xml:space="preserve">
-    <value>Modifier type in armor:</value>
-  </data>
-  <data name="ModFieldVoidDesc" xml:space="preserve">
-    <value>Revolvers, sniper rifles, grenade launchers, scout rifles, pistols.</value>
-  </data>
-  <data name="ModFieldVoidTitle" xml:space="preserve">
-    <value>Void</value>
-  </data>
   <data name="MsgDelEmbDesc" xml:space="preserve">
     <value>Where: &lt;#{0}&gt;
 Posted by **{1}**</value>
@@ -478,9 +421,6 @@ Posted by **{1}**</value>
   </data>
   <data name="MsgUpdEmbTitle" xml:space="preserve">
     <value>📝 Updated message</value>
-  </data>
-  <data name="MyAd" xml:space="preserve">
-    <value>Do you want a custom bot? Write to my creator Cyber_Garret#5898</value>
   </data>
   <data name="NeiraFooterIcon" xml:space="preserve">
     <value>https://www.neira.app/img/neira.png</value>

@@ -16,63 +16,46 @@ namespace Failsafe.Services
 	public class LoggingService
 	{
 		// declare the fields used later in this class
-		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
-		private readonly CommandService command;
+		private readonly ILogger<LoggingService> _logger;
 
 
-		public LoggingService(IServiceProvider services)
+		public LoggingService(ILogger<LoggingService> logger, IServiceProvider services)
 		{
+			_logger = logger;
+
 			// get the services we need via DI, and assign the fields declared above to them
-			discord = services.GetRequiredService<DiscordSocketClient>();
-			command = services.GetRequiredService<CommandService>();
-			logger = services.GetRequiredService<ILogger<LoggingService>>();
+			var discord = services.GetRequiredService<DiscordSocketClient>();
+			var command = services.GetRequiredService<CommandService>();
 
 			discord.Log += OnLogAsync;
 			command.Log += OnLogAsync;
 		}
 
 		// this method switches out the severity level from Discord.Net's API, and logs appropriately
-		public Task OnLogAsync(LogMessage msg)
+		private Task OnLogAsync(LogMessage msg)
 		{
-			string logText = $"{msg.Source}: {msg.Message}";
+			var logText = $"{msg.Source}: {msg.Message}";
 			switch (msg.Severity.ToString())
 			{
 				case "Critical":
-					{
-						logger.LogCritical(logText);
-						break;
-					}
+					_logger.LogCritical(logText);
+					break;
 				case "Warning":
-					{
-						logger.LogWarning(logText);
-						break;
-					}
+					_logger.LogWarning(logText);
+					break;
 				case "Info":
-					{
-						logger.LogInformation(logText);
-						break;
-					}
 				case "Verbose":
-					{
-						logger.LogInformation(logText);
-						break;
-					}
+					_logger.LogInformation(logText);
+					break;
 				case "Debug":
-					{
-						logger.LogDebug(logText);
-						break;
-					}
+					_logger.LogDebug(logText);
+					break;
 				case "Error":
-					{
-						logger.LogError(logText);
-						break;
-					}
+					_logger.LogError(logText);
+					break;
 				default:
-					{
-						logger.LogWarning(logText);
-						break;
-					}
+					_logger.LogWarning(logText);
+					break;
 			}
 
 			return Task.CompletedTask;

@@ -189,54 +189,63 @@ namespace Failsafe.Services
 
 		public Embed MilestoneEmbed(Milestone milestone)
 		{
-			var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
-			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
-
-			var embed = new EmbedBuilder
+			try
 			{
-				Title = string.Format(Resources.MilEmbTitle,
-						  milestone.DateExpire.ToString("dd.MM.yyyy"),
-						  milestone.DateExpire.ToString("HH:mm(zzz)"),
-						  milestone.MilestoneInfo.Type,
-						  milestone.MilestoneInfo.Name),
-				Author = GetGame(milestone.MilestoneInfo.Game),
-				ThumbnailUrl = milestone.MilestoneInfo.Icon,
-				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType)
+				var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
+				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
-			};
-			if (milestone.Note != null)
-				embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
-
-			var leader = discord.GetUser(milestone.Leader);
-
-			embed.AddField(Resources.MilEmbInfTitleField, string.Format(Resources.MilEmbInfDescField, leader.Mention, leader.Username, _emote.Raid));
-
-			if (milestone.MilestoneUsers.Count > 0)
-			{
-				var embedFieldUsers = new EmbedFieldBuilder
+				var embed = new EmbedBuilder
 				{
-					Name = Resources.MilEmbMemTitleField
+					Title = string.Format(Resources.MilEmbTitle,
+						milestone.DateExpire.ToString("dd.MM.yyyy"),
+						milestone.DateExpire.ToString("HH:mm(zzz)"),
+						milestone.MilestoneInfo.Type,
+						milestone.MilestoneInfo.Name),
+					Author = GetGame(milestone.MilestoneInfo.Game),
+					ThumbnailUrl = milestone.MilestoneInfo.Icon,
+					Color = GetColorByType(milestone.MilestoneInfo.MilestoneType)
+
 				};
-				int count = 2;
-				foreach (var user in milestone.MilestoneUsers)
+				if (milestone.Note != null)
+					embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
+
+				var leader = discord.GetUser(milestone.Leader);
+
+				embed.AddField(Resources.MilEmbInfTitleField, string.Format(Resources.MilEmbInfDescField, leader.Mention, leader.Username, _emote.Raid));
+
+				if (milestone.MilestoneUsers.Count > 0)
 				{
-					if (user == GlobalVariables.ReservedID)
+					var embedFieldUsers = new EmbedFieldBuilder
 					{
-						embedFieldUsers.Value += $"#{count} {Resources.MilReserved}\n";
-					}
-					else
+						Name = Resources.MilEmbMemTitleField
+					};
+					var count = 2;
+					foreach (var user in milestone.MilestoneUsers)
 					{
-						var discordUser = discord.GetUser(user);
-						embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+						if (user == GlobalVariables.ReservedID)
+						{
+							embedFieldUsers.Value += $"#{count} {Resources.MilReserved}\n";
+						}
+						else
+						{
+							var discordUser = discord.GetUser(user);
+							embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
+						}
+						count++;
 					}
-					count++;
+
+					embed.AddField(embedFieldUsers);
 				}
+				embed.WithFooter($"ID: {milestone.MessageId}");
 
-				embed.AddField(embedFieldUsers);
+				return embed.Build();
 			}
-			embed.WithFooter($"ID: {milestone.MessageId}\n{Resources.MyAd}");
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "MilestoneEmbed");
+				return null;
+			}
 
-			return embed.Build();
 		}
 
 		public Embed GetMilestonesNameEmbed(SocketGuild guild, MilestoneType type)
@@ -273,7 +282,7 @@ namespace Failsafe.Services
 				}
 				embed.Description = text;
 			}
-			embed.WithFooter($"{Resources.EmbFooterAboutDel}\n{Resources.MyAd}");
+			embed.WithFooter(Resources.EmbFooterAboutDel);
 
 			return embed.Build();
 		}
@@ -301,12 +310,9 @@ namespace Failsafe.Services
 			};
 			var leader = discord.GetUser(milestone.Leader);
 			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
-			int count = 2;
-			foreach (var user in milestone.MilestoneUsers)
+			var count = 2;
+			foreach (var discordUser in from user in milestone.MilestoneUsers where user != GlobalVariables.ReservedID select discord.GetUser(user))
 			{
-				if (user == GlobalVariables.ReservedID) continue;
-
-				var discordUser = discord.GetUser(user);
 				embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
 
 				count++;
@@ -314,7 +320,7 @@ namespace Failsafe.Services
 			if (embedFieldUsers.Value != null)
 				embed.AddField(embedFieldUsers);
 
-			embed.WithFooter($"{string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name)}\n{Resources.MyAd}", guild.IconUrl);
+			embed.WithFooter(string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name), guild.IconUrl);
 			embed.WithCurrentTimestamp();
 
 			return embed.Build();
@@ -337,7 +343,7 @@ namespace Failsafe.Services
 
 			embed.AddField(Resources.MilEmbTimeFieldTitle, string.Format(Resources.MilEmbTimeFieldDesc, jumpUrl));
 
-			embed.WithFooter($"{string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name)}\n{Resources.MyAd}", guild.IconUrl);
+			embed.WithFooter(string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name), guild.IconUrl);
 			embed.WithCurrentTimestamp();
 
 			return embed.Build();
