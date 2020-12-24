@@ -10,22 +10,24 @@ using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord.Rest;
 
 namespace Failsafe.Services
 {
 	public class MilestoneService
 	{
-		private readonly ILogger _logger;
-		private readonly DiscordSocketClient discord;
+		private readonly ILogger<MilestoneService> _logger;
+		private readonly DiscordRestClient _discordRest;
 		private readonly EmoteService _emote;
 
-		public MilestoneService(IServiceProvider service)
+		public MilestoneService(ILogger<MilestoneService> logger, EmoteService emote, DiscordRestClient discordRest)
 		{
-			_logger = service.GetRequiredService<ILogger<MilestoneService>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
-			_emote = service.GetRequiredService<EmoteService>();
+			_logger = logger;
+			_emote = emote;
+			_discordRest = discordRest;
 		}
 
 		public async Task MilestoneReactionAdded(Cacheable<IUserMessage, ulong> cache, SocketReaction reaction)
@@ -41,9 +43,9 @@ namespace Failsafe.Services
 				if (reaction.Emote.Equals(_emote.Raid))
 				{
 					//check reaction
-					var UserExist = milestone.MilestoneUsers.Any(u => u == reaction.UserId);
+					var userExist = milestone.MilestoneUsers.Any(u => u == reaction.UserId);
 
-					if (reaction.UserId != milestone.Leader && !UserExist && milestone.MilestoneUsers.Count + 1 < milestone.MilestoneInfo.MaxSpace)
+					if (reaction.UserId != milestone.Leader && !userExist && milestone.MilestoneUsers.Count + 1 < milestone.MilestoneInfo.MaxSpace)
 					{
 						milestone.MilestoneUsers.Add(reaction.UserId);
 						ActiveMilestoneData.SaveMilestones(milestone.MessageId);
@@ -52,7 +54,8 @@ namespace Failsafe.Services
 					}
 					else
 					{
-						var user = discord.GetUser(reaction.UserId);
+						var user = await _discordRest.GetUserAsync(reaction.UserId);
+						//var user = _discord.GetUser(reaction.UserId);
 						await msg.RemoveReactionAsync(_emote.Raid, user);
 					}
 				}
@@ -76,9 +79,9 @@ namespace Failsafe.Services
 				if (reaction.Emote.Equals(_emote.Raid))
 				{
 					//check reaction
-					var UserExist = milestone.MilestoneUsers.Any(u => u == reaction.UserId);
+					var userExist = milestone.MilestoneUsers.Any(u => u == reaction.UserId);
 
-					if (reaction.UserId != milestone.Leader && UserExist)
+					if (reaction.UserId != milestone.Leader && userExist)
 					{
 						milestone.MilestoneUsers.Remove(reaction.UserId);
 						ActiveMilestoneData.SaveMilestones(milestone.MessageId);
@@ -86,7 +89,8 @@ namespace Failsafe.Services
 					}
 					else
 					{
-						var user = discord.GetUser(reaction.UserId);
+						var user = await _discordRest.GetUserAsync(reaction.UserId);
+						//var user = _discord.GetUser(reaction.UserId);
 						await msg.RemoveReactionAsync(_emote.Raid, user);
 					}
 				}
@@ -100,9 +104,16 @@ namespace Failsafe.Services
 
 		private async void HandleReaction(IUserMessage message, Milestone milestone)
 		{
-			var newEmbed = MilestoneEmbed(milestone);
-			if (newEmbed.Length != 0)
-				await message.ModifyAsync(m => m.Embed = newEmbed);
+			try
+			{
+				var newEmbed = await MilestoneEmbed(milestone);
+				if (newEmbed.Length != 0)
+					await message.ModifyAsync(m => m.Embed = newEmbed);
+			}
+			catch (Exception e)
+			{
+				_logger.LogError(e, nameof(HandleReaction));
+			}
 		}
 
 		public async Task MilestoneNotificationAsync(Milestone milestone)
@@ -112,12 +123,13 @@ namespace Failsafe.Services
 				var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
-				var RemindEmbed = this.RemindEmbed(milestone);
+				var remindEmbed = await RemindEmbed(milestone);
 
-				var Leader = discord.GetUser(milestone.Leader);
-				var LeaderDM = await Leader.GetOrCreateDMChannelAsync();
+				var leader = await _discordRest.GetUserAsync(milestone.Leader);
+				//var leader = _discord.GetUser(milestone.Leader);
+				var leaderDm = await leader.GetOrCreateDMChannelAsync();
 
-				await LeaderDM.SendMessageAsync(embed: RemindEmbed);
+				await leaderDm.SendMessageAsync(embed: remindEmbed);
 
 				foreach (var user in milestone.MilestoneUsers)
 				{
@@ -126,10 +138,11 @@ namespace Failsafe.Services
 
 						if (user == GlobalVariables.ReservedID) continue;
 
-						var LoadedUser = discord.GetUser(user);
+						var loadedUser = await _discordRest.GetUserAsync(user);
+						//var loadedUser = _discord.GetUser(user);
 
-						var DM = await LoadedUser.GetOrCreateDMChannelAsync();
-						await DM.SendMessageAsync(embed: RemindEmbed);
+						var dm = await loadedUser.GetOrCreateDMChannelAsync();
+						await dm.SendMessageAsync(embed: remindEmbed);
 					}
 					catch (Exception ex)
 					{
@@ -148,19 +161,20 @@ namespace Failsafe.Services
 		{
 			try
 			{
-				var Guild = discord.GetGuild(milestone.GuildId);
-				var loadedGuild = GuildData.GetGuildAccount(Guild);
+				var guild = await _discordRest.GetGuildAsync(milestone.GuildId);
+				var loadedGuild = GuildData.GetGuildAccount(guild);
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
-				var channel = Guild.GetTextChannel(milestone.ChannelId);
+				var channel = await guild.GetTextChannelAsync(milestone.ChannelId);
 				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
 
-				var RemindEmbed = TimeChangedEmbed(Guild, milestone, msg.GetJumpUrl());
+				var remindEmbed = TimeChangedEmbed(guild, milestone, msg.GetJumpUrl());
 
-				var Leader = discord.GetUser(milestone.Leader);
-				var LeaderDM = await Leader.GetOrCreateDMChannelAsync();
+				var leader = await _discordRest.GetUserAsync(milestone.Leader);
+				//var leader = _discord.GetUser(milestone.Leader);
+				var leaderDm = await leader.GetOrCreateDMChannelAsync();
 
-				await LeaderDM.SendMessageAsync(embed: RemindEmbed);
+				await leaderDm.SendMessageAsync(embed: remindEmbed);
 
 				foreach (var user in milestone.MilestoneUsers)
 				{
@@ -169,10 +183,11 @@ namespace Failsafe.Services
 
 						if (user == GlobalVariables.ReservedID) continue;
 
-						var LoadedUser = discord.GetUser(user);
+						var loadedUser = await _discordRest.GetUserAsync(user);
+						//var loadedUser = _discord.GetUser(user);
 
-						var DM = await LoadedUser.GetOrCreateDMChannelAsync();
-						await DM.SendMessageAsync(embed: RemindEmbed);
+						var dm = await loadedUser.GetOrCreateDMChannelAsync();
+						await dm.SendMessageAsync(embed: remindEmbed);
 					}
 					catch (Exception ex)
 					{
@@ -187,7 +202,7 @@ namespace Failsafe.Services
 
 		}
 
-		public Embed MilestoneEmbed(Milestone milestone)
+		public async Task<Embed> MilestoneEmbed(Milestone milestone)
 		{
 			try
 			{
@@ -209,7 +224,8 @@ namespace Failsafe.Services
 				if (milestone.Note != null)
 					embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
 
-				var leader = discord.GetUser(milestone.Leader);
+				var leader = await _discordRest.GetUserAsync(milestone.Leader);
+				//var leader = _discord.GetUser(milestone.Leader);
 
 				embed.AddField(Resources.MilEmbInfTitleField, string.Format(Resources.MilEmbInfDescField, leader.Mention, leader.Username, _emote.Raid));
 
@@ -228,7 +244,8 @@ namespace Failsafe.Services
 						}
 						else
 						{
-							var discordUser = discord.GetUser(user);
+							var discordUser = await _discordRest.GetUserAsync(user);
+							//var discordUser = _discord.GetUser(user);
 							embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
 						}
 						count++;
@@ -260,26 +277,25 @@ namespace Failsafe.Services
 			};
 			if (type == MilestoneType.Raid)
 			{
-				var Des2names = string.Empty;
-				var Div2names = string.Empty;
+				var des2Names = string.Empty;
+				var div2Names = string.Empty;
 				foreach (var item in MilestoneInfoData.GetMilestonesByType(type))
 				{
 					if (item.Game == GameName.Destiny)
-						Des2names += $"**{item.Alias}** - {item.Name}\n";
+						des2Names += $"**{item.Alias}** - {item.Name}\n";
 					else
-						Div2names += $"**{item.Alias}** - {item.Name}\n";
+						div2Names += $"**{item.Alias}** - {item.Name}\n";
 
 				}
-				embed.AddField("Destiny 2", Des2names);
-				embed.AddField("The Division 2", Div2names);
+				embed.AddField("Destiny 2", des2Names);
+				embed.AddField("The Division 2", div2Names);
 			}
 			else
 			{
-				var text = string.Empty;
-				foreach (var milestone in MilestoneInfoData.GetMilestonesByType(type))
-				{
-					text += $"**{milestone.Alias}** - {milestone.Name}\n";
-				}
+				var text = MilestoneInfoData.GetMilestonesByType(type)
+					.Aggregate(string.Empty,
+						(current,
+							milestone) => current + $"**{milestone.Alias}** - {milestone.Name}\n");
 				embed.Description = text;
 			}
 			embed.WithFooter(Resources.EmbFooterAboutDel);
@@ -287,9 +303,9 @@ namespace Failsafe.Services
 			return embed.Build();
 		}
 
-		private Embed RemindEmbed(Milestone milestone)
+		private async Task<Embed> RemindEmbed(Milestone milestone)
 		{
-			var guild = discord.GetGuild(milestone.GuildId);
+			var guild = await _discordRest.GetGuildAsync(milestone.GuildId);
 			var loadedGuild = GuildData.GetGuildAccount(guild);
 			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
@@ -308,15 +324,18 @@ namespace Failsafe.Services
 			{
 				Name = Resources.MilEmbMemTitleField
 			};
-			var leader = discord.GetUser(milestone.Leader);
+			var leader = await _discordRest.GetUserAsync(milestone.Leader);
+			//var leader = _discord.GetUser(milestone.Leader);
 			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
 			var count = 2;
-			foreach (var discordUser in from user in milestone.MilestoneUsers where user != GlobalVariables.ReservedID select discord.GetUser(user))
+			foreach (var user in milestone.MilestoneUsers.Where(user => user != GlobalVariables.ReservedID))
 			{
+				var discordUser = await _discordRest.GetUserAsync(user);
 				embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
 
 				count++;
 			}
+
 			if (embedFieldUsers.Value != null)
 				embed.AddField(embedFieldUsers);
 
@@ -326,12 +345,12 @@ namespace Failsafe.Services
 			return embed.Build();
 		}
 
-		private Embed TimeChangedEmbed(SocketGuild guild, Milestone milestone, string jumpUrl)
+		private static Embed TimeChangedEmbed(IGuild guild, Milestone milestone, string jumpUrl)
 		{
 			var loadedGuild = GuildData.GetGuildAccount(guild);
 			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
-			var embed = new EmbedBuilder()
+			var embed = new EmbedBuilder
 			{
 				Title = Resources.MilEmbTitleChangeTime,
 				Author = GetGame(milestone.MilestoneInfo.Game),
@@ -349,7 +368,7 @@ namespace Failsafe.Services
 			return embed.Build();
 		}
 
-		private Color GetColorByType(MilestoneType type)
+		private static Color GetColorByType(MilestoneType type)
 		{
 			return type switch
 			{
@@ -360,7 +379,7 @@ namespace Failsafe.Services
 			};
 		}
 
-		private string GetNameForMilestoneType(SocketGuild guild, MilestoneType type)
+		private static string GetNameForMilestoneType(IGuild guild, MilestoneType type)
 		{
 			var loadedGuild = GuildData.GetGuildAccount(guild);
 			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
@@ -374,30 +393,29 @@ namespace Failsafe.Services
 			};
 		}
 
-		private EmbedAuthorBuilder GetGame(GameName game)
+		private static EmbedAuthorBuilder GetGame(GameName game)
 		{
 			var author = new EmbedAuthorBuilder();
-			if (game == GameName.Destiny)
+			switch (game)
 			{
-				author.Name = "Destiny 2";
-				author.IconUrl = @"https://www.neira.app/img/Destiny2.png";
-				author.Url = @"https://www.bungie.net/";
-			}
-			else if (game == GameName.Division)
-			{
-				author.Name = "The Division 2";
-				author.IconUrl = @"https://www.neira.app/img/Division2.png";
-				author.Url = @"https://tomclancy-thedivision.ubisoft.com/game/";
-			}
-			else if (game == GameName.Warzone)
-			{
-				author.Name = "CoD: Warzone";
-				author.IconUrl = @"https://www.neira.app/img/Warzone.png";
-				author.Url = @"https://www.callofduty.com/warzone";
-			}
-			else
-			{
-				author.Name = "Unknown";
+				case GameName.Destiny:
+					author.Name = "Destiny 2";
+					author.IconUrl = @"https://www.neira.app/img/Destiny2.png";
+					author.Url = @"https://www.bungie.net/";
+					break;
+				case GameName.Division:
+					author.Name = "The Division 2";
+					author.IconUrl = @"https://www.neira.app/img/Division2.png";
+					author.Url = @"https://tomclancy-thedivision.ubisoft.com/game/";
+					break;
+				case GameName.Warzone:
+					author.Name = "CoD: Warzone";
+					author.IconUrl = @"https://www.neira.app/img/Warzone.png";
+					author.Url = @"https://www.callofduty.com/warzone";
+					break;
+				default:
+					author.Name = "Unknown";
+					break;
 			}
 			return author;
 		}

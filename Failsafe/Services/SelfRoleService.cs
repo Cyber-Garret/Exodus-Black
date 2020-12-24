@@ -32,11 +32,11 @@ namespace Failsafe.Services
 
 				foreach (var selfRole in guild.GuildSelfRoles)
 				{
-					var emote = await discord.GetGuild(guild.Id).GetEmoteAsync(selfRole.EmoteID);
+					var emote = await discord.GetGuild(guild.Id).GetEmoteAsync(selfRole.EmoteId);
 					if (reaction.Emote.Equals(emote))
 					{
 						var user = discord.GetGuild(guild.Id).GetUser(reaction.UserId);
-						var role = discord.GetGuild(guild.Id).GetRole(selfRole.RoleID);
+						var role = discord.GetGuild(guild.Id).GetRole(selfRole.RoleId);
 						await user.AddRoleAsync(role);
 					}
 				}
@@ -58,11 +58,11 @@ namespace Failsafe.Services
 
 				foreach (var selfRole in guild.GuildSelfRoles)
 				{
-					var emote = await discord.GetGuild(guild.Id).GetEmoteAsync(selfRole.EmoteID);
+					var emote = await discord.GetGuild(guild.Id).GetEmoteAsync(selfRole.EmoteId);
 					if (reaction.Emote.Equals(emote))
 					{
 						var user = discord.GetGuild(guild.Id).GetUser(reaction.UserId);
-						var role = discord.GetGuild(guild.Id).GetRole(selfRole.RoleID);
+						var role = discord.GetGuild(guild.Id).GetRole(selfRole.RoleId);
 						await user.RemoveRoleAsync(role);
 					}
 				}

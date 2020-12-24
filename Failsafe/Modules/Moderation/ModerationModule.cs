@@ -209,12 +209,12 @@ namespace Failsafe.Modules
 
 			if (role == null)
 			{
-				guild.AutoroleID = 0;
+				guild.AutoroleId = 0;
 				await ReplyAndDeleteAsync(Resources.GuildAutoroleOff);
 			}
 			else
 			{
-				guild.AutoroleID = role.Id;
+				guild.AutoroleId = role.Id;
 				await ReplyAndDeleteAsync(string.Format(Resources.GuildAutoroleOn, role.Name));
 			}
 			GuildData.SaveAccounts(Context.Guild);

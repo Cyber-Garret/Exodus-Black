@@ -53,30 +53,9 @@ namespace Ex077.Controllers
 		public IActionResult BlackExodus() =>
 			RedirectPermanent(_options.Value.ExodusInviteLink);
 
-		[Route("AddEnBot")]
-		public IActionResult AddEnBot() =>
-			RedirectPermanent(_options.Value.EnBotLink);
-
-		[Route("EnDocs")]
-		public IActionResult EnDocs() =>
-			RedirectPermanent(_options.Value.EnDocsLink);
-
-		[Route("AddRuBot")]
-		public IActionResult AddRuBot() =>
-			Redirect(_options.Value.RuBotLink);
-
-		[Route("RuDocs")]
-		public IActionResult RuDocs() =>
-			RedirectPermanent(_options.Value.RuDocsLink);
-
-		[Route("AddUaBot")]
-		public IActionResult AddUaBot() =>
-			RedirectPermanent(_options.Value.UaBotLink);
-
-		[Route("UaDocs")]
-		public IActionResult UaDocs() =>
-			RedirectPermanent(_options.Value.UaDocsLink);
-
+		[Route("InviteBot")]
+		public IActionResult InviteBot() =>
+			RedirectPermanent(_options.Value.BotInviteLink);
 		#endregion
 	}
 }

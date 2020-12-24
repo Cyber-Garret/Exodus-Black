@@ -14,10 +14,7 @@ namespace Failsafe.Core.Data
 		{
 			var result = DataStorage.LoadJSONFromHDD<Milestone>(DataStorage.MilestonesFolder);
 
-			if (result != null)
-				ActiveMilestones = result.ToConcurrentDictionary(k => k.MessageId);
-			else
-				ActiveMilestones = new ConcurrentDictionary<ulong, Milestone>();
+			ActiveMilestones = result != null ? result.ToConcurrentDictionary(k => k.MessageId) : new ConcurrentDictionary<ulong, Milestone>();
 		}
 
 		/// <summary>

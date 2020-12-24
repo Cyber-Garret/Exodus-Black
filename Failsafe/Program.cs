@@ -21,6 +21,7 @@ using Serilog;
 using Serilog.Core;
 
 using System;
+using Discord.Rest;
 
 namespace Failsafe
 {
@@ -74,12 +75,18 @@ namespace Failsafe
 											 GatewayIntents.DirectMessages |
 											 GatewayIntents.DirectMessageReactions
 						}))
-						.AddSingleton(new CommandService(new CommandServiceConfig
-						{
-							CaseSensitiveCommands = false,
-							DefaultRunMode = RunMode.Async,
-							LogLevel = discordSeverity
-						}))
+							.AddSingleton(new CommandService(new CommandServiceConfig
+							{
+								CaseSensitiveCommands = false,
+								DefaultRunMode = RunMode.Async,
+								LogLevel = discordSeverity
+							}))
+							.AddSingleton(new DiscordRestClient(new DiscordRestConfig
+							{
+								DefaultRetryMode = RetryMode.AlwaysRetry,
+								LogLevel = discordSeverity,
+								RateLimitPrecision = RateLimitPrecision.Second
+							}))
 						.AddSingleton<InteractiveService>()
 						.AddSingleton<LoggingService>()
 						.AddSingleton<DiscordEventHandlerService>()

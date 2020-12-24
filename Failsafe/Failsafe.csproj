@@ -20,6 +20,7 @@
     <None Remove="UserData\milestones_info\**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="2.3.0-dev-20201214.8" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.22.2.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -49,11 +50,6 @@
     <Folder Include="UserData\welcome-bg\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Discord.Net\src\Discord.Net.Commands\Discord.Net.Commands.csproj" />
-    <ProjectReference Include="..\..\Discord.Net\src\Discord.Net.Core\Discord.Net.Core.csproj" />
-    <ProjectReference Include="..\..\Discord.Net\src\Discord.Net.Rest\Discord.Net.Rest.csproj" />
-    <ProjectReference Include="..\..\Discord.Net\src\Discord.Net.Webhook\Discord.Net.Webhook.csproj" />
-    <ProjectReference Include="..\..\Discord.Net\src\Discord.Net.WebSocket\Discord.Net.WebSocket.csproj" />
     <ProjectReference Include="..\Addons\Discord.Addons.Interactive\Discord.Addons.Interactive.csproj" />
     <ProjectReference Include="..\Fuselage\Fuselage.csproj" />
   </ItemGroup>

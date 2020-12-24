@@ -50,12 +50,12 @@ namespace Failsafe.Modules
 
 				var guild = GuildData.GetGuildAccount(Context.Guild);
 
-				if (!guild.GuildSelfRoles.Any(r => r.RoleID == role.Id || r.EmoteID == emote.Id))
+				if (!guild.GuildSelfRoles.Any(r => r.RoleId == role.Id || r.EmoteId == emote.Id))
 				{
 					var selfrole = new GuildSelfRole
 					{
-						EmoteID = emote.Id,
-						RoleID = role.Id
+						EmoteId = emote.Id,
+						RoleId = role.Id
 					};
 					guild.GuildSelfRoles.Add(selfrole);
 					GuildData.SaveAccounts(Context.Guild);
@@ -104,8 +104,8 @@ namespace Failsafe.Modules
 					var message = Resources.SlfRolList;
 					foreach (var item in guild.GuildSelfRoles)
 					{
-						var emote = await Context.Guild.GetEmoteAsync(item.EmoteID);
-						var role = Context.Guild.GetRole(item.RoleID);
+						var emote = await Context.Guild.GetEmoteAsync(item.EmoteId);
+						var role = Context.Guild.GetRole(item.RoleId);
 						message += $"{emote} - {role.Mention}\n";
 					}
 					await ReplyAndDeleteAsync(message, timeout: TimeSpan.FromMinutes(1));
@@ -142,7 +142,7 @@ namespace Failsafe.Modules
 
 					foreach (var role in guild.GuildSelfRoles)
 					{
-						var emote = await Context.Guild.GetEmoteAsync(role.EmoteID);
+						var emote = await Context.Guild.GetEmoteAsync(role.EmoteId);
 						await message.AddReactionAsync(emote);
 					}
 				}
@@ -178,8 +178,8 @@ namespace Failsafe.Modules
 			};
 			foreach (var item in GuildRoles)
 			{
-				var emote = await Context.Guild.GetEmoteAsync(item.EmoteID);
-				var role = Context.Guild.GetRole(item.RoleID);
+				var emote = await Context.Guild.GetEmoteAsync(item.EmoteId);
+				var role = Context.Guild.GetRole(item.RoleId);
 				embedField.Value += string.Format(Resources.SlfRolEmbDescField, emote, role.Mention);
 			}
 			embed.AddField(embedField);

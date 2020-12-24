@@ -177,13 +177,10 @@
   <data name="Title" xml:space="preserve">
     <value>Главная</value>
   </data>
-  <data name="BotNodesDesc" xml:space="preserve">
-    <value>Доступный кластер узлов Нейроматрицы</value>
+  <data name="Docs" xml:space="preserve">
+    <value>Cправочник</value>
   </data>
-  <data name="BotNodesTitle" xml:space="preserve">
-    <value>Узлы бота</value>
-  </data>
-  <data name="Available" xml:space="preserve">
-    <value>Бот скоро будет доступен.</value>
+  <data name="DocsLink" xml:space="preserve">
+    <value>https://docs.neira.app/v/russian/</value>
   </data>
 </root>

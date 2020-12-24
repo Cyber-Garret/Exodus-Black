@@ -55,30 +55,21 @@ namespace Failsafe.Services
 		public void Configure()
 		{
 			_discord.Ready += Discord_Ready;
-
 			_discord.JoinedGuild += Discord_JoinedGuild;
 			_discord.LeftGuild += Discord_LeftGuild;
-
 			_discord.ChannelCreated += Discord_ChannelCreated;
 			_discord.ChannelDestroyed += Discord_ChannelDestroyed;
-
 			_discord.GuildAvailable += Discord_GuildAvailable;
 			_discord.GuildMemberUpdated += Discord_GuildMemberUpdated;
-
 			_discord.MessageUpdated += Discord_MessageUpdated;
 			_discord.MessageDeleted += Discord_MessageDeleted;
-
 			_discord.RoleDeleted += Discord_RoleDeleted;
-
 			_discord.UserJoined += Discord_UserJoined;
 			_discord.UserLeft += Discord_UserLeft;
-
 			_discord.ReactionAdded += Discord_ReactionAdded;
 			_discord.ReactionRemoved += Discord_ReactionRemoved;
 		}
-
-
-
+		
 		#region Events
 		private Task Discord_Ready()
 		{
@@ -186,9 +177,9 @@ namespace Failsafe.Services
 				//AutoRole
 
 				var guild = GuildData.GetGuildAccount(guildUser.Guild);
-				if (guild.AutoroleID != 0)
+				if (guild.AutoroleId != 0)
 				{
-					var targetRole = guildUser.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleID);
+					var targetRole = guildUser.Guild.Roles.FirstOrDefault(r => r.Id == guild.AutoroleId);
 					if (targetRole != null)
 						await guildUser.AddRoleAsync(targetRole);
 				}

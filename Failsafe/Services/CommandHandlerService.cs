@@ -8,9 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Failsafe.Modules;
 
 namespace Failsafe.Services
 {
@@ -70,12 +72,21 @@ namespace Failsafe.Services
 						 //Execute command in current discord context
 						 var executionTask = _commands.ExecuteAsync(context, argPos, _service);
 
-						 await executionTask.ContinueWith(task =>
+						 await executionTask.ContinueWith(async task =>
 						 {
-							 // if Success or command unknown just finish Task
-							 if (task.Result.IsSuccess || task.Result.Error == CommandError.UnknownCommand) return;
+							 // ignore if command unknown
+							 if (task.Result.Error == CommandError.UnknownCommand) return;
 
-							 context.Channel.SendMessageAsync($"{context.User.Mention}, {Resources.ErrorHndlCom} {task.Result.ErrorReason}");
+							 // if Success remove source message if it milestone command
+							 if (task.Result.IsSuccess)
+							 {
+								 if (cmdSearchResult.Commands.Any(x => x.Command.Module.Name == nameof(MilestoneModule)))
+									 await msg.DeleteAsync();
+								 return;
+							 }
+
+							 var errorMsg = await context.Channel.SendMessageAsync($"{context.User.Mention}, {Resources.ErrorHndlCom} {task.Result.ErrorReason}");
+							 await errorMsg.DeleteAsync();
 						 });
 					 }
 				 }

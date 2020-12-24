@@ -186,17 +186,16 @@ namespace Failsafe.Modules
 						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
 				}
 			}
-
 			var embed = new EmbedBuilder
 			{
 				Title = string.Format(Resources.HelpEmbTitle, app.CreatedAt.Date.ToShortDateString()),
 				Color = Color.Gold,
 				Description = string.Format(Resources.HelpEmbDesc, Resources.NeiraWebSite)
 			}
-			.AddField(Resources.HelpEmbMainFieldTitle, mainCommands[0..^2])
-			.AddField(Resources.HelpEmbMilFieldTitle, milestoneCommands[0..^2])
-			.AddField(Resources.HelpEmbAdmFieldTitle, adminCommands[0..^2])
-			.AddField(Resources.HelpEmbSRolFieldTitle, selfRoleCommands[0..^2]);
+			.AddField(Resources.HelpEmbMainFieldTitle, mainCommands[..^2])
+			.AddField(Resources.HelpEmbMilFieldTitle, milestoneCommands[..^2])
+			.AddField(Resources.HelpEmbAdmFieldTitle, adminCommands[..^2])
+			.AddField(Resources.HelpEmbSRolFieldTitle, selfRoleCommands[..^2]);
 
 			return embed.Build();
 		}

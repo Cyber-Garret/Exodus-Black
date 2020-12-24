@@ -6,24 +6,30 @@ using Quartz;
 
 using System;
 using System.Threading.Tasks;
+using Discord.WebSocket;
 
 namespace Failsafe.Core.QuartzJobs
 {
 	[DisallowConcurrentExecution]
 	public class MilestoneClean : IJob
 	{
-		private readonly ILogger logger;
+		private readonly ILogger<MilestoneClean> _logger;
+		private readonly DiscordSocketClient _discord;
 
-		public MilestoneClean(ILogger<MilestoneClean> logger) => this.logger = logger;
+		public MilestoneClean(ILogger<MilestoneClean> logger, DiscordSocketClient discord)
+		{
+			_logger = logger;
+			_discord = discord;
+		}
 
 		public Task Execute(IJobExecutionContext context)
 		{
-			logger.LogInformation("Milestone cleaning job start work");
+			_logger.LogInformation("Milestone cleaning job start work");
 			var query = ActiveMilestoneData.GetAllMilestones();
 
 			if (query.Count > 0)
 			{
-				Parallel.ForEach(query, milestone =>
+				Parallel.ForEach(query, async milestone =>
 				{
 					try
 					{
@@ -31,14 +37,17 @@ namespace Failsafe.Core.QuartzJobs
 						var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
 						var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone);
 						var timer = milestone.DateExpire.AddHours(1);
-						if (now > timer)
-						{
-							ActiveMilestoneData.RemoveMilestone(milestone.MessageId);
-						}
+
+						if (now <= timer) return;
+
+						ActiveMilestoneData.RemoveMilestone(milestone.MessageId);
+						var message = await _discord.GetGuild(milestone.GuildId).GetTextChannel(milestone.ChannelId)
+							.GetMessageAsync(milestone.MessageId);
+						await message.DeleteAsync();
 					}
 					catch (Exception ex)
 					{
-						logger.LogError(ex, "Milestone cleaning job");
+						_logger.LogError(ex, "Milestone cleaning job");
 					}
 
 				});

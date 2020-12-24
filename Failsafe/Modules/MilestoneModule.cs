@@ -21,19 +21,19 @@ namespace Failsafe.Modules
 	[RequireContext(ContextType.Guild), Cooldown(5)]
 	public class MilestoneModule : RootModule
 	{
-		private readonly IConfiguration config;
-		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
-		private readonly MilestoneService milestoneHandler;
-		private readonly EmoteService emote;
+		private readonly IConfiguration _config;
+		private readonly ILogger<MilestoneModule> _logger;
+		private readonly DiscordSocketClient _discord;
+		private readonly MilestoneService _milestoneHandler;
+		private readonly EmoteService _emote;
 
-		public MilestoneModule(IServiceProvider service)
+		public MilestoneModule(IConfiguration config, ILogger<MilestoneModule> logger, DiscordSocketClient discord, MilestoneService milestoneHandler, EmoteService emote)
 		{
-			config = service.GetRequiredService<IConfiguration>();
-			logger = service.GetRequiredService<ILogger<MilestoneModule>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
-			milestoneHandler = service.GetRequiredService<MilestoneService>();
-			emote = service.GetRequiredService<EmoteService>();
+			_config = config;
+			_logger = logger;
+			_discord = discord;
+			_milestoneHandler = milestoneHandler;
+			_emote = emote;
 		}
 
 		#region Commands
@@ -83,15 +83,16 @@ namespace Failsafe.Modules
 
 						var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
 						var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+						var embed = await _milestoneHandler.MilestoneEmbed(milestone);
 
-						await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+						await msg.ModifyAsync(m => m.Embed = embed);
 
 						await ReplyAndDeleteAsync(string.Format(Resources.MilReservedOk, count, msg.GetJumpUrl()));
 					}
 					catch (Exception ex)
 					{
 						await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
-						logger.LogError(ex, "Milestone reserve command");
+						_logger.LogError(ex, "Milestone reserve command");
 					}
 				}
 			}
@@ -112,15 +113,16 @@ namespace Failsafe.Modules
 
 					var channel = (ISocketMessageChannel)Context.Guild.GetChannel(milestone.ChannelId);
 					var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+					var embed = await _milestoneHandler.MilestoneEmbed(milestone);
 
-					await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+					await msg.ModifyAsync(m => m.Embed = embed);
 
 					await ReplyAndDeleteAsync(string.Format(Resources.MilNoteEdited, msg.GetJumpUrl()));
 				}
 				catch (Exception ex)
 				{
 					await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
-					logger.LogError(ex, "Milestone note command");
+					_logger.LogError(ex, "Milestone note command");
 				}
 			}
 			else
@@ -149,9 +151,11 @@ namespace Failsafe.Modules
 				var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
 
 				if (IsReacted)
-					await msg.RemoveReactionAsync(emote.Raid, newLeader);
+					await msg.RemoveReactionAsync(_emote.Raid, newLeader);
 
-				await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+				var embed = await _milestoneHandler.MilestoneEmbed(milestone);
+
+				await msg.ModifyAsync(m => m.Embed = embed);
 
 				await ReplyAndDeleteAsync(string.Format(Resources.MilChangeLeader, msg.GetJumpUrl()));
 			}
@@ -166,16 +170,16 @@ namespace Failsafe.Modules
 			if (milestone.Leader == Context.User.Id)
 			{
 				//Get time formats from appsetings.json
-				var timeFormats = config.GetSection("Bot:TimeFormats").Get<string[]>();
-				var IsSucess = DateTime.TryParseExact(newTime, timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+				var timeFormats = _config.GetSection("Bot:TimeFormats").Get<string[]>();
+				var isSucess = DateTime.TryParseExact(newTime, timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime);
 
-				if (IsSucess)
+				if (isSucess)
 				{
 					var guild = GuildData.GetGuildAccount(milestone.GuildId);
 					var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
 					var raidTimeOffset = new DateTimeOffset(dateTime, guildTimeZone.BaseUtcOffset);
 
-					var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone).AddMinutes(15);
+					var now = new DateTimeOffset(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone).AddMinutes(15), guildTimeZone.BaseUtcOffset);
 
 					if (raidTimeOffset < now)
 						await ReplyAndDeleteAsync(Resources.MilPastTime);
@@ -186,19 +190,20 @@ namespace Failsafe.Modules
 
 						try
 						{
-							var channel = discord.GetGuild(milestone.GuildId).GetTextChannel(milestone.ChannelId);
+							var channel = _discord.GetGuild(milestone.GuildId).GetTextChannel(milestone.ChannelId);
 							var msg = (IUserMessage)await channel.GetMessageAsync(milestone.MessageId);
+							var embed = await _milestoneHandler.MilestoneEmbed(milestone);
 
-							await msg.ModifyAsync(m => m.Embed = milestoneHandler.MilestoneEmbed(milestone));
+							await msg.ModifyAsync(m => m.Embed = embed);
 
 							await ReplyAndDeleteAsync(string.Format(Resources.MilTimeChanged, msg.GetJumpUrl()));
 
 							//Notif all user about time changed
-							await milestoneHandler.TimeChangedNotificationAsync(milestone);
+							await _milestoneHandler.TimeChangedNotificationAsync(milestone);
 						}
 						catch (Exception ex)
 						{
-							logger.LogError(ex, "Milestone change time error");
+							_logger.LogError(ex, "Milestone change time error");
 							await ReplyAsync(string.Format(Resources.Error, ex.Message));
 						}
 					}
@@ -242,7 +247,7 @@ namespace Failsafe.Modules
 				catch (Exception ex)
 				{
 					await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
-					logger.LogError(ex, "Canceling milestone");
+					_logger.LogError(ex, "Canceling milestone");
 				}
 			}
 			else
@@ -261,21 +266,21 @@ namespace Failsafe.Modules
 				Embed embed;
 				if (milestoneInfo == null)
 				{
-					embed = milestoneHandler.GetMilestonesNameEmbed(Context.Guild, type);
+					embed = _milestoneHandler.GetMilestonesNameEmbed(Context.Guild, type);
 					await ReplyAndDeleteAsync(string.Format(Resources.MilNotFound, Context.User.Mention), embed: embed, timeout: TimeSpan.FromMinutes(1));
 					return;
 				}
 
 				//Get time formats from appsetings.json
-				var timeFormats = config.GetSection("Bot:TimeFormats").Get<string[]>();
-				var IsSucess = DateTime.TryParseExact(time, timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+				var timeFormats = _config.GetSection("Bot:TimeFormats").Get<string[]>();
+				var isSucess = DateTime.TryParseExact(time, timeFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime);
 
-				if (IsSucess)
+				if (isSucess)
 				{
 					var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
 					var raidTimeOffset = new DateTimeOffset(dateTime, guildTimeZone.BaseUtcOffset);
 
-					var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone);
+					var now = new DateTimeOffset(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone), guildTimeZone.BaseUtcOffset);
 
 					if (raidTimeOffset < now)
 					{
@@ -299,7 +304,7 @@ namespace Failsafe.Modules
 
 					ActiveMilestoneData.AddMilestone(newMilestone);
 
-					embed = milestoneHandler.MilestoneEmbed(newMilestone);
+					embed = await _milestoneHandler.MilestoneEmbed(newMilestone);
 
 					await msg.ModifyAsync(a =>
 					{
@@ -307,7 +312,7 @@ namespace Failsafe.Modules
 						a.Embed = embed;
 					});
 					//Slots
-					await msg.AddReactionAsync(emote.Raid);
+					await msg.AddReactionAsync(_emote.Raid);
 				}
 				else
 					await ReplyAndDeleteAsync(Resources.MilTimeError);
@@ -315,7 +320,7 @@ namespace Failsafe.Modules
 			catch (Exception ex)
 			{
 				await ReplyAndDeleteAsync(string.Format(Resources.MilError, ex.Message));
-				logger.LogError(ex, "Milestone method");
+				_logger.LogError(ex, "Milestone method");
 			}
 		}
 
@@ -330,7 +335,7 @@ namespace Failsafe.Modules
 			{
 				Name = Resources.MilEmbMemTitleField
 			};
-			var leader = discord.GetUser(milestone.Leader);
+			var leader = _discord.GetUser(milestone.Leader);
 			embedFieldUsers.Value = $"#1 {leader.Mention} - {leader.Username}\n";
 			if (milestone.MilestoneUsers.Count > 0)
 			{
@@ -344,7 +349,7 @@ namespace Failsafe.Modules
 					}
 					else
 					{
-						var discordUser = discord.GetUser(user);
+						var discordUser = _discord.GetUser(user);
 						embedFieldUsers.Value += $"#{count} {discordUser.Mention} - {discordUser.Username}\n";
 					}
 					count++;

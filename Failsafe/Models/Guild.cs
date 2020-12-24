@@ -6,23 +6,22 @@ namespace Failsafe.Models
 	public class Guild
 	{
 		public ulong Id { get; set; }
-		public ulong NotificationChannel { get; set; } = 0;
-		public ulong LoggingChannel { get; set; } = 0;
-		public ulong WelcomeChannel { get; set; } = 0;
-		public string WelcomeMessage { get; set; } = null;
-		public string LeaveMessage { get; set; } = null;
-		public ulong AutoroleID { get; set; } = 0;
-		public string CommandPrefix { get; set; } = null;
+		public ulong NotificationChannel { get; set; }
+		public ulong LoggingChannel { get; set; }
+		public ulong WelcomeChannel { get; set; }
+		public string WelcomeMessage { get; set; }
+		public ulong AutoroleId { get; set; }
+		public string CommandPrefix { get; set; }
 		public CultureInfo Language { get; set; } = new CultureInfo("ru-RU");
-		public string TimeZone { get; set; } = "Europe/Moscow";
+		public string TimeZone { get; set; } = "Russian Standard Time";
 		public string GlobalMention { get; set; } = "@here";
-		public ulong SelfRoleMessageId { get; set; } = 0;
+		public ulong SelfRoleMessageId { get; set; }
 		public List<GuildSelfRole> GuildSelfRoles { get; set; } = new List<GuildSelfRole>();
 	}
 
 	public class GuildSelfRole
 	{
-		public ulong EmoteID { get; set; }
-		public ulong RoleID { get; set; }
+		public ulong EmoteId { get; set; }
+		public ulong RoleId { get; set; }
 	}
 }
