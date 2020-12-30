@@ -35,15 +35,19 @@ namespace Failsafe.Core.QuartzJobs
 					{
 						var guild = GuildData.GetGuildAccount(milestone.GuildId);
 						var guildTimeZone = TimeZoneInfo.FindSystemTimeZoneById(guild.TimeZone);
-						var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone);
+						var now = new DateTimeOffset(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, guildTimeZone), guildTimeZone.BaseUtcOffset);
 						var timer = milestone.DateExpire.AddHours(1);
 
-						if (now <= timer) return;
+						if (now < timer) return;
 
 						ActiveMilestoneData.RemoveMilestone(milestone.MessageId);
 						var message = await _discord.GetGuild(milestone.GuildId).GetTextChannel(milestone.ChannelId)
 							.GetMessageAsync(milestone.MessageId);
-						await message.DeleteAsync();
+
+						if (message != null)
+							await message.DeleteAsync();
+
+
 					}
 					catch (Exception ex)
 					{

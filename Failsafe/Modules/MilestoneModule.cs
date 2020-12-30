@@ -266,7 +266,7 @@ namespace Failsafe.Modules
 				Embed embed;
 				if (milestoneInfo == null)
 				{
-					embed = _milestoneHandler.GetMilestonesNameEmbed(Context.Guild, type);
+					embed = MilestoneService.GetMilestonesNameEmbed(Context.Guild, type);
 					await ReplyAndDeleteAsync(string.Format(Resources.MilNotFound, Context.User.Mention), embed: embed, timeout: TimeSpan.FromMinutes(1));
 					return;
 				}

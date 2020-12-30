@@ -46,7 +46,7 @@ namespace Failsafe.Core.QuartzJobs
 			return Task.CompletedTask;
 		}
 
-		private EmbedBuilder XurArriveEmbed(CultureInfo culture)
+		private static EmbedBuilder XurArriveEmbed(CultureInfo culture)
 		{
 			Thread.CurrentThread.CurrentUICulture = culture;
 

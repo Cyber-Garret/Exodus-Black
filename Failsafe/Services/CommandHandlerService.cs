@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Failsafe.Core;
 using Failsafe.Modules;
 
 namespace Failsafe.Services
@@ -50,8 +51,9 @@ namespace Failsafe.Services
 		private Task HandleCommandAsync(SocketMessage message)
 		{
 			// ignore if not SocketUserMessage or author is bot
-			if (!(message is SocketUserMessage msg) || message.Author.IsBot) return Task.CompletedTask;
+			if (!message.IsA<SocketUserMessage>() || message.Author.IsBot) return Task.CompletedTask;
 
+			var msg = (SocketUserMessage)message;
 			//New Task for fix disconeting from Discord WebSockets by 1001 if current Task not completed.
 			Task.Run(async () =>
 			 {

@@ -4,13 +4,10 @@ using Discord.WebSocket;
 using Failsafe.Core.Data;
 using Failsafe.Models;
 using Failsafe.Properties;
-
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord.Rest;
@@ -265,7 +262,7 @@ namespace Failsafe.Services
 
 		}
 
-		public Embed GetMilestonesNameEmbed(SocketGuild guild, MilestoneType type)
+		public static Embed GetMilestonesNameEmbed(SocketGuild guild, MilestoneType type)
 		{
 			var loadedGuild = GuildData.GetGuildAccount(guild);
 			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;

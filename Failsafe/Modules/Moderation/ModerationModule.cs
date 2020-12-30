@@ -23,14 +23,13 @@ namespace Failsafe.Modules
 	[RequireContext(ContextType.Guild), Cooldown(5), RequireUserPermission(GuildPermission.Administrator)]
 	public class ModerationModule : RootModule
 	{
-		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
-		private readonly DiscordEventHandlerService discordEvent;
-		public ModerationModule(IServiceProvider service)
+		private readonly ILogger<ModerationModule> _logger;
+		private readonly DiscordSocketClient _discord;
+
+		public ModerationModule(ILogger<ModerationModule> logger, DiscordSocketClient discord)
 		{
-			logger = service.GetRequiredService<ILogger<ModerationModule>>();
-			discord = service.GetRequiredService<DiscordSocketClient>();
-			discordEvent = service.GetRequiredService<DiscordEventHandlerService>();
+			_logger = logger;
+			_discord = discord;
 		}
 
 		#region Commands
@@ -180,7 +179,7 @@ namespace Failsafe.Modules
 			if (string.IsNullOrWhiteSpace(guild.WelcomeMessage))
 				await ReplyAndDeleteAsync(Resources.GuildPrivateWelcomeIsNull);
 			else
-				await ReplyAsync(embed: discordEvent.WelcomeEmbed((SocketGuildUser)Context.User, guild.WelcomeMessage));
+				await ReplyAsync(embed: DiscordEventHandlerService.WelcomeEmbed((SocketGuildUser)Context.User, guild.WelcomeMessage));
 		}
 
 		[Command("prefix"), Alias("префикс", "префікс")]
@@ -266,7 +265,7 @@ namespace Failsafe.Modules
 				catch (Exception ex)
 				{
 					failCount++;
-					logger.LogWarning(ex, "SendMessage command");
+					_logger.LogWarning(ex, "SendMessage command");
 				}
 			}
 			await workMessage.ModifyAsync(m => m.Content = string.Format(Resources.MailDone, role.Name, sucessCount + failCount, sucessCount, failCount));
@@ -312,7 +311,7 @@ namespace Failsafe.Modules
 			catch (Exception ex)
 			{
 				await ReplyAsync(string.Format(Resources.Error, ex.Message));
-				logger.LogWarning(ex, "PurgeChat");
+				_logger.LogWarning(ex, "PurgeChat");
 			}
 		}
 
@@ -332,7 +331,7 @@ namespace Failsafe.Modules
 			catch (Exception ex)
 			{
 				await ReplyAndDeleteAsync(string.Format(Resources.Error, ex.Message));
-				logger.LogWarning(ex, "GetRandomUser command");
+				_logger.LogWarning(ex, "GetRandomUser command");
 			}
 		}
 		#endregion
@@ -349,7 +348,7 @@ namespace Failsafe.Modules
 			{
 				Author = new EmbedAuthorBuilder
 				{
-					IconUrl = discord.CurrentUser.GetAvatarUrl(),
+					IconUrl = _discord.CurrentUser.GetAvatarUrl(),
 					Name = Resources.GuCoEmbTitle
 				},
 				Color = Color.Orange,

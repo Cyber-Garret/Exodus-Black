@@ -12,7 +12,7 @@
 		public string SecondPerk { get; set; }
 		public string SecondPerkDescription { get; set; }
 		public string DropLocation { get; set; }
-		public bool isWeapon { get; set; } = false;
-		public bool isHaveCatalyst { get; set; } = false;
+		public bool IsWeapon { get; set; } = false;
+		public bool IsHaveCatalyst { get; set; } = false;
 	}
 }

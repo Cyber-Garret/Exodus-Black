@@ -29,7 +29,7 @@ namespace Neiralink
 
 		}
 
-		private string GetWishQuery(string lang)
+		private static string GetWishQuery(string lang)
 		{
 			return $@"SELECT locale.Title, locale.Desc, base.WallScreenshot
 							FROM Wish_Base AS base

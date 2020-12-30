@@ -8,7 +8,6 @@ using Failsafe.Properties;
 using ImageMagick;
 
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Neiralink;
@@ -20,6 +19,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Failsafe.Core;
 
 namespace Failsafe.Services
 {
@@ -69,7 +69,7 @@ namespace Failsafe.Services
 			_discord.ReactionAdded += Discord_ReactionAdded;
 			_discord.ReactionRemoved += Discord_ReactionRemoved;
 		}
-		
+
 		#region Events
 		private Task Discord_Ready()
 		{
@@ -233,16 +233,17 @@ namespace Failsafe.Services
 		#region Methods
 		private async Task ChannelCreated(IChannel arg)
 		{
-			if (!(arg is ITextChannel channel)) return;
+			if (!arg.IsA<ITextChannel>()) return;
 			try
 			{
+				var channel = (ITextChannel)arg;
+
 				var loadedGuild = GuildData.GetGuildAccount(channel.GuildId);
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 				var log = await channel.Guild.GetAuditLogsAsync(1);
 				var audit = log.ToList();
 				var name = audit[0].Action == ActionType.ChannelCreated ? audit[0].User.Username : Resources.Unknown;
-				var auditLogData = audit[0].Data as ChannelCreateAuditLogData;
 
 				var embed = new EmbedBuilder
 				{
@@ -273,16 +274,16 @@ namespace Failsafe.Services
 		}
 		private async Task ChannelDestroyed(IChannel arg)
 		{
-			if (!(arg is ITextChannel channel)) return;
+			if (!arg.IsA<ITextChannel>()) return;
 			try
 			{
+				var channel = (ITextChannel)arg;
 				var loadedGuild = GuildData.GetGuildAccount(channel.GuildId);
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 				var log = await channel.Guild.GetAuditLogsAsync(1);
 				var audit = log.ToList();
 				var name = audit[0].Action == ActionType.ChannelDeleted ? audit[0].User.Username : Resources.Unknown;
-				var auditLogData = audit[0].Data as ChannelDeleteAuditLogData;
 
 				var embed = new EmbedBuilder
 				{
@@ -362,8 +363,7 @@ namespace Failsafe.Services
 						roleString = Resources.GuMemRemRole;
 						var differenceQuery = beforeRoles.Except(afterRoles);
 						var socketRoles = differenceQuery as SocketRole[] ?? differenceQuery.ToArray();
-						for (var i = 0; i < socketRoles.Count(); i++)
-							role += socketRoles[i];
+						role = socketRoles.Aggregate(role, (current, socketRole) => current + socketRole);
 					}
 					else
 					{
@@ -371,8 +371,7 @@ namespace Failsafe.Services
 						roleString = Resources.GuMemAddRole;
 						var differenceQuery = afterRoles.Except(beforeRoles);
 						var socketRoles = differenceQuery as SocketRole[] ?? differenceQuery.ToArray();
-						for (var i = 0; i < socketRoles.Count(); i++)
-							role += socketRoles[i];
+						role = socketRoles.Aggregate(role, (current, socketRole) => current + socketRole);
 					}
 
 					var log = await before.Guild.GetAuditLogsAsync(1).FlattenAsync();
@@ -416,7 +415,9 @@ namespace Failsafe.Services
 
 					if (msgAfter.Content == null) return;
 
-					if (!((msgBefore.HasValue ? msgBefore.Value : null) is IUserMessage before)) return;
+					if (!(msgBefore.HasValue ? msgBefore.Value : null).IsA<IUserMessage>()) return;
+
+					var before = (IUserMessage)msgBefore.Value;
 
 					if (before.Content == after?.Content) return;
 
@@ -428,20 +429,20 @@ namespace Failsafe.Services
 						Description = string.Format(Resources.MsgUpdEmbDesc, before.Channel.Id),
 						Footer = new EmbedFooterBuilder
 						{
-							IconUrl = msgBefore.Value.Author.GetAvatarUrl() ?? msgBefore.Value.Author.GetDefaultAvatarUrl(),
+							IconUrl = before.Author.GetAvatarUrl() ?? before.Author.GetDefaultAvatarUrl(),
 							Text = string.Format(Resources.DiEvnEmbFooter, after?.Author)
 						},
 					};
 					//old text
-					if (msgBefore.Value.Content.Length > 1000)
+					if (before.Content.Length > 1000)
 					{
-						var textBefore = msgBefore.Value.Content.Substring(0, 1000);
+						var textBefore = before.Content.Substring(0, 1000);
 
 						embed.AddField(Resources.MsgUpdEmbOldFieldTitle, $"{textBefore}...");
 					}
-					else if (msgBefore.Value.Content.Length != 0)
+					else if (before.Content.Length != 0)
 					{
-						embed.AddField(Resources.MsgUpdEmbOldFieldTitle, msgBefore.Value.Content);
+						embed.AddField(Resources.MsgUpdEmbOldFieldTitle, before.Content);
 					}
 
 					//new text
@@ -601,8 +602,10 @@ namespace Failsafe.Services
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
 				if (loadedGuild.WelcomeChannel == 0) return;
-				if (!(_discord.GetChannel(loadedGuild.WelcomeChannel) is SocketTextChannel channel)) return;
-				List<string> randomWelcome = _db.GetWelcomesByLocale(loadedGuild.Language);
+
+				var channel = (SocketTextChannel)_discord.GetChannel(loadedGuild.WelcomeChannel);
+
+				var randomWelcome = _db.GetWelcomesByLocale(loadedGuild.Language);
 
 				var rand = new Random();
 
@@ -625,8 +628,8 @@ namespace Failsafe.Services
 				using var label = new MagickImage($"caption:{welcomeMessage}", readSettings);
 				//Load user avatar
 				using var client = new WebClient();
-				var file = user.GetAvatarUrl(ImageFormat.Png, 128) ?? user.GetDefaultAvatarUrl();
-				using var stream = client.OpenRead(file);
+				var file = user.GetAvatarUrl(ImageFormat.Png) ?? user.GetDefaultAvatarUrl();
+				await using var stream = client.OpenRead(file);
 				using var avatar = new MagickImage(stream, MagickFormat.Png8);
 				avatar.AdaptiveResize(128, 128);
 				avatar.Border(2);
@@ -660,37 +663,42 @@ namespace Failsafe.Services
 					Description = string.Format(Resources.UsrLefEmbDesc, user.Nickname ?? user.Username, user),
 
 				};
-				if (audit[0].Action == ActionType.Kick)
+				switch (audit[0].Action)
 				{
-					var kick = audit[0].Data as KickAuditLogData;
-					if (kick.Target.Id == user.Id)
-					{
-						var who = audit[0].User;
-
-						embed.Title = Resources.UsrKicEmbTitle;
-						embed.AddField(Resources.UsrLefEmbFieldTitle, audit[0].Reason ?? Resources.Unknown);
-						embed.Footer = new EmbedFooterBuilder
+					case ActionType.Kick:
 						{
-							IconUrl = who.GetAvatarUrl() ?? who.GetDefaultAvatarUrl(),
-							Text = string.Format(Resources.DiEvnEmbFooter, who.Username)
-						};
-					}
-				}
-				else if (audit[0].Action == ActionType.Ban)
-				{
-					var ban = audit[0].Data as BanAuditLogData;
-					if (ban.Target.Id == user.Id)
-					{
-						var who = audit[0].User;
+							if (audit[0].Data is KickAuditLogData kick && kick.Target.Id == user.Id)
+							{
+								var who = audit[0].User;
 
-						embed.Title = Resources.UsrBanEmbTitle;
-						embed.AddField(Resources.UsrLefEmbFieldTitle, audit[0].Reason ?? Resources.Unknown);
-						embed.Footer = new EmbedFooterBuilder
+								embed.Title = Resources.UsrKicEmbTitle;
+								embed.AddField(Resources.UsrLefEmbFieldTitle, audit[0].Reason ?? Resources.Unknown);
+								embed.Footer = new EmbedFooterBuilder
+								{
+									IconUrl = who.GetAvatarUrl() ?? who.GetDefaultAvatarUrl(),
+									Text = string.Format(Resources.DiEvnEmbFooter, who.Username)
+								};
+							}
+
+							break;
+						}
+					case ActionType.Ban:
 						{
-							IconUrl = who.GetAvatarUrl() ?? who.GetDefaultAvatarUrl(),
-							Text = string.Format(Resources.DiEvnEmbFooter, who.Username)
-						};
-					}
+							if (audit[0].Data is BanAuditLogData ban && ban.Target.Id == user.Id)
+							{
+								var who = audit[0].User;
+
+								embed.Title = Resources.UsrBanEmbTitle;
+								embed.AddField(Resources.UsrLefEmbFieldTitle, audit[0].Reason ?? Resources.Unknown);
+								embed.Footer = new EmbedFooterBuilder
+								{
+									IconUrl = who.GetAvatarUrl() ?? who.GetDefaultAvatarUrl(),
+									Text = string.Format(Resources.DiEvnEmbFooter, who.Username)
+								};
+							}
+
+							break;
+						}
 				}
 
 				if (loadedGuild.LoggingChannel != 0)
@@ -705,7 +713,7 @@ namespace Failsafe.Services
 			}
 		}
 
-		public Embed WelcomeEmbed(SocketGuildUser user, string text)
+		public static Embed WelcomeEmbed(SocketGuildUser user, string text)
 		{
 			var embed = new EmbedBuilder
 			{

@@ -253,13 +253,14 @@ namespace Discord.Addons.Interactive
 		/// </summary>
 		public void Dispose()
 		{
-			if (Discord is DiscordShardedClient shardedClient)
+			switch (Discord)
 			{
-				shardedClient.ReactionAdded -= HandleReactionAsync;
-			}
-			else if (Discord is DiscordSocketClient socketClient)
-			{
-				socketClient.ReactionAdded -= HandleReactionAsync;
+				case DiscordShardedClient shardedClient:
+					shardedClient.ReactionAdded -= HandleReactionAsync;
+					break;
+				case DiscordSocketClient socketClient:
+					socketClient.ReactionAdded -= HandleReactionAsync;
+					break;
 			}
 		}
 

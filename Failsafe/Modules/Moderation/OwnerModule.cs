@@ -9,20 +9,17 @@ using Discord.WebSocket;
 using Failsafe.Properties;
 
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace Failsafe.Modules.Moderation
 {
 	public class GuildOwnerModule : RootModule
 	{
 		private readonly ulong botOwner;
-		private readonly ILogger<GuildOwnerModule> _logger;
 		private readonly DiscordSocketClient _discord;
 
-		public GuildOwnerModule(IConfiguration configuration, ILogger<GuildOwnerModule> logger, DiscordSocketClient discord)
+		public GuildOwnerModule(IConfiguration configuration, DiscordSocketClient discord)
 		{
 			botOwner = configuration.GetValue<ulong>("Bot:Owner");
-			_logger = logger;
 			_discord = discord;
 		}
 

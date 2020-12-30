@@ -5,7 +5,7 @@ namespace Failsafe.Modules
 {
 	public class RootModule : InteractiveBase
 	{
-		internal IEmote WhiteHeavyCheckMark => new Emoji("\u2705");
-		internal IEmote RedX => new Emoji("\u274C");
+		internal static IEmote WhiteHeavyCheckMark => new Emoji("\u2705");
+		internal static IEmote RedX => new Emoji("\u274C");
 	}
 }

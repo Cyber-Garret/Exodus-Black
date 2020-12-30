@@ -143,47 +143,50 @@ namespace Failsafe.Modules
 			var commands = command.Commands.ToList();
 
 			//Sort all commands
-			foreach (var command in commands)
+			foreach (var commandInfo in commands)
 			{
-				//Main commands
-				if (command.Module.Name == typeof(MainModule).Name)
+				switch (commandInfo.Module.Name)
 				{
-					if (guild.Language.Name == "en-US")
-						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
-					else if (guild.Language.Name == "ru-RU")
-						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
-					else
-						mainCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
-				}
-				//Milestone commands
-				else if (command.Module.Name == typeof(MilestoneModule).Name)
-				{
-					if (guild.Language.Name == "en-US")
-						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
-					else if (guild.Language.Name == "ru-RU")
-						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
-					else
-						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
-				}
-				//Admin commands
-				else if (command.Module.Name == typeof(ModerationModule).Name)
-				{
-					if (guild.Language.Name == "en-US")
-						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
-					else if (guild.Language.Name == "ru-RU")
-						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
-					else
-						adminCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
-				}
-				//Self role admin commands
-				else if (command.Module.Name == typeof(SelfRoleModule).Name)
-				{
-					if (guild.Language.Name == "en-US")
-						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[0]}, ";
-					else if (guild.Language.Name == "ru-RU")
-						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases[1]}, ";
-					else
-						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{command.Aliases.Last()}, ";
+					//Main commands
+					case nameof(MainModule) when guild.Language.Name == "en-US":
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[0]}, ";
+						break;
+					case nameof(MainModule) when guild.Language.Name == "ru-RU":
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[1]}, ";
+						break;
+					//Milestone commands
+					case nameof(MainModule):
+						mainCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[^1]}, ";
+						break;
+					case nameof(MilestoneModule) when guild.Language.Name == "en-US":
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[0]}, ";
+						break;
+					case nameof(MilestoneModule) when guild.Language.Name == "ru-RU":
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[1]}, ";
+						break;
+					//Admin commands
+					case nameof(MilestoneModule):
+						milestoneCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[^1]}, ";
+						break;
+					case nameof(ModerationModule) when guild.Language.Name == "en-US":
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[0]}, ";
+						break;
+					case nameof(ModerationModule) when guild.Language.Name == "ru-RU":
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[1]}, ";
+						break;
+					//Self role admin commands
+					case nameof(ModerationModule):
+						adminCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[^1]}, ";
+						break;
+					case nameof(SelfRoleModule) when guild.Language.Name == "en-US":
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[0]}, ";
+						break;
+					case nameof(SelfRoleModule) when guild.Language.Name == "ru-RU":
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[1]}, ";
+						break;
+					case nameof(SelfRoleModule):
+						selfRoleCommands += $"{guild.CommandPrefix ?? "!"}{commandInfo.Aliases[^1]}, ";
+						break;
 				}
 			}
 			var embed = new EmbedBuilder
@@ -200,7 +203,7 @@ namespace Failsafe.Modules
 			return embed.Build();
 		}
 
-		private Embed ExoticEmbed(Exotic exotic)
+		private static Embed ExoticEmbed(Exotic exotic)
 		{
 			var embed = new EmbedBuilder
 			{
@@ -216,9 +219,9 @@ namespace Failsafe.Modules
 				}
 
 			};
-			if (exotic.isWeapon)//Only weapon can have catalyst field
+			if (exotic.IsWeapon)//Only weapon can have catalyst field
 			{
-				embed.AddField(Resources.ExoEmbCatFieldTitle, exotic.isHaveCatalyst == true ? Resources.ExoEmbCatFieldDescYes : Resources.ExoEmbCatFieldDescNo);
+				embed.AddField(Resources.ExoEmbCatFieldTitle, exotic.IsHaveCatalyst == true ? Resources.ExoEmbCatFieldDescYes : Resources.ExoEmbCatFieldDescNo);
 			}
 			embed.AddField(exotic.Perk, exotic.PerkDescription);//Main Exotic perk
 
@@ -230,7 +233,7 @@ namespace Failsafe.Modules
 			return embed.Build();
 		}
 
-		private Embed CatalystEmbed(Catalyst catalyst)
+		private static Embed CatalystEmbed(Catalyst catalyst)
 		{
 			var embed = new EmbedBuilder
 			{
@@ -267,7 +270,7 @@ namespace Failsafe.Modules
 			return pager;
 		}
 
-		private Embed PollEmbed(string text, SocketGuildUser user)
+		private static Embed PollEmbed(string text, SocketGuildUser user)
 		{
 			var embed = new EmbedBuilder
 			{
