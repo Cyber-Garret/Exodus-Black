@@ -262,6 +262,7 @@ namespace Discord.Addons.Interactive
 					socketClient.ReactionAdded -= HandleReactionAsync;
 					break;
 			}
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>

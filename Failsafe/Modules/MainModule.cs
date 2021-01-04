@@ -24,18 +24,19 @@ namespace Failsafe.Modules
 	[RequireContext(ContextType.Guild), Cooldown(5)]
 	public class MainModule : RootModule
 	{
-		private readonly ILogger logger;
-		private readonly DiscordSocketClient discord;
-		private readonly CommandService command;
-		private readonly EmoteService emote;
-		private readonly IWishDbClient wishDb;
-		public MainModule(IServiceProvider service, ILogger<MainModule> logger)
+		private readonly ILogger<MainModule> _logger;
+		private readonly DiscordSocketClient _discord;
+		private readonly CommandService _command;
+		private readonly EmoteService _emote;
+		private readonly IWishDbClient _wishDb;
+
+		public MainModule(ILogger<MainModule> logger, DiscordSocketClient discord, CommandService command, EmoteService emote, IWishDbClient wishDb)
 		{
-			this.logger = logger;
-			discord = service.GetRequiredService<DiscordSocketClient>();
-			command = service.GetRequiredService<CommandService>();
-			emote = service.GetRequiredService<EmoteService>();
-			wishDb = service.GetRequiredService<IWishDbClient>();
+			_logger = logger;
+			_discord = discord;
+			_command = command;
+			_emote = emote;
+			_wishDb = wishDb;
 		}
 
 		#region Commands
@@ -51,7 +52,7 @@ namespace Failsafe.Modules
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex, "Help command");
+				_logger.LogError(ex, "Help command");
 			}
 		}
 
@@ -109,7 +110,7 @@ namespace Failsafe.Modules
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex, "Wish command");
+				_logger.LogError(ex, "Wish command");
 			}
 		}
 
@@ -133,14 +134,14 @@ namespace Failsafe.Modules
 		#region Embeds
 		private async Task<Embed> HelpEmbedAsync(Guild guild)
 		{
-			var app = await discord.GetApplicationInfoAsync();
+			var app = await _discord.GetApplicationInfoAsync();
 
 			var mainCommands = string.Empty;
 			var milestoneCommands = string.Empty;
 			var adminCommands = string.Empty;
 			var selfRoleCommands = string.Empty;
 
-			var commands = command.Commands.ToList();
+			var commands = _command.Commands.ToList();
 
 			//Sort all commands
 			foreach (var commandInfo in commands)
@@ -257,8 +258,8 @@ namespace Failsafe.Modules
 
 		private PaginatedMessage GetPaginatedWishesEmbed(CultureInfo guildLocale)
 		{
-			var localeISO = guildLocale.TwoLetterISOLanguageName.ToUpper();
-			var wishes = wishDb.GetWishes(localeISO);
+			var localeIso = guildLocale.TwoLetterISOLanguageName.ToUpper();
+			var wishes = _wishDb.GetWishes(localeIso);
 
 			var pager = new PaginatedMessage
 			{
