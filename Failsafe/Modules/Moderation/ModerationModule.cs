@@ -318,7 +318,7 @@ namespace Failsafe.Modules
 		[Command("random"), Alias("рандом")]
 		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
 		{
-			if (mentionedRole == null || (count >= 10 || count <= 1))
+			if (mentionedRole == null || (count < 1 || count > 10))
 			{
 				await ReplyAndDeleteAsync(Resources.RndErrorStart);
 				return;
