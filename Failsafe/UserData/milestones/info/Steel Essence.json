@@ -1,0 +1,9 @@
+{
+	"Name": "Стали",
+	"Alias": "фст",
+	"Type": "Фарм",
+	"Icon": "https://neira.app/img/milestones/warframe/steel_essence.png",
+	"MaxSpace": 4,
+	"MilestoneType": 2,
+	"Game": 3
+}

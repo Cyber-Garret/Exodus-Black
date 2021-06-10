@@ -190,6 +190,24 @@ namespace Failsafe.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string DonateEmbFieldDesc {
+            get {
+                return ResourceManager.GetString("DonateEmbFieldDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string DonateEmbFieldTitle {
+            get {
+                return ResourceManager.GetString("DonateEmbFieldTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The message will be automatically deleted after one minute..
         /// </summary>
         internal static string EmbFooterAboutDel {
@@ -712,7 +730,7 @@ namespace Failsafe.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, in {1}. {2}: {3}.
+        ///   Looks up a localized string similar to {0}, in {1}. {2}.
         /// </summary>
         internal static string MilEmbTitle {
             get {
@@ -795,7 +813,7 @@ namespace Failsafe.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}: {1}. Server: {2}.
+        ///   Looks up a localized string similar to {0}. Server: {1}.
         /// </summary>
         internal static string MilRemEmbFooter {
             get {

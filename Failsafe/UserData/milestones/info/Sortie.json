@@ -1,0 +1,9 @@
+{
+	"Name": "\"Вылазка\"",
+	"Alias": "выл",
+	"Type": "Активность",
+	"Icon": "https://neira.app/img/milestones/other/sortie.png",
+	"MaxSpace": 4,
+	"MilestoneType": 2,
+	"Game": 3
+}

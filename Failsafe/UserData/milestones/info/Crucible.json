@@ -1,7 +1,7 @@
 {
 	"Name": "Горнило",
 	"Alias": "горнило",
-	"Type": "Игрок против игрока",
+	"Type": "",
 	"Icon": "http://www.neira.app/img/milestones/other/shaxx.jpg",
 	"MaxSpace": 12,
 	"MilestoneType": 2,

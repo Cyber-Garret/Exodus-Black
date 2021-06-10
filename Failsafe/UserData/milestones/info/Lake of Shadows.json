@@ -1,8 +1,8 @@
 {
 	"Name": "Озеро теней",
 	"Alias": "от",
-	"Type": "Сумрачный налет",
-	"Icon": "http://www.neira.app/img/milestones/strikes/lake_of_shadows.jpg",
+	"Type": "Налёт",
+	"Icon": "http://neira.app/img/milestones/strikes/lake_of_shadows.jpg",
 	"MaxSpace": 3,
 	"MilestoneType": 1,
 	"Game": 0

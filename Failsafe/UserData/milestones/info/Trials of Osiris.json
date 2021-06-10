@@ -1,7 +1,7 @@
 {
 	"Name": "Испытания Осириса",
 	"Alias": "ио",
-	"Type": "Испытания",
+	"Type": "",
 	"Icon": "http://www.neira.app/img/milestones/other/trials_of_osiris.jpg",
 	"MaxSpace": 3,
 	"MilestoneType": 2,

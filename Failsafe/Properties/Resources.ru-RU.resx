@@ -305,7 +305,7 @@ NSFW **{1}**
 - Не удалось отправить: **{3}**</value>
   </data>
   <data name="MailEmbFooterDesc" xml:space="preserve">
-    <value>Страж, учти что я не имею отношения к содержимому данного сообщения.</value>
+    <value>Страж, учти, что я не имею отношения к содержимому данного сообщения.</value>
   </data>
   <data name="MailEmbTitle" xml:space="preserve">
     <value>:mailbox_with_mail: Вам сообщение от {0} с сервера **`{1}`**</value>
@@ -346,7 +346,7 @@ NSFW **{1}**
     <value>Ссылка на активность</value>
   </data>
   <data name="MilEmbTitle" xml:space="preserve">
-    <value>{0}, в {1}. {2}: {3}</value>
+    <value>{0}, в {1}. {2}</value>
   </data>
   <data name="MilEmbTitleChangeTime" xml:space="preserve">
     <value>Приветствую, хочу сообщить что лидер активности сменил время начала мероприятия.</value>
@@ -375,7 +375,7 @@ NSFW **{1}**
 Бип...Удачи и передай привет моему капитану.</value>
   </data>
   <data name="MilRemEmbFooter" xml:space="preserve">
-    <value>{0}: {1}. Сервер: {2}</value>
+    <value>{0}. Сервер: {1}</value>
   </data>
   <data name="MilRemEmbTitle" xml:space="preserve">
     <value>Хочу вам напомнить, что у вас через 15 минут начнется **{0}**.</value>
@@ -549,5 +549,11 @@ Discord имя стража
   </data>
   <data name="WishFooterFormat" xml:space="preserve">
     <value>Желание {0}/{1}</value>
+  </data>
+  <data name="DonateEmbFieldDesc" xml:space="preserve">
+    <value>Страж, если тебе не сложно, поддержи меня на [Patreon](https://www.patreon.com/Cyber_Garret) или на [Boosty](https://boosty.to/cyber_garret), мой сервер хоть и не дорогой, но все же аренду за него надо оплачивать. </value>
+  </data>
+  <data name="DonateEmbFieldTitle" xml:space="preserve">
+    <value>Поддержи "Черный Исход"</value>
   </data>
 </root>

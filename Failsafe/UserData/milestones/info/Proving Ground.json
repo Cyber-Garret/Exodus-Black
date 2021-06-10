@@ -1,0 +1,9 @@
+{
+	"Name": "Арена доказательств",
+	"Alias": "ад",
+	"Type": "Налёт",
+	"Icon": "http://www.neira.app/img/milestones/strikes/proving_ground.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}
