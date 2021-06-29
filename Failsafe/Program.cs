@@ -10,7 +10,6 @@ using Failsafe.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 using Neiralink;
 
@@ -19,7 +18,6 @@ using Quartz.Impl;
 using Quartz.Spi;
 
 using Serilog;
-using Serilog.Core;
 
 using System;
 

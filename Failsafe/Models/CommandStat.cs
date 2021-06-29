@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Failsafe.Models
+﻿namespace Failsafe.Models
 {
     public class CommandStat
     {

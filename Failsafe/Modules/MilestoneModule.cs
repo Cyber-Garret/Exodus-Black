@@ -4,6 +4,7 @@ using Discord.WebSocket;
 
 using Failsafe.Core.Data;
 using Failsafe.Models;
+using Failsafe.Models.Enums;
 using Failsafe.Preconditions;
 using Failsafe.Properties;
 using Failsafe.Services;
@@ -14,7 +15,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Failsafe.Models.Enums;
 
 namespace Failsafe.Modules
 {

@@ -4,18 +4,16 @@ using Discord.WebSocket;
 
 using Failsafe.Core;
 using Failsafe.Core.Data;
-using Failsafe.Modules;
+using Failsafe.Models;
 using Failsafe.Properties;
 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Failsafe.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Failsafe.Services
 {

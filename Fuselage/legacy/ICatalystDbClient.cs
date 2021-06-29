@@ -1,10 +1,11 @@
 ﻿using Dapper;
 
+using MySqlConnector;
+
 using Neiralink.Enums;
 using Neiralink.Models;
 
 using System.Collections.Generic;
-using MySqlConnector;
 
 namespace Neiralink
 {

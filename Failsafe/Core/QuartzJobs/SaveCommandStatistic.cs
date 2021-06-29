@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-
-using Failsafe.Core.Data;
+﻿using Failsafe.Core.Data;
 
 using Quartz;
+
+using System.Threading.Tasks;
 
 namespace Failsafe.Core.QuartzJobs
 {

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Failsafe.Models;
+
+using System;
 using System.Collections.Concurrent;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-
-using Failsafe.Models;
 
 namespace Failsafe.Core.Data
 {
@@ -23,9 +22,15 @@ namespace Failsafe.Core.Data
 
         internal static void SaveStatByDay()
         {
-            var stat = CommandStats.Values;
+            if (!CommandStats.Any()) return;
+
+            var now = DateTime.Now;
+
+            var stat = CommandStats.Values.OrderByDescending(x => x.Count);
+            CommandStats.Clear();
+
             DataStorage.SaveObject(stat,
-                Path.Combine(DataStorage.GuildsFolder, $"{DateTime.Now.ToString(CultureInfo.InvariantCulture)}.json"));
+                Path.Combine(DataStorage.StatFolder, $"{now.Day}-{now.Month}-{now.Year}-{now.Hour}-{now.Minute}.json"));
         }
     }
 }

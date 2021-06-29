@@ -6,5 +6,6 @@
         Division = 1,
         Warzone = 2,
         Warframe = 3,
+        WildRift = 4
     }
 }
