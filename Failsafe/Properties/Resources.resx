@@ -349,7 +349,7 @@ You can find more information in the documentation section on my [site]({0})</va
     <value>Link to milestone</value>
   </data>
   <data name="MilEmbTitle" xml:space="preserve">
-    <value>{0}, in {1}. {2}: {3}</value>
+    <value>{0}, in {1}. {2}</value>
     <comment>Пример: 20.02.2020, в 20:00(+03:00). Сумрачный налет: Сад</comment>
   </data>
   <data name="MilEmbTitleChangeTime" xml:space="preserve">
@@ -379,7 +379,7 @@ Error: {0}</value>
 Beep ... Good luck and say hello to my captain.</value>
   </data>
   <data name="MilRemEmbFooter" xml:space="preserve">
-    <value>{0}: {1}. Server: {2}</value>
+    <value>{0}. Server: {1}</value>
   </data>
   <data name="MilRemEmbTitle" xml:space="preserve">
     <value>I want to remind you that you will start **{0}** in 15 minutes.</value>
@@ -554,5 +554,11 @@ Discord Guardian Name
   </data>
   <data name="XurLeaveEmbTitle" xml:space="preserve">
     <value>Attention! Xur left the solar system.</value>
+  </data>
+  <data name="DonateEmbFieldTitle" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="DonateEmbFieldDesc" xml:space="preserve">
+    <value></value>
   </data>
 </root>

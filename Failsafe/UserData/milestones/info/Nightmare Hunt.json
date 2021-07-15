@@ -1,7 +1,7 @@
 {
 	"Name": "Охота на кошмаров",
 	"Alias": "онк",
-	"Type": "Охота",
+	"Type": "",
 	"Icon": "http://www.neira.app/img/milestones/other/nightmare_hunt.jpg",
 	"MaxSpace": 3,
 	"MilestoneType": 2,

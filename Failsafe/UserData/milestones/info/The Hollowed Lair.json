@@ -1,7 +1,7 @@
 {
 	"Name": "Полое логово",
 	"Alias": "пл",
-	"Type": "Сумрачный налет",
+	"Type": "Налёт",
 	"Icon": "http://www.neira.app/img/milestones/strikes/the_hollowed_lair.jpg",
 	"MaxSpace": 3,
 	"MilestoneType": 1,

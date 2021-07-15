@@ -1,19 +1,19 @@
 ﻿using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
 
 using Failsafe.Core.Data;
 using Failsafe.Models;
+using Failsafe.Models.Enums;
 using Failsafe.Properties;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Discord.Rest;
 
 namespace Failsafe.Services
 {
@@ -204,18 +204,23 @@ namespace Failsafe.Services
 
 		public async Task<Embed> MilestoneEmbed(Milestone milestone)
 		{
+			//TODO: Donate text
 			try
 			{
 				var loadedGuild = GuildData.GetGuildAccount(milestone.GuildId);
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
+				var activityTitle = new StringBuilder();
+
+				if (milestone.MilestoneInfo.Type != null)
+					activityTitle.Append(milestone.MilestoneInfo.Type);
+				activityTitle.Append(milestone.MilestoneInfo.Name);
 
 				var embed = new EmbedBuilder
 				{
 					Title = string.Format(Resources.MilEmbTitle,
 						milestone.DateExpire.ToString("dd.MM.yyyy"),
 						milestone.DateExpire.ToString("HH:mm(zzz)"),
-						milestone.MilestoneInfo.Type,
-						milestone.MilestoneInfo.Name),
+						BuildActivityName(milestone.MilestoneInfo)),
 					Author = GetGame(milestone.MilestoneInfo.Game),
 					ThumbnailUrl = milestone.MilestoneInfo.Icon,
 					Color = GetColorByType(milestone.MilestoneInfo.MilestoneType)
@@ -265,7 +270,7 @@ namespace Failsafe.Services
 
 		}
 
-		public Embed GetMilestonesNameEmbed(SocketGuild guild, MilestoneType type)
+		public static Embed GetMilestonesNameEmbed(SocketGuild guild, MilestoneType type)
 		{
 			var loadedGuild = GuildData.GetGuildAccount(guild);
 			Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
@@ -303,6 +308,16 @@ namespace Failsafe.Services
 			return embed.Build();
 		}
 
+		private static string BuildActivityName(MilestoneInfo milestone)
+		{
+			if (string.IsNullOrEmpty(milestone.Type))
+				return milestone.Name;
+
+			var activityName = new[] { milestone.Type, milestone.Name };
+
+			return string.Join(' ', activityName);
+		}
+
 		private async Task<Embed> RemindEmbed(Milestone milestone)
 		{
 			var guild = await _discordRest.GetGuildAsync(milestone.GuildId);
@@ -312,7 +327,7 @@ namespace Failsafe.Services
 
 			var embed = new EmbedBuilder()
 			{
-				Title = string.Format(Resources.MilRemEmbTitle, milestone.MilestoneInfo.Type),
+				Title = string.Format(Resources.MilRemEmbTitle, BuildActivityName(milestone.MilestoneInfo)),
 				Author = GetGame(milestone.MilestoneInfo.Game),
 				Color = GetColorByType(milestone.MilestoneInfo.MilestoneType),
 				ThumbnailUrl = milestone.MilestoneInfo.Icon
@@ -339,7 +354,7 @@ namespace Failsafe.Services
 			if (embedFieldUsers.Value != null)
 				embed.AddField(embedFieldUsers);
 
-			embed.WithFooter(string.Format(Resources.MilRemEmbFooter, milestone.MilestoneInfo.Type, milestone.MilestoneInfo.Name, guild.Name), guild.IconUrl);
+			embed.WithFooter(string.Format(Resources.MilRemEmbFooter, BuildActivityName(milestone.MilestoneInfo), guild.Name), guild.IconUrl);
 			embed.WithCurrentTimestamp();
 
 			return embed.Build();
@@ -412,6 +427,16 @@ namespace Failsafe.Services
 					author.Name = "CoD: Warzone";
 					author.IconUrl = @"https://www.neira.app/img/Warzone.png";
 					author.Url = @"https://www.callofduty.com/warzone";
+					break;
+				case GameName.Warframe:
+					author.Name = "Warframe";
+					author.IconUrl = "https://www.neira.app/img/Warframe.png";
+					author.Url = @"https://www.warframe.com/";
+					break;
+				case GameName.WildRift:
+					author.Name = "League of Legends: Wild Rift";
+					author.IconUrl = "https://www.neira.app/img/WildRift.png";
+					author.Url = "https://wildrift.leagueoflegends.com/";
 					break;
 				default:
 					author.Name = "Unknown";

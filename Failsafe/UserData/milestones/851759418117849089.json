@@ -1,0 +1,18 @@
+﻿{
+  "MessageId": 851759418117849089,
+  "ChannelId": 689065424020570112,
+  "GuildId": 521689023962415104,
+  "MilestoneInfo": {
+    "Name": "Испытания Осириса",
+    "Alias": "ио",
+    "Type": "Испытания",
+    "Icon": "http://www.neira.app/img/milestones/other/trials_of_osiris.jpg",
+    "MaxSpace": 3,
+    "MilestoneType": 2,
+    "Game": 0
+  },
+  "Note": "тест рамки",
+  "Leader": 316272461291192322,
+  "DateExpire": "2021-06-08T13:46:00+02:00",
+  "MilestoneUsers": []
+}

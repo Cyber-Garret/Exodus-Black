@@ -1,0 +1,9 @@
+{
+	"Name": "Логово Дьявола",
+	"Alias": "лд",
+	"Type": "Налёт",
+	"Icon": "http://www.neira.app/img/milestones/strikes/devils_lair.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}

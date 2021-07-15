@@ -1,0 +1,9 @@
+{
+	"Name": "Бесславная",
+	"Alias": "бес",
+	"Type": "Налёт",
+	"Icon": "http://www.neira.app/img/milestones/strikes/the_disgraced.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}

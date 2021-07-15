@@ -1,8 +1,8 @@
 {
-	"Name": "Легендарная сложность",
+	"Name": "Легендарной сложности",
 	"Alias": "лс",
 	"Type": "PvE операция",
-	"Icon": "https://neira.su/img/milestones/other/legendary.jpg",
+	"Icon": "https://neira.app/img/milestones/other/legendary.jpg",
 	"MaxSpace": 4,
 	"MilestoneType": 2,
 	"Game": 1

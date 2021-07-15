@@ -1,0 +1,9 @@
+{
+	"Name": "Склеп глубокого камня",
+	"Alias": "сгк",
+	"Type": "Рейд",
+	"Icon": "https://www.neira.app/img/milestones/raids/deep_stone_crypt.jpg",
+	"MaxSpace": 6,
+	"MilestoneType": 0,
+	"Game": 0
+}

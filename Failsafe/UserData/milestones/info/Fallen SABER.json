@@ -1,0 +1,9 @@
+{
+	"Name": "S.A.B.E.R. Падших",
+	"Alias": "сп",
+	"Type": "Налёт",
+	"Icon": "http://neira.app/img/milestones/strikes/fallen_saber.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 1,
+	"Game": 0
+}

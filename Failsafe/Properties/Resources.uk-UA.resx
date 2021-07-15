@@ -136,7 +136,7 @@
     <value>Інформація про каталізатор для зброї {0}</value>
   </data>
   <data name="CatFound" xml:space="preserve">
-    <value>Отож, {0} ось все, що мені відомо про цей каталізатор</value>
+    <value>Отож, {0} ось все, що мені відомо про цей каталізатор.</value>
   </data>
   <data name="CatInputIsNull" xml:space="preserve">
     <value>:x: Будьте такі ласкаві, введіть повну чи часткову назву екзотичної зброї.</value>
@@ -301,7 +301,7 @@ NSFW **{1}**
 - Не вдалось надіслати: **{3}**</value>
   </data>
   <data name="MailEmbFooterDesc" xml:space="preserve">
-    <value>Ґардіане, прошу врахувати, що я ніяким боком не причетна до змісту даного повідомлення. | www.neira.app</value>
+    <value>Ґардіане, прошу врахувати, що я ніяким боком не причетна до змісту даного повідомлення.</value>
   </data>
   <data name="MailEmbTitle" xml:space="preserve">
     <value>:mailbox_with_mail: Вам повідомлення від {0} з сервера **`{1}`**</value>
@@ -336,7 +336,7 @@ NSFW **{1}**
     <value>В бойову групу записались</value>
   </data>
   <data name="MilEmbTitle" xml:space="preserve">
-    <value>{0}, o {1}. {2}: {3}</value>
+    <value>{0}, o {1}. {2}</value>
     <comment>Приклад: 20.02.2020, о 20:00 за Києвом. Найтфол: Пірамідіон</comment>
   </data>
   <data name="MilError" xml:space="preserve">
@@ -363,7 +363,7 @@ NSFW **{1}**
 Біп...Нехай щастить. І не забудь передати вітання моєму капітану.</value>
   </data>
   <data name="MilRemEmbFooter" xml:space="preserve">
-    <value>{0}: {1}. Сервер: {2}</value>
+    <value>{0}. Сервер: {1}</value>
   </data>
   <data name="MilRemEmbTitle" xml:space="preserve">
     <value>Хочу вам нагадати, що у вас за 15 хвилин починається **{0}**.</value>

@@ -1,7 +1,7 @@
 {
-	"Name": "Беславная",
-	"Alias": "бес",
-	"Type": "Сумрачный налет",
+	"Name": "Оскверненная",
+	"Alias": "оск",
+	"Type": "Налёт",
 	"Icon": "http://www.neira.app/img/milestones/strikes/the_corrupted.jpg",
 	"MaxSpace": 3,
 	"MilestoneType": 1,

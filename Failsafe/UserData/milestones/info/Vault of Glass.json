@@ -1,0 +1,9 @@
+{
+	"Name": "Хрустальный чертог",
+	"Alias": "хч",
+	"Type": "Рейд",
+	"Icon": "https://www.neira.app/img/milestones/raids/vault_of_glass.jpg",
+	"MaxSpace": 6,
+	"MilestoneType": 0,
+	"Game": 0
+}

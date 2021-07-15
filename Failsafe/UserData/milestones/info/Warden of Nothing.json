@@ -1,7 +1,7 @@
 {
 	"Name": "Надзиратель пустоты",
 	"Alias": "нп",
-	"Type": "Сумрачный налет",
+	"Type": "Налёт",
 	"Icon": "http://www.neira.app/img/milestones/strikes/warden_of_nothing.jpg",
 	"MaxSpace": 3,
 	"MilestoneType": 1,

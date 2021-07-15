@@ -2,7 +2,7 @@
 	"Name": "Конфликт",
 	"Alias": "кн",
 	"Type": "PvP операция",
-	"Icon": "https://neira.su/img/milestones/other/conflict.jpg",
+	"Icon": "https://neira.app/img/milestones/other/conflict.jpg",
 	"MaxSpace": 4,
 	"MilestoneType": 2,
 	"Game": 1

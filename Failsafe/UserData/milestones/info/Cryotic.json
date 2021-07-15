@@ -1,0 +1,9 @@
+{
+	"Name": "Криотика",
+	"Alias": "фкр",
+	"Type": "Фарм",
+	"Icon": "https://neira.app/img/milestones/warframe/cryotic.png",
+	"MaxSpace": 4,
+	"MilestoneType": 2,
+	"Game": 3
+}

@@ -1,0 +1,9 @@
+{
+	"Name": "Оксиума",
+	"Alias": "фок",
+	"Type": "Фарм",
+	"Icon": "https://neira.app/img/milestones/warframe/oxium.png",
+	"MaxSpace": 4,
+	"MilestoneType": 2,
+	"Game": 3
+}

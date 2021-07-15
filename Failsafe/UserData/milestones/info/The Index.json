@@ -1,0 +1,9 @@
+{
+	"Name": "\"Индекс\"",
+	"Alias": "ин",
+	"Type": "Фарм",
+	"Icon": "https://neira.app/img/milestones/other/the_index.png",
+	"MaxSpace": 4,
+	"MilestoneType": 2,
+	"Game": 3
+}

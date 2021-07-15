@@ -2,38 +2,35 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Version>2.0.4</Version>
-    <Authors>PassiveModding</Authors>
+    <Version>1.0.0</Version>
+    <Authors></Authors>
     
     <PackageId>Discord.Addons.PassiveInteractive</PackageId>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/PassiveModding/Discord.Addons.Interactive</PackageProjectUrl>
+    <PackageProjectUrl></PackageProjectUrl>
     <PackageTags>discord;discord.net;discord.addons;discord.addons.interactive</PackageTags>
     <AssemblyName>Discord.Addons.Interactive</AssemblyName>
     <RootNamespace>Discord.Addons.Interactive</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Push to Stable</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <Description>A fork of Discord.Addons.Interactive, Adding more functionality including
 
 -Inline Reactions
 
 -Full Paginater Customization</Description>
-    <AssemblyVersion>2.0.3.1</AssemblyVersion>
-    <FileVersion>2.0.3.1</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <Product />
+    <Company />
     
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Commands" Version="2.2.0" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Discord.Net\src\Discord.Net.Commands\Discord.Net.Commands.csproj" />
-    <ProjectReference Include="..\..\..\Discord.Net\src\Discord.Net.WebSocket\Discord.Net.WebSocket.csproj" />
+    <PackageReference Include="Discord.Net.Commands" Version="2.4.0" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
