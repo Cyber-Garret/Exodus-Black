@@ -28,9 +28,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Commands" Version="2.4.0" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="2.4.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Discord.Net.Commands" Version="3.0.0-dev-20210710.3" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="3.0.0-dev-20210710.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>

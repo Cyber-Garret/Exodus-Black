@@ -127,7 +127,7 @@ namespace Failsafe.Services
 
 				var leader = await _discordRest.GetUserAsync(milestone.Leader);
 				//var leader = _discord.GetUser(milestone.Leader);
-				var leaderDm = await leader.GetOrCreateDMChannelAsync();
+				var leaderDm = await leader.CreateDMChannelAsync();
 
 				await leaderDm.SendMessageAsync(embed: remindEmbed);
 
@@ -141,7 +141,7 @@ namespace Failsafe.Services
 						var loadedUser = await _discordRest.GetUserAsync(user);
 						//var loadedUser = _discord.GetUser(user);
 
-						var dm = await loadedUser.GetOrCreateDMChannelAsync();
+						var dm = await loadedUser.CreateDMChannelAsync();
 						await dm.SendMessageAsync(embed: remindEmbed);
 					}
 					catch (Exception ex)
@@ -172,7 +172,7 @@ namespace Failsafe.Services
 
 				var leader = await _discordRest.GetUserAsync(milestone.Leader);
 				//var leader = _discord.GetUser(milestone.Leader);
-				var leaderDm = await leader.GetOrCreateDMChannelAsync();
+				var leaderDm = await leader.CreateDMChannelAsync();
 
 				await leaderDm.SendMessageAsync(embed: remindEmbed);
 
@@ -186,7 +186,7 @@ namespace Failsafe.Services
 						var loadedUser = await _discordRest.GetUserAsync(user);
 						//var loadedUser = _discord.GetUser(user);
 
-						var dm = await loadedUser.GetOrCreateDMChannelAsync();
+						var dm = await loadedUser.CreateDMChannelAsync();
 						await dm.SendMessageAsync(embed: remindEmbed);
 					}
 					catch (Exception ex)
