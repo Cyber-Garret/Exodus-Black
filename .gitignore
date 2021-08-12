@@ -263,3 +263,4 @@ __pycache__/
 .vscode/
 Bot/UserData/
 Failsafe/logs/
+Failsafe/UserData/guilds/

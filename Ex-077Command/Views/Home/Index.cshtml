@@ -1,18 +1,18 @@
-﻿@inject IViewLocalizer Localizer
-@inject SharedResourcesService SharedRes
+﻿@inject IViewLocalizer _localizer
+@inject SharedResourcesService _sharedRes
 
 @model HomeViewModel
 @{
-	ViewData["Title"] = Localizer["Title"];
+	ViewData["Title"] = _localizer["Title"];
 }
 
 <!-- Main -->
 <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center main-bg text-light">
 	<div class="col-md-5 p-lg-5 mx-auto my-5">
-		<p class="lead font-weight-normal">@Localizer["Welcome"]</p>
-		<h1 class="display-4 font-weight-normal">@Localizer["Name"]</h1>
-		<a class="btn btn-info" asp-controller="Home" asp-action="InviteBot" role="button" target="_blank">@Localizer["AddBot"]</a>
-		<a class="btn btn-info" href="@Localizer["DocsLink"]" role="button" target="_blank">@Localizer["Docs"]</a>
+		<p class="lead font-weight-normal">@_localizer["Welcome"]</p>
+		<h1 class="display-4 font-weight-normal">@_localizer["Name"]</h1>
+		<a class="btn btn-info" asp-controller="Home" asp-action="InviteBot" role="button" target="_blank">@_localizer["AddBot"]</a>
+		<a class="btn btn-info" href="@_localizer["DocsLink"]" role="button" target="_blank">@_localizer["Docs"]</a>
 	</div>
 </div>
 
@@ -20,15 +20,15 @@
 <div class="py-5 bg-light">
 	<div class="container">
 		<div class="col-lg-12 text-center">
-			<h2 class="text-uppercase">@Localizer["BotStatTitle"]</h2>
-			<h3 class="text-muted">@Localizer["BotStatDesc"]</h3>
+			<h2 class="text-uppercase">@_localizer["BotStatTitle"]</h2>
+			<h3 class="text-muted">@_localizer["BotStatDesc"]</h3>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="card mb-4 shadow-sm text-center">
 					<i class="fas fa-globe-europe fa-10x mt-4"></i>
 					<div class="card-body">
-						<h2>@Localizer["BotStatServers"]</h2>
+						<h2>@_localizer["BotStatServers"]</h2>
 						<p class="card-text">550+</p>
 					</div>
 				</div>
@@ -37,7 +37,7 @@
 				<div class="card mb-4 shadow-sm text-center">
 					<i class="fas fa-users fa-10x mt-4"></i>
 					<div class="card-body">
-						<h2>@Localizer["BotStatUsers"]</h2>
+						<h2>@_localizer["BotStatUsers"]</h2>
 						<p class="card-text">82000+</p>
 					</div>
 				</div>
@@ -46,7 +46,7 @@
 				<div class="card mb-4 shadow-sm text-center">
 					<i class="fas fa-clipboard-list fa-10x mt-4"></i>
 					<div class="card-body">
-						<h2>@Localizer["BotStatRaids"]</h2>
+						<h2>@_localizer["BotStatRaids"]</h2>
 						<p class="card-text">42300+</p>
 					</div>
 				</div>
@@ -59,51 +59,51 @@
 <div class="py-5 bg-dark text-light">
 	<div class="container">
 		<div class="col-lg-12 text-center">
-			<h2 class="text-uppercase">@Localizer["FeatTitle"]</h2>
-			<h3 class="text-muted">@Localizer["FeatDesc"]</h3>
+			<h2 class="text-uppercase">@_localizer["FeatTitle"]</h2>
+			<h3 class="text-muted">@_localizer["FeatDesc"]</h3>
 		</div>
 		<div class="row row-cols-1 row-cols-md-2">
 			<div class="col mb-4">
 				<div class="card mb-4 shadow-sm text-light bg-dark">
 					<div class="embed-responsive embed-responsive-16by9">
-						<img class="card-img-top embed-responsive-item" src="~/img/features/1.jpg" alt="@Localizer["FeatOneTitle"]" />
+						<img class="card-img-top embed-responsive-item" src="~/img/features/1.jpg" alt="@_localizer["FeatOneTitle"]" />
 					</div>
 					<div class="card-body">
-						<h3 class="card-title">@Localizer["FeatOneTitle"]</h3>
-						<p class="card-text">@Localizer["FeatOneDesc"]</p>
+						<h3 class="card-title">@_localizer["FeatOneTitle"]</h3>
+						<p class="card-text">@_localizer["FeatOneDesc"]</p>
 					</div>
 				</div>
 			</div>
 			<div class="col mb-4">
 				<div class="card shadow-sm text-light bg-dark">
 					<div class="embed-responsive embed-responsive-16by9">
-						<img class="card-img-top embed-responsive-item" src="~/img/features/2.jpg" alt="@Localizer["FeatTwoTitle"]" />
+						<img class="card-img-top embed-responsive-item" src="~/img/features/2.jpg" alt="@_localizer["FeatTwoTitle"]" />
 					</div>
 					<div class="card-body">
-						<h3 class="card-title">@Localizer["FeatTwoTitle"]</h3>
-						<p class="card-text">@Localizer["FeatTwoDesc"]</p>
+						<h3 class="card-title">@_localizer["FeatTwoTitle"]</h3>
+						<p class="card-text">@_localizer["FeatTwoDesc"]</p>
 					</div>
 				</div>
 			</div>
 			<div class="col mb-4">
 				<div class="card shadow-sm text-light bg-dark">
 					<div class="embed-responsive embed-responsive-16by9">
-						<img class="card-img-top embed-responsive-item" src="~/img/features/3.jpg" alt="@Localizer["FeatThreeTitle"]" />
+						<img class="card-img-top embed-responsive-item" src="~/img/features/3.jpg" alt="@_localizer["FeatThreeTitle"]" />
 					</div>
 					<div class="card-body">
-						<h3 class="card-title">@Localizer["FeatThreeTitle"]</h3>
-						<p class="card-text">@Localizer["FeatThreeDesc"]</p>
+						<h3 class="card-title">@_localizer["FeatThreeTitle"]</h3>
+						<p class="card-text">@_localizer["FeatThreeDesc"]</p>
 					</div>
 				</div>
 			</div>
 			<div class="col mb-4">
 				<div class="card shadow-sm text-light bg-dark">
 					<div class="embed-responsive embed-responsive-16by9">
-						<img class="card-img-top embed-responsive-item" src="~/img/features/4.jpg" alt="@Localizer["FeatFourTitle"]" />
+						<img class="card-img-top embed-responsive-item" src="~/img/features/4.jpg" alt="@_localizer["FeatFourTitle"]" />
 					</div>
 					<div class="card-body">
-						<h3 class="card-title">@Localizer["FeatFourTitle"]</h3>
-						<p class="card-text">@Localizer["FeatFourDesc"]</p>
+						<h3 class="card-title">@_localizer["FeatFourTitle"]</h3>
+						<p class="card-text">@_localizer["FeatFourDesc"]</p>
 					</div>
 				</div>
 			</div>
