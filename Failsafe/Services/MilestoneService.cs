@@ -438,6 +438,11 @@ namespace Failsafe.Services
 					author.IconUrl = "https://www.neira.app/img/WildRift.png";
 					author.Url = "https://wildrift.leagueoflegends.com/";
 					break;
+				case GameName.LostArk:
+					author.Name = "Lost Ark";
+					author.IconUrl = "https://www.neira.app/img/LostArk.png";
+					author.Url = "https://la.mail.ru/";
+					break;
 				default:
 					author.Name = "Unknown";
 					break;

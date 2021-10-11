@@ -20,8 +20,8 @@
     <None Remove="UserData\milestones_info\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="3.0.0-dev-20210710.3" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.1.0" />
+    <PackageReference Include="Discord.Net.Labs" Version="3.1.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.3.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Quartz" Version="3.3.3" />
