@@ -127,7 +127,7 @@ namespace Failsafe.Services
 
 				var leader = await _discordRest.GetUserAsync(milestone.Leader);
 				//var leader = _discord.GetUser(milestone.Leader);
-				var leaderDm = await leader.GetOrCreateDMChannelAsync();
+				var leaderDm = await leader.CreateDMChannelAsync();
 
 				await leaderDm.SendMessageAsync(embed: remindEmbed);
 
@@ -141,7 +141,7 @@ namespace Failsafe.Services
 						var loadedUser = await _discordRest.GetUserAsync(user);
 						//var loadedUser = _discord.GetUser(user);
 
-						var dm = await loadedUser.GetOrCreateDMChannelAsync();
+						var dm = await loadedUser.CreateDMChannelAsync();
 						await dm.SendMessageAsync(embed: remindEmbed);
 					}
 					catch (Exception ex)
@@ -172,7 +172,7 @@ namespace Failsafe.Services
 
 				var leader = await _discordRest.GetUserAsync(milestone.Leader);
 				//var leader = _discord.GetUser(milestone.Leader);
-				var leaderDm = await leader.GetOrCreateDMChannelAsync();
+				var leaderDm = await leader.CreateDMChannelAsync();
 
 				await leaderDm.SendMessageAsync(embed: remindEmbed);
 
@@ -186,7 +186,7 @@ namespace Failsafe.Services
 						var loadedUser = await _discordRest.GetUserAsync(user);
 						//var loadedUser = _discord.GetUser(user);
 
-						var dm = await loadedUser.GetOrCreateDMChannelAsync();
+						var dm = await loadedUser.CreateDMChannelAsync();
 						await dm.SendMessageAsync(embed: remindEmbed);
 					}
 					catch (Exception ex)
@@ -284,16 +284,32 @@ namespace Failsafe.Services
 			{
 				var des2Names = string.Empty;
 				var div2Names = string.Empty;
+				var lostArkNames = string.Empty;
+				var other = string.Empty;
 				foreach (var item in MilestoneInfoData.GetMilestonesByType(type))
 				{
-					if (item.Game == GameName.Destiny)
-						des2Names += $"**{item.Alias}** - {item.Name}\n";
-					else
-						div2Names += $"**{item.Alias}** - {item.Name}\n";
-
+					switch (item.Game)
+					{
+						case GameName.Destiny:
+							des2Names += $"**{item.Alias}** - {item.Name}\n";
+							break;
+						case GameName.Division:
+							div2Names += $"**{item.Alias}** - {item.Name}\n";
+							break;
+						case GameName.LostArk:
+							lostArkNames += $"**{item.Alias}** - {item.Name}\n";
+							break;
+						default:
+							other += $"**{item.Alias}** - {item.Name}\n";
+							break;
+					}
 				}
 				embed.AddField("Destiny 2", des2Names);
 				embed.AddField("The Division 2", div2Names);
+				embed.AddField("Lost Ark", lostArkNames);
+
+				if (!string.IsNullOrWhiteSpace(other))
+					embed.AddField(GlobalVariables.InvisibleString, other);
 			}
 			else
 			{
@@ -437,6 +453,11 @@ namespace Failsafe.Services
 					author.Name = "League of Legends: Wild Rift";
 					author.IconUrl = "https://www.neira.app/img/WildRift.png";
 					author.Url = "https://wildrift.leagueoflegends.com/";
+					break;
+				case GameName.LostArk:
+					author.Name = "Lost Ark";
+					author.IconUrl = "https://www.neira.app/img/LostArk.png";
+					author.Url = "https://la.mail.ru/";
 					break;
 				default:
 					author.Name = "Unknown";

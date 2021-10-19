@@ -465,8 +465,7 @@ NSFW **{1}**
     <value>Капитан, я удалила все записанные роли в моей базе данных.</value>
   </data>
   <data name="SlfRolEmbDescField" xml:space="preserve">
-    <value>Нажми на {0} что бы получить роль {1}
-</value>
+    <value>Нажми на {0} что бы получить роль {1}</value>
   </data>
   <data name="SlfRolEmpty" xml:space="preserve">
     <value>Капитан, в мой базе не записанно ни одной автороли.</value>

@@ -440,8 +440,7 @@ NSFW **{1}**
     <value>Капітане, я видалила всі ролі в моїй базі даних.</value>
   </data>
   <data name="SlfRolEmbDescField" xml:space="preserve">
-    <value>Натисни на {0} аби отримати роль {1}
-</value>
+    <value>Натисни на {0} аби отримати роль {1}</value>
   </data>
   <data name="SlfRolEmpty" xml:space="preserve">
     <value>Капітане, в моїй базі не записанно жодної авторолі.</value>

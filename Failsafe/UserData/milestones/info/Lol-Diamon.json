@@ -1,0 +1,9 @@
+{
+	"Name": "Алмаз",
+	"Alias": "алмаз",
+	"Type": "Ранговая битва",
+	"Icon": "https://neira.app/img/milestones/wild-rift/diamond.png",
+	"MaxSpace": 5,
+	"MilestoneType": 2,
+	"Game": 4
+}
