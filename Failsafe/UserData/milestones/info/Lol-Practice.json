@@ -1,0 +1,9 @@
+{
+	"Name": "Режим Тренировки",
+	"Alias": "прак",
+	"Type": null,
+	"Icon": "https://neira.app/img/milestones/wild-rift/practice.jpg",
+	"MaxSpace": 10,
+	"MilestoneType": 2,
+	"Game": 4
+}
