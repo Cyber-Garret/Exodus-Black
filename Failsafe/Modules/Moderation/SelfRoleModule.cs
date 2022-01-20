@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Failsafe.Modules
+namespace Failsafe.Modules.Moderation
 {
 	[RequireContext(ContextType.Guild), Cooldown(5), RequireUserPermission(GuildPermission.Administrator)]
 	public class SelfRoleModule : RootModule

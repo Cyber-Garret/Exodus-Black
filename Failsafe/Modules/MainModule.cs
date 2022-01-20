@@ -5,6 +5,7 @@ using Discord.WebSocket;
 
 using Failsafe.Core.Data;
 using Failsafe.Models;
+using Failsafe.Modules.Moderation;
 using Failsafe.Preconditions;
 using Failsafe.Properties;
 using Failsafe.Services;
@@ -20,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Failsafe.Modules
 {
-    [RequireContext(ContextType.Guild), Cooldown(5)]
+	[RequireContext(ContextType.Guild), Cooldown(5)]
     public class MainModule : RootModule
     {
         private readonly ILogger<MainModule> _logger;

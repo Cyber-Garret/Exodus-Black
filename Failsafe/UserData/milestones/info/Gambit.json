@@ -2,7 +2,7 @@
 	"Name": "Гамбит",
 	"Alias": "гамбит",
 	"Type": "",
-	"Icon": "http://neira.app/img/milestones/other/drifter.jpg",
+	"Icon": "https://neira.app/img/milestones/other/drifter.jpg",
 	"MaxSpace": 8,
 	"MilestoneType": 2,
 	"Game": 0

@@ -11,7 +11,7 @@ namespace Failsafe.Models
         public ulong WelcomeChannel { get; set; }
         public string WelcomeMessage { get; set; }
         public ulong AutoroleId { get; set; }
-        public string CommandPrefix { get; set; }
+        public string? CommandPrefix { get; set; }
         public CultureInfo Language { get; set; } = new("ru-RU");
         public string TimeZone { get; set; } = "Europe/Moscow";
         public string GlobalMention { get; set; } = "@here";
