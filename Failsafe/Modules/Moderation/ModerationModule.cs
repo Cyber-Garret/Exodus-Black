@@ -1,4 +1,11 @@
-﻿using Discord;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -9,13 +16,6 @@ using Failsafe.Properties;
 using Failsafe.Services;
 
 using Microsoft.Extensions.Logging;
-
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Failsafe.Modules.Moderation
 {

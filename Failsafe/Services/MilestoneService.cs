@@ -1,4 +1,10 @@
-﻿using Discord;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 
@@ -8,12 +14,6 @@ using Failsafe.Models.Enums;
 using Failsafe.Properties;
 
 using Microsoft.Extensions.Logging;
-
-using System;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Failsafe.Services
 {
@@ -230,9 +230,11 @@ namespace Failsafe.Services
 					embed.WithDescription(string.Format(Resources.MilEmbDesc, milestone.Note));
 
 				var leader = await _discordRest.GetUserAsync(milestone.Leader);
-				//var leader = _discord.GetUser(milestone.Leader);
 
-				embed.AddField(Resources.MilEmbInfTitleField, string.Format(Resources.MilEmbInfDescField, leader.Mention, leader.Username, _emote.Raid));
+				var leaderTitle = milestone.MilestoneInfo.Game == GameName.WoT ? Resources.MilEmbInfDescFieldWoT
+					: Resources.MilEmbInfDescFieldMain;
+
+				embed.AddField(Resources.MilEmbInfTitleField, string.Format(leaderTitle, leader.Mention, leader.Username, _emote.Raid));
 
 				if (milestone.MilestoneUsers.Count > 0)
 				{
@@ -458,6 +460,11 @@ namespace Failsafe.Services
 					author.Name = "Lost Ark";
 					author.IconUrl = "https://www.neira.app/img/LostArk.png";
 					author.Url = "https://la.mail.ru/";
+					break;
+				case GameName.WoT:
+					author.Name = "World of Tanks";
+					author.IconUrl = "https://www.neira.app/img/WoT.png";
+					author.Url = "https://worldoftanks.ru/";
 					break;
 				default:
 					author.Name = "Unknown";

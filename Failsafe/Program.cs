@@ -1,3 +1,5 @@
+﻿using System;
+
 using Discord;
 using Discord.Addons.Interactive;
 using Discord.Commands;
@@ -18,8 +20,6 @@ using Quartz.Impl;
 using Quartz.Spi;
 
 using Serilog;
-
-using System;
 
 namespace Failsafe
 {
@@ -105,14 +105,12 @@ namespace Failsafe
 					services.AddSingleton<XurLeave>();
 					services.AddSingleton<MilestoneRemind>();
 					services.AddSingleton<MilestoneClean>();
-					services.AddSingleton<SaveCommandStatistic>();
 					// Quartz triggers
 					var hour = hostContext.Configuration.GetSection("Bot:XurHour").Get<int>();
 					services.AddSingleton(new JobSchedule(typeof(XurArrive), $"0 0 {hour} ? * FRI")); // run every Friday in 20:00
 					services.AddSingleton(new JobSchedule(typeof(XurLeave), $"0 0 {hour} ? * TUE")); // run every Tuesday in 20:00
 					services.AddSingleton(new JobSchedule(typeof(MilestoneRemind), "0/10 * * * * ?")); // run every 10 seconds.
 					services.AddSingleton(new JobSchedule(typeof(MilestoneClean), "0 0/15 * * * ?")); // run every 15 minute.
-					services.AddSingleton(new JobSchedule(typeof(SaveCommandStatistic), "0 0 * ? * *")); //run every hour.
 
 					services.AddTransient<IWelcomeDbClient, WelcomeDbClient>(provider => new WelcomeDbClient(hostContext.Configuration.GetConnectionString("DefaultConnection")));
 					services.AddTransient<IWishDbClient, WishDbClient>(provider => new WishDbClient(hostContext.Configuration.GetConnectionString("DefaultConnection")));

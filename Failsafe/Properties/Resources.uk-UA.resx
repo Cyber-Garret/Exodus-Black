@@ -325,7 +325,7 @@ NSFW **{1}**
   <data name="MilEmbDescCanceled" xml:space="preserve">
     <value>Причина скасування: {0}</value>
   </data>
-  <data name="MilEmbInfDescField" xml:space="preserve">
+  <data name="MilEmbInfDescFieldMain" xml:space="preserve">
     <value>- Лідер бойової групи: **#1 {0} - {1}**
 - Для бронювання місця натисність реакцію {2}</value>
   </data>
@@ -549,5 +549,9 @@ Discord ім'я ґардіана
   </data>
   <data name="WishFooterFormat" xml:space="preserve">
     <value>Бажання {0}/{1}</value>
+  </data>
+  <data name="MilEmbInfDescFieldWoT" xml:space="preserve">
+    <value>- Командир загону: **#1 {0} - {1}**
+- Для бронювання місця натисність реакцію {2}</value>
   </data>
 </root>

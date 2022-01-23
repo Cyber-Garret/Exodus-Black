@@ -687,9 +687,19 @@ namespace Failsafe.Properties {
         ///   Looks up a localized string similar to - Leader of the battle group: **# 1 {0} - {1}**
         ///- To  your place, click on the reaction {2}.
         /// </summary>
-        internal static string MilEmbInfDescField {
+        internal static string MilEmbInfDescFieldMain {
             get {
-                return ResourceManager.GetString("MilEmbInfDescField", resourceCulture);
+                return ResourceManager.GetString("MilEmbInfDescFieldMain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to - Squad leader: **# 1 {0} - {1}**
+        ///- To  your place, click on the reaction {2}.
+        /// </summary>
+        internal static string MilEmbInfDescFieldWoT {
+            get {
+                return ResourceManager.GetString("MilEmbInfDescFieldWoT", resourceCulture);
             }
         }
         

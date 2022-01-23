@@ -1,0 +1,9 @@
+{
+	"Name": "Тиски Алчности",
+	"Alias": "та",
+	"Type": "Подземелье",
+	"Icon": "https://www.neira.app/img/milestones/other/grasp_of_avarice.jpg",
+	"MaxSpace": 3,
+	"MilestoneType": 2,
+	"Game": 0
+}

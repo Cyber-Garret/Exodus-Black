@@ -1,4 +1,8 @@
-﻿using Discord;
+﻿using System;
+using System.Globalization;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -11,10 +15,6 @@ using Failsafe.Services;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
-using System;
-using System.Globalization;
-using System.Threading.Tasks;
 
 namespace Failsafe.Modules
 {

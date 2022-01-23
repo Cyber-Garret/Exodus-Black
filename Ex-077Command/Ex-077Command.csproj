@@ -80,6 +80,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+	  <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Fuselage\Fuselage.csproj" />
 	</ItemGroup>
 
@@ -106,6 +111,11 @@
 		<EmbeddedResource Update="Resources\SharedResources.resx">
 			<Generator></Generator>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Entities\Profiles\" />
+	  <Folder Include="Extensions\" />
 	</ItemGroup>
 
 </Project>

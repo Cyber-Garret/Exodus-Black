@@ -1,4 +1,11 @@
-﻿using Discord;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 
@@ -12,13 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Neiralink;
-
-using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Failsafe.Services
 {

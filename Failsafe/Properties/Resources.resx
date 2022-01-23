@@ -332,7 +332,7 @@ You can find more information in the documentation section on my [site]({0})</va
   <data name="MilEmbDescCanceled" xml:space="preserve">
     <value>Canceled due to: {0}</value>
   </data>
-  <data name="MilEmbInfDescField" xml:space="preserve">
+  <data name="MilEmbInfDescFieldMain" xml:space="preserve">
     <value>- Leader of the battle group: **# 1 {0} - {1}**
 - To  your place, click on the reaction {2}</value>
   </data>
@@ -560,5 +560,9 @@ Discord Guardian Name
   </data>
   <data name="DonateEmbFieldDesc" xml:space="preserve">
     <value></value>
+  </data>
+  <data name="MilEmbInfDescFieldWoT" xml:space="preserve">
+    <value>- Squad leader: **# 1 {0} - {1}**
+- To  your place, click on the reaction {2}</value>
   </data>
 </root>
