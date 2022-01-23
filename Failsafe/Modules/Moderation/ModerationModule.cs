@@ -1,4 +1,11 @@
-﻿using Discord;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -10,14 +17,7 @@ using Failsafe.Services;
 
 using Microsoft.Extensions.Logging;
 
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Failsafe.Modules
+namespace Failsafe.Modules.Moderation
 {
 	[RequireContext(ContextType.Guild), Cooldown(5), RequireUserPermission(GuildPermission.Administrator)]
 	public class ModerationModule : RootModule
@@ -324,7 +324,7 @@ namespace Failsafe.Modules
 		[Command("random"), Alias("рандом")]
 		public async Task GetRandomUser(IRole mentionedRole = null, int count = 1)
 		{
-			if (mentionedRole == null || (count < 1 || count > 10))
+			if (mentionedRole == null || count < 1 || count > 10)
 			{
 				await ReplyAndDeleteAsync(Resources.RndErrorStart);
 				return;
@@ -408,7 +408,7 @@ namespace Failsafe.Modules
 			};
 			var random = new Random();
 
-			for (int i = 0; i < count; i++)
+			for (var i = 0; i < count; i++)
 			{
 				var num = random.Next(0, filteredUsers.Count());
 				//Pick random user

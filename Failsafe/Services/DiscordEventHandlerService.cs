@@ -1,4 +1,11 @@
-﻿using Discord;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
 
@@ -12,13 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Neiralink;
-
-using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Failsafe.Services
 {
@@ -185,11 +185,11 @@ namespace Failsafe.Services
 			return Task.CompletedTask;
 		}
 
-		private Task Discord_UserLeft(SocketGuildUser guildUser)
+		private Task Discord_UserLeft(SocketGuild guild, SocketUser user)
 		{
 			Task.Run(async () =>
 			{
-				await UserLeft(guildUser);
+				await UserLeft(guild, user);
 			});
 			return Task.CompletedTask;
 		}
@@ -643,22 +643,23 @@ namespace Failsafe.Services
 			}
 
 		}
-		private async Task UserLeft(SocketGuildUser user)
+		private async Task UserLeft(SocketGuild guild, SocketUser user)
 		{
-			if (user == null || user.IsBot) return;
+
+			if (user.IsBot) return;
 			try
 			{
-				var loadedGuild = GuildData.GetGuildAccount(user.Guild);
+				var loadedGuild = GuildData.GetGuildAccount(guild);
 				Thread.CurrentThread.CurrentUICulture = loadedGuild.Language;
 
-				var log = await user.Guild.GetAuditLogsAsync(1).FlattenAsync();
+				var log = await guild.GetAuditLogsAsync(1).FlattenAsync();
 				var audit = log.ToList();
 				var embed = new EmbedBuilder
 				{
 					Title = Resources.UsrLefEmbTitle,
 					Color = Color.Red,
 					ThumbnailUrl = user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl(),
-					Description = string.Format(Resources.UsrLefEmbDesc, user.Nickname ?? user.Username, user),
+					Description = string.Format(Resources.UsrLefEmbDesc, user.Username, user),
 
 				};
 				switch (audit[0].Action)

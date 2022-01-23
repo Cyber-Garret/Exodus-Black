@@ -7,6 +7,7 @@
 		Warzone = 2,
 		Warframe = 3,
 		WildRift = 4,
-		LostArk = 5
+		LostArk = 5,
+		WoT = 6
 	}
 }

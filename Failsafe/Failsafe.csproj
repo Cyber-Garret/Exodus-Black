@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>dotnet-Bot-4E6EFB48-F9EE-4BFE-9F3A-0DA6C1D3F6FC</UserSecretsId>
     <NeutralLanguage>en-US</NeutralLanguage>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
@@ -20,9 +20,9 @@
     <None Remove="UserData\milestones_info\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Labs" Version="3.1.6" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.3.3" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Discord.Net.Labs" Version="3.6.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Quartz" Version="3.3.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />

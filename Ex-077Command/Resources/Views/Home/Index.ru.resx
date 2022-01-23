@@ -180,7 +180,4 @@
   <data name="Docs" xml:space="preserve">
     <value>Cправочник</value>
   </data>
-  <data name="DocsLink" xml:space="preserve">
-    <value>https://docs.neira.app/v/russian/</value>
-  </data>
 </root>

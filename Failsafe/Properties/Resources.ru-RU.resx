@@ -329,7 +329,7 @@ NSFW **{1}**
   <data name="MilEmbDescCanceled" xml:space="preserve">
     <value>Отменен по причине: {0}</value>
   </data>
-  <data name="MilEmbInfDescField" xml:space="preserve">
+  <data name="MilEmbInfDescFieldMain" xml:space="preserve">
     <value>- Лидер боевой группы: **#1 {0} - {1}**
 - Чтобы за вами закрепилось место нажмите на реакцию {2}</value>
   </data>
@@ -554,5 +554,9 @@ Discord имя стража
   </data>
   <data name="DonateEmbFieldTitle" xml:space="preserve">
     <value>Поддержи "Черный Исход"</value>
+  </data>
+  <data name="MilEmbInfDescFieldWoT" xml:space="preserve">
+    <value>- Командир отряда: **#1 {0} - {1}**
+- Чтобы за вами закрепилось место нажмите на реакцию {2}</value>
   </data>
 </root>
